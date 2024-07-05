@@ -25,7 +25,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/styles/sga-theme-angular-material.scss"
             ],
             "scripts": [],
             "customWebpackConfig": {
@@ -100,7 +101,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/styles/sga-theme-angular-material.scss"
             ],
             "scripts": []
           }
