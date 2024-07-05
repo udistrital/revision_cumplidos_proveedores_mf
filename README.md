@@ -57,7 +57,6 @@ npm start
 ###  Ejecucion : revision_cumplidos_proveedores_mf
 Public
 
-El Core contiene componentes generales que construyen el layout y administran aspectos como la autenticación.
 
 **Pasos para la Ejecución de revision_cumplidos_proveedores_mf**
 1. Clonar el repositorio:
@@ -81,7 +80,7 @@ npm install
 3. Iniciar revision_cumplidos_proveedores_mf: 
   
 ```
-ng serve
+ng s --project revision_cumplidos_proveedores_mf --disable-host-check --port 4201 --live-reload false
 
 ```
 
