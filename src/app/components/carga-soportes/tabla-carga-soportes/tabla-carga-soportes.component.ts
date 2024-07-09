@@ -23,7 +23,6 @@ export class TablaCargaSoportesComponent {
   
 
 
-
   displayedColumns: string[] = ['numeroContrato', 'vigencia', 'rp', 'vigenciaRp', 'fechaCrecion', 'dependencia', 'acciones'];
   dataSource = [
     { 
