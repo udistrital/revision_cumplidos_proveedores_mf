@@ -1,0 +1,65 @@
+<div class="button-close">
+    
+<button mat-icon-button mat-dialog-close aria-label="Cerrar">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="custom-modal">
+  <mat-card>
+    <mat-card-header class="card-title  color-primray">
+        <mat-card-title class=" ">CARGA  SOPORTES</mat-card-title>
+        
+    </mat-card-header>
+
+    <mat-card-content>
+        <div class="center">
+            <p>Seleccione la solicitud a la cual va a cargar los soportes</p>
+        <button   mat-button class="button-enviar" >Crear solicitud</button>
+        </div>
+     
+            <mat-card>
+                <div>
+            <table mat-table [dataSource]="dataSource"  class="mat-elevation-z8 color-table">
+          
+                <ng-container matColumnDef="noSolicitud">
+                  <th mat-header-cell *matHeaderCellDef class="texto-negro-negrita th-backgound ">N° SOLICITUD</th>
+                  <td mat-cell *matCellDef="let element"> {{element.numeroContrato}} </td>
+                </ng-container>
+            
+                <ng-container matColumnDef="numeroContrato">
+                  <th mat-header-cell class="texto-negro-negrita " *matHeaderCellDef> N° CONTRATO </th>
+                  <td mat-cell *matCellDef="let element"> {{element.vigencia}} </td>
+                </ng-container>
+            
+                <ng-container matColumnDef="fechaCreacion">
+                  <th mat-header-cell *matHeaderCellDef class="texto-negro-negrita "> FECHA CREACION </th>
+                  <td mat-cell *matCellDef="let element"> {{element.rp}} </td>
+                </ng-container>
+                <ng-container matColumnDef="periodo">
+                    <th mat-header-cell *matHeaderCellDef class="texto-negro-negrita "> PERIODO</th>
+                    <td mat-cell *matCellDef="let element"> {{element.rp}} </td>
+                  </ng-container>
+            
+                <ng-container matColumnDef="estadoSoliciatud">
+                  <th mat-header-cell *matHeaderCellDef class=""> ESTADO SOLICITUD </th>
+                  <td mat-cell *matCellDef="let element"> {{element.mes}} </td>
+                </ng-container>
+            
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef class="texto-negro-negrita ">ACCIONES </th>
+                  <td mat-cell *matCellDef="let element"><a  class="small-icon-button " color="primary" mat-button><mat-icon fontIcon="folder_open" ></mat-icon></a> <a class="small-icon-button " color="primary" mat-button><mat-icon fontIcon="send" ></mat-icon></a></td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              
+            
+              </table>
+          </div>
+            </mat-card>
+        
+    </mat-card-content>
+  
+  </mat-card>
+
+  
+</mat-dialog-content>
