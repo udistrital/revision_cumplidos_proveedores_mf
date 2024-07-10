@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:single-spa:revision_cumplidos_proveedores_mf": "ng build revision_cumplidos_proveedores_mf --configuration production",
-    "serve:single-spa:revision_cumplidos_proveedores_mf": "ng s --project revision_cumplidos_proveedores_mf --disable-host-check --port 4201 --live-reload false"
+    "serve:single-spa:revision_cumplidos_proveedores_mf": "ng s --project revision_cumplidos_proveedores_mf --disable-host-check --port 4202 --live-reload false"
   },
   "private": true,
   "dependencies": {
@@ -17,6 +17,7 @@
     "@angular/common": "^16.2.0",
     "@angular/compiler": "^16.2.0",
     "@angular/core": "^16.2.0",
+    "@angular/flex-layout": "^15.0.0-beta.42",
     "@angular/forms": "^16.2.0",
     "@angular/material": "^16.2.14",
     "@angular/platform-browser": "^16.2.0",

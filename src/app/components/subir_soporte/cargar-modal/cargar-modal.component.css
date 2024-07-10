@@ -1,0 +1,10 @@
+.modal-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+mat-icon {
+  color: red;
+}
+
+

@@ -1,0 +1,76 @@
+.soporte-cumplido-card{
+  border-radius: 10px;
+  margin: 0 auto;
+  margin-bottom: 15px;
+}
+
+
+.soporte-cumplido-header{
+  display: flex;
+  justify-content: center;
+}
+
+
+.soporte-cumplido-title{
+  text-align: center;
+  margin-top: 10%;
+  color: #98483c;
+  font-size: 2em;
+  margin-bottom: 0;
+}
+
+.soporte-cumplido-content{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+p{
+  margin-top: 0%;
+  color: grey !important;
+  font-size: 15px;
+  padding: 10px 80px;
+}
+
+.soporte-cumplido-text-area{
+  border-width: 0;
+  resize: none;
+  background-color: #f8cecc;
+  height: 100px;
+  width: 90%;
+  color: rgb(85, 83, 83) !important;
+  padding: 2%;
+  border-radius: 10px;
+  border: 1px solid #b85450
+}
+
+.eliminar-button{
+  display: flex;
+  justify-items: center;
+  background-color: #f8cecc;
+  color: #1f1e1e;
+  border-radius: 5px;
+  border: 1px solid #b85450;
+  width: 20%;
+  height: 30%;
+  margin: 5%;
+  margin-left: 7%;
+  cursor: pointer;
+}
+
+.soporte-cumplido-footer{
+  display: flex;
+  justify-content: space-between;
+}
+
+.ver-documentos-button{
+  width: 25%;
+  height: 70%;
+  margin: 5%;
+  cursor: pointer;
+  color: #98483c;
+}
+
+
+

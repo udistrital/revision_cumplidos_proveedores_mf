@@ -1,0 +1,18 @@
+<mat-card class="soporte-cumplido-card">
+  <mat-card-header class="soporte-cumplido-header">
+      <mat-card-title class="soporte-cumplido-title">{{ nombre }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="soporte-cumplido-content">
+    <p class="soporte-cumplido-fecha"> {{ fecha }} </p>
+
+    <p class="soporte-cumplido-item"> {{ item }} </p>
+
+    <textarea matInput class="soporte-cumplido-text-area" disabled="true" > {{ comentario }} </textarea>
+
+  </mat-card-content>
+  <mat-card-footer class="soporte-cumplido-footer">
+      <button mat-button class="eliminar-button">Eliminar</button>
+      <button mat-button class="ver-documentos-button"> VER DOCUMENTO</button>
+  </mat-card-footer>
+</mat-card>
+

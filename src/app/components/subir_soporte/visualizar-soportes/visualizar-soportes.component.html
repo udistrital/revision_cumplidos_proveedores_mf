@@ -1,0 +1,16 @@
+<mat-card class="ver-soportes-card">
+  <mat-card-header class="ver-soportes-tittle">
+      <mat-card-title>{{ tittle }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p class="spaced-paragraph">A continuación se muestran los soportes asociados al cumplido</p>
+    <app-soporte-cumplido *ngFor="let soporte of soportes "
+    [nombre]="soporte.nombre"
+    [fecha]="soporte.fecha"
+    [item]="soporte.item"
+    [comentario]="soporte.comentario"
+    >
+    </app-soporte-cumplido>
+  </mat-card-content>
+</mat-card>
+
