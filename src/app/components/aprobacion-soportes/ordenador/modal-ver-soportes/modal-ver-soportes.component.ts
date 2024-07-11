@@ -2,11 +2,11 @@ import { Component } from '@angular/core'
 import { AletManagerService } from 'src/app/managers/alet-manager.service'
 
 @Component({
-  selector: 'app-modal-ver-soportes',
+  selector: 'app-modal-ver-soportes-ordenador',
   templateUrl: './modal-ver-soportes.component.html',
   styleUrls: ['./modal-ver-soportes.component.css']
 })
-export class ModalVerSoportesComponent {
+export class ModalVerSoportesComponentOrdenador {
 
   constructor(private alerts:AletManagerService){
 

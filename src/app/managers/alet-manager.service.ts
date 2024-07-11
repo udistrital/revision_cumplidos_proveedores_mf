@@ -17,7 +17,15 @@ alertConfirm(tile:string): Promise<any>{
     showCancelButton: true,
     confirmButtonText: "Aceptar",
     cancelButtonText: "Cancelar",
-    reverseButtons: true
+    reverseButtons: true,
+    confirmButtonColor: '#358227', 
+   cancelButtonColor: '#d33',
+    width:"400px",
+    allowOutsideClick: false,
+  
+    
+
+  
   });
 
 
@@ -29,6 +37,11 @@ showSuccessAlert(title:string,message: string) {
     title: title,
     text: message,
     confirmButtonText:"Aceptar",
+    width:"400px",
+    confirmButtonColor: '#358227', 
+    cancelButtonColor: '#d33',
+    allowOutsideClick: false,
+    
   });
 }
 
@@ -38,6 +51,10 @@ showCancelAlert(title: string,message: string) {
     title: title,
     text: message,
     confirmButtonText:"Aceptar",
+    width:"400px",
+    confirmButtonColor: '#358227', 
+    cancelButtonColor: '#d33',
+    allowOutsideClick: false,
   });
 }
 

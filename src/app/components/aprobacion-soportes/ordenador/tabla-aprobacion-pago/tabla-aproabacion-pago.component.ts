@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AletManagerService } from 'src/app/managers/alet-manager.service';
-import { ModalVerSoportesComponent } from '../modal-ver-soportes/modal-ver-soportes.component';
+import { ModalVerSoportesComponentOrdenador } from '../modal-ver-soportes/modal-ver-soportes.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -27,7 +27,7 @@ export class TablaAproabacionPagoComponent {
 
 
   openVerSoportes() {
-    this.dialog.open(ModalVerSoportesComponent,{
+    this.dialog.open(ModalVerSoportesComponentOrdenador,{
       disableClose: true,
       maxHeight:"80vw",
       maxWidth:"100vw",
