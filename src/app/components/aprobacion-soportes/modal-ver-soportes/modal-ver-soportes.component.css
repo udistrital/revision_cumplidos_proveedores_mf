@@ -1,0 +1,61 @@
+.card-title{
+    background-color: #8c1a19;
+    color: white;
+    justify-content: center;
+}
+
+.texto-gris-negrita {
+    color: grey;
+    font-weight: bold;
+  }
+
+  .m-l-4 {
+    margin-left:20px ;
+  }
+  .m-4{
+    margin: 4px;
+  }
+
+
+  .text-center{
+    text-align: center;
+  }
+
+  .container-button{
+    display: flex;
+    justify-content: center;
+  }
+  textarea{
+    
+    resize: vertical;
+    height: 50%;
+  }
+
+  .container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .column {
+    flex: 1; 
+    padding: 10px; 
+    text-align: center;
+  }
+
+  .nombre-documento{
+    color: #8c1a19;
+    font-size: 24px;
+  }
+
+
+
+  mat-card{
+    border: #49494948 solid 1px;
+    margin-bottom: 20px;
+  }
+
+  .button-close{
+    text-align: right;
+}

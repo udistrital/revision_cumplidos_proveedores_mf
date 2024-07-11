@@ -11,18 +11,23 @@ import { AppComponent } from './app.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TablaCargaSoportesComponent } from './components/carga-soportes/tabla-carga-soportes/tabla-carga-soportes.component';
-
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import {MatSelectModule} from '@angular/material/select';
-import { ModalCargaSoprotesComponent } from './components/modal-carga-soprotes/modal-carga-soprotes.component';
+import { ModalCargaSoprotesComponent } from './components/carga-soportes/modal-carga-soprotes/modal-carga-soprotes.component'; 
+import { TablaAproabacionPagoComponent } from './components/aprobacion-soportes/tabla-aprobacion-pago/tabla-aproabacion-pago.component';
+import { ModalVerSoportesComponent } from './components/aprobacion-soportes/modal-ver-soportes/modal-ver-soportes.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TablaCargaSoportesComponent,
     ModalCargaSoprotesComponent,
+    TablaAproabacionPagoComponent,
+    ModalVerSoportesComponent,
   ],
   imports: [
-    BrowserModule,
+ 
+  BrowserModule,
     AppRoutingModule,
     MatButtonModule,
     MatToolbarModule,
@@ -33,6 +38,7 @@ import { ModalCargaSoprotesComponent } from './components/modal-carga-soprotes/m
     MatDialogModule,
     MatSelectModule,
     BrowserAnimationsModule,
+    SweetAlert2Module ,
   ],
   providers: [],
   bootstrap: [AppComponent]

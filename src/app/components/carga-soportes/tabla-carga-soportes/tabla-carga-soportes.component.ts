@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalCargaSoprotesComponent } from '../../modal-carga-soprotes/modal-carga-soprotes.component';
+import { ModalCargaSoprotesComponent } from '../modal-carga-soprotes/modal-carga-soprotes.component';
 
 @Component({
   selector: 'app-tabla-carga-soportes',
