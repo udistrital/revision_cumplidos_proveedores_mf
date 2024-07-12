@@ -1,0 +1,159 @@
+.card-informacion-contrato{
+  margin-top: 15px;
+}
+
+.labels{
+  color: rgb(97, 93, 93) !important;
+  font-size: 20px;
+  padding: 10px 30px;
+}
+
+.primera-fila{
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 2%;
+}
+.input-numero-contrato{
+  height: 25px;
+  margin: 0;
+  background-color: #f8cecc;
+  border-radius: 5px;
+  border: 1px solid #b85450;
+  width: 30%;
+  color: black;
+  text-align: center;
+  font-size: 15px;
+}
+
+.container-numero-contrato{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 40%;
+}
+
+.container-nombre-proveedor{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 50%;
+}
+
+.input-nombre-proveedor{
+  height: 25px;
+  margin: 0;
+  background-color: #f8cecc;
+  border-radius: 5px;
+  border: 1px solid #b85450;
+  width: 45%;
+  color: black;
+  text-align: center;
+  font-size: 15px;
+}
+
+.segunda-fila{
+  display: flex;
+  justify-content: space-around;
+  margin-top: 2%;
+}
+
+.container-cdp{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+}
+
+.input-container-cdp{
+  height: 25px;
+  margin: 0;
+  background-color: #f8cecc;
+  border-radius: 5px;
+  border: 1px solid #b85450;
+  width: 40%;
+  color: black;
+  text-align: center;
+  font-size: 15px;
+}
+
+.container-tipo-contrato{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 35%;
+}
+
+.input-tipo-contrato{
+  height: 25px;
+  margin: 0;
+  background-color: #f8cecc;
+  border-radius: 5px;
+  border: 1px solid #b85450;
+  width: 40%;
+  color: black;
+  text-align: center;
+  font-size: 15px;
+}
+
+.container-saldo{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 35%;
+}
+
+.input-saldo{
+  height: 25px;
+  margin: 0;
+  background-color: #f8cecc;
+  border-radius: 5px;
+  border: 1px solid #b85450;
+  width: 40%;
+  color: black;
+  text-align: center;
+  font-size: 15px;
+}
+
+.tercera-fila{
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 2%;
+}
+
+.container-crp{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 20%;
+}
+
+.input-crp{
+  height: 25px;
+  margin: 0;
+  background-color: #f8cecc;
+  border-radius: 5px;
+  border: 1px solid #b85450;
+  width: 40%;
+  color: black;
+  text-align: center;
+  font-size: 15px;
+}
+
+.container-total-contrato{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 35%;
+}
+
+.input-total-contrato{
+  height: 25px;
+  margin: 0;
+  background-color: #f8cecc;
+  border-radius: 5px;
+  border: 1px solid #b85450;
+  width: 40%;
+  color: black;
+  text-align: center;
+  font-size: 15px;
+}

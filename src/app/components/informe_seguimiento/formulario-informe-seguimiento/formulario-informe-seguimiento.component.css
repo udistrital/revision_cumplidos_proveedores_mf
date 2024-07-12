@@ -1,0 +1,221 @@
+.card-formulario-informe-seguimiento{
+  margin-top: 1%;
+  border-radius: 5px;
+}
+
+form{
+  display: flex;
+}
+
+.container-formulario-izquierda{
+  display: inline-block;
+  width: 50%;
+}
+
+.container-tipo-pago{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 6%;
+  margin-left: 6%;
+}
+
+.input-tipo-pago{
+  height: 50px;
+  margin: 0px;
+  padding: 0;
+  width: 30%;
+  text-align: center;
+}
+
+.icon-ayuda{
+  border-radius: 50%;
+  background-color: black;
+  padding: 0;
+}
+
+.labels{
+  color: black !important;
+  font-size: 20px;
+  padding: 10px 30px;
+}
+
+.container-fechas{
+	display: flex;
+	justify-content: start;
+	margin-left: 3%;
+  margin-bottom: 4%;
+}
+
+.selects-fecha {
+	margin-right: 2%;
+  width: 15%;
+  text-align: center;
+}
+
+.container-peridos{
+  width: 15%;
+  text-align: center;
+}
+
+.parrafo-fecha-final{
+  color: grey !important;
+  font-size: 20px;
+  padding: 10px 30px;
+}
+
+.ultimo_componente{
+  display: inline-block;
+  border: 2px solid #B59695;
+  padding: 4%;
+  margin-left: 6%;
+}
+
+.container-cuenta-cobro{
+  display: flex;
+}
+
+.label-ultimo-componente{
+  color: black !important;
+  font-size: 20px;
+  padding: 10px 30px;
+  width: 60%;
+}
+
+
+.select-cuenta-cobro{
+  width: 40%;
+  text-align: center;
+
+}
+
+.input-numero-cuenta{
+  width: 40%;
+}
+
+
+
+.container-numero-cuenta{
+  display: flex;
+}
+
+
+.container-formulario-medio{
+  display: inline-block;
+  width: 30%;
+  margin-left: 2%;
+}
+
+.container-valor-pagar{
+  display: flex;
+  justify-content: start;
+  margin-bottom: 2%;
+  align-items: first baseline;
+}
+
+.input-valor-pagar{
+  width: 40%;
+  text-align: center;
+}
+
+.container-informacion-bancaria{
+  display: inline-block;
+  border: 2px solid #B59695;
+  padding: 0 3%;
+}
+
+.titulo-informacion-bancaria{
+  text-align: start;
+  margin-top: 1%;
+  color: #98483c;
+  font-size: 2em;
+  margin-bottom: 4%;
+}
+
+.container-tipo-cuenta{
+  display: flex;
+}
+
+.labels-informacion-bancaria{
+  color: black !important;
+  font-size: 20px;
+  padding: 10px 30px 10px 0;
+}
+
+.label-numero-cuenta{
+  color: black !important;
+  font-size: 20px;
+  padding: 10px 30px 10px 0;
+
+}
+
+
+
+.input-informacion-bancaria{
+  width: 65%;
+  text-align: center;
+}
+
+.container-banco{
+  display: flex;
+}
+
+.input-banco{
+  width: 100%;
+  text-align: center;
+}
+
+.container-buttom-cambiar-informacion{
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.buttom-cambiar-informacion{
+  background-color: #f8cecc;
+  width: 40%;
+  height: 45px;
+  font-size: 16px;
+  border-radius: 10px;
+  margin-right: 4%;
+  margin-bottom: 2%;
+}
+
+.botones{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 80px;
+  margin-left: 30px;
+  margin-top: 40%;
+}
+
+.boton-guardar{
+  background-color: #f8cecc;
+  width: 100%;
+  height: 50px;
+  font-size: 16px;
+  border-radius: 10px;
+  margin-right: 4%;
+  margin-bottom: 2%;
+}
+
+.boton-ver{
+  background-color: #f8cecc;
+  width: 100%;
+  height: 50px;
+  font-size: 16px;
+  border-radius: 10px;
+  margin-right: 4%;
+  margin-bottom: 2%;
+}
+
+.boton-crear-informe{
+  background-color: #dae8fc;
+  width: 100%;
+  height: 50px;
+  font-size: 16px;
+  border-radius: 10px;
+  margin-right: 4%;
+  margin-bottom: 2%;
+}

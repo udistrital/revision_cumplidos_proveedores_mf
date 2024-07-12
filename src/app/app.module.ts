@@ -15,11 +15,14 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { VisualizarSoportesComponent } from './components/subir_soporte/visualizar-soportes/visualizar-soportes.component';
 import { SoporteCumplidoComponent } from './components/subir_soporte/soporte-cumplido/soporte-cumplido.component';
 import { CargarModalComponent } from './components/subir_soporte/cargar-modal/cargar-modal.component';
+import { ComponentePrincipalComponent } from './components/informe_seguimiento/componente-principal/componente-principal.component';
+import { InformacionContratoComponent } from './components/informe_seguimiento/informacion-contrato/informacion-contrato.component';
+import { FormularioInformeSeguimientoComponent } from './components/informe_seguimiento/formulario-informe-seguimiento/formulario-informe-seguimiento.component';
 
 
 @NgModule({
@@ -28,7 +31,10 @@ import { CargarModalComponent } from './components/subir_soporte/cargar-modal/ca
     SubirSoporteComponent,
     VisualizarSoportesComponent,
     SoporteCumplidoComponent,
-    CargarModalComponent
+    CargarModalComponent,
+    ComponentePrincipalComponent,
+    InformacionContratoComponent,
+    FormularioInformeSeguimientoComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +51,8 @@ import { CargarModalComponent } from './components/subir_soporte/cargar-modal/ca
     MatDialogModule,
     FlexLayoutModule,
     FormsModule,
-    MatGridListModule
+    MatGridListModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

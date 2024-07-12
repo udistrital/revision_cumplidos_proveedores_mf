@@ -1,0 +1,45 @@
+<mat-card class="card-informacion-contrato">
+    <mat-card-content>
+        <div class="primera-fila">
+          <div class="container-numero-contrato">
+            <p class="labels"> Número de Contrato </p>
+            <input matInput disabled="true" class="input-numero-contrato" [value]="informacion_contrato.numero_contrato">
+          </div>
+
+          <div class="container-nombre-proveedor">
+            <p class="labels"> Nombre del Proveedor </p>
+            <input matInput disabled="true" class="input-nombre-proveedor" [value]="informacion_contrato.nombre_proveedor">
+          </div>
+        </div>
+        <div class="segunda-fila">
+          <div class="container-cdp">
+            <p class="labels"> CDP </p>
+            <input matInput disabled="true" class="input-container-cdp" [value]="informacion_contrato.cdp">
+          </div>
+          <div class="container-tipo-contrato">
+            <p class="labels"> Tipo de Contrato </p>
+            <input matInput disabled="true" class="input-tipo-contrato" [value]="informacion_contrato.tipo_contrato">
+          </div>
+          <div class="container-saldo">
+            <p class="labels"> Saldo </p>
+            <input matInput disabled="true" class="input-saldo" [value]="informacion_contrato.saldo">
+          </div>
+        </div>
+        <div class="tercera-fila">
+          <div class="container-crp">
+            <p class="labels"> CRP </p>
+            <input matInput disabled="true" class="input-crp" [value]="informacion_contrato.crp">
+          </div>
+          <div class="container-total-contrato">
+            <p class="labels"> Total Contrato </p>
+            <input matInput disabled="true" class="input-total-contrato" [value]="informacion_contrato.total_contrato">
+          </div>
+        </div>
+    </mat-card-content>
+    <mat-card-actions align="start">
+
+
+    </mat-card-actions>
+    <mat-card-footer>
+    </mat-card-footer>
+</mat-card>
