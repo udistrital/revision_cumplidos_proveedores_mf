@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SubirSoporteComponent } from './components/subir_soporte/subir-soporte/subir-soporte.component'
@@ -23,7 +22,27 @@ import { CargarModalComponent } from './components/subir_soporte/cargar-modal/ca
 import { ComponentePrincipalComponent } from './components/informe_seguimiento/componente-principal/componente-principal.component';
 import { InformacionContratoComponent } from './components/informe_seguimiento/informacion-contrato/informacion-contrato.component';
 import { FormularioInformeSeguimientoComponent } from './components/informe_seguimiento/formulario-informe-seguimiento/formulario-informe-seguimiento.component';
+import {MatTableModule} from '@angular/material/table'
+import { TablaCargaSoportesComponent } from './components/carga-soportes/tabla-carga-soportes/tabla-carga-soportes.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { ModalCargaSoprotesComponent } from './components/carga-soportes/modal-carga-soprotes/modal-carga-soprotes.component';
+import { TablaAproabacionPagoComponent } from './components/aprobacion-soportes/ordenador/tabla-aprobacion-pago/tabla-aproabacion-pago.component';
+import {  ModalVerSoportesComponentContratacion} from './components/aprobacion-soportes/contratacion/modal-ver-soportes/modal-ver-soportes.component';
+import { ModalVerSoportesComponentOrdenador } from './components/aprobacion-soportes/ordenador/modal-ver-soportes/modal-ver-soportes.component';
+import { TablaAprobacionPagoComponent } from './components/aprobacion-soportes/contratacion/tabla-aprobacion-pago/tabla-aprobacion-pago.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { VerSoporteModalComponent } from './components/subir_soporte/ver-soporte-modal/ver-soporte-modal.component';
 
+
+
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -34,7 +53,14 @@ import { FormularioInformeSeguimientoComponent } from './components/informe_segu
     CargarModalComponent,
     ComponentePrincipalComponent,
     InformacionContratoComponent,
-    FormularioInformeSeguimientoComponent
+    FormularioInformeSeguimientoComponent,
+    TablaCargaSoportesComponent,
+    ModalCargaSoprotesComponent,
+    TablaAproabacionPagoComponent,
+    ModalVerSoportesComponentContratacion,
+    TablaAprobacionPagoComponent,
+    ModalVerSoportesComponentOrdenador,
+    VerSoporteModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,9 +78,20 @@ import { FormularioInformeSeguimientoComponent } from './components/informe_segu
     FlexLayoutModule,
     FormsModule,
     MatGridListModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatTableModule,
+    SweetAlert2Module,
+    HttpClientModule,
+    MatSnackBarModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

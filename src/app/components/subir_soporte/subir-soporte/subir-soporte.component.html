@@ -19,8 +19,8 @@
         <mat-grid-tile>
           <mat-form-field appearance="outline" class="grid-form">
             <mat-select [(ngModel)]="opcionSeleccionada" placeholder="--Seleccione el item del cual cargara soporte--">
-                <mat-option *ngFor="let opcion of opciones" [value]="opcion.viewValue">
-                  {{opcion.viewValue}}
+                <mat-option *ngFor="let opcion of opciones" [value]="opcion.IdTipoDocumento">
+                  {{opcion.Nombre}}
                 </mat-option>
             </mat-select>
           </mat-form-field>
@@ -39,23 +39,23 @@
     </div>
     <br>
     <div class="container-subir-documento">
-
+      <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" />
       <mat-form-field appearance="outline" class="input-subir-documento">
-        <input matInput placeholder="Seleccione el archivo ..." disabled="true">
+        <input matInput placeholder="Seleccione el archivo ..." [value]="fileName" disabled="true">
       </mat-form-field>
 
-      <button mat-button class="button-browse"> Browse ..</button>
+      <button mat-button class="button-browse" (click)="triggerFileInput()"> Browse ..</button>
 
     </div>
 
     <div class="container-remover-boton">
-      <button mat-button class="remover-button">Remover</button>
+      <button mat-button class="remover-button" (click)="removeFile()">Remover</button>
     </div>
 
     <br>
 
       <div class="container-cargar">
-        <button mat-button class="cargar-button">CARGAR SOPORTES</button>
+        <button mat-button class="cargar-button" (click)="uploadFile()">CARGAR SOPORTES</button>
       </div>
 
   </mat-card-content>

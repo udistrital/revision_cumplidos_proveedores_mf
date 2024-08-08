@@ -5,10 +5,7 @@
   <mat-card-content>
     <p class="spaced-paragraph">A continuación se muestran los soportes asociados al cumplido</p>
     <app-soporte-cumplido *ngFor="let soporte of soportes "
-    [nombre]="soporte.nombre"
-    [fecha]="soporte.fecha"
-    [item]="soporte.item"
-    [comentario]="soporte.comentario"
+    [soporte]="soporte"
     >
     </app-soporte-cumplido>
   </mat-card-content>

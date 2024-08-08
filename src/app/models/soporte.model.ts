@@ -3,4 +3,5 @@ export interface Soporte {
   fecha: Date;
   item: string;
   comentario: string;
+  archivo: string
 }

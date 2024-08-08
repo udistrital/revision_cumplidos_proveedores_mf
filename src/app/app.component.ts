@@ -13,15 +13,4 @@ export class AppComponent {
 
   constructor(public dialog: MatDialog) {}
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(CargarModalComponent, {
-      width: '53%',
-      height: '70%',
-      panelClass: 'custom-dialog-container'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
 }
