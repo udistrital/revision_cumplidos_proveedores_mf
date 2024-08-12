@@ -48,36 +48,36 @@ export class PopUpManager {
       icon: 'info',
       title: title,
       text: text,
-      confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+      confirmButtonText: this.translate.instant('Aceptar'),
     });
   }
 
   showSuccessAlert(text: string):Promise<any> {
     return Swal.fire({
       icon: 'success',
-      title: this.translate.instant('GLOBAL.operacion_exitosa'),
+      title: this.translate.instant('Operación exitosa'),
       text: text,
-      confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+      confirmButtonText: this.translate.instant('Aceptar'),
     });
   }
 
   showErrorAlert(text: string) {
     Swal.fire({
       icon: 'error',
-      title: this.translate.instant('GLOBAL.error'),
+      title: this.translate.instant('Error'),
       text: text,
-      confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+      confirmButtonText: this.translate.instant('Aceptar'),
     });
   }
 
-  showConfirmAlert(text: string, title: string = this.translate.instant('GLOBAL.atencion')): Promise<any> {
+  showConfirmAlert(text: string, title: string = this.translate.instant('Atención')): Promise<any> {
     return Swal.fire({
       title: title,
       text: text,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-      cancelButtonText: this.translate.instant('GLOBAL.cancelar'),
+      confirmButtonText: this.translate.instant('Aceptar'),
+      cancelButtonText: this.translate.instant('Cancelar'),
     });
   }
 
@@ -88,8 +88,8 @@ export class PopUpManager {
       icon: type,
       showCancelButton: cancelar,
       allowOutsideClick: !cancelar,
-      confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-      cancelButtonText: this.translate.instant('GLOBAL.cancelar'),
+      confirmButtonText: this.translate.instant('Aceptar'),
+      cancelButtonText: this.translate.instant('Cancelar'),
     });
   }
 
@@ -99,8 +99,8 @@ export class PopUpManager {
       html: form.html,
       showCancelButton: cancelar,
       allowOutsideClick: !cancelar,
-      confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-      cancelButtonText: this.translate.instant('GLOBAL.cancelar'),
+      confirmButtonText: this.translate.instant('Aceptar'),
+      cancelButtonText: this.translate.instant('Cancelar'),
       preConfirm: () => {
         const results: any = {};
         form.ids.forEach(id => {

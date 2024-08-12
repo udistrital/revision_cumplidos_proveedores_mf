@@ -36,8 +36,10 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { VerSoporteModalComponent } from './components/subir_soporte/ver-soporte-modal/ver-soporte-modal.component';
-
-
+import { SafeUrlPipe } from './pipes/safe-url.pipe';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { DatePipe } from '@angular/common';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -61,6 +63,7 @@ export function createTranslateLoader(http: HttpClient) {
     TablaAprobacionPagoComponent,
     ModalVerSoportesComponentOrdenador,
     VerSoporteModalComponent,
+    SafeUrlPipe,
   ],
   imports: [
     BrowserModule,
@@ -73,11 +76,13 @@ export function createTranslateLoader(http: HttpClient) {
     MatToolbarModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatNativeDateModule,
     MatIconModule,
     MatDialogModule,
     FlexLayoutModule,
     FormsModule,
     MatGridListModule,
+    MatDatepickerModule,
     ReactiveFormsModule,
     MatTableModule,
     SweetAlert2Module,
@@ -91,7 +96,7 @@ export function createTranslateLoader(http: HttpClient) {
       }
     }),
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

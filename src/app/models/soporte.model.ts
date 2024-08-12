@@ -1,6 +1,7 @@
 export interface Soporte {
+  Id: number;
   nombre: string;
-  fecha: Date;
+  fecha: string;
   item: string;
   comentario: string;
   archivo: string

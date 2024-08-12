@@ -4,5 +4,5 @@
   </button>
 </div>
 <div mat-dialog-content>
-  <iframe [src]="pdfSrc" width="100%" height="500px"></iframe>
+  <iframe [src]="pdfSrc | safeUrl" width="100%" height="500px"></iframe>
 </div>

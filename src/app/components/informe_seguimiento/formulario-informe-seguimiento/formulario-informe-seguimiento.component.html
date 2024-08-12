@@ -19,33 +19,17 @@
           <div class="container-fechas">
             <p class="labels"> FECHA: </p>
             <mat-form-field appearance="fill" class="selects-fecha">
-              <mat-select  formControlName="anio_inicio" placeholder="Año">
-                <mat-option *ngFor="let anio of anios" [value]="anio">
-                  {{anio}}
-                </mat-option>
-              </mat-select>
+              <input matInput [matDatepicker]="datepickerInicio" formControlName="fecha_inicio" placeholder="Fecha de inicio">
+              <mat-datepicker-toggle matSuffix [for]="datepickerInicio"></mat-datepicker-toggle>
+              <mat-datepicker #datepickerInicio></mat-datepicker>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="container-peridos">
-              <mat-select  formControlName="periodo_inicio" placeholder="Periodo">
-                <mat-option *ngFor="let periodo of periodos" [value]="periodo">
-                  {{periodo.nombre}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+
             <p class="parrafo-fecha-final"> Hasta </p>
+
             <mat-form-field appearance="fill" class="selects-fecha">
-              <mat-select  formControlName="anio_fin" placeholder="Año">
-                <mat-option *ngFor="let anio of anios" [value]="anio">
-                  {{anio}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="container-peridos">
-              <mat-select  formControlName="periodo_fin" placeholder="Periodo">
-                <mat-option *ngFor="let periodo of periodos" [value]="periodo">
-                  {{periodo.nombre}}
-                </mat-option>
-              </mat-select>
+              <input matInput [matDatepicker]="datepickerFin" formControlName="fecha_fin" placeholder="Fecha de fin">
+              <mat-datepicker-toggle matSuffix [for]="datepickerFin"></mat-datepicker-toggle>
+              <mat-datepicker #datepickerFin></mat-datepicker>
             </mat-form-field>
           </div>
           <div class="ultimo_componente">
@@ -115,8 +99,8 @@
         <div class="container-formulario-derecho">
           <div class="botones">
             <button class="boton-guardar" mat-button >Guardar</button>
-            <button class="boton-ver" mat-button >Ver</button>
-            <button class="boton-crear-informe" mat-button >Crear Informe</button>
+            <button type="button" class="boton-ver" mat-button (click)="VerInformeSegumiento()" >Ver</button>
+            <button type="submit" class="boton-crear-informe" mat-button >Crear Informe</button>
           </div>
         </div>
       </form>

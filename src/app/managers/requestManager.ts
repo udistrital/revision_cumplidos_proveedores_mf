@@ -58,7 +58,7 @@ export class RequestManager {
             ),
             catchError(this.errManager.handleError.bind(this)),
         );
-        
+
     }
 
     /**
@@ -109,6 +109,7 @@ export class RequestManager {
      * @returns Observable<any>
      */
     delete(endpoint: any, id: any) {
+      console.log(`${this.path}${endpoint}/${id}`)
         return this.http.delete<any>(`${this.path}${endpoint}/${id}`, this.httpOptions).pipe(
             catchError(this.errManager.handleError),
         );

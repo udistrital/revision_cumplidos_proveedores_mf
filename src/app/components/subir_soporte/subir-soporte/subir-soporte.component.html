@@ -54,9 +54,14 @@
 
     <br>
 
-      <div class="container-cargar">
-        <button mat-button class="cargar-button" (click)="uploadFile()">CARGAR SOPORTES</button>
-      </div>
+    <div class="container-cargar">
+      <button routerLink="/informe-seguimiento" mat-button class="cargar-button" *ngIf="opcionSeleccionada == 157; else cargarSoporte" (click)="crearDocumento()">
+        Crear Documento
+      </button>
+      <ng-template #cargarSoporte>
+        <button mat-button class="cargar-button" (click)="uploadFile()">Cargar Soporte</button>
+      </ng-template>
+    </div>
 
   </mat-card-content>
 </mat-card>

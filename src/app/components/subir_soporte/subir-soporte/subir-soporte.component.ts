@@ -1,6 +1,10 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
+import { SoportesServicesService } from 'src/app/services/soportes.services.service';
+import { Soporte } from 'src/app/models/soporte.model';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 
 
@@ -19,6 +23,7 @@ export class SubirSoporteComponent {
   fileName: string = '';
   idTipoDocumento!: number;
   solicitudPago!: number;
+  soportes: Soporte[] = []
 
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -26,6 +31,9 @@ export class SubirSoporteComponent {
   constructor(
     private cumplidosMidServices: CumplidosProveedoresMidService,
     private popUpManager: PopUpManager,
+    private soporteService: SoportesServicesService,
+    private router: Router,
+    private dialog: MatDialog
   ){
 
   }
@@ -84,6 +92,18 @@ export class SubirSoporteComponent {
     this.base64Output = '';
   }
 
+  cargarSoportes(cumplido_proveedor: number) {
+    this.soporteService.getDocumentosCumplidos(cumplido_proveedor)
+      .subscribe({
+        next: (soportes: Soporte[]) => {
+          this.soportes = soportes;
+        },
+        error: (error: any) => {
+          this.popUpManager.showAlert('Solicitud pago sin soportes','Por el momento no se han cargado documentos a esta solicitud de pago');
+        }
+      });
+  }
+
   uploadFile() {
     if (this.base64Output) {
       const payload = {
@@ -106,8 +126,13 @@ export class SubirSoporteComponent {
     } else {
       this.popUpManager.showErrorAlert('No se ha seleccionado ningún archivo');
     }
+    this.cargarSoportes(this.solicitudPago);
   }
 
+  crearDocumento() {
+    this.dialog.closeAll();
+    this.router.navigate(['/informe-seguimiento']);
+  }
 
 
 }

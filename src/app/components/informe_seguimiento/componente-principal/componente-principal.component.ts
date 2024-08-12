@@ -9,5 +9,11 @@ export class ComponentePrincipalComponent {
 
   title = 'Informe de seguimiento Proveedores'
 
+  constructor() { }
 
+  ngOnInit(): void {
+
+
+
+  }
 }

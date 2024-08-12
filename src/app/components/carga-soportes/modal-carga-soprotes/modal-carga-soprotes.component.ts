@@ -43,8 +43,8 @@ export class ModalCargaSoprotesComponent {
       if (contrato) {
         this.numeroContrato = contrato.numeroContrato;
         this.vigencia = contrato.vigencia;
-        this.numeroContrato = "026";
-        this.vigencia = "2024";
+        //this.numeroContrato = "026";
+        //this.vigencia = "2024";
 
 
         this.getSolicitudesContrato(this.numeroContrato, this.vigencia);
@@ -101,7 +101,7 @@ export class ModalCargaSoprotesComponent {
       .subscribe({
         next: (res: any) => {
           this.newCambioEstado = {
-            EstadoCumplidoId: 2,
+            EstadoCumplidoId: 1,
             CumplidoProveedorId: res.Data.Id,
             DocumentoResponsable: this.documento_supervisor,
             CargoResponsable: "Supervisor",
@@ -134,7 +134,7 @@ export class ModalCargaSoprotesComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+
     });
   }
 }

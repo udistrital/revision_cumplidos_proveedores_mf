@@ -49,7 +49,7 @@ form{
 
 .selects-fecha {
 	margin-right: 2%;
-  width: 15%;
+  width: 30%;
   text-align: center;
 }
 
@@ -219,3 +219,48 @@ form{
   margin-right: 4%;
   margin-bottom: 2%;
 }
+
+
+
+::ng-deep .mat-calendar-content {
+	padding: 0 8px 8px 8px;
+	outline: none;
+	height: 100%;
+}
+
+::ng-deep .mat-calendar-table {
+	border-spacing: 0;
+	border-collapse: collapse;
+	width: 100%;
+	height: 70%;
+}
+
+
+::ng-deep thead{
+  height: 20%;
+}
+
+
+::ng-deep th{
+  text-align: center;
+  padding: 0 0 0px 0;
+
+}
+
+::ng-deep .mat-calendar-table-header th {
+	text-align: center;
+	padding: 0 0 0px 0;
+
+}
+
+::ng-deep .mat-calendar-table-header-divider {
+	text-align: center;
+	padding: 0 0 0px 0;
+}
+
+::ng-deep .mat-calendar-table-header {
+	text-align: center;
+	padding: 0 0 0px 0;
+
+}
+

@@ -3,36 +3,36 @@
         <div class="primera-fila">
           <div class="container-numero-contrato">
             <p class="labels"> Número de Contrato </p>
-            <input matInput disabled="true" class="input-numero-contrato" [value]="informacion_contrato.numero_contrato">
+            <input matInput disabled="true" class="input-numero-contrato" [value]="contrato.numeroContrato">
           </div>
 
           <div class="container-nombre-proveedor">
             <p class="labels"> Nombre del Proveedor </p>
-            <input matInput disabled="true" class="input-nombre-proveedor" [value]="informacion_contrato.nombre_proveedor">
+            <input matInput disabled="true" class="input-nombre-proveedor" [value]="contrato.nombreProveedor" >
           </div>
         </div>
         <div class="segunda-fila">
           <div class="container-cdp">
             <p class="labels"> CDP </p>
-            <input matInput disabled="true" class="input-container-cdp" [value]="informacion_contrato.cdp">
+            <input matInput disabled="true" class="input-container-cdp" [value]="contrato.numeroCdp">
           </div>
           <div class="container-tipo-contrato">
             <p class="labels"> Tipo de Contrato </p>
-            <input matInput disabled="true" class="input-tipo-contrato" [value]="informacion_contrato.tipo_contrato">
+            <input matInput disabled="true" class="input-tipo-contrato" [value]="contrato.tipoContrato">
           </div>
           <div class="container-saldo">
             <p class="labels"> Saldo </p>
-            <input matInput disabled="true" class="input-saldo" [value]="informacion_contrato.saldo">
+            <input matInput disabled="true" class="input-saldo" [value]="contrato.saldo | currency:'$': 'symbol':'1.0'">
           </div>
         </div>
         <div class="tercera-fila">
           <div class="container-crp">
             <p class="labels"> CRP </p>
-            <input matInput disabled="true" class="input-crp" [value]="informacion_contrato.rp">
+            <input matInput disabled="true" class="input-crp" [value]="contrato.rp">
           </div>
           <div class="container-total-contrato">
             <p class="labels"> Total Contrato </p>
-            <input matInput disabled="true" class="input-total-contrato" [value]="informacion_contrato.total_contrato">
+            <input matInput disabled="true" class="input-total-contrato" [value]="contrato.total_contrato | currency:'$': 'symbol':'1.0'">
           </div>
         </div>
     </mat-card-content>

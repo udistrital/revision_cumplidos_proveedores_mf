@@ -1,4 +1,4 @@
-<mat-card class="soporte-cumplido-card">
+<mat-card class="soporte-cumplido-card" *ngFor="let soporte of soportes">
   <mat-card-header class="soporte-cumplido-header">
       <mat-card-title class="soporte-cumplido-title">{{ soporte.nombre }}</mat-card-title>
   </mat-card-header>
@@ -11,8 +11,8 @@
 
   </mat-card-content>
   <mat-card-footer class="soporte-cumplido-footer">
-      <button mat-button class="eliminar-button">Eliminar</button>
-      <button mat-button class="ver-documentos-button" (click)="verSoporte(soporte.archivo, soporte.nombre)"> VER DOCUMENTO</button>
+      <button mat-button class="eliminar-button" (click)="eliminarSoporte(soporte)">Eliminar</button>
+      <button mat-button class="ver-documentos-button" (click)="getDocument(soporte.archivo, soporte.nombre)"> VER DOCUMENTO</button>
   </mat-card-footer>
 </mat-card>
 

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { InformacionContrato } from 'src/app/models/informacion.contrato.model'
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
+import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service'
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 
@@ -11,13 +12,21 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 })
 export class InformacionContratoComponent {
 
-  numeroContrato!: string;
-  vigencia! : string;
+  contrato: InformacionContrato = {
+    numeroContrato: '',
+    nombreProveedor: '',
+    numeroCdp: 0,
+    tipoContrato: '',
+    rp: 0,
+    saldo: 0,
+    total_contrato: 0
+  };
+  vigencia!: string
 
-  informacion_contrato!: InformacionContrato
 
   constructor(
     private cumplidosMidServices: CumplidosProveedoresMidService,
+    private cumplidosCrudServices: CumplidosProveedoresCrudService,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
   ) {
@@ -26,31 +35,34 @@ export class InformacionContratoComponent {
   }
 
   ngOnInit() {
-    this.cumplidosMidServices.contrato$.subscribe((contrato: any) => {
-      this.numeroContrato = contrato.Contrato.NumeroContratoSuscrito;
-      this.vigencia = contrato.Contrato.Vigencia;
-      this.informacion_contrato.numero_contrato =  this.numeroContrato;
-      this.informacion_contrato.nombre_proveedor = contrato.Contrato.NombreProveedor;
-      this.informacion_contrato.cdp = contrato.Contrato.NumeroCdp;
-      this.informacion_contrato.tipo_contrato = contrato.Contrato.TipoContrato;
-      this.informacion_contrato.rp = contrato.Contrato.NumeroRp;
-    }
-    );
-    console.log(this.informacion_contrato)
-    this.getInformacionContrato();
+    this.cumplidosMidServices.contrato$.subscribe(contrato => {
+      if (contrato){
+        this.contrato.nombreProveedor = contrato.Contrato.NombreProveedor;
+        this.contrato.numeroContrato = contrato.Contrato.NumeroContratoSuscrito;
+        this.contrato.numeroCdp = contrato.Contrato.NumeroCdp;
+        this.contrato.rp = contrato.Contrato.NumeroRp;
+        this.contrato.tipoContrato = contrato.Contrato.TipoContrato;
+        this.vigencia = contrato.Contrato.Vigencia;
+      }else{
+        this.popUpManager.showErrorAlert('No se registra informacion del contrato');
+      }
+    })
+
+    this.getBalanceFinanciero(this.contrato.numeroContrato, this.vigencia)
 
   }
 
 
-  getInformacionContrato(){
-    this.cumplidosMidServices.get('balance-financiero-contrato/' + this.numeroContrato + '/' + this.vigencia)
+
+  getBalanceFinanciero(numero_contrato: string, vigencia: string){
+    this.cumplidosMidServices.get(`/supervisor/balance-financiero-contrato/${numero_contrato}/${vigencia}`)
     .subscribe({
       next: (res: any) => {
-        this.informacion_contrato.saldo = res.Data.saldo;
-        this.informacion_contrato.total_contrato = res.Data.total_contrato;
+        this.contrato.saldo = res.Data.saldo
+        this.contrato.total_contrato = res.Data.total_contrato
       },
-      error: (err: any) => {
-        this.popUpManager.showErrorAlert(this.translate.instant('Error al consultar el balance financiero del contrato'));
+      error: (error: any) => {
+        this.popUpManager.showErrorAlert('No se ha podido obtener el balance financiero')
       }
     })
   }

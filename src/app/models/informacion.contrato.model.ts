@@ -1,9 +1,9 @@
 export interface InformacionContrato {
-  numero_contrato: string,
-  nombre_proveedor: string,
-  cdp: number,
-  tipo_contrato: string,
-  saldo: number,
+  numeroContrato: string,
+  nombreProveedor: string,
+  numeroCdp: number,
+  tipoContrato: string,
   rp: number,
+  saldo: number,
   total_contrato: number
 }

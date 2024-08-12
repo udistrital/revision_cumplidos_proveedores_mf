@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ver-soporte-modal',
@@ -9,14 +8,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class VerSoporteModalComponent {
 
-  pdfSrc: SafeResourceUrl;
+  pdfSrc: string;
 
   constructor(
     public dialogRef: MatDialogRef<VerSoporteModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { base64: string, fileName: string },
-    private sanitizer: DomSanitizer
+    @Inject(MAT_DIALOG_DATA) public data: { fileURL: string },
   ) {
-    this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`data:application/pdf;base64,${data.base64}`);
+    this.pdfSrc = data.fileURL;
   }
 
   close(): void {
