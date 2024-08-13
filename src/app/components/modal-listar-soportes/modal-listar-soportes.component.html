@@ -18,7 +18,7 @@
           <p>A continuacion Se muestran los soportes asocciados al cumplido</p>
         </div>
         <div>
-          <mat-card-content *ngFor="let documento of documentos">
+          <mat-card-content *ngFor="let documento of soportesCumplido">
             <div  >
               <mat-card >
                 <div>
@@ -27,25 +27,25 @@
                       <div class="container">
                         <div class="column">
                           <div>
-                            <p class="nombre-documento">{{documento.name}}</p>
+                            <p class="nombre-documento">{{documento.Documento.Nombre}}</p>
                           </div>
                           <div>
-                            <p>Comentario Informe</p>
+                            <p>{{documento.Documento.Observaciones}}</p>
                           </div>
                         </div>
                         <div class="column">
                           <div>Observaciones</div>
                           <div>
-                            <textarea> </textarea>
+                            <textarea [(ngModel)]="observacion"> </textarea>
                           </div>
                         </div>
                       </div>
                       <div class="container-button">
                         <div class="m-4">
-                          <a mat-button color="primary">Ver documento</a>
+                          <a mat-button color="primary" (click)="openVerSoporte(documento.Archivo.File)">Ver documento</a>
                         </div>
                         <div class="m-4">
-                          <a mat-button color="primary" (click)="enviarComnetario()">Enviar Observaciones</a>
+                          <a mat-button color="primary" (click)="enviarComentario(documento.Documento.Id)">Enviar Observaciones</a>
                         </div>
                       </div>
                     </div>

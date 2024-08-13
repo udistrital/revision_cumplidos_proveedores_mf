@@ -15,10 +15,13 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import {MatSelectModule} from '@angular/material/select';
 import { ModalCargaSoprotesComponent } from './components/carga-soportes/modal-carga-soprotes/modal-carga-soprotes.component'; 
 import { TablaAproabacionPagoComponent } from './components/aprobacion-soportes/ordenador/tabla-aprobacion-pago/tabla-aproabacion-pago.component'; 
-import {  ModalVerSoportesComponentContratacion} from './components/aprobacion-soportes/contratacion/modal-ver-soportes/modal-ver-soportes.component';
-import { ModalVerSoportesComponentOrdenador } from './components/aprobacion-soportes/ordenador/modal-ver-soportes/modal-ver-soportes.component';
 import { TablaAprobacionPagoComponent } from './components/aprobacion-soportes/contratacion/tabla-aprobacion-pago/tabla-aprobacion-pago.component'; 
-
+import { HttpClientModule } from '@angular/common/http';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ModalVerSoporteComponent } from './components/modal-ver-soporte/modal-ver-soporte.component';
+import { SafeUrlPipe } from './pipes/safeurl.pipe';
+import { ModalListarSoportes } from './components/modal-listar-soportes/modal-listar-soportes.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,14 +29,15 @@ import { TablaAprobacionPagoComponent } from './components/aprobacion-soportes/c
     TablaCargaSoportesComponent,
     ModalCargaSoprotesComponent,
     TablaAproabacionPagoComponent,
-    ModalVerSoportesComponentContratacion,
     TablaAprobacionPagoComponent,
-    ModalVerSoportesComponentOrdenador,
+    ModalVerSoporteComponent,
+    SafeUrlPipe,
+    ModalListarSoportes,
   ],
   imports: [
 
 
-
+    HttpClientModule,
   BrowserModule,
     AppRoutingModule,
     MatButtonModule,
@@ -46,6 +50,8 @@ import { TablaAprobacionPagoComponent } from './components/aprobacion-soportes/c
     MatSelectModule,
     BrowserAnimationsModule,
     SweetAlert2Module ,
+    MatSnackBarModule,
+    FormsModule 
   ],
   providers: [],
   bootstrap: [AppComponent]
