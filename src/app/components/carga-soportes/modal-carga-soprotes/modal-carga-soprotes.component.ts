@@ -9,6 +9,7 @@ import { UserService } from 'src/app/services/user.services';
 import { CargarModalComponent } from 'src/app/components/subir_soporte/cargar-modal/cargar-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 
+
 @Component({
   selector: 'app-modal-carga-soprotes',
   templateUrl: './modal-carga-soprotes.component.html',
@@ -137,4 +138,5 @@ export class ModalCargaSoprotesComponent {
 
     });
   }
+
 }

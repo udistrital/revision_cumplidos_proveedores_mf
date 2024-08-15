@@ -40,11 +40,14 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
+import { ModalVerSoporteComponent } from './components/modal-ver-soporte/modal-ver-soporte.component';
+import { ModalListarSoportes } from './components/modal-listar-soportes/modal-listar-soportes.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
 }
+
 
 @NgModule({
   declarations: [
@@ -64,8 +67,11 @@ export function createTranslateLoader(http: HttpClient) {
     ModalVerSoportesComponentOrdenador,
     VerSoporteModalComponent,
     SafeUrlPipe,
+    ModalVerSoporteComponent,
+    ModalListarSoportes
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

@@ -6,6 +6,7 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { UserService } from 'src/app/services/user.services';
 
+
 @Component({
   selector: 'app-tabla-carga-soportes',
   templateUrl: './tabla-carga-soportes.component.html',
@@ -75,8 +76,6 @@ export class TablaCargaSoportesComponent {
       width:"80%"
     });
   }
-
-
 
   displayedColumns: string[] = ['numeroContrato', 'vigencia', 'rp', 'vigenciaRp', 'nombreProveedor', 'dependencias', 'acciones'];
 
