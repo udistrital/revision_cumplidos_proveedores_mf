@@ -11,7 +11,7 @@ import { TablaAproabacionPagoComponent } from './components/aprobacion-soportes/
 
 export const routes: Routes = [
   {
-    path:'subir-soportes',
+    path:'supervisor/subir-soportes',
     component: TablaCargaSoportesComponent,
   },
   {

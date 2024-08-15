@@ -45,7 +45,7 @@ export class ModalListarSoportes {
         const  observacionData= new Observacion(cambioEstado.CumplidoProveedorId.Id.toString(),cambioEstado.EstadoCumplidoId.Id.toString(),this.observacion);
         this.observacion="";
         console.log(observacionData)
-        this.generalService.post("solicitud-pago/comentario-soporte",observacionData).subscribe((response)=>{
+        this.generalService.post("/solicitud-pago/comentario-soporte",observacionData).subscribe((response)=>{
           this.alerts.showSuccessAlert("Comentario Guardado", "Se ha guardado el comentario en el documento")
         });
       }catch(error){

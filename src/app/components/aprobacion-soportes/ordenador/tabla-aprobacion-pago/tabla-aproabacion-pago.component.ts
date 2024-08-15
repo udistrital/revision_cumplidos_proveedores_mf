@@ -174,7 +174,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
 
   CambiarEstado(cambioEstado: CambioEstado) {
     this.ordenadorService
-      .post('solicitud-pago/cambio-estado', cambioEstado)
+      .post('/solicitud-pago/cambio-estado', cambioEstado)
       .subscribe(
         (response) => {
           console.log(response);
@@ -206,7 +206,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
 
   GenerarAutotizacionDePago(cumplidoId: number): Observable<number | null> {
     return this.ordenadorService
-      .get('ordenador/certificado-aprobacion-pago/' + cumplidoId)
+      .get('/ordenador/certificado-aprobacion-pago/' + cumplidoId)
       .pipe(
         map((response: any) => {
           if (response.Data != null && response.Data.length > 0) {
