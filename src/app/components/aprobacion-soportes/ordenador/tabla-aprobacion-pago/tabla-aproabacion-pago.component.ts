@@ -6,7 +6,7 @@ import { Cumplido } from 'src/app/models/cumplido';
 import { SoporteCumplido } from 'src/app/models/soporte_cumplido';
 import { catchError, map, Observable, of } from 'rxjs';
 import { CambioEstado } from 'src/app/models/cambio-estado';
-import { AutorizacioPago } from 'src/app/models/autorizacion-de-pago';
+import { CertificadoPago } from 'src/app/models/certificado-pago';
 import { ModalListarSoportes } from 'src/app/components/modal-listar-soportes/modal-listar-soportes.component';
 import { GeneralService } from 'src/app/services/generalService.service';
 import { ModalVerSoporteComponent } from 'src/app/components/modal-ver-soporte/modal-ver-soporte.component';
@@ -86,11 +86,12 @@ export class TablaAproabacionPagoComponent implements OnInit {
       idCumplido
     ).toPromise()
     if (autorizacionPago != null) {
-      this.openVerSoporte(autorizacionPago.toString(), idCumplido);
+      this.openVerSoporte(autorizacionPago, idCumplido);
     }
+  
   }
 
-  async aprobarSoporte(idCumplido: number, autorizacionPago: string) {
+  async cargarSoporte(idCumplido: number, autorizacionPago: string) {
     try {
       let x = await this.alertService.alertConfirm(
         '¿Esta seguro de aprobar los soportes?'
@@ -101,33 +102,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
 
         if (idEstado === null || idEstado === undefined) {
           throw new Error('El ID obtenido es nulo o indefinido.');
-        } else {
-          if (autorizacionPago != null) {
-            const autorizacionDePago = new AutorizacioPago(
-              idCumplido,
-              'application/pdf',
-              168,
-              'Se aprueba pago desde contratacion',
-              'Autorizacion de pago',
-              autorizacionPago.toString()
-            );
-            const cambioEstado = new CambioEstado(
-              idEstado,
-              idCumplido,
-              '52622477',
-              'Contratacion'
-            );
-
-            this.cargarAutotizacionDePago(autorizacionDePago);
-            this.CambiarEstado(cambioEstado);
-          }
-
-          this.CargarTablaCumplidos();
-          this.alertService.showSuccessAlert(
-            'Aprobado',
-            '!Se han aprobado los soportes!'
-          );
-        }
+        } 
       } else {
         this.alertService.showCancelAlert(
           'Cancelado',
@@ -205,7 +180,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
       );
   }
 
-  GenerarAutotizacionDePago(cumplidoId: number): Observable<number | null> {
+  GenerarAutotizacionDePago(cumplidoId: number): Observable<CertificadoPago | null> {
   
     return this.ordenadorService
       .get('/ordenador/certificado-aprobacion-pago/' + cumplidoId)
@@ -213,7 +188,11 @@ export class TablaAproabacionPagoComponent implements OnInit {
         map((response: any) => {
           if (response.Data != null) {
         
-            return response.Data.Archivo;
+            return new CertificadoPago(response.Data.NombreArchivo,
+              response.Data.NombreResponsable ,
+               response.Data.CargoResponsable, 
+               response.Data.DescripcionDocumento, 
+               response.Data.Archivo);
           }
           return null;
         }),
@@ -224,7 +203,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
       );
   }
 
-  cargarAutotizacionDePago(autorizacionPago: AutorizacioPago) {
+  cargarAutotizacionDePago(autorizacionPago: CertificadoPago) {
     this.ordenadorService
       .post(`solicitud-pago/soportes`, autorizacionPago)
       .subscribe(
@@ -237,7 +216,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
       );
   }
 
-  openVerSoporte(pdfBase64: string, idCumplido: number) {
+  openVerSoporte(autorizacionPago: CertificadoPago, idCumplido: number) {
     this.dialog.open(ModalVerSoporteComponent, {
       disableClose: true,
       height: '70vh',
@@ -246,11 +225,13 @@ export class TablaAproabacionPagoComponent implements OnInit {
       maxHeight: '80vh',
       panelClass: 'custom-dialog-container',
       data: {
-        base64: pdfBase64,
+        autorizacionPago: autorizacionPago,
         aprobarSoportes: true,
         idCumplido: idCumplido,
+        tipoDocumento:168,
+        base64:File,
         funcionAprobar: (id: number, base64: string) =>
-          this.aprobarSoporte(id, base64),
+          this.cargarSoporte(id, base64),
       },
     });
   }

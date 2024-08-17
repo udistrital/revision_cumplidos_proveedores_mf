@@ -8,7 +8,7 @@ import { RequestManager } from '../managers/requestManager';
   providedIn: 'root',
 })
 
-export class GeneralService{
+export class Service{
 
     constructor(private requestManager:RequestManager){
         this.requestManager.setPath('CUMPLIDOS_PROVEEDORES_MID_SERVICE');
@@ -32,12 +32,23 @@ export class GeneralService{
         return this.requestManager.post(endpoint, element);
       }
 
+      
+    postCumplidosProveedoresCrud(endpoint: any, element: any) {
+        this.requestManager.setPath('CUMPLIDOS_PROVEEDORES_CRUD_SERVICE');
+        return this.requestManager.post(endpoint, element);
+      }
       getDocumnetosCrud(endpoint : any){
         this.requestManager.setPath("DOCUMENTOS_CRUD");
         return this.requestManager.get(endpoint);
     }
 
 
+
+    postFirmaElectronica (endpoint:any , element :any){ 
+        this.requestManager.setPath('FIRMA_ELECTRONICA_MID');
+    return this.requestManager.post(endpoint, element); 
+
+}
 
 
 
