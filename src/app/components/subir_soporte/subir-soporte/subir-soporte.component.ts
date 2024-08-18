@@ -131,7 +131,7 @@ export class SubirSoporteComponent {
 
   crearDocumento() {
     this.dialog.closeAll();
-    this.router.navigate(['/informe-seguimiento']);
+    this.router.navigate(['/informe-seguimiento',this.solicitudPago]);
   }
 
 

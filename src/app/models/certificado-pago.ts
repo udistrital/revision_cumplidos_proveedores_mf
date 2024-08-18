@@ -1,4 +1,4 @@
-export class CertificadoPago {
+export class SolicituDeFirma {
     NombreArchivo: string;
     NombreResponsable: string;
     CargoResponsable: string;

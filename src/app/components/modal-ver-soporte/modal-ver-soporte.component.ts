@@ -4,9 +4,10 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AletManagerService } from 'src/app/managers/alet-manager.service';
 import { GeneralService } from 'src/app/services/generalService.service';
 import { Cumplido } from 'src/app/models/cumplido';
-import { CertificadoPago } from 'src/app/models/certificado-pago';
+import { SolicituDeFirma } from 'src/app/models/certificado-pago';
 import { Documento } from './../../models/soporte_cumplido';
 import { Service } from './../../services/service.service';
+import { TokenService } from 'src/app/utils.ts/info_token';
 
 @Component({
   selector: 'app-modal-ver-soportes',
@@ -20,24 +21,27 @@ export class ModalVerSoporteComponent  {
   base64 :string
   aprobarSoportes:boolean;
   idCumplido:number
-  autorizacionPago:CertificadoPago;
+  autorizacionPago:SolicituDeFirma;
   tipoDocumento:number
-
+  payload = TokenService.getPayload();
+  cargoResponsable:string;
 
   constructor(public dialogRef:MatDialogRef<ModalVerSoporteComponent>,
     private alertService: AletManagerService,
     public dialog: MatDialog,
     private generalService:Service,
-    @Inject(MAT_DIALOG_DATA) public data: { autorizacionPago: CertificadoPago , aprobarSoportes:boolean,idCumplido:number,base64:string, tipoDocumento:number,funcionAprobar: (id: number, base64: string) => void;  } 
+    @Inject(MAT_DIALOG_DATA) public data: { documentoAFirmar:SolicituDeFirma ,
+      cargoResponsable:string, aprobarSoportes:boolean,idCumplido:number,base64:string, tipoDocumento:number,funcionAprobar: (id: number, base64: string) => void;  } 
 
   ) {
+    this.cargoResponsable=data.cargoResponsable;
     this.base64=data.base64
-    this.autorizacionPago=data.autorizacionPago;
+    this.autorizacionPago=data.documentoAFirmar;
     this.idCumplido = data.idCumplido != null ? data.idCumplido : 0;
     if(this.autorizacionPago==null){
       this.pdfSrc = `data:application/pdf;base64,${data.base64}`;
     }else{
-      this.pdfSrc = `data:application/pdf;base64,${data.autorizacionPago.Archivo}`;
+      this.pdfSrc = `data:application/pdf;base64,${data.documentoAFirmar.Archivo}`;
     }
     this.aprobarSoportes=data.aprobarSoportes!=null? data.aprobarSoportes: false;
     this.tipoDocumento=data.tipoDocumento
@@ -61,6 +65,7 @@ export class ModalVerSoporteComponent  {
 
 
    firmarDocumento(){
+    console.log(this.autorizacionPago)
     const documentosAFirmarArray = [
       {
         IdTipoDocumento: this.tipoDocumento, 
@@ -69,9 +74,9 @@ export class ModalVerSoporteComponent  {
         firmantes: [
           {
             nombre: this.autorizacionPago.NombreResponsable,
-            cargo: "Ordenador del gasto",
-            tipoId: "cc",
-            identificacion: "1111111"
+            cargo: this.cargoResponsable,
+            tipoId: this.payload?.documento_compuesto.replace(/[^A-Za-z]/g, ''),
+            identificacion: this.payload?.documento,
           }
         ], 
         representantes: [],
@@ -79,7 +84,9 @@ export class ModalVerSoporteComponent  {
         file: this.autorizacionPago.Archivo
       }
     ];
-    
+    console.log("------")
+    console.log(this.payload)
+    console.log("------")
     
 
      this.generalService.postFirmaElectronica("/firma_electronica",documentosAFirmarArray)
@@ -100,8 +107,6 @@ export class ModalVerSoporteComponent  {
      );
 
       }
-  
-
 
       registarSoportePagoFirmado(respuesta: any) {
 

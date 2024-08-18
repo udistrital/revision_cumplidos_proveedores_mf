@@ -6,7 +6,7 @@ import { Cumplido } from 'src/app/models/cumplido';
 import { SoporteCumplido } from 'src/app/models/soporte_cumplido';
 import { catchError, map, Observable, of } from 'rxjs';
 import { CambioEstado } from 'src/app/models/cambio-estado';
-import { CertificadoPago } from 'src/app/models/certificado-pago';
+import { SolicituDeFirma } from 'src/app/models/certificado-pago';
 import { ModalListarSoportes } from 'src/app/components/modal-listar-soportes/modal-listar-soportes.component';
 import { GeneralService } from 'src/app/services/generalService.service';
 import { ModalVerSoporteComponent } from 'src/app/components/modal-ver-soporte/modal-ver-soporte.component';
@@ -86,7 +86,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
       idCumplido
     ).toPromise()
     if (autorizacionPago != null) {
-      this.openVerSoporte(autorizacionPago, idCumplido);
+      this.modalVerSoporte(autorizacionPago, idCumplido);
     }
   
   }
@@ -180,20 +180,23 @@ export class TablaAproabacionPagoComponent implements OnInit {
       );
   }
 
-  GenerarAutotizacionDePago(cumplidoId: number): Observable<CertificadoPago | null> {
+  GenerarAutotizacionDePago(cumplidoId: number): Observable<SolicituDeFirma | null> {
   
     return this.ordenadorService
       .get('/ordenador/certificado-aprobacion-pago/' + cumplidoId)
       .pipe(
         map((response: any) => {
           if (response.Data != null) {
-        
-            return new CertificadoPago(response.Data.NombreArchivo,
+              console.log(response)
+            return new SolicituDeFirma(
+      
+              response.Data.NombreArchivo,
               response.Data.NombreResponsable ,
                response.Data.CargoResponsable, 
                response.Data.DescripcionDocumento, 
                response.Data.Archivo);
           }
+          console.log()
           return null;
         }),
         catchError((error) => {
@@ -203,7 +206,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
       );
   }
 
-  cargarAutotizacionDePago(autorizacionPago: CertificadoPago) {
+  cargarAutotizacionDePago(autorizacionPago: SolicituDeFirma) {
     this.ordenadorService
       .post(`solicitud-pago/soportes`, autorizacionPago)
       .subscribe(
@@ -216,7 +219,10 @@ export class TablaAproabacionPagoComponent implements OnInit {
       );
   }
 
-  openVerSoporte(autorizacionPago: CertificadoPago, idCumplido: number) {
+  modalVerSoporte(autorizacionPago: SolicituDeFirma, idCumplido: number) {
+    console.log("---")
+    console.log(autorizacionPago)
+    console.log("----")
     this.dialog.open(ModalVerSoporteComponent, {
       disableClose: true,
       height: '70vh',
@@ -225,11 +231,12 @@ export class TablaAproabacionPagoComponent implements OnInit {
       maxHeight: '80vh',
       panelClass: 'custom-dialog-container',
       data: {
-        autorizacionPago: autorizacionPago,
+        documentoAFirmar: autorizacionPago,
         aprobarSoportes: true,
         idCumplido: idCumplido,
         tipoDocumento:168,
-        base64:File,
+        base64:autorizacionPago.Archivo,
+        cargoResponsable:"Ordenador",
         funcionAprobar: (id: number, base64: string) =>
           this.cargarSoporte(id, base64),
       },

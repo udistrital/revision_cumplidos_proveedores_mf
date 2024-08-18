@@ -5,6 +5,9 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { UtilsService } from 'src/app/services/utils.service';
+import { SolicituDeFirma } from 'src/app/models/certificado-pago';
+import { ModalVerSoporteComponent } from '../../modal-ver-soporte/modal-ver-soporte.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-formulario-informe-seguimiento',
@@ -18,6 +21,8 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
   vigencia!: string;
   pdfBase64!: string;
   nameFile!: string;
+  solicituDeFirma!:SolicituDeFirma;
+  cumplidoId!:number
 
   constructor(
     private fg: FormBuilder,
@@ -25,13 +30,17 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
     private popUpManager: PopUpManager,
     private dialog: MatDialog,
     private datePipe: DatePipe,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private route:ActivatedRoute
 
   ) {}
 
   ngOnInit() {
 
-
+    this.route.paramMap.subscribe(params => {
+      const idParam = params.get('cumplidoId');
+      this.cumplidoId = idParam ? +idParam : 0;
+    });
     this.formularioInformeSeguimiento = this.fg.group({
       "tipo_pago": new FormControl("", Validators.required),
       "fecha_inicio": "",
@@ -101,10 +110,26 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
       this.cumplidosMidServices.post('/supervisor/informe-seguimiento', body)
       .subscribe({
         next: (res: any) => {
-          this.pdfBase64 = res.Data.file;
-          this.nameFile = res.Data.prueba
+
+          this.solicituDeFirma= new SolicituDeFirma(res.Data.NombreArchivo,
+            res.Data.NombreResponsable ,
+            res.Data.CargoResponsable, 
+            res.Data.DescripcionDocumento, 
+            res.Data.Archivo);
+  
+          this.pdfBase64 = this.solicituDeFirma.Archivo;
+          this.nameFile = this.solicituDeFirma.NombreArchivo;
+          console.log("#-----")
+          console.log(this.solicituDeFirma.Archivo)
+          console.log("#-----")
+          
           this.popUpManager.showSuccessAlert('Informe de seguimiento creado exitosamente');
+          console.log("#-----")
+          console.log(this.solicituDeFirma)
+          console.log("#-----")
+          
         },
+        
         error: (error: any) => {
           this.popUpManager.showErrorAlert('Error al crear el informe de seguimiento');
         }
@@ -114,32 +139,26 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
     }
   }
 
-  VerInformeSegumiento(){
-    if (this.pdfBase64 === undefined) {
-      this.popUpManager.showErrorAlert('No se ha generado el informe de seguimiento');
-      return;
-    } else {
-      const arrayBuffer = this.utilsService.base64ToArrayBuffer(this.pdfBase64);
-      const file = new Blob([arrayBuffer], { type: 'application/pdf' });
-      const fileURL = URL.createObjectURL(file);
 
-      /*
-      const dialogRef = this.dialog.open(VerSoporteModalComponent, {
-        width: '53%',
-        height: '70%',
-        panelClass: 'custom-dialog-container',
-        data: { fileURL: fileURL }
-      });
-
-      */
-
-      window.open(
-        fileURL,
-        this.nameFile,
-        "resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=800,height=900"
-      );
-    }
-
+  modalVerSoporte() {
+    this.dialog.open(ModalVerSoporteComponent, {
+      disableClose: true,
+      height: '70vh',
+      width: '40vw',
+      maxWidth: '60vw',
+      maxHeight: '80vh',
+      panelClass: 'custom-dialog-container',
+      data: {
+        documentoAFirmar: this.solicituDeFirma,
+        aprobarSoportes: true,
+        idCumplido: this.cumplidoId,
+        tipoDocumento:168,
+        base64:this.pdfBase64,
+        cargoResponsable:"Supervisor",
+      },
+    });
   }
+
+
 
 }

@@ -15,7 +15,7 @@ export const routes: Routes = [
     component: TablaCargaSoportesComponent,
   },
   {
-    path: 'informe-seguimiento',
+    path: 'informe-seguimiento/:cumplidoId',
     component: ComponentePrincipalComponent,
   },
   {

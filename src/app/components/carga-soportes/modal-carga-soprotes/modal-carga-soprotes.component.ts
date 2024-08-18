@@ -127,11 +127,15 @@ export class ModalCargaSoprotesComponent {
   }
 
   openDialog(cumplido: any) {
+    console.log("cumplido"+cumplido);
     this.cumplidosMidServices.getCumplidoProveedor(cumplido);
     const dialogRef = this.dialog.open(CargarModalComponent, {
       width: '53%',
       height: '70%',
-      panelClass: 'custom-dialog-container'
+      panelClass: 'custom-dialog-container',
+      data:{
+        cumplido:cumplido
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
