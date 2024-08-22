@@ -6,7 +6,8 @@ import { AletManagerService } from 'src/app/managers/alet-manager.service';
 import { CambioEstadoCumplido, CumplidoProveedor, EstadoCumplido } from 'src/app/models/cambio-estado-cumplido';
 import { Observacion } from 'src/app/models/observacion';
 import { SoporteCumplido } from 'src/app/models/soporte_cumplido';
-import { GeneralService } from 'src/app/services/generalService.service';
+import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
+import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 @Component({
   selector: 'app-modal-listar-soportes-contratacion',
   templateUrl: './modal-listar-soportes.component.html',
@@ -17,13 +18,14 @@ import { GeneralService } from 'src/app/services/generalService.service';
 
 export class ModalListarSoportes {
   soportesCumplido:SoporteCumplido[] = []
-  observacion:string="";
+  observaciones: { [key: number]: string } = {};
   idCumplido:number=0;
 
   constructor(private alerts:AletManagerService,
     public dialog:MatDialog,
     public dialogRef: MatDialogRef<ModalListarSoportes>,
-    private generalService:GeneralService,
+    private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
+    private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
     @Inject (MAT_DIALOG_DATA) public data:{soporteCumplido:SoporteCumplido[], idCumplido: number}
   ){
     this.soportesCumplido = data.soporteCumplido;
@@ -42,10 +44,10 @@ export class ModalListarSoportes {
     if(enviarComnetario.isConfirmed && cambioEstado!=null){
 
       try{
-        const  observacionData= new Observacion(cambioEstado.CumplidoProveedorId.Id.toString(),cambioEstado.EstadoCumplidoId.Id.toString(),this.observacion);
-        this.observacion="";
-        console.log(observacionData)
-        this.generalService.post("/solicitud-pago/comentario-soporte",observacionData).subscribe((response)=>{
+        const  observacionData= new Observacion(cambioEstado.CumplidoProveedorId.Id.toString(),cambioEstado.EstadoCumplidoId.Id.toString(),this.observaciones[soporteId]);
+        this.observaciones[soporteId]="";
+
+        this.cumplidos_provedore_mid_service.post("/solicitud-pago/comentario-soporte",observacionData).subscribe((response)=>{
           this.alerts.showSuccessAlert("Comentario Guardado", "Se ha guardado el comentario en el documento")
         });
       }catch(error){
@@ -57,8 +59,8 @@ export class ModalListarSoportes {
    }
 
    ObtenerCambioEstado(idCumplido: number): Observable<CambioEstadoCumplido | null> {
-    return this.generalService
-      .getCumplidosProveedoresCrud(
+    return this.cumplidos_provedore_crud_service
+      .get(
         `/cambio_estado_cumplido/?query=CumplidoProveedorId.id:${idCumplido},Activo:true`
       )
       .pipe(

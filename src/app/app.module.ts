@@ -27,8 +27,6 @@ import { TablaCargaSoportesComponent } from './components/carga-soportes/tabla-c
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ModalCargaSoprotesComponent } from './components/carga-soportes/modal-carga-soprotes/modal-carga-soprotes.component';
 import { TablaAproabacionPagoComponent } from './components/aprobacion-soportes/ordenador/tabla-aprobacion-pago/tabla-aproabacion-pago.component';
-import {  ModalVerSoportesComponentContratacion} from './components/aprobacion-soportes/contratacion/modal-ver-soportes/modal-ver-soportes.component';
-import { ModalVerSoportesComponentOrdenador } from './components/aprobacion-soportes/ordenador/modal-ver-soportes/modal-ver-soportes.component';
 import { TablaAprobacionPagoComponent } from './components/aprobacion-soportes/contratacion/tabla-aprobacion-pago/tabla-aprobacion-pago.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
@@ -62,9 +60,7 @@ export function createTranslateLoader(http: HttpClient) {
     TablaCargaSoportesComponent,
     ModalCargaSoprotesComponent,
     TablaAproabacionPagoComponent,
-    ModalVerSoportesComponentContratacion,
     TablaAprobacionPagoComponent,
-    ModalVerSoportesComponentOrdenador,
     VerSoporteModalComponent,
     SafeUrlPipe,
     ModalVerSoporteComponent,

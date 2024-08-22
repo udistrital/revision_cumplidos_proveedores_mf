@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { AletManagerService } from 'src/app/managers/alet-manager.service';
 import { MatDialog } from '@angular/material/dialog';
-import { GeneralService } from 'src/app/services/generalService.service';
 import { Cumplido } from 'src/app/models/cumplido';
 import { SoporteCumplido } from 'src/app/models/soporte_cumplido';
 import { catchError, map, Observable, of } from 'rxjs';
 import { CambioEstado } from 'src/app/models/cambio-estado';
 import { ModalListarSoportes } from 'src/app/components/modal-listar-soportes/modal-listar-soportes.component';
+import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
+import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-tabla-aprobacion-pago-contratacion',
@@ -20,7 +22,8 @@ export class TablaAprobacionPagoComponent {
   constructor(
     private alertService: AletManagerService,
     public dialog: MatDialog,
-    private contratacionService: GeneralService
+    private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
+    private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
   ) {
     this.CargarTablaCumplidos();
   }
@@ -38,9 +41,10 @@ export class TablaAprobacionPagoComponent {
 
   CargarTablaCumplidos() {
     this.solicitudes = [];
-
-    this.contratacionService.get('/contratacion/solicitudes-pago/').subscribe(
+    this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
+    this.cumplidos_provedore_mid_service.get('/contratacion/solicitudes-pago/').subscribe(
       (response: any) => {
+        Swal.close();
         if (response.Data != null && response.Data.length > 0) {
           this.solicitudes = response.Data;
         } else {
@@ -48,16 +52,18 @@ export class TablaAprobacionPagoComponent {
         }
       },
       (error) => {
-        console.log('error', error);
+        this.alertService.showCancelAlert("Error Al consultar", "Se produjo " + error +" al consultar")
         this.solicitudes = [];
       }
     );
   }
 
-  ListarSoportes(id: number) {
-    this.contratacionService.get('/solicitud-pago/soportes/' + id).subscribe(
+  ListarSoportes(idCumplido: number) {
+    this.alertService.showLoadingAlert("Cargando", "Espera mientras se listan los documentos")
+    this.cumplidos_provedore_mid_service.get('/solicitud-pago/soportes/' + idCumplido).subscribe(
       (response: any) => {
         if (response.Data.length > 0) {
+          Swal.close()
           this.soporte_cumplido = response.Data;
           this.dialog.open(ModalListarSoportes, {
             disableClose: true,
@@ -66,7 +72,7 @@ export class TablaAprobacionPagoComponent {
             maxWidth: '60vw',
             maxHeight: '80vh',
             panelClass: 'custom-dialog-container',
-            data: { soporteCumplido: this.soporte_cumplido },
+            data: { soporteCumplido: this.soporte_cumplido,idCumplido: idCumplido },
           });
         }
       },
@@ -77,11 +83,11 @@ export class TablaAprobacionPagoComponent {
   }
 
   async aprobarSoportes(idCumplido: number) {
-    let x = await this.alertService.alertConfirm(
+    let confirm = await this.alertService.alertConfirm(
       '¿Esta seguro de aprobar los soportes?'
     );
     console.log(idCumplido);
-    if (x.isConfirmed) {
+    if (confirm.isConfirmed) {
       try{
 
       const idEstado = await this.ObtenerEstadoId('PRO').toPromise();
@@ -101,7 +107,7 @@ export class TablaAprobacionPagoComponent {
             '52622477',
             'Contratacion'
           );
-      ///    this.CambiarEstado(cambioEstado);
+           this.CambiarEstado(cambioEstado);
           this.CargarTablaCumplidos();
 
       }
@@ -135,12 +141,11 @@ export class TablaAprobacionPagoComponent {
       const cambioEstado = new CambioEstado(
         id,
         idCumplido,
-        '111111',
+        '',
         'Contratacion'
       );
       this.CambiarEstado(cambioEstado);
 
-      this.contratacionService;
       this.alertService.showSuccessAlert(
         'Rehzadado',
         '!Se han rechazado los soprtes!'
@@ -154,7 +159,7 @@ export class TablaAprobacionPagoComponent {
   }
 
   CambiarEstado(cambioEstado: CambioEstado) {
-    this.contratacionService
+    this.cumplidos_provedore_mid_service
       .post('solicitud-pago/cambio-estado', cambioEstado)
       .subscribe(
         (response) => {
@@ -167,8 +172,8 @@ export class TablaAprobacionPagoComponent {
   }
 
   ObtenerEstadoId(codigoAbreviacion: string): Observable<number | null> {
-    return this.contratacionService
-      .getCumplidosProveedoresCrud(
+    return this.cumplidos_provedore_mid_service
+      .get(
         `/estado_cumplido?query=CodigoAbreviación:${codigoAbreviacion}`
       )
       .pipe(
@@ -186,8 +191,8 @@ export class TablaAprobacionPagoComponent {
   }
 
   ObternerIdTipoDocumento(codigoAbreviacion: string) {
-    return this.contratacionService
-      .getDocumnetosCrud(
+    return this.cumplidos_provedore_crud_service
+      .get(
         `tipo_documento/?query=DominioTipoDocumento.CodigoAbreviacion:CUMP_PROV,CodigoAbreviacion:${codigoAbreviacion}`
       )
       .pipe(

@@ -2,12 +2,12 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AletManagerService } from 'src/app/managers/alet-manager.service';
-import { GeneralService } from 'src/app/services/generalService.service';
-import { Cumplido } from 'src/app/models/cumplido';
 import { SolicituDeFirma } from 'src/app/models/certificado-pago';
-import { Documento } from './../../models/soporte_cumplido';
-import { Service } from './../../services/service.service';
 import { TokenService } from 'src/app/utils.ts/info_token';
+import { FirmaElectronicaService } from 'src/app/services/firma_electronica_mid.service';
+import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
+import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-ver-soportes',
@@ -29,9 +29,11 @@ export class ModalVerSoporteComponent  {
   constructor(public dialogRef:MatDialogRef<ModalVerSoporteComponent>,
     private alertService: AletManagerService,
     public dialog: MatDialog,
-    private generalService:Service,
+    private firmaElectronica:FirmaElectronicaService,
+    private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
+    private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
     @Inject(MAT_DIALOG_DATA) public data: { documentoAFirmar:SolicituDeFirma ,
-      cargoResponsable:string, aprobarSoportes:boolean,idCumplido:number,base64:string, tipoDocumento:number,funcionAprobar: (id: number, base64: string) => void;  } 
+      cargoResponsable:string, aprobarSoportes:boolean,idCumplido:number,base64:string, tipoDocumento:number,funcionAprobar: (id: number) => void;  } 
 
   ) {
     this.cargoResponsable=data.cargoResponsable;
@@ -50,7 +52,7 @@ export class ModalVerSoporteComponent  {
 
   aprobarContratacion() {
     if (typeof this.data.funcionAprobar === 'function') {
-      this.data.funcionAprobar(this.idCumplido, this.pdfSrc);
+      this.data.funcionAprobar(this.idCumplido);
     }
     this.dialogRef.close()
   }
@@ -84,17 +86,16 @@ export class ModalVerSoporteComponent  {
         file: this.autorizacionPago.Archivo
       }
     ];
-    console.log("------")
-    console.log(this.payload)
-    console.log("------")
-    
 
-     this.generalService.postFirmaElectronica("/firma_electronica",documentosAFirmarArray)
+   this.alertService.showLoadingAlert("Firmando", "Espera mientras el documento se firma")
+
+     this.firmaElectronica.post("/firma_electronica",documentosAFirmarArray)
      .subscribe(
       (response:any)=>{
         
         if(response && response.res){
-        
+        Swal.close();
+        this.aprobarContratacion();
         this.registarSoportePagoFirmado(response.res)
       
         }
@@ -110,13 +111,15 @@ export class ModalVerSoporteComponent  {
 
       registarSoportePagoFirmado(respuesta: any) {
 
+        this.alertService.showLoadingAlert("Cargando", "Espera mientras el documento se carga")
           const documento = {
             DocumentoId: respuesta.Id,
             CumplidoProveedorId: { id: this.idCumplido },
           };
-          this.generalService.postCumplidosProveedoresCrud("/soporte_cumplido", documento).subscribe(
+          this.cumplidos_provedore_crud_service.post("/soporte_cumplido", documento).subscribe(
             response => {
              this.buscarSoporteFirmado(respuesta.Id);
+             
             },
             error => {
               console.error('Error al registrar soporte de pago:', error);
@@ -128,7 +131,7 @@ export class ModalVerSoporteComponent  {
       async buscarSoporteFirmado(idDocumento: number) {
         try {
           
-            const response: any = await this.generalService.get(`/solicitud-pago/soportes/${this.idCumplido}`).toPromise();
+            const response: any = await this.cumplidos_provedore_mid_service.get(`/solicitud-pago/soportes/${this.idCumplido}`).toPromise();
             console.log('Respuesta completa:', response);
         
   
@@ -139,6 +142,7 @@ export class ModalVerSoporteComponent  {
                 if (this.dialogRef) {
                   this.dialogRef.close();
                 }
+                Swal.close()
                 this.openVerSoporte(this.idCumplido);
             }
         } catch (error) {

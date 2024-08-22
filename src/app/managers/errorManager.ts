@@ -7,33 +7,46 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   providedIn: 'root',
 })
 export class HttpErrorManager {
-  constructor(
-
-    public snack: MatSnackBar,
-   ) {}
+  constructor(private snack: MatSnackBar) {}
 
   public handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
+      console.error('Error del lado del cliente:', error.error.message);
+      this.snack.open('Error del cliente. Por favor, verifique su conexión a la red.', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
     } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-
+      // Maneja errores del servidor
       console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: `, error.error);
+        `Código de estado ${error.status}, ` +
+        `cuerpo del error: ${JSON.stringify(error.error)}`
+      );
+      this.snack.open(this.getErrorMessage(error), 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
     }
-    // return an observable with a user-facing error message
-    if(error.status === 200){
-      return []
-    }else {
-      return throwError(error.error/* {
-        status: error.status,
-        System: error.error.System,
-        message: 'Something bad happened; please try again later.',
-      } */);
-    }
-  };
-}
 
+    return throwError(() => new Error(this.getErrorMessage(error)));
+  }
+
+  private getErrorMessage(error: HttpErrorResponse): string {
+    switch (error.status) {
+      case 0:
+        return 'Error desconocido. Por favor, verifique su conexión a la red.';
+      case 400:
+        return 'Solicitud incorrecta. Por favor, revise su entrada.';
+      case 401:
+        return 'No autorizado. Por favor, inicie sesión para acceder a este recurso.';
+      case 403:
+        return 'Prohibido. No tiene permiso para acceder a este recurso.';
+      case 404:
+        return 'No encontrado. El recurso solicitado no pudo ser encontrado.';
+      case 500:
+        return 'Error interno del servidor. Por favor, intente de nuevo más tarde.';
+      default:
+        return 'Ocurrió un error inesperado. Por favor, intente de nuevo más tarde.';
+    }
+  }
+}

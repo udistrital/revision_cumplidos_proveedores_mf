@@ -31,6 +31,31 @@ alertConfirm(tile:string): Promise<any>{
 
 }
 
+
+showLoadingAlert(title: string, message: string): Promise<any> {
+  return Swal.fire({
+    title: title,
+    text: message,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+    allowOutsideClick: false,
+    width: '400px',
+  });
+}
+
+showInfoAlert(title: string, message: string): Promise<any> {
+  return Swal.fire({
+    icon: 'info',
+    title: title,
+    text: message,
+    confirmButtonText: 'Aceptar',
+    width: '400px',
+    confirmButtonColor: '#358227',
+    allowOutsideClick: false,
+  });
+}
+
 showSuccessAlert(title:string,message: string) {
   Swal.fire({
     icon: 'success',

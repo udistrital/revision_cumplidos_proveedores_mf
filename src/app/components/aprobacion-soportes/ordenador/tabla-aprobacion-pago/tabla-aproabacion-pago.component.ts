@@ -8,8 +8,10 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { CambioEstado } from 'src/app/models/cambio-estado';
 import { SolicituDeFirma } from 'src/app/models/certificado-pago';
 import { ModalListarSoportes } from 'src/app/components/modal-listar-soportes/modal-listar-soportes.component';
-import { GeneralService } from 'src/app/services/generalService.service';
 import { ModalVerSoporteComponent } from 'src/app/components/modal-ver-soporte/modal-ver-soporte.component';
+import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
+import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-tabla-aproabacion-pago',
@@ -23,7 +25,8 @@ export class TablaAproabacionPagoComponent implements OnInit {
   constructor(
     private alertService: AletManagerService,
     public dialog: MatDialog,
-    private ordenadorService: GeneralService
+    private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
+    private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
   ) {}
   ngOnInit(): void {
     this.CargarTablaCumplidos();
@@ -41,9 +44,10 @@ export class TablaAproabacionPagoComponent implements OnInit {
 
   CargarTablaCumplidos() {
     this.solicitudes = [];
-
-    this.ordenadorService.get('/ordenador/solicitudes-pago/52622477').subscribe(
+    this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
+    this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/52622477').subscribe(
       (response: any) => {
+        Swal.close();
         if (response.Data != null && response.Data.length > 0) {
           this.solicitudes = response.Data;
         } else {
@@ -51,6 +55,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
         }
       },
       (error) => {
+        this.alertService.showCancelAlert("Error al consultar","Se produjo un error"+error);
         console.log('error', error);
         this.solicitudes = [];
       }
@@ -58,8 +63,10 @@ export class TablaAproabacionPagoComponent implements OnInit {
   }
 
   ListarSoportes(idCumplido: number) {
-    this.ordenadorService.get('/solicitud-pago/soportes/' + idCumplido).subscribe(
+    this.alertService.showLoadingAlert("Cargando", "Espera mientras se listan los documentos")
+    this.cumplidos_provedore_mid_service.get('/solicitud-pago/soportes/' + idCumplido).subscribe(
       (response: any) => {
+        Swal.close()
         if (response.Data.length > 0) {
           this.soporte_cumplido = response.Data;
           this.dialog.open(ModalListarSoportes, {
@@ -75,7 +82,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
         }
       },
       (error) => {
-        console.log('error', error);
+        this.alertService.showCancelAlert("Error alcargar documentos","Se peodujo"+ error)
       }
     );
   }
@@ -91,24 +98,24 @@ export class TablaAproabacionPagoComponent implements OnInit {
   
   }
 
-  async cargarSoporte(idCumplido: number, autorizacionPago: string) {
+  async aprobarCumplido(idCumplido: number) {
     try {
-      let x = await this.alertService.alertConfirm(
-        '¿Esta seguro de aprobar los soportes?'
-      );
-
-      if (x.isConfirmed) {
+    
+      alert("Se cargara")
         const idEstado = await this.ObtenerEstadoId('AO').toPromise();
 
         if (idEstado === null || idEstado === undefined) {
           throw new Error('El ID obtenido es nulo o indefinido.');
         } 
-      } else {
-        this.alertService.showCancelAlert(
-          'Cancelado',
-          'No se han aprobado los soportes!'
+
+        const cambioEstado = new CambioEstado(
+          idEstado,
+          idCumplido,
+          '52622477',
+          'Contratacion'
         );
-      }
+        this.CambiarEstado(cambioEstado);
+     
     } catch (error) {
       this.alertService.showCancelAlert(
         'Cancelado',
@@ -117,12 +124,12 @@ export class TablaAproabacionPagoComponent implements OnInit {
     }
   }
 
-  async rechazarSoportes(idCumplido: number) {
-    let x = await this.alertService.alertConfirm(
+  async rechazarCumplido(idCumplido: number) {
+    let confirm = await this.alertService.alertConfirm(
       '¿Esta seguro de Rechazar los soportes?'
     );
 
-    if (x.isConfirmed) {
+    if (confirm.isConfirmed) {
       const id = await this.ObtenerEstadoId('RO').toPromise();
 
       if (id === null || id === undefined) {
@@ -131,7 +138,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
       const cambioEstado = new CambioEstado(
         id,
         idCumplido,
-        '111111',
+        '',
         'Contratacion'
       );
 
@@ -149,10 +156,11 @@ export class TablaAproabacionPagoComponent implements OnInit {
   }
 
   CambiarEstado(cambioEstado: CambioEstado) {
-    this.ordenadorService
+    this.cumplidos_provedore_mid_service
       .post('/solicitud-pago/cambio-estado', cambioEstado)
       .subscribe(
         (response) => {
+          console.log(cambioEstado)
           console.log(response);
         },
         (error) => {
@@ -162,8 +170,8 @@ export class TablaAproabacionPagoComponent implements OnInit {
   }
 
   ObtenerEstadoId(codigoAbreviacion: string): Observable<number | null> {
-    return this.ordenadorService
-      .getCumplidosProveedoresCrud(
+    return this.cumplidos_provedore_crud_service
+      .get(
         `/estado_cumplido?query=CodigoAbreviación:${codigoAbreviacion}`
       )
       .pipe(
@@ -182,7 +190,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
 
   GenerarAutotizacionDePago(cumplidoId: number): Observable<SolicituDeFirma | null> {
   
-    return this.ordenadorService
+    return this.cumplidos_provedore_mid_service
       .get('/ordenador/certificado-aprobacion-pago/' + cumplidoId)
       .pipe(
         map((response: any) => {
@@ -207,7 +215,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
   }
 
   cargarAutotizacionDePago(autorizacionPago: SolicituDeFirma) {
-    this.ordenadorService
+    this.cumplidos_provedore_mid_service
       .post(`solicitud-pago/soportes`, autorizacionPago)
       .subscribe(
         (response) => {
@@ -238,7 +246,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
         base64:autorizacionPago.Archivo,
         cargoResponsable:"Ordenador",
         funcionAprobar: (id: number, base64: string) =>
-          this.cargarSoporte(id, base64),
+          this.aprobarCumplido(id),
       },
     });
   }
