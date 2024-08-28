@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { AletManagerService } from 'src/app/managers/alet-manager.service';
+import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { MatDialog } from '@angular/material/dialog';
-import { Cumplido } from 'src/app/models/cumplido';
-import { SoporteCumplido } from 'src/app/models/soporte_cumplido';
+import { Cumplido } from 'src/app/models/cumplido.model';
 import { catchError, map, Observable, of } from 'rxjs';
-import { CambioEstado } from 'src/app/models/cambio-estado';
+import { CambioEstado } from 'src/app/models/cambio-estado.model';
 import { ModalListarSoportes } from 'src/app/components/modal-listar-soportes/modal-listar-soportes.component';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import Swal from 'sweetalert2';
+import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
 
 @Component({
   selector: 'app-tabla-aprobacion-pago-contratacion',

@@ -2,12 +2,12 @@ import { Component, Inject, Input } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { catchError, map, Observable, of } from 'rxjs';
 import { ModalVerSoporteComponent } from 'src/app/components/modal-ver-soporte/modal-ver-soporte.component';
-import { AletManagerService } from 'src/app/managers/alet-manager.service';
-import { CambioEstadoCumplido, CumplidoProveedor, EstadoCumplido } from 'src/app/models/cambio-estado-cumplido';
-import { Observacion } from 'src/app/models/observacion';
-import { SoporteCumplido } from 'src/app/models/soporte_cumplido';
+import { AletManagerService } from 'src/app/managers/alert-manager.service';
+import { CambioEstadoCumplido, CumplidoProveedor, EstadoCumplido } from 'src/app/models/cambio-estado-cumplido.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
+import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
+import { Observacion } from 'src/app/models/observacion.model';
 @Component({
   selector: 'app-modal-listar-soportes-contratacion',
   templateUrl: './modal-listar-soportes.component.html',

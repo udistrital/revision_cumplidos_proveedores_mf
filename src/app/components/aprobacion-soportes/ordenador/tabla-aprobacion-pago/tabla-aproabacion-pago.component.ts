@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AletManagerService } from 'src/app/managers/alet-manager.service';
+import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Cumplido } from 'src/app/models/cumplido';
-import { SoporteCumplido } from 'src/app/models/soporte_cumplido';
+import { Cumplido } from 'src/app/models/cumplido.model';
+import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
 import { catchError, map, Observable, of } from 'rxjs';
-import { CambioEstado } from 'src/app/models/cambio-estado';
-import { SolicituDeFirma } from 'src/app/models/certificado-pago';
+import { CambioEstado } from 'src/app/models/cambio-estado.model';
+import { SolicituDeFirma } from 'src/app/models/certificado-pago.model';
 import { ModalListarSoportes } from 'src/app/components/modal-listar-soportes/modal-listar-soportes.component';
 import { ModalVerSoporteComponent } from 'src/app/components/modal-ver-soporte/modal-ver-soporte.component';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';

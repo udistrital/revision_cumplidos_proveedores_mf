@@ -6,6 +6,7 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { SoportesServicesService } from 'src/app/services/soportes.services.service';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { ModalVerSoporteComponent } from '../../modal-ver-soporte/modal-ver-soporte.component';
 
 @Component({
   selector: 'app-soporte-cumplido',
@@ -51,28 +52,22 @@ export class SoporteCumplidoComponent {
       });
   }
 
-  getDocument(documentBase64: string, nameWindow: string) {
-    const arrayBuffer = this.utilsService.base64ToArrayBuffer(documentBase64);
-    const file = new Blob([arrayBuffer], { type: 'application/pdf' });
-    const fileURL = URL.createObjectURL(file);
 
-    /*
-    const dialogRef = this.dialog.open(VerSoporteModalComponent, {
-      width: '53%',
-      height: '70%',
+
+  openVerSoporte(pdfBase64: string) {
+    this.dialog.open(ModalVerSoporteComponent, {
+      disableClose: true,
+      height: '70vh',
+      width: '50vw',
+      maxWidth: '60vw',
+      maxHeight: '80vh',
       panelClass: 'custom-dialog-container',
-      data: { fileURL: fileURL }
+      data: { base64: pdfBase64 }
     });
-
-    */
-
-    window.open(
-      fileURL,
-      nameWindow,
-      "resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=yes,scrollbars=yes,dependent=no,width=800,height=900"
-    );
-
   }
+
+
+
 
   eliminarSoporte(soporte: any){
     console.log(soporte)

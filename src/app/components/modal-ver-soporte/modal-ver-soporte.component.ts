@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { AletManagerService } from 'src/app/managers/alet-manager.service';
-import { SolicituDeFirma } from 'src/app/models/certificado-pago';
+import { AletManagerService } from 'src/app/managers/alert-manager.service'; 
+import { SolicituDeFirma } from 'src/app/models/certificado-pago.model';
 import { TokenService } from 'src/app/utils.ts/info_token';
 import { FirmaElectronicaService } from 'src/app/services/firma_electronica_mid.service';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
@@ -66,46 +66,59 @@ export class ModalVerSoporteComponent  {
   }
 
 
-   firmarDocumento(){
-    console.log(this.autorizacionPago)
-    const documentosAFirmarArray = [
-      {
-        IdTipoDocumento: this.tipoDocumento, 
-        nombre: this.autorizacionPago.NombreArchivo,
-        metadatos: {observaciones:`documento de pago para el proveedor ${this.autorizacionPago.NombreArchivo}`}, 
-        firmantes: [
+   async firmarDocumento(){
+
+
+console.log(this.autorizacionPago.NombreResponsable)
+      const confirm = await this.alertService.alertConfirm("¿Estas seguro de firmar el documento?");
+      if(confirm.isConfirmed){
+
+        console.log(this.tipoDocumento)
+        console.log("",this.autorizacionPago.NombreArchivo)
+        console.log("nombre archivo",this.autorizacionPago.NombreArchivo)
+        console.log("nombre responsable ",this.autorizacionPago.NombreResponsable)
+    
+        const documentosAFirmarArray = [
           {
-            nombre: this.autorizacionPago.NombreResponsable,
-            cargo: this.cargoResponsable,
-            tipoId: this.payload?.documento_compuesto.replace(/[^A-Za-z]/g, ''),
-            identificacion: this.payload?.documento,
+            IdTipoDocumento: this.tipoDocumento, 
+            nombre: this.autorizacionPago.NombreArchivo,
+            metadatos: {observaciones:`documento de pago para el proveedor ${this.autorizacionPago.NombreArchivo}`}, 
+            firmantes: [
+              {
+                nombre: this.autorizacionPago.NombreResponsable,
+                cargo: this.cargoResponsable,
+                tipoId: this.payload?.documento_compuesto.replace(/[^A-Za-z]/g, ''),
+                identificacion: this.payload?.documento,
+              }
+            ], 
+            representantes: [],
+            descripcion: this.autorizacionPago.DescripcionDocumento,
+            file: this.autorizacionPago.Archivo
           }
-        ], 
-        representantes: [],
-        descripcion: this.autorizacionPago.DescripcionDocumento,
-        file: this.autorizacionPago.Archivo
-      }
-    ];
-
-   this.alertService.showLoadingAlert("Firmando", "Espera mientras el documento se firma")
-
-     this.firmaElectronica.post("/firma_electronica",documentosAFirmarArray)
-     .subscribe(
-      (response:any)=>{
-        
-        if(response && response.res){
-        Swal.close();
-        this.aprobarContratacion();
-        this.registarSoportePagoFirmado(response.res)
-      
-        }
-       
-      },
-      error=>{
-        console.log(error)
-      }
+        ];
+      console.log(documentosAFirmarArray)
+       this.alertService.showLoadingAlert("Firmando", "Espera mientras el documento se firma")
+    
+         this.firmaElectronica.post("/firma_electronica",documentosAFirmarArray)
+         .subscribe(
+          (response:any)=>{
             
-     );
+            if(response && response.res){
+            Swal.close();
+            this.aprobarContratacion();
+            this.registarSoportePagoFirmado(response.res)
+          
+            }
+           
+          },
+          error=>{
+            console.log(error)
+          }
+                
+         );
+      }else{
+        this.alertService.showCancelAlert("Cancelado","No se firmo el documento")
+      }
 
       }
 

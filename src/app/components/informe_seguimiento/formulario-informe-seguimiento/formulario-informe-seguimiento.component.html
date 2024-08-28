@@ -10,8 +10,8 @@
             <p class="labels"> TIPO DE PAGO: </p>
             <mat-form-field appearance="outline" class="input-tipo-pago">
               <mat-select  formControlName="tipo_pago">
-                <mat-option *ngFor="let tipo_pago of tipos_pago" [value]="tipo_pago">
-                  {{tipo_pago.nombre}}
+                <mat-option *ngFor="let tipo_pago of listaTipoDePago" [value]="tipo_pago">
+                  {{tipo_pago.Nombre}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -34,11 +34,11 @@
           </div>
           <div class="ultimo_componente">
             <div class="container-cuenta-cobro">
-              <p class="label-ultimo-componente"> FACTURA ELECTRONICA DE VENTA O CUENTA DE COBRO </p>
+              <p class="label-ultimo-componente"> TIPO DE COBRO</p>
               <mat-form-field class="select-cuenta-cobro">
-                <mat-select formControlName="cuenta_cobro" placeholder="-- Tipo">
-                    <mat-option *ngFor="let cuenta_cobro of cuentas_cobro" [value]="cuenta_cobro">
-                      {{ cuenta_cobro.nombre }}
+                <mat-select formControlName="tipo_cobro" placeholder="-- Tipo">
+                    <mat-option *ngFor="let tipo_cobro of listaDocumentoCobro" [value]="tipo_cobro">
+                      {{ tipo_cobro.Nombre }}
                     </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -47,7 +47,7 @@
             <div class="container-numero-cuenta">
               <p class="label-ultimo-componente"> NÚMERO DE CUENTA O FACTURA </p>
               <mat-form-field class="input-numero-cuenta">
-                    <input matInput formControlName="numero_cuenta" type="text">
+                    <input matInput formControlName="numero_factura" type="text">
               </mat-form-field>
             </div>
           </div>
@@ -60,17 +60,31 @@
             </svg>
             <p class="labels"> VALOR A PAGAR:  </p>
             <mat-form-field class="input-valor-pagar">
-              <input matInput formControlName="valor_pagar" type="text">
+              <input matInput formControlName="valor_cumplido" type="text">
             </mat-form-field>
           </div>
           <div class="container-informacion-bancaria">
+
+            
             <p class="titulo-informacion-bancaria"> Información bancaria </p>
+            <div class="container-banco">
+              <p class="labels-informacion-bancaria"> BANCO:  </p>
+              <mat-select formControlName="banco" >
+                <mat-option *ngFor="let banco of listaBancos" [value]="banco">
+                  {{banco.NombreBanco}}
+                </mat-option>
+                 
+              </mat-select>
+    
+            </div>
             <div class="container-tipo-cuenta">
               <p class="labels-informacion-bancaria"> TIPO DE CUENTA: </p>
+
+              
               <mat-form-field class="select-tipo-cuenta">
                 <mat-select formControlName="tipo_cuenta">
-                    <mat-option *ngFor="let tipo_cuenta of tipos_cuenta" [value]="tipo_cuenta">
-                      {{ tipo_cuenta.nombre }}
+                    <mat-option *ngFor="let tipo_cuenta of listaTiposCuentaBancaria" [value]="tipo_cuenta">
+                      {{ tipo_cuenta.Nombre }}
                     </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -78,15 +92,10 @@
             <div class="container-numero-cuenta">
               <p class="label-numero-cuenta"> N° CUENTA:  </p>
               <mat-form-field class="input-informacion-bancaria">
-                <input matInput formControlName="visualizar_numero_cuenta" type="text">
+                <input matInput formControlName="numero_cuenta" type="text">
               </mat-form-field>
             </div>
-            <div class="container-banco">
-              <p class="labels-informacion-bancaria"> BANCO:  </p>
-              <mat-form-field class="input-banco">
-                <input matInput formControlName="banco" type="text">
-              </mat-form-field>
-            </div>
+            
             <div class="container-buttom-cambiar-informacion">
               <button type="submit" class="buttom-cambiar-informacion" >Cambiar información</button>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" class="icon-ayuda" >
@@ -98,7 +107,7 @@
         </div>
         <div class="container-formulario-derecho">
           <div class="botones">
-            <button class="boton-guardar" mat-button >Guardar</button>
+            <button class="boton-guardar"  type="button" mat-button  (click)="guardarIformacionPago()">Guardar</button>
             <button type="button" class="boton-ver" mat-button (click)="modalVerSoporte()" >Ver</button>
             <button type="submit" class="boton-crear-informe" mat-button >Crear Informe</button>
           </div>

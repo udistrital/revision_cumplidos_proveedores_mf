@@ -12,7 +12,7 @@
   </mat-card-content>
   <mat-card-footer class="soporte-cumplido-footer">
       <button mat-button class="eliminar-button" (click)="eliminarSoporte(soporte)">Eliminar</button>
-      <button mat-button class="ver-documentos-button" (click)="getDocument(soporte.archivo, soporte.nombre)"> VER DOCUMENTO</button>
+      <button mat-button class="ver-documentos-button" (click)="openVerSoporte(soporte.archivo)"> VER DOCUMENTO</button>
   </mat-card-footer>
 </mat-card>
 

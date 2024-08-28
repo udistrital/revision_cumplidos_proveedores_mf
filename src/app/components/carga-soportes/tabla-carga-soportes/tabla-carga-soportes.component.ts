@@ -5,6 +5,8 @@ import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_prove
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { UserService } from 'src/app/services/user.services';
+import Swal from 'sweetalert2';
+import { AletManagerService } from 'src/app/managers/alert-manager.service';
 
 
 @Component({
@@ -25,7 +27,8 @@ export class TablaCargaSoportesComponent {
     private cumplidosMidServices: CumplidosProveedoresMidService,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
-    private user: UserService
+    private user: UserService,
+    private alertService:AletManagerService,
   ) {
       this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       });
@@ -39,9 +42,11 @@ export class TablaCargaSoportesComponent {
   }
 
   cargarContratos() {
+    this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan los contratos disponibles")
     this.cumplidosMidServices.get('/supervisor/contratos-supervisor/' + this.documento_supervisor)
       .subscribe({
         next: (res: any) => {
+          Swal.close()
           this.contratos_supervisor = res.Data;
           this.nombreSupervisor = this.contratos_supervisor.nombre_supervisor;
           this.dependencias_supervisor = this.contratos_supervisor.dependencias_supervisor.map((dep: any) => dep.Nombre).join(', ');

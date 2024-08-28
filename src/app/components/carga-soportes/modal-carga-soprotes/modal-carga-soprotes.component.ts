@@ -67,6 +67,8 @@ export class ModalCargaSoprotesComponent {
 
 
   getSolicitudesContrato(numero_contrato: string, vigencia_contrato: string){
+    console.log(numero_contrato)
+    console.log(vigencia_contrato)
     this.cumplidosMidServices.contrato$.subscribe(contrato  => {
       if (contrato) {
         this.cumplidosMidServices.get('/supervisor/solicitudes-contrato/' + numero_contrato + '/' + vigencia_contrato)
@@ -74,13 +76,16 @@ export class ModalCargaSoprotesComponent {
             next: (res: any) => {
               var count = 1
               this.solicitudes_contrato = res.Data;
+              console.log("---------")
+              console.log("---------")
               this.dataSource = this.solicitudes_contrato.map((solicitud: any) => {
+                console.log(solicitud)
                 return {
                   noSolicitud: count++,
                   numeroContrato: solicitud.CumplidoProveedorId.NumeroContrato,
                   fechaCreacion: new Date(solicitud.FechaCreacion),
                   periodo: "11/04/2024 - 11/05/2024",
-                  estadoSoliciatud: solicitud.EstadoCumplidoId.Nombre,
+                  estadoSoliciatud: solicitud.EstadoCumplido,
                   acciones: 'Editar, Eliminar',
                   cumplidoProveedor: solicitud.CumplidoProveedorId
                 };
