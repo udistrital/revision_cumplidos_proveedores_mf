@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Injectable({
@@ -6,7 +7,8 @@ import Swal from 'sweetalert2';
 })
 export class AletManagerService {
 
-  constructor() { }
+  constructor(private translate: TranslateService) { }
+
 
 
 alertConfirm(tile:string): Promise<any>{
@@ -24,8 +26,6 @@ alertConfirm(tile:string): Promise<any>{
     allowOutsideClick: false,
   
     
-
-  
   });
 
 
@@ -82,5 +82,14 @@ showCancelAlert(title: string,message: string) {
     allowOutsideClick: false,
   });
 }
+
+showErrorAlert(text: string) {
+    Swal.fire({
+      icon: 'error',
+      title: this.translate.instant('Error'),
+      text: text,
+      confirmButtonText: this.translate.instant('Aceptar'),
+    });
+  }
 
 }
