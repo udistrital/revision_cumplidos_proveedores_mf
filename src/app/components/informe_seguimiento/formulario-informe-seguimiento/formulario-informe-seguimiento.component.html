@@ -1,6 +1,6 @@
 <mat-card class="card-formulario-informe-seguimiento">
     <mat-card-content>
-      <form [formGroup]="formularioInformeSeguimiento" (ngSubmit)="submitFormularioInformeSeguimiento()">
+      <form [formGroup]="formularioInformeSeguimiento" (ngSubmit)="generarSoporte()">
         <div class="container-formulario-izquierda">
           <div class="container-tipo-pago">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" class="icon-ayuda" >
@@ -108,8 +108,7 @@
         <div class="container-formulario-derecho">
           <div class="botones">
             <button class="boton-guardar"  type="button" mat-button  (click)="guardarIformacionPago()">Guardar</button>
-            <button type="button" class="boton-ver" mat-button (click)="modalVerSoporte()" >Ver</button>
-            <button type="submit" class="boton-crear-informe" mat-button >Crear Informe</button>
+            <button type="submit" class="boton-crear-informe" mat-button >Ver</button>
           </div>
         </div>
       </form>

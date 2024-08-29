@@ -1,7 +1,15 @@
 <div class="button-close">
+  <ng-container *ngIf="!regresarACargaDocumentos; else cargaDocumentos">
     <button mat-icon-button mat-dialog-close aria-label="Cerrar">
       <mat-icon>close</mat-icon>
     </button>
+  </ng-container>
+  
+  <ng-template #cargaDocumentos>
+    <button mat-icon-button mat-dialog-close aria-label="Cerrar" (click)="openCargarSoportes() ">
+      <mat-icon>close</mat-icon>
+    </button>
+  </ng-template>
   </div>
   <div>
     <mat-card>

@@ -72,6 +72,7 @@ export class TablaCargaSoportesComponent {
 
 
   openCargaSoportes(contrato:any ) {
+    
     this.cumplidosMidServices.getContrato(contrato);
     this.dialog.open(ModalCargaSoprotesComponent,{
       disableClose: true,

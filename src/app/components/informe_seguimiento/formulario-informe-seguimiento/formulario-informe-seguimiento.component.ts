@@ -9,17 +9,15 @@ import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_prove
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
-import { UtilsService } from 'src/app/services/utils.service';
 import { SolicituDeFirma } from 'src/app/models/certificado-pago.model';
 import { ModalVerSoporteComponent } from '../../modal-ver-soporte/modal-ver-soporte.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CoreApiService } from './../../../services/core_api.service';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { Banco } from 'src/app/models/banco.model';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { TipoPago } from 'src/app/models/tipo_pago.model';
 import { TipoCuentaBancaria } from 'src/app/models/tipo_cuenta_bancaria.model';
-import { InformacionPago } from 'src/app/models/informacion_pago.model';
 import { lastValueFrom } from 'rxjs';
 import { DocumentoCobro } from 'src/app/models/documento_cobro.model';
 import Swal from 'sweetalert2';
@@ -45,6 +43,8 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
   numero_factura: string = '';
   bancoId: number = 0;
   informacionPagoId: number = 0;
+  cumplido:any;
+  contrato:any;
 
   constructor(
     private fg: FormBuilder,
@@ -55,7 +55,9 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
     private datePipe: DatePipe,
     private route: ActivatedRoute,
     private coreApiService: CoreApiService,
-    private alertService: AletManagerService
+    private alertService: AletManagerService,
+    private cumplidoService:CumplidosProveedoresMidService,
+    private router: Router,
   ) {
     this.formularioInformeSeguimiento = this.fg.group({
       tipo_pago: [null, Validators.required],
@@ -75,6 +77,15 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
   }
 
   async ngOnInit() {
+
+     this.cumplidoService.cumplido$.subscribe(cumplido => {
+         this.cumplido=cumplido
+    });
+    
+    this.cumplidosMidServices.contrato$.subscribe(contrato=>{
+      this.contrato=contrato
+    }
+    )
     
     this.route.paramMap.subscribe((params) => {
       const idParam = params.get('cumplidoId');
@@ -95,8 +106,7 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
         }
       });
 
-     
-  
+
   }
 
   async obtenerBancos() {
@@ -225,7 +235,7 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
     }
   }
 
- async submitFormularioInformeSeguimiento() {
+ async generarSoporte() {
     this.alertService.showLoadingAlert("Espera por favor","Estamos generando tu documento. Esto puede tardar unos momentos. Gracias.");
 
     this.cumplidosMidServices.contrato$.subscribe((contrato) => {
@@ -289,7 +299,6 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
   }
 
   modalVerSoporte() {
-    console.log(this.solicituDeFirma)
     this.dialog.open(ModalVerSoporteComponent, {
       disableClose: true,
       height: '70vh',
@@ -304,21 +313,27 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
         tipoDocumento: 168,
         base64: this.pdfBase64,
         cargoResponsable: 'Supervisor',
+        cumplido:this.cumplido,
+       regresarACargaDocumentos:false
       },
     });
   }
 
   async buscarInformacionPago() {
+    
     try {
+      this.alertService.showLoadingAlert("Cargado","Espera mientras se carga la informacion");
       const response = await lastValueFrom(
         this.cumplidosCrudServices.get(
           `/informacion_pago?query=CumplidoProveedorId.Id:${this.cumplidoId}`
         )
       );
+      Swal.close();
 
         if (response.Data[0]?.Id !=undefined) {
-   
-  
+         
+        this.cumplido=response.Data[0]
+          
         this.nuevoFormuario = false;
         this.informacionPagoId = response.Data[0].Id;
         const informePago = response.Data[0];
@@ -349,9 +364,13 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
           tipo_cobro: tipoCobroSelecconado,
           tipo_cuenta: tipoCuentaBancaria,
         });
-        console.log("id:",this.formularioInformeSeguimiento.get('tipo_cuenta')?.value)
+       
       }
-    } catch (error) {}
+      Swal.close();
+    } catch (error) {
+   
+      this.alertService.showCancelAlert("Error","Se genereo el siguiente error"+error)
+    }
   }
 
   obtenerInformacionPago() {
@@ -378,4 +397,6 @@ export class FormularioInformeSeguimientoComponent implements OnInit {
       FechaFinal: this.formularioInformeSeguimiento.get('fecha_fin')?.value?? null, 
     };
   }
+
+
 }

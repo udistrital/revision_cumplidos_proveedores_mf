@@ -8,6 +8,9 @@ import { FirmaElectronicaService } from 'src/app/services/firma_electronica_mid.
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import Swal from 'sweetalert2';
+import { CargarModalComponent } from '../subir_soporte/cargar-modal/cargar-modal.component';
+import { Router } from '@angular/router';
+import { ModalCargaSoprotesComponent } from '../carga-soportes/modal-carga-soprotes/modal-carga-soprotes.component';
 
 @Component({
   selector: 'app-modal-ver-soportes',
@@ -25,6 +28,8 @@ export class ModalVerSoporteComponent  {
   tipoDocumento:number
   payload = TokenService.getPayload();
   cargoResponsable:string;
+  regresarACargaDocumentos:boolean;
+  cumplido:any
 
   constructor(public dialogRef:MatDialogRef<ModalVerSoporteComponent>,
     private alertService: AletManagerService,
@@ -32,12 +37,20 @@ export class ModalVerSoporteComponent  {
     private firmaElectronica:FirmaElectronicaService,
     private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
     private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
+    private router:Router,
     @Inject(MAT_DIALOG_DATA) public data: { documentoAFirmar:SolicituDeFirma ,
-      cargoResponsable:string, aprobarSoportes:boolean,idCumplido:number,base64:string, tipoDocumento:number,funcionAprobar: (id: number) => void;  } 
+
+      cargoResponsable:string, aprobarSoportes:boolean,idCumplido:number,base64:string, cumplido:any , regresarACargaDocumentos:boolean,
+      tipoDocumento:number,funcionAprobar: (id: number) => void; }  
 
   ) {
     this.cargoResponsable=data.cargoResponsable;
+    this.cumplido =data.cumplido
     this.base64=data.base64
+    this.regresarACargaDocumentos= data.regresarACargaDocumentos
+    console.log("this.registarSoportePagoFirmado")
+    console.log("registarSoportePagoFirmado")
+    console.log(this.regresarACargaDocumentos)
     this.autorizacionPago=data.documentoAFirmar;
     this.idCumplido = data.idCumplido != null ? data.idCumplido : 0;
     if(this.autorizacionPago==null){
@@ -96,7 +109,7 @@ console.log(this.autorizacionPago.NombreResponsable)
             file: this.autorizacionPago.Archivo
           }
         ];
-      console.log(documentosAFirmarArray)
+      
        this.alertService.showLoadingAlert("Firmando", "Espera mientras el documento se firma")
     
          this.firmaElectronica.post("/firma_electronica",documentosAFirmarArray)
@@ -146,7 +159,7 @@ console.log(this.autorizacionPago.NombreResponsable)
           
             const response: any = await this.cumplidos_provedore_mid_service.get(`/solicitud-pago/soportes/${this.idCumplido}`).toPromise();
             console.log('Respuesta completa:', response);
-        
+            console.log(this.registarSoportePagoFirmado);
   
             const documentoFiltrado = response.Data.find((item: any) => item.Documento.Id === idDocumento);
         
@@ -157,14 +170,18 @@ console.log(this.autorizacionPago.NombreResponsable)
                 }
                 Swal.close()
                 this.openVerSoporte(this.idCumplido);
+                if(this.regresarACargaDocumentos != undefined && !this.regresarACargaDocumentos){
+                      this.regresarACargaDocumentos=true;
+                }
             }
         } catch (error) {
             console.error('Error al obtener los documentos', error);
         }
+        console.log(this.registarSoportePagoFirmado);
     }
     
     openVerSoporte(idCumplido: number) {
-        console.log(this.base64);
+        
         
         this.dialog.open(ModalVerSoporteComponent, {
             disableClose: true,
@@ -177,9 +194,30 @@ console.log(this.autorizacionPago.NombreResponsable)
                 aprobarSoportes: false,
                 idCumplido: idCumplido,
                 tipoDocumento: 168,
-                base64: this.base64, 
+                base64: this.base64,
+                regresarACargaDocumentos:this.registarSoportePagoFirmado
+                
             },
         });
+    }
+
+    openCargarSoportes() {
+     this.router.navigate(['/supervisor/subir-soportes']).then(()=>{
+      const dialogRef = this.dialog.open(ModalCargaSoprotesComponent, {
+        width: '53%',
+        height: '70%',
+        panelClass: 'custom-dialog-container',
+        data:{
+          cumplido:this.cumplido
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+  
+      });
+     });
+ 
+     
+      
     }
     }
     

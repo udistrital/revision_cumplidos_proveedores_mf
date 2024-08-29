@@ -7,6 +7,7 @@ import { SoportesServicesService } from 'src/app/services/soportes.services.serv
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ModalVerSoporteComponent } from '../../modal-ver-soporte/modal-ver-soporte.component';
+import { AletManagerService } from 'src/app/managers/alert-manager.service';
 
 @Component({
   selector: 'app-soporte-cumplido',
@@ -23,7 +24,8 @@ export class SoporteCumplidoComponent {
     private popUpManager: PopUpManager,
     private soporteService: SoportesServicesService,
     private cumplidosMidServices: CumplidosProveedoresMidService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private aletManagerService:AletManagerService,
   ){
 
   }
@@ -69,19 +71,30 @@ export class SoporteCumplidoComponent {
 
 
 
-  eliminarSoporte(soporte: any){
-    console.log(soporte)
-    this.cumplidosMidServices.delete(`/solicitud-pago/soportes`, soporte)
-    .subscribe({
-      next: (res: any) => {
-        this.popUpManager.showSuccessAlert('Soporte eliminado correctamente');
-        this.cargarSoportes(this.solicitudPago);
-      },
-      error: (error: any) => {
-        this.popUpManager.showErrorAlert('No fue posible eliminar el soporte');
-      }
-    });
-
+  async eliminarSoporte(soporte: any){
+ 
+       const confirm = await this.aletManagerService.alertConfirm("¿Deseas Eliminar el soporte?");
+       if(confirm.isConfirmed){
+        
+        console.log(soporte)
+        try{
+          this.cumplidosMidServices.delete(`/solicitud-pago/soportes`, soporte)
+        .subscribe({
+          next: (res: any) => {
+            this.popUpManager.showSuccessAlert('Soporte eliminado correctamente');
+            this.cargarSoportes(this.solicitudPago);
+          },
+          error: (error: any) => {
+            this.popUpManager.showErrorAlert('No fue posible eliminar el soporte');
+          }
+        });
+        }catch(error){
+            this.aletManagerService.showCancelAlert("Error","Se produjo"+error)
+        }
+        
+       }else{
+        this.aletManagerService.showCancelAlert("Cancelado","No se elimino")
+       }
   }
 
 }

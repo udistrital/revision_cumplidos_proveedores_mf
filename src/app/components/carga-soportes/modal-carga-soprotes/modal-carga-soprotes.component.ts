@@ -76,8 +76,6 @@ export class ModalCargaSoprotesComponent {
             next: (res: any) => {
               var count = 1
               this.solicitudes_contrato = res.Data;
-              console.log("---------")
-              console.log("---------")
               this.dataSource = this.solicitudes_contrato.map((solicitud: any) => {
                 console.log(solicitud)
                 return {

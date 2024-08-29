@@ -64,7 +64,7 @@ export function createTranslateLoader(http: HttpClient) {
     VerSoporteModalComponent,
     SafeUrlPipe,
     ModalVerSoporteComponent,
-    ModalListarSoportes
+    ModalListarSoportes,
   ],
   imports: [
     HttpClientModule,
