@@ -9,6 +9,8 @@ import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_prove
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import Swal from 'sweetalert2';
 import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
+import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
+import { UserService } from 'src/app/services/user.services';
 @Component({
   selector: 'app-tabla-aprobacion-pago-contratacion',
   templateUrl: './tabla-aprobacion-pago.component.html',
@@ -17,13 +19,17 @@ import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
 export class TablaAprobacionPagoComponent {
   solicitudes: Cumplido[] = [];
   soporte_cumplido: SoporteCumplido[] = [];
+  documentoResponsable:string=""
 
   constructor(
     private alertService: AletManagerService,
     public dialog: MatDialog,
     private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
     private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
+    private cambioEstadoService:CambioEstadoService,
+    private userService:UserService
   ) {
+   
     this.CargarTablaCumplidos();
   }
 
@@ -81,35 +87,23 @@ export class TablaAprobacionPagoComponent {
     );
   }
 
-  async aprobarSoportes(idCumplido: number) {
+  async aprobarSoportes(cumplido: any) {
+
+
+
+    console.log(cumplido)
     let confirm = await this.alertService.alertConfirm(
       '¿Esta seguro de aprobar los soportes?'
     );
-    console.log(idCumplido);
+    console.log(cumplido);
     if (confirm.isConfirmed) {
       try{
 
-      const idEstado = await this.ObtenerEstadoId('PRO').toPromise();
-      const tipo_documento = await this.ObternerIdTipoDocumento(
-        'AP'
-      ).toPromise();
-
-
-      if (idEstado === null || idEstado === undefined) {
-        throw new Error('El ID obtenido es nulo o indefinido.');
-      } else {
-
-
-          const cambioEstado = new CambioEstado(
-            idEstado,
-            idCumplido,
-            '52622477',
-            'Contratacion'
-          );
-           this.CambiarEstado(cambioEstado);
-          this.CargarTablaCumplidos();
-
-      }
+        this.cambiarEstado(cumplido.Id,"PRO", "265313","Ordenador");
+        this.alertService.showSuccessAlert(
+          'Rehzadado',
+          '!Se han rechazado los soprtes!'
+        );
 
       this.alertService.showSuccessAlert('Aprobado', '!se Aprobo con exito!');
       }catch(error){
@@ -126,25 +120,16 @@ export class TablaAprobacionPagoComponent {
     }
   }
 
-  async rechazarSoportes(idCumplido: number) {
+  async rechazarSoportes(cumplido: any) {
+
+  this.obtenerResponsable("/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
     let x = await this.alertService.alertConfirm(
       '¿Esta seguro de Rechazar los soportes?'
     );
     if (x.isConfirmed) {
-      const id = await this.ObtenerEstadoId('RC').toPromise();
-      console.log('log' + id);
+     
 
-      if (id === null || id === undefined) {
-        throw new Error('El ID obtenido es nulo o indefinido.');
-      }
-      const cambioEstado = new CambioEstado(
-        id,
-        idCumplido,
-        '',
-        'Contratacion'
-      );
-      this.CambiarEstado(cambioEstado);
-
+      this.cambiarEstado(cumplido.Id,"RC", "0","Contratacion");
       this.alertService.showSuccessAlert(
         'Rehzadado',
         '!Se han rechazado los soprtes!'
@@ -157,18 +142,7 @@ export class TablaAprobacionPagoComponent {
     }
   }
 
-  CambiarEstado(cambioEstado: CambioEstado) {
-    this.cumplidos_provedore_mid_service
-      .post('solicitud-pago/cambio-estado', cambioEstado)
-      .subscribe(
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  }
+
 
   ObtenerEstadoId(codigoAbreviacion: string): Observable<number | null> {
     return this.cumplidos_provedore_mid_service
@@ -209,6 +183,17 @@ export class TablaAprobacionPagoComponent {
   }
 
 
+  private async obtenerResponsable(endPoint:string){
+    
+    this.documentoResponsable = await this.userService.obtenerResponsable(endPoint);
+   }
+ 
+ 
+
+  cambiarEstado(idCumplido:any,estado:string, documentoResponsable:string, cargoResponable:string){
+ 
+    this.cambioEstadoService.cambiarEstado(idCumplido,estado,documentoResponsable,cargoResponable);
+      }
 
 
 }

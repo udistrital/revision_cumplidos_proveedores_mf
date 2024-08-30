@@ -5,6 +5,8 @@ import { CumplidosProveedoresMidService } from './cumplidos_proveedores_mid.serv
 import { CambioEstado } from '../models/cambio-estado.model';
 import { catchError, map, Observable, of } from 'rxjs';
 import { AletManagerService } from '../managers/alert-manager.service';
+import { UserService } from './user.services';
+import { JbpmService } from './jbpm_service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,21 +15,18 @@ import { AletManagerService } from '../managers/alert-manager.service';
 
 export class CambioEstadoService{
 
-    constructor(private alertService: AletManagerService,private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService){
+    documentoResponsable:string=""
+    asunto:string=""
+    documentoDestinatario:string=""
+
+
+    constructor(private alertService: AletManagerService,private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService, private userService:UserService,private jbpmService:JbpmService){
 
         }
 
-  public getPayload(): any {
-    var payload: any = {};
-    const idToken = window.localStorage.getItem('id_token')?.split('.');
-    if (idToken != undefined) {
-      payload = JSON.parse(atob(idToken[1]));
-    }
-    return payload;
-  }
+ 
 
-  obtenerEstadoId(codigoAbreviacion: string): Observable<number | null> {
-    console.log("codigoAbreviacion:" ,codigoAbreviacion, "id");
+  obtenerEstado(codigoAbreviacion: string): Observable<number | null> {
     return this.cumplidos_provedore_crud_service
       .get(
         `/estado_cumplido?query=CodigoAbreviacion:${codigoAbreviacion}`
@@ -36,7 +35,7 @@ export class CambioEstadoService{
         map((response: any) => {
           if (response.Data != null && response.Data.length > 0) {
        
-            return response.Data[0].Id;
+            return response.Data[0];
           }
           return null;
         }),
@@ -68,21 +67,38 @@ export class CambioEstadoService{
   async cambiarEstado(idCumplido: number,estadoCumplido:string, documentoResponsable:string,cargoResponable:string) {
     try {
      
-            console.log(estadoCumplido)
-        const idEstado = await this.obtenerEstadoId(estadoCumplido).toPromise();
-        console.log("Estado",idEstado)
-
-        if (idEstado === undefined ||idEstado === null ) {
+        
+        const estado:any = await this.obtenerEstado(estadoCumplido).toPromise();
+            console.log("Estado desde cambiar: " ,estado)
+        if (estado === undefined ||estado === null ) {
           throw new Error('El ID obtenido es nulo o indefinido.');
         } 
 
         const cambioEstado = new CambioEstado(
-          idEstado,
+          estado.Id,
           idCumplido,
           documentoResponsable,
           cargoResponable
         );
         this.solicituCambiarEstado(cambioEstado);
+
+
+        await this.obtenerAsunto(estado.CodigoAbreviacion);
+
+         console.log("Essssstadooooo : ",this.asunto)
+
+      /*
+        const notificacion = Notification("66c8afeca6ee77849101664d",
+            "66ac05deb6d4007375621835",
+            ["265313"],
+            this.documentoResponsable,
+            "asunto: string",
+            mensaje: string,
+            lectura: boolean,
+            {},
+            activo: boolean
+        ) 
+      */
      
     } catch (error) {
       this.alertService.showCancelAlert(
@@ -93,7 +109,35 @@ export class CambioEstadoService{
   }
 
 
+  private async  obtenerAsunto(estado:string){
+     console.log("obtenerAsunto", estado)
+    switch(estado){
+        case "PRO":
+        this.asunto= "Contratacion te asigno una de cumplidoo proveedor"
+
+        break;
+        case "PRC":
+          this.asunto= "EL supervisor te asigno una de cumplidoo proveedor"
+          break;
+        case "AO":
+        this.asunto= "El ordenador ha aprobado una solicitud de cumplidoo proveedor"
+        break;
+        case "RO":
+        this.asunto= "EL supervisor te asigno una de cumplidoo proveedor"
+        break;
+        case "RC":
+            this.asunto= "Contratacion  ha rechazado la solicitud  de cumplidoo proveedor"
+            break;
+            default:
+                this.asunto=""
+                break;
+    }
+  }
+
+
+
   
+
 
   
 }

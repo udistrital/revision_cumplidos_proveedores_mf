@@ -15,7 +15,7 @@
               <p>ORDENADOR/A</p>
             </div>
             <div class="border-data-supervisor">
-              <p>PEPITO PEREZ</p>
+              <p>{{nombreResponsable}}</p>
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@
                               fontIcon="check"
                             ></mat-icon>
                           </a>
-                          <a mat-button class="mat-button-sm" (click)="rechazarCumplido(element.Id)">
+                          <a mat-button class="mat-button-sm" (click)="rechazarCumplido(element)">
                             <mat-icon
                               color="primary"
                               fontIcon="close"

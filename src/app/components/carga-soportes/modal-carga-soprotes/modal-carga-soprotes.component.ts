@@ -8,6 +8,7 @@ import { BodyCambioEstado } from 'src/app/models/CargaSoportes/body_cambio_estad
 import { UserService } from 'src/app/services/user.services';
 import { CargarModalComponent } from 'src/app/components/subir_soporte/cargar-modal/cargar-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
 
 
 @Component({
@@ -34,7 +35,8 @@ export class ModalCargaSoprotesComponent {
     private translate: TranslateService,
     private cumplidosCrudService:CumplidosProveedoresCrudService,
     private user: UserService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private cambioEstadoService:CambioEstadoService
   ){
     this.documento_supervisor = user.getPayload().documento;
   }
@@ -144,6 +146,12 @@ export class ModalCargaSoprotesComponent {
     dialogRef.afterClosed().subscribe(result => {
 
     });
+  }
+
+
+  cambiarEstado(idCumplido:any){
+ 
+this.cambioEstadoService.cambiarEstado(idCumplido.cumplidoProveedor.Id,"PRC","0","Contratacion");
   }
 
 }

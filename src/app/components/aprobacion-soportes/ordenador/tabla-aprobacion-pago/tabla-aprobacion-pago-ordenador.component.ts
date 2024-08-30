@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { Cumplido } from 'src/app/models/cumplido.model';
 import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, lastValueFrom, map, Observable, of } from 'rxjs';
 import { CambioEstado } from 'src/app/models/cambio-estado.model';
 import { SolicituDeFirma } from 'src/app/models/certificado-pago.model';
 import { ModalListarSoportes } from 'src/app/components/modal-listar-soportes/modal-listar-soportes.component';
@@ -15,7 +15,6 @@ import Swal from 'sweetalert2';
 import { UserService } from 'src/app/services/user.services';
 
 import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
-
 @Component({
   selector: 'app-tabla-aprobacion-ordenador-pago',
   templateUrl: './tabla-aprobacion-pago-ordenador.component.html',
@@ -25,6 +24,7 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   solicitudes: Cumplido[] = [];
   soporte_cumplido: SoporteCumplido[] = [];
   documentoResponsable:string="";
+  nombreResponsable:string="";
   constructor(
     private alertService: AletManagerService,
     public dialog: MatDialog,
@@ -32,11 +32,14 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
     private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
     private cambioEstadoService:CambioEstadoService,
     private userService:UserService,
+    
      
   ) {}
   ngOnInit(): void {
    this.documentoResponsable= this.userService.getPayload().documento 
     this.CargarTablaCumplidos();
+    this.nombreResponsable=this.userService.getPayload().sub
+
   }
   displayedColumns = [
     'numeroContrato',
@@ -54,7 +57,7 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
     this.solicitudes = [];
     this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
    
-    this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/52622477').subscribe(
+    this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/'+ this.documentoResponsable).subscribe(
       (response: any) => {
         Swal.close();
         if (response.Data != null && response.Data.length > 0) {
@@ -107,59 +110,23 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   
   }
 
-  async aprobarCumplido(idCumplido: number) {
-    try {
+  async rechazarCumplido(idCumplido: any) {
     
-
-        const idEstado = await this.ObtenerEstadoId('AO').toPromise();
-
-        if (idEstado === null || idEstado === undefined) {
-          throw new Error('El ID obtenido es nulo o indefinido.');
-        } 
-
-        const cambioEstado = new CambioEstado(
-          idEstado,
-          idCumplido,
-          '52622477',
-          'Contratacion'
-        );
-        this.CambiarEstado(cambioEstado);
-     
-    } catch (error) {
-      this.alertService.showCancelAlert(
-        'Cancelado',
-        'No se pudo relizar la accion' + error
-      );
-    }
-  }
-
-  async rechazarCumplido(idCumplido: number) {
-    let confirm = await this.alertService.alertConfirm(
+    let x = await this.alertService.alertConfirm(
       '¿Esta seguro de Rechazar los soportes?'
     );
+    if (x.isConfirmed) {
+     
 
-    if (confirm.isConfirmed) {
-      const id = await this.ObtenerEstadoId('RO').toPromise();
-
-      if (id === null || id === undefined) {
-        throw new Error('El ID obtenido es nulo o indefinido.');
-      }
-      const cambioEstado = new CambioEstado(
-        id,
-        idCumplido,
-        '',
-        'Contratacion'
-      );
-
-      this.CambiarEstado(cambioEstado);
+      this.cambiarEstado(idCumplido.Id,"RO", "0","Contratacion");
       this.alertService.showSuccessAlert(
-        'Rechadado',
+        'Rehzadado',
         '!Se han rechazado los soprtes!'
       );
     } else {
       this.alertService.showCancelAlert(
         'Cancelado',
-        'No se han rechazado los soprtes'
+        'No se han rechazado los sooprtes'
       );
     }
   }
@@ -261,4 +228,11 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
       },
     });
   }
+
+  
+  cambiarEstado(idCumplido:any,estado:string, documentoResponsable:string, cargoResponable:string){
+ 
+    this.cambioEstadoService.cambiarEstado(idCumplido,estado,documentoResponsable,cargoResponable);
+      }
+
 }
