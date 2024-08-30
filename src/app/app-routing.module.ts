@@ -7,7 +7,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { getSingleSpaExtraProviders } from 'single-spa-angular';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { TablaAprobacionPagoComponent } from './components/aprobacion-soportes/contratacion/tabla-aprobacion-pago/tabla-aprobacion-pago.component';
-import { TablaAproabacionPagoComponent } from './components/aprobacion-soportes/ordenador/tabla-aprobacion-pago/tabla-aproabacion-pago.component';
+import { TablaAprobacionPagoOrdenadorComponent } from './components/aprobacion-soportes/ordenador/tabla-aprobacion-pago/tabla-aprobacion-pago-ordenador.component';
 
 export const routes: Routes = [
   {
@@ -24,7 +24,7 @@ export const routes: Routes = [
   },
   {
     path: 'ordenador/aprobacion-pago',
-    component: TablaAproabacionPagoComponent,
+    component: TablaAprobacionPagoOrdenadorComponent,
   }
 ];
 

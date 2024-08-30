@@ -24,10 +24,10 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-formulario-informe-seguimiento',
-  templateUrl: './formulario-informe-seguimiento.component.html',
-  styleUrls: ['./formulario-informe-seguimiento.component.css'],
+  templateUrl: './formulario-informe-satisfaccion.component.html',
+  styleUrls: ['./formulario-informe-satisfaccion.component.css'],
 })
-export class FormularioInformeSeguimientoComponent implements OnInit {
+export class FormularioInformeSatisfaccionComponent  implements OnInit {
   formularioInformeSeguimiento: FormGroup;
   numeroContrato: string = '';
   vigencia: string = '';

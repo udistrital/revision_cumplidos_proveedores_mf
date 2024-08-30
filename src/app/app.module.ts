@@ -21,12 +21,12 @@ import { SoporteCumplidoComponent } from './components/subir_soporte/soporte-cum
 import { CargarModalComponent } from './components/subir_soporte/cargar-modal/cargar-modal.component';
 import { ComponentePrincipalComponent } from './components/informe_seguimiento/componente-principal/componente-principal.component';
 import { InformacionContratoComponent } from './components/informe_seguimiento/informacion-contrato/informacion-contrato.component';
-import { FormularioInformeSeguimientoComponent } from './components/informe_seguimiento/formulario-informe-seguimiento/formulario-informe-seguimiento.component';
+import { FormularioInformeSatisfaccionComponent  } from './components/informe_seguimiento/formulario-informe-seguimiento/formulario-informe-seguimiento.component';
 import {MatTableModule} from '@angular/material/table'
 import { TablaCargaSoportesComponent } from './components/carga-soportes/tabla-carga-soportes/tabla-carga-soportes.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ModalCargaSoprotesComponent } from './components/carga-soportes/modal-carga-soprotes/modal-carga-soprotes.component';
-import { TablaAproabacionPagoComponent } from './components/aprobacion-soportes/ordenador/tabla-aprobacion-pago/tabla-aproabacion-pago.component';
+import { TablaAprobacionPagoOrdenadorComponent } from './components/aprobacion-soportes/ordenador/tabla-aprobacion-pago/tabla-aprobacion-pago-ordenador.component';
 import { TablaAprobacionPagoComponent } from './components/aprobacion-soportes/contratacion/tabla-aprobacion-pago/tabla-aprobacion-pago.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
@@ -56,11 +56,11 @@ export function createTranslateLoader(http: HttpClient) {
     CargarModalComponent,
     ComponentePrincipalComponent,
     InformacionContratoComponent,
-    FormularioInformeSeguimientoComponent,
+    FormularioInformeSatisfaccionComponent ,
     TablaCargaSoportesComponent,
     ModalCargaSoprotesComponent,
-    TablaAproabacionPagoComponent,
     TablaAprobacionPagoComponent,
+    TablaAprobacionPagoOrdenadorComponent,
     VerSoporteModalComponent,
     SafeUrlPipe,
     ModalVerSoporteComponent,

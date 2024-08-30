@@ -30,6 +30,8 @@ export class ModalVerSoporteComponent  {
   cargoResponsable:string;
   regresarACargaDocumentos:boolean;
   cumplido:any
+  documentoResponsable:string
+  estadoCumplido:string
 
   constructor(public dialogRef:MatDialogRef<ModalVerSoporteComponent>,
     private alertService: AletManagerService,
@@ -41,13 +43,15 @@ export class ModalVerSoporteComponent  {
     @Inject(MAT_DIALOG_DATA) public data: { documentoAFirmar:SolicituDeFirma ,
 
       cargoResponsable:string, aprobarSoportes:boolean,idCumplido:number,base64:string, cumplido:any , regresarACargaDocumentos:boolean,
-      tipoDocumento:number,funcionAprobar: (id: number) => void; }  
+      tipoDocumento:number,funcionAprobar: (id: number,esatadoCumplido:string, documentoResponsable:string, cargoResponsable:string) => void,estadoCumplido:string,documentoResponsable:string; }  
 
   ) {
     this.cargoResponsable=data.cargoResponsable;
     this.cumplido =data.cumplido
     this.base64=data.base64
+    this.estadoCumplido = data.estadoCumplido
     this.regresarACargaDocumentos= data.regresarACargaDocumentos
+    this.documentoResponsable=data.documentoResponsable
     console.log("this.registarSoportePagoFirmado")
     console.log("registarSoportePagoFirmado")
     console.log(this.regresarACargaDocumentos)
@@ -64,8 +68,10 @@ export class ModalVerSoporteComponent  {
   }
 
   aprobarContratacion() {
+    console.log("ssientro");
     if (typeof this.data.funcionAprobar === 'function') {
-      this.data.funcionAprobar(this.idCumplido);
+      console.log(this.idCumplido,this.estadoCumplido ,this.documentoResponsable,this.cargoResponsable)
+      this.data.funcionAprobar(this.idCumplido,this.estadoCumplido,this.documentoResponsable, this.cargoResponsable );
     }
     this.dialogRef.close()
   }

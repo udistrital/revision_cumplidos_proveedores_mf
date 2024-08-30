@@ -9,7 +9,6 @@ import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_prove
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import Swal from 'sweetalert2';
 import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
-
 @Component({
   selector: 'app-tabla-aprobacion-pago-contratacion',
   templateUrl: './tabla-aprobacion-pago.component.html',

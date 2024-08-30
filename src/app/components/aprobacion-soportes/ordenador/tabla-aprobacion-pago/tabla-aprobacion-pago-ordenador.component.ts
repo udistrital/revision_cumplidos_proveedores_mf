@@ -12,23 +12,30 @@ import { ModalVerSoporteComponent } from 'src/app/components/modal-ver-soporte/m
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import Swal from 'sweetalert2';
+import { UserService } from 'src/app/services/user.services';
+
+import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
 
 @Component({
-  selector: 'app-tabla-aproabacion-pago',
-  templateUrl: './tabla-aproabacion-pago.component.html',
-  styleUrls: ['./tabla-aproabacion-pago.component.css'],
+  selector: 'app-tabla-aprobacion-ordenador-pago',
+  templateUrl: './tabla-aprobacion-pago-ordenador.component.html',
+  styleUrls: ['./tabla-aprobacion-pago-ordenador.component.css'],
 })
-export class TablaAproabacionPagoComponent implements OnInit {
+export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   solicitudes: Cumplido[] = [];
   soporte_cumplido: SoporteCumplido[] = [];
-
+  documentoResponsable:string="";
   constructor(
     private alertService: AletManagerService,
     public dialog: MatDialog,
     private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
     private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
+    private cambioEstadoService:CambioEstadoService,
+    private userService:UserService,
+     
   ) {}
   ngOnInit(): void {
+   this.documentoResponsable= this.userService.getPayload().documento 
     this.CargarTablaCumplidos();
   }
   displayedColumns = [
@@ -43,8 +50,10 @@ export class TablaAproabacionPagoComponent implements OnInit {
   ];
 
   CargarTablaCumplidos() {
+    console.log("entro")
     this.solicitudes = [];
     this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
+   
     this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/52622477').subscribe(
       (response: any) => {
         Swal.close();
@@ -101,7 +110,7 @@ export class TablaAproabacionPagoComponent implements OnInit {
   async aprobarCumplido(idCumplido: number) {
     try {
     
-      alert("Se cargara")
+
         const idEstado = await this.ObtenerEstadoId('AO').toPromise();
 
         if (idEstado === null || idEstado === undefined) {
@@ -245,8 +254,10 @@ export class TablaAproabacionPagoComponent implements OnInit {
         tipoDocumento:168,
         base64:autorizacionPago.Archivo,
         cargoResponsable:"Ordenador",
-        funcionAprobar: (id: number, base64: string) =>
-          this.aprobarCumplido(id),
+        documentoResponsable:this.documentoResponsable,
+        estadoCumplido:"AO",
+        funcionAprobar: (id: number,esatadoCumplido:string, documentoResponsable:string, cargoResponsable:string) =>
+          this.cambioEstadoService.cambiarEstado(id,esatadoCumplido,documentoResponsable,cargoResponsable),
       },
     });
   }
