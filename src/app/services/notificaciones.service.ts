@@ -4,6 +4,7 @@ import { RequestManager } from '../managers/requestManager';
 import { WebSocketSubject } from 'rxjs/webSocket';
 import { environment } from 'src/environments/environment';
 import { UserService } from './user.services';
+import { NotificacionBody } from '../models/notificacion.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class NotificacionesService {
     this.requestManager.setPath(environment.CUMPLIDOS_PROVEEDORES_CRUD_SERVICE);
   }
 
-  connectWebSocket(docUsuario: string) {
+  connectWebSocket() {
     this.socket$ = new WebSocketSubject(environment.NOTIFICACION_MID_WS);
     this.socket$.subscribe();
     const userDocument = this.userService.getPayload().documento;
@@ -26,19 +27,32 @@ export class NotificacionesService {
   }
 
   post(endpoint: any, element: any) {
-    this.requestManager.setPath('NOTIFICACIONES_CRUD');
+    this.requestManager.setPath('NOTIFICACIONES_CRUD')
     return this.requestManager.post(endpoint, element);
   }
 
-  async publicarNotificaciones(notificacion: Notification): Promise<any[]> {
+  async publicarNotificaciones(notificacion: NotificacionBody) {
+   
+    console.log("Entro 2",notificacion)
     const notificaciones: any = await new Promise((resolve, reject) => {
-      this.post('NOTIFICACIONES_CRUD', notificacion).subscribe(
-        (data: any) => resolve(data),
-        (error: any) => reject(error)
+      this.post('/notificacion', notificacion).subscribe(
+        response=>{
+          console.log(response)
+        },
+        error=>{
+          console.log(error)
+        }
       );
     });
-    return notificaciones.Data;
+
+    this.connectWebSocket();
+
+    if (this.socket$) {
+      this.socket$.next(notificaciones.Data); 
+    }
+   
   }
+
 
 
 }

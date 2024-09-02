@@ -1,4 +1,4 @@
-export class Notificacion {
+export class NotificacionBody{
     sistema_id: string;
     tipo_notificacion_id: string;
     destinatarios: string[];
