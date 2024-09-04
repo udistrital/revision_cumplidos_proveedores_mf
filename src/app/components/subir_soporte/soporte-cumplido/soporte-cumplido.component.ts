@@ -73,7 +73,7 @@ export class SoporteCumplidoComponent {
 
   async eliminarSoporte(soporte: any){
  
-       const confirm = await this.aletManagerService.alertConfirm("¿Deseas Eliminar el soporte?");
+       const confirm = await this.aletManagerService.alertConfirm("¿Deseas Eliminar el soporte?","Esta opccion no es reversive");
        if(confirm.isConfirmed){
         
         console.log(soporte)

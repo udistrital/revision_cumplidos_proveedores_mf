@@ -3,7 +3,6 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  FormControl,
   ValidatorFn,
   AbstractControl,
 } from '@angular/forms';
@@ -172,7 +171,10 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async guardarIformacionPago() {
-    let confirm = await this.alertService.alertConfirm('Guardado');
+    let confirm = await this.alertService.alertConfirm(
+      '¿Estás seguro?',
+      'Podrás continuar donde lo dejaste.'
+    );
 
     if (confirm.isConfirmed) {
       const body = this.obtenerInformacionPago();
@@ -232,7 +234,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async generarSoporte() {
-    let confirm = await this.alertService.alertConfirm('¿Generar soporte?');
+    let confirm = await this.alertService.alertConfirm("¿Generar soporte",""
+);
 
     this.cumplidosMidServices.contrato$.subscribe((contrato) => {
       if (contrato) {

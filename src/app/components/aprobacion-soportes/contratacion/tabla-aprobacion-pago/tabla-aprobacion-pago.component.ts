@@ -93,7 +93,7 @@ export class TablaAprobacionPagoComponent {
 
     console.log(cumplido)
     let confirm = await this.alertService.alertConfirm(
-      '¿Esta seguro de aprobar los soportes?'
+      '¿Esta seguro de aprobar los soportes?',""
     );
     console.log(cumplido);
     if (confirm.isConfirmed) {
@@ -124,7 +124,7 @@ export class TablaAprobacionPagoComponent {
 
   this.obtenerResponsable("/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
     let x = await this.alertService.alertConfirm(
-      '¿Esta seguro de Rechazar los soportes?'
+      '¿Esta seguro de Rechazar los soportes?',""
     );
     if (x.isConfirmed) {
      

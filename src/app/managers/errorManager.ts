@@ -17,7 +17,7 @@ export class HttpErrorManager {
         panelClass: ['error-snackbar']
       });
     } else {
-      // Maneja errores del servidor
+
       console.error(
         `Código de estado ${error.status}, ` +
         `cuerpo del error: ${JSON.stringify(error.error)}`

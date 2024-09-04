@@ -40,6 +40,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
 import { ModalVerSoporteComponent } from './components/modal-ver-soporte/modal-ver-soporte.component';
 import { ModalListarSoportes } from './components/modal-listar-soportes/modal-listar-soportes.component';
+import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
+import { FormularioConsultaComponent } from './components/historico-cumplidos/formulario-consulta/formulario-consulta.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -65,6 +67,8 @@ export function createTranslateLoader(http: HttpClient) {
     SafeUrlPipe,
     ModalVerSoporteComponent,
     ModalListarSoportes,
+    HistoricoCumplidosComponent,
+    FormularioConsultaComponent,
   ],
   imports: [
     HttpClientModule,

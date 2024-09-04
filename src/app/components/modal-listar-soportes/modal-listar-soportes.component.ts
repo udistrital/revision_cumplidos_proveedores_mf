@@ -37,7 +37,7 @@ export class ModalListarSoportes {
   
 
   async enviarComentario(soporteId:number){
-    let enviarComnetario = await this.alerts.alertConfirm("¿Estas seguro de enviar las observaciones?");
+    let enviarComnetario = await this.alerts.alertConfirm("¿Estas seguro de enviar las observaciones?","");
 
     const cambioEstado = await this.ObtenerCambioEstado(this.idCumplido).toPromise();
 

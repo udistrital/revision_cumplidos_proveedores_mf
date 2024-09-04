@@ -114,7 +114,7 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   async rechazarCumplido(idCumplido: any) {
     
     let x = await this.alertService.alertConfirm(
-      '¿Esta seguro de Rechazar los soportes?'
+      '¿Esta seguro de Rechazar los soportes?',""
     );
     if (x.isConfirmed) {
      

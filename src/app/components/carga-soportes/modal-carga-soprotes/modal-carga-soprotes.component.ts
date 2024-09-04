@@ -151,7 +151,7 @@ export class ModalCargaSoprotesComponent {
   async cambiarEstado(idCumplido:any){
 
     let confirm = await this.alertService.alertConfirm(
-      '¿Esta seguro de aprobar los soportes?'
+      '¿Esta seguro de aprobar los soportes?' ,""
     );
     console.log();
     if (confirm.isConfirmed) {

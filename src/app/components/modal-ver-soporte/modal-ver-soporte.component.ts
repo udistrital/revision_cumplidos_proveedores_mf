@@ -89,7 +89,10 @@ export class ModalVerSoporteComponent  {
 
 
 console.log(this.autorizacionPago.NombreResponsable)
-      const confirm = await this.alertService.alertConfirm("¿Estas seguro de firmar el documento?");
+const confirm = await this.alertService.alertConfirm(
+  "¿Estás seguro de firmar el documento?",
+  "Una vez firmado el documento, se cargará automáticamente."
+);
       if(confirm.isConfirmed){
 
         console.log(this.tipoDocumento)
