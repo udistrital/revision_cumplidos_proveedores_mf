@@ -53,12 +53,12 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   ];
 
   CargarTablaCumplidos() {
-    console.log("entro")
     this.solicitudes = [];
     this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
    
     this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/'+ this.documentoResponsable).subscribe(
       (response: any) => {
+    
         Swal.close();
         if (response.Data != null && response.Data.length > 0) {
           this.solicitudes = response.Data;
@@ -67,6 +67,7 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
         }
       },
       (error) => {
+        console.log("si entro");
         this.alertService.showCancelAlert("Error al consultar","Se produjo un error"+error);
         console.log('error', error);
         this.solicitudes = [];

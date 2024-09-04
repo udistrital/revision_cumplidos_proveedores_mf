@@ -30,7 +30,7 @@ export class TablaAprobacionPagoComponent {
     private userService:UserService
   ) {
    
-    this.CargarTablaCumplidos();
+    this.cargarTablaCumplidos();
   }
 
   displayedColumns = [
@@ -44,7 +44,7 @@ export class TablaAprobacionPagoComponent {
     'acciones',
   ];
 
-  CargarTablaCumplidos() {
+  cargarTablaCumplidos() {
     this.solicitudes = [];
     this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
     this.cumplidos_provedore_mid_service.get('/contratacion/solicitudes-pago/').subscribe(
@@ -63,7 +63,7 @@ export class TablaAprobacionPagoComponent {
     );
   }
 
-  ListarSoportes(idCumplido: number) {
+  obtenerSoprtes(idCumplido: number) {
     this.alertService.showLoadingAlert("Cargando", "Espera mientras se listan los documentos")
     this.cumplidos_provedore_mid_service.get('/solicitud-pago/soportes/' + idCumplido).subscribe(
       (response: any) => {
@@ -144,7 +144,7 @@ export class TablaAprobacionPagoComponent {
 
 
 
-  ObtenerEstadoId(codigoAbreviacion: string): Observable<number | null> {
+  obtenerEstadoId(codigoAbreviacion: string): Observable<number | null> {
     return this.cumplidos_provedore_mid_service
       .get(
         `/estado_cumplido?query=CodigoAbreviación:${codigoAbreviacion}`
@@ -157,13 +157,13 @@ export class TablaAprobacionPagoComponent {
           return null;
         }),
         catchError((error) => {
-          console.error('Error', error);
+            this.alertService.showCancelAlert("Se genero un error", error);
           return of(null);
         })
       );
   }
 
-  ObternerIdTipoDocumento(codigoAbreviacion: string) {
+  obternerIdTipoDocumento(codigoAbreviacion: string) {
     return this.cumplidos_provedore_crud_service
       .get(
         `tipo_documento/?query=DominioTipoDocumento.CodigoAbreviacion:CUMP_PROV,CodigoAbreviacion:${codigoAbreviacion}`
@@ -176,7 +176,7 @@ export class TablaAprobacionPagoComponent {
           return null;
         }),
         catchError((error) => {
-          console.error('Error', error);
+          this.alertService.showCancelAlert("Se genero un error", error);
           return of(null);
         })
       );

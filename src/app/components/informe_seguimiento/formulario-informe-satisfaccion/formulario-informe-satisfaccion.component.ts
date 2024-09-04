@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { FormularioInformeSatisfaccionComponent } from './formulario-informe-seguimiento.component';
-
+import { FormularioInformeSatisfaccionComponent } from './formulario-informe-satisfaccion';
 describe('FormularioInformeSeguimientoComponent', () => {
   let component: FormularioInformeSatisfaccionComponent ;
   let fixture: ComponentFixture<FormularioInformeSatisfaccionComponent >;

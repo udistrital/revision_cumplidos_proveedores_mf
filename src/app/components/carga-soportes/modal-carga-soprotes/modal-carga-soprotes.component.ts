@@ -6,9 +6,10 @@ import { BodyCumplidoProveedor } from 'src/app/models/CargaSoportes/body_cumplid
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { BodyCambioEstado } from 'src/app/models/CargaSoportes/body_cambio_estado.model';
 import { UserService } from 'src/app/services/user.services';
-import { CargarModalComponent } from 'src/app/components/subir_soporte/cargar-modal/cargar-modal.component';
+import { CargarModalComponent } from '../../subir_soporte/cargar-modal/cargar-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
+import { AletManagerService } from 'src/app/managers/alert-manager.service';
 
 
 @Component({
@@ -36,7 +37,8 @@ export class ModalCargaSoprotesComponent {
     private cumplidosCrudService:CumplidosProveedoresCrudService,
     private user: UserService,
     public dialog: MatDialog,
-    private cambioEstadoService:CambioEstadoService
+    private cambioEstadoService:CambioEstadoService,
+    private alertService:AletManagerService
   ){
     this.documento_supervisor = user.getPayload().documento;
   }
@@ -46,10 +48,7 @@ export class ModalCargaSoprotesComponent {
       if (contrato) {
         this.numeroContrato = contrato.numeroContrato;
         this.vigencia = contrato.vigencia;
-        //this.numeroContrato = "026";
-        //this.vigencia = "2024";
-
-
+     
         this.getSolicitudesContrato(this.numeroContrato, this.vigencia);
 
 
@@ -79,7 +78,7 @@ export class ModalCargaSoprotesComponent {
               var count = 1
               this.solicitudes_contrato = res.Data;
               this.dataSource = this.solicitudes_contrato.map((solicitud: any) => {
-                console.log(solicitud)
+                console.log(res.Data,"..Dataparalafecha")
                 return {
                   noSolicitud: count++,
                   numeroContrato: solicitud.CumplidoProveedorId.NumeroContrato,
@@ -149,9 +148,19 @@ export class ModalCargaSoprotesComponent {
   }
 
 
-  cambiarEstado(idCumplido:any){
- 
-this.cambioEstadoService.cambiarEstado(idCumplido.cumplidoProveedor.Id,"PRC","0","Contratacion");
+  async cambiarEstado(idCumplido:any){
+
+    let confirm = await this.alertService.alertConfirm(
+      '¿Esta seguro de aprobar los soportes?'
+    );
+    console.log();
+    if (confirm.isConfirmed) {
+      this.cambioEstadoService.cambiarEstado(idCumplido.cumplidoProveedor.Id,"PRC","0","Contratacion");
+    }else{
+      this.alertService.showCancelAlert("Cancelado","No se ha relizado ninguna accion");
+    }
+     
+
   }
 
 }

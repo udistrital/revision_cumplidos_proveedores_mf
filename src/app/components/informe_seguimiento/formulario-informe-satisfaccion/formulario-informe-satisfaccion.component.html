@@ -1,0 +1,190 @@
+<mat-card class="card-formulario-informe-seguimiento">
+  <mat-card-content>
+    <form
+      [formGroup]="formularioInformeSeguimiento"
+      (ngSubmit)="generarSoporte()"
+    >
+      <div class="wp-item-form">
+        <div class="wp-payment-type">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            class="icon-ayuda"
+          >
+            <circle cx="12" cy="12" r="10" fill="white" />
+            <text
+              x="50%"
+              y="50%"
+              text-anchor="middle"
+              dominant-baseline="central"
+              font-size="14px"
+              fill="black"
+            >
+              ?
+            </text>
+          </svg>
+          <p class="labels">TIPO DE PAGO:</p>
+          <mat-form-field appearance="outline" class="input-tipo-pago">
+            <mat-select formControlName="tipo_pago">
+              <mat-option
+                *ngFor="let tipo_pago of listaTipoDePago"
+                [value]="tipo_pago"
+              >
+                {{ tipo_pago.Nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="wp-dates">
+          <p class="labels">FECHA:</p>
+          <mat-form-field appearance="fill" class="selects-fecha">
+            <input
+              matInput
+              [matDatepicker]="datepickerInicio"
+              formControlName="fecha_inicio"
+              placeholder="Fecha de inicio"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="datepickerInicio"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #datepickerInicio></mat-datepicker>
+          </mat-form-field>
+          <p class="p-final-date">Hasta</p>
+          <mat-form-field appearance="fill" class="selects-fecha">
+            <input
+              matInput
+              [matDatepicker]="datepickerFin"
+              formControlName="fecha_fin"
+              placeholder="Fecha de fin"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="datepickerFin"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #datepickerFin></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="wp-collection-account">
+          <div class="wp-collection-item">
+            <p class="label">TIPO DE COBRO</p>
+            <mat-form-field>
+              <mat-select formControlName="tipo_cobro" placeholder="-- Tipo">
+                <mat-option
+                  *ngFor="let tipo_cobro of listaDocumentoCobro"
+                  [value]="tipo_cobro"
+                >
+                  {{ tipo_cobro.Nombre }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="wp-collection-item">
+            <p class="label">NÚMERO DE CUENTA O FACTURA</p>
+            <mat-form-field>
+              <input matInput formControlName="numero_factura" type="text" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="wp-item-form">
+        <div class="wp-payment-value">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            class="icon-ayuda"
+          >
+            <circle cx="12" cy="12" r="10" fill="white" />
+            <text
+              x="50%"
+              y="50%"
+              text-anchor="middle"
+              dominant-baseline="central"
+              font-size="14px"
+              fill="black"
+            >
+              ?
+            </text>
+          </svg>
+          <p class="labels">VALOR A PAGAR:</p>
+          <mat-form-field>
+            <input matInput formControlName="valor_cumplido" type="text" />
+          </mat-form-field>
+        </div>
+
+        <div class="wp-bank-info">
+          <p class="title-bank-info">Información bancaria</p>
+          <div class="bank-info-items">
+            <p class="labels">BANCO:</p>
+            <mat-select formControlName="banco">
+              <mat-option *ngFor="let banco of listaBancos" [value]="banco">
+                {{ banco.NombreBanco }}
+              </mat-option>
+            </mat-select>
+          </div>
+          <div class="bank-info-items">
+            <p class="labels">TIPO DE CUENTA:</p>
+            <mat-form-field>
+              <mat-select formControlName="tipo_cuenta">
+                <mat-option
+                  *ngFor="let tipo_cuenta of listaTiposCuentaBancaria"
+                  [value]="tipo_cuenta"
+                >
+                  {{ tipo_cuenta.Nombre }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="bank-info-items">
+            <p class="labels">N° CUENTA:</p>
+            <mat-form-field>
+              <input matInput formControlName="numero_cuenta" type="text" />
+            </mat-form-field>
+          </div>
+
+          <div class="wp-change-info">
+            <button type="submit" class="btn btn-view">
+              Cambiar información
+            </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              class="icon-ayuda"
+            >
+              <circle cx="12" cy="12" r="10" fill="white" />
+              <text
+                x="50%"
+                y="50%"
+                text-anchor="middle"
+                dominant-baseline="central"
+                font-size="14px"
+                fill="black"
+              >
+                ?
+              </text>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="wp-item-form">
+        <button
+          class="btn btn-save"
+          type="button"
+          mat-button
+          (click)="guardarIformacionPago()"
+        >
+          Guardar
+        </button>
+        <button type="submit" class="btn btn-save" mat-button>Ver</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

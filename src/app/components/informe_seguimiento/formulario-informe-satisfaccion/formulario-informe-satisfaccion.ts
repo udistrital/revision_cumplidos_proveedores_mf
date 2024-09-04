@@ -12,7 +12,7 @@ import { DatePipe } from '@angular/common';
 import { SolicituDeFirma } from 'src/app/models/certificado-pago.model';
 import { ModalVerSoporteComponent } from '../../modal-ver-soporte/modal-ver-soporte.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CoreApiService } from './../../../services/core_api.service';
+import { CoreApiService } from '../../../services/core_api.service';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { Banco } from 'src/app/models/banco.model';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
@@ -23,7 +23,7 @@ import { DocumentoCobro } from 'src/app/models/documento_cobro.model';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-formulario-informe-seguimiento',
+  selector: 'app-formulario-informe-satisfaccion',
   templateUrl: './formulario-informe-satisfaccion.component.html',
   styleUrls: ['./formulario-informe-satisfaccion.component.css'],
 })
@@ -177,9 +177,6 @@ export class FormularioInformeSatisfaccionComponent  implements OnInit {
 
     if (confirm.isConfirmed) {
       const body = this.obtenerInformacionPago();
-      console.log('------');
-      console.log(body);
-      console.log('------');
       if (this.nuevoFormuario) {
         try {
           this.cumplidosCrudServices.post('/informacion_pago/', body).subscribe(

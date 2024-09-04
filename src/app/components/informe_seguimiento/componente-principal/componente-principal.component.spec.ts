@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ComponentePrincipalComponent } from './componente-principal.component';
-
 describe('ComponentePrincipalComponent', () => {
   let component: ComponentePrincipalComponent;
   let fixture: ComponentFixture<ComponentePrincipalComponent>;

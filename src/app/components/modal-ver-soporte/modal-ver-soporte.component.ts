@@ -176,9 +176,6 @@ console.log(this.autorizacionPago.NombreResponsable)
                 }
                 Swal.close()
                 this.openVerSoporte(this.idCumplido);
-                if(this.regresarACargaDocumentos != undefined && !this.regresarACargaDocumentos){
-                      this.regresarACargaDocumentos=true;
-                }
             }
         } catch (error) {
             console.error('Error al obtener los documentos', error);

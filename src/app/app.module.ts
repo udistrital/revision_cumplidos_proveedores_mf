@@ -21,7 +21,7 @@ import { SoporteCumplidoComponent } from './components/subir_soporte/soporte-cum
 import { CargarModalComponent } from './components/subir_soporte/cargar-modal/cargar-modal.component';
 import { ComponentePrincipalComponent } from './components/informe_seguimiento/componente-principal/componente-principal.component';
 import { InformacionContratoComponent } from './components/informe_seguimiento/informacion-contrato/informacion-contrato.component';
-import { FormularioInformeSatisfaccionComponent  } from './components/informe_seguimiento/formulario-informe-seguimiento/formulario-informe-seguimiento.component';
+import { FormularioInformeSatisfaccionComponent } from './components/informe_seguimiento/formulario-informe-satisfaccion/formulario-informe-satisfaccion';
 import {MatTableModule} from '@angular/material/table'
 import { TablaCargaSoportesComponent } from './components/carga-soportes/tabla-carga-soportes/tabla-carga-soportes.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
