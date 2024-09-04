@@ -130,6 +130,9 @@ form {
   text-align: center;
 }
 
+.error-message{
+  color:#955654;
+}
 ::ng-deep .mat-calendar-content {
   padding: 0 8px 8px 8px;
   outline: none;

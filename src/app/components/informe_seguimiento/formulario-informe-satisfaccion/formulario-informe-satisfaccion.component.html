@@ -66,7 +66,9 @@
             ></mat-datepicker-toggle>
             <mat-datepicker #datepickerFin></mat-datepicker>
           </mat-form-field>
-
+          <div class="error-message" *ngIf="formularioInformeSeguimiento.errors?.['dateRangeInvalid']">
+            La Fecha Inicio no puede ser posterior a la Fecha Fin.
+          </div>
           
         </div>
         <div class="wp-collection-account">
