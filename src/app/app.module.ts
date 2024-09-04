@@ -19,7 +19,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { VisualizarSoportesComponent } from './components/subir_soporte/visualizar-soportes/visualizar-soportes.component';
 import { SoporteCumplidoComponent } from './components/subir_soporte/soporte-cumplido/soporte-cumplido.component';
 import { CargarModalComponent } from './components/subir_soporte/cargar-modal/cargar-modal.component';
-import { ComponentePrincipalComponent } from './components/informe_seguimiento/componente-principal/componente-principal.component';
+import { InformeSatisfaccionComponent } from './components/informe_seguimiento/informe-satisfaccion.component';
 import { InformacionContratoComponent } from './components/informe_seguimiento/informacion-contrato/informacion-contrato.component';
 import { FormularioInformeSatisfaccionComponent } from './components/informe_seguimiento/formulario-informe-satisfaccion/formulario-informe-satisfaccion';
 import {MatTableModule} from '@angular/material/table'
@@ -52,9 +52,9 @@ export function createTranslateLoader(http: HttpClient) {
     AppComponent,
     SubirSoporteComponent,
     VisualizarSoportesComponent,
+    InformeSatisfaccionComponent,
     SoporteCumplidoComponent,
     CargarModalComponent,
-    ComponentePrincipalComponent,
     InformacionContratoComponent,
     FormularioInformeSatisfaccionComponent ,
     TablaCargaSoportesComponent,

@@ -66,6 +66,8 @@
             ></mat-datepicker-toggle>
             <mat-datepicker #datepickerFin></mat-datepicker>
           </mat-form-field>
+
+          
         </div>
         <div class="wp-collection-account">
           <div class="wp-collection-item">
@@ -122,11 +124,13 @@
           <p class="title-bank-info">Información bancaria</p>
           <div class="bank-info-items">
             <p class="labels">BANCO:</p>
-            <mat-select formControlName="banco">
+         <mat-form-field>
+             <mat-select formControlName="banco">
               <mat-option *ngFor="let banco of listaBancos" [value]="banco">
                 {{ banco.NombreBanco }}
               </mat-option>
             </mat-select>
+         </mat-form-field>
           </div>
           <div class="bank-info-items">
             <p class="labels">TIPO DE CUENTA:</p>
