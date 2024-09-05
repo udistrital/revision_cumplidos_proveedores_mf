@@ -1,21 +1,40 @@
 <div class="button-close">
 
-<button mat-icon-button mat-dialog-close aria-label="Cerrar">
+<button mat-icon-button mat-dialog-close aria-label="Cerrar" class="btn-close">
     <mat-icon>close</mat-icon>
   </button>
 </div>
-<mat-dialog-content class="custom-modal">
+<mat-dialog-content>
   <mat-card>
-    <mat-card-header class="card-title  color-primray">
-        <mat-card-title class=" ">CARGA  SOPORTES</mat-card-title>
-    </mat-card-header>
+    
+    <div class="title">
+      <mat-card-header class="">
+     
+        <div class="text">
+         <mat-card-title class="text2">
+           <div class="">
+             <h5  >CARGA  SOPORTES</h5>
+           </div>
+         </mat-card-title>
+        </div>
+    
+   </mat-card-header>
+    </div>
 
     <mat-card-content>
-        <div class="center text-center">
-            <p>Seleccione la solicitud a la cual va a cargar los soportes</p>
-        <button   mat-button class="button-enviar" (click)="crearCumplidoProveedor()" >Crear solicitud</button>
+      
+      <div class="btn-create">
+        <div class="text-center">
+          <p>Seleccione la solicitud a la cual va a cargar los soportes</p>
         </div>
-
+        <div>
+          <button   mat-button class="button-enviar" (click)="crearCumplidoProveedor()" >Crear solicitud</button>
+        </div>
+      </div>
+         
+  
+         
+      
             <mat-card>
                 <div>
             <table mat-table [dataSource]="dataSource"  class="mat-elevation-z8 color-table">
