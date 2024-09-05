@@ -1,0 +1,79 @@
+<section class="mg-section">
+  <mat-card>
+    <div>
+      <mat-table #table [dataSource]="dataSourcetest">
+        <ng-container matColumnDef="numeroContrato">
+          <mat-header-cell *matHeaderCellDef>
+            Número de Contrato
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{
+            element.numeroContrato
+          }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="vigencia">
+          <mat-header-cell *matHeaderCellDef> Vigencia </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.vigencia }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="rp">
+          <mat-header-cell *matHeaderCellDef> RP </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.rp }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="mes">
+          <mat-header-cell *matHeaderCellDef> Mes </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.mes }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaAprobacion">
+          <mat-header-cell *matHeaderCellDef>
+            Fecha Aprobación
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{
+            element.fechaAprobacion | date : "dd/MM/yyyy"
+          }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="nombreProveedor">
+          <mat-header-cell *matHeaderCellDef>
+            Nombre Proveedor
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{
+            element.nombreProveedor
+          }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="dependencias">
+          <mat-header-cell *matHeaderCellDef> Dependencias </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{
+            element.dependencias
+          }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <div class="btn-box">
+              <div>
+                <a mat-button>
+                  <mat-icon color="primary" fontIcon="visibility"></mat-icon>
+                </a>
+              </div>
+              <div>
+                <a mat-button (click)="descargarDocumentos()">
+                  <mat-icon color="primary" fontIcon="archive"></mat-icon>
+                </a>
+              </div>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        
+      </mat-table>
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-card>
+</section>

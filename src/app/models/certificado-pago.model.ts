@@ -3,14 +3,13 @@ export class SolicituDeFirma {
     NombreResponsable: string;
     CargoResponsable: string;
     DescripcionDocumento: string;
-    Archivo: any; // Tipo 'any' por ahora, ajusta según el tipo real de 'Archivo'
-
+    Archivo: any; 
     constructor(
         nombreArchivo: string,
         nombreResponsable: string,
         cargoResponsable: string,
         descripcionDocumento: string,
-        archivo: any // Tipo 'any' por ahora, ajusta según el tipo real de 'Archivo'
+        archivo: any 
     ) {
         this.NombreArchivo = nombreArchivo;
         this.NombreResponsable = nombreResponsable;
