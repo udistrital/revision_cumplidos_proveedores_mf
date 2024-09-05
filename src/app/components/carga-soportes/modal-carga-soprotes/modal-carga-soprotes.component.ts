@@ -51,13 +51,10 @@ export class ModalCargaSoprotesComponent {
      
         this.getSolicitudesContrato(this.numeroContrato, this.vigencia);
 
-
         this.newCumplidoProveedor = {
           NumeroContrato: this.numeroContrato,
           VigenciaContrato: Number(this.vigencia),
-          Activo: true,
-          FechaCreacion: new Date(),
-          FechaModificacion: new Date(),
+
         }
 
 
@@ -105,11 +102,12 @@ export class ModalCargaSoprotesComponent {
     this.cumplidosCrudService.post('/cumplido_proveedor', this.newCumplidoProveedor)
       .subscribe({
         next: (res: any) => {
+          console.log(res)
           this.newCambioEstado = {
-            EstadoCumplidoId: 1,
+            CodigoAbreviacionEstadoCumplido:"CD",
             CumplidoProveedorId: res.Data.Id,
-            DocumentoResponsable: this.documento_supervisor,
-            CargoResponsable: "Supervisor",
+
+
           }
           this.cumplidosMidServices.post('/solicitud-pago/cambio-estado', this.newCambioEstado)
             .subscribe({
@@ -155,7 +153,7 @@ export class ModalCargaSoprotesComponent {
     );
     console.log();
     if (confirm.isConfirmed) {
-      this.cambioEstadoService.cambiarEstado(idCumplido.cumplidoProveedor.Id,"PRC","0","Contratacion");
+      this.cambioEstadoService.cambiarEstado(idCumplido.cumplidoProveedor.Id,"PRC");
     }else{
       this.alertService.showCancelAlert("Cancelado","No se ha relizado ninguna accion");
     }

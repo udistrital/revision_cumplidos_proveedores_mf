@@ -99,7 +99,7 @@ export class TablaAprobacionPagoComponent {
     if (confirm.isConfirmed) {
       try{
 
-        this.cambiarEstado(cumplido.Id,"PRO", "265313","Ordenador");
+        this.cambiarEstado(cumplido.Id,"PRO");
         this.alertService.showSuccessAlert(
           'Rehzadado',
           '!Se han rechazado los soprtes!'
@@ -129,7 +129,7 @@ export class TablaAprobacionPagoComponent {
     if (x.isConfirmed) {
      
 
-      this.cambiarEstado(cumplido.Id,"RC", "0","Contratacion");
+      this.cambiarEstado(cumplido.Nombre,"RC");
       this.alertService.showSuccessAlert(
         'Rehzadado',
         '!Se han rechazado los soprtes!'
@@ -190,9 +190,9 @@ export class TablaAprobacionPagoComponent {
  
  
 
-  cambiarEstado(idCumplido:any,estado:string, documentoResponsable:string, cargoResponable:string){
+  cambiarEstado(idCumplido:any,estado:string){
  
-    this.cambioEstadoService.cambiarEstado(idCumplido,estado,documentoResponsable,cargoResponable);
+    this.cambioEstadoService.cambiarEstado(idCumplido,estado);
       }
 
 

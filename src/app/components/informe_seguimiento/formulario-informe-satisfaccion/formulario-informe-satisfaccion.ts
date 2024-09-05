@@ -254,7 +254,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         const body = this.obtenerInformacionPago();
 
         this.cumplidosMidServices
-          .post('/supervisor/informe-seguimiento', body)
+          .post('/supervisor/cumplido-satisfaccion', body)
           .subscribe({
             next: (res: any) => {
               console.log('response', res.Data);
@@ -265,7 +265,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
                 res.Data.DescripcionDocumento,
                 res.Data.Archivo
               );
-
+              console.log(this.solicituDeFirma.Archivo)
               this.pdfBase64 = this.solicituDeFirma.Archivo;
               this.nameFile = this.solicituDeFirma.NombreArchivo;
             },
@@ -378,28 +378,25 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
   obtenerInformacionPago() {
     return {
-      BancoId: this.formularioInformeSeguimiento.get('banco')?.value.Id ?? 0,
-      CumplidoProveedorId: {
-        id: this.cumplidoId,
-      },
+      Banco:
+        this.formularioInformeSeguimiento.get('banco')?.value.NombreBanco ?? 0,
       NumeroContratoSuscrito: Number(this.numeroContrato) ?? 0,
       NumeroCuenta: this.formularioInformeSeguimiento.value.numero_cuenta ?? '',
-      NumeroFactura:
+      NumeroCuentaFactura:
         this.formularioInformeSeguimiento.value.numero_factura ?? '',
-      TipoCuentaBancariaId:
-        this.formularioInformeSeguimiento.get('tipo_cuenta')?.value.Id ?? 0,
-      TipoPagoId: {
-        id: this.formularioInformeSeguimiento.get('tipo_pago')?.value.Id ?? 0,
-      },
-      TipoDocumentoCobroId:
-        this.formularioInformeSeguimiento.get('tipo_cobro')?.value.Id ?? 0,
-      ValorCumplido: Number(
+      TipoCuenta:
+        this.formularioInformeSeguimiento.get('tipo_cuenta')?.value.Nombre ?? 0,
+      TipoPago:
+this.formularioInformeSeguimiento.get('tipo_pago')?.value.Nombre ?? 0,
+      TipoFactura:
+        this.formularioInformeSeguimiento.get('tipo_cobro')?.value.Nombre ?? 0,
+      ValorPagar: Number(
         this.formularioInformeSeguimiento.value.valor_cumplido
       ),
       VigenciaContrato: this.vigencia ?? '',
-      FechaInicial:
+      PeriodoInicio:
         this.formularioInformeSeguimiento.get('fecha_inicio')?.value ?? null,
-      FechaFinal:
+      PeriodoFin:
         this.formularioInformeSeguimiento.get('fecha_fin')?.value ?? null,
     };
   }

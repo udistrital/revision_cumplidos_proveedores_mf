@@ -119,7 +119,7 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
     if (x.isConfirmed) {
      
 
-      this.cambiarEstado(idCumplido.Id,"RO", "0","Contratacion");
+      this.cambiarEstado(idCumplido.Id,"RO");
       this.alertService.showSuccessAlert(
         'Rehzadado',
         '!Se han rechazado los soprtes!'
@@ -225,15 +225,15 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
         documentoResponsable:this.documentoResponsable,
         estadoCumplido:"AO",
         funcionAprobar: (id: number,esatadoCumplido:string, documentoResponsable:string, cargoResponsable:string) =>
-          this.cambioEstadoService.cambiarEstado(id,esatadoCumplido,documentoResponsable,cargoResponsable),
+          this.cambioEstadoService.cambiarEstado(id,esatadoCumplido),
       },
     });
   }
 
   
-  cambiarEstado(idCumplido:any,estado:string, documentoResponsable:string, cargoResponable:string){
+  cambiarEstado(idCumplido:any,estado:string){
  
-    this.cambioEstadoService.cambiarEstado(idCumplido,estado,documentoResponsable,cargoResponable);
+    this.cambioEstadoService.cambiarEstado(idCumplido,estado);
       }
 
 }

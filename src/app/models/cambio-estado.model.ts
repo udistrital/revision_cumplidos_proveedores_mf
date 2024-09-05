@@ -1,18 +1,15 @@
 export class CambioEstado {
-    EstadoCumplidoId: number;
+    CodigoAbreviacionEstadoCumplido: string;
     CumplidoProveedorId: number;
-    DocumentoResponsable: string;
-    CargoResponsable: string;
+ 
 
     constructor(
-        EstadoCumplidoId: number,
-        CumplidoProveedorId: number,
-        DocumentoResponsable: string,
-        CargoResponsable: string
+        CodigoAbreviacionEstadoCumplido: string,
+        CumplidoProveedorId:number
+      
     ) {
-        this.EstadoCumplidoId = EstadoCumplidoId;
+        this.CodigoAbreviacionEstadoCumplido = CodigoAbreviacionEstadoCumplido;
         this.CumplidoProveedorId = CumplidoProveedorId;
-        this.DocumentoResponsable = DocumentoResponsable;
-        this.CargoResponsable = CargoResponsable;
+        
     }
 }
