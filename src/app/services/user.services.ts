@@ -4,17 +4,17 @@ import { environment } from '../../environments/environment';
 import { RequestManager } from '../managers/requestManager';
 import { JbpmService } from './jbpm_service.service';
 import { AletManagerService } from '../managers/alert-manager.service';
+import { AdministrativaAmazonService } from './administrativa_amazon.service';
 
 @Injectable({
   providedIn: 'root',
 })
-
-
-export class UserService{
-
-constructor(private jbmpServie:JbpmService,private alertService:AletManagerService){
-
-}
+export class UserService {
+  constructor(
+    private jbmpServie: JbpmService,
+    private alertService: AletManagerService,
+    private administrativaAmazonService: AdministrativaAmazonService
+  ) {}
 
   public getPayload(): any {
     var payload: any = {};
@@ -34,5 +34,12 @@ constructor(private jbmpServie:JbpmService,private alertService:AletManagerServi
       throw new Error('Error al obtener el documento');
     }
   }
-}
 
+  public obtenerInformacionPersona(): Observable<any> {
+    const infoPerson = this.administrativaAmazonService.get(
+      '/informacion_persona_natural?query=Id:' + this.getPayload().documento
+    );
+
+    return infoPerson;
+  }
+}
