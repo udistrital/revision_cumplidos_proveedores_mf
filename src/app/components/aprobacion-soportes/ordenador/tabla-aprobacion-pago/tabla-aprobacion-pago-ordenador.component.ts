@@ -205,9 +205,6 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   }
 
   modalVerSoporte(autorizacionPago: SolicituDeFirma, idCumplido: number) {
-    console.log("---")
-    console.log(autorizacionPago)
-    console.log("----")
     this.dialog.open(ModalVerSoporteComponent, {
       disableClose: true,
       height: '70vh',

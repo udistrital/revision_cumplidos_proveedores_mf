@@ -30,6 +30,33 @@ export class SoporteCumplidoComponent {
 
   }
 
+  listaSoportes: Soporte[] = [
+    {
+      Id: 1,
+      nombre: "Soporte 1",
+      fecha: "2024-09-05",
+      item: "Item A",
+      comentario: "Este es un comentario para el Soporte 1",
+      archivo: "soporte1.pdf"
+    },
+    {
+      Id: 2,
+      nombre: "Soporte 2",
+      fecha: "2024-09-05",
+      item: "Item B",
+      comentario: "Comentario del Soporte 2",
+      archivo: "soporte2.doc"
+    },
+    {
+      Id: 3,
+      nombre: "Soporte 3",
+      fecha: "2024-09-05",
+      item: "Item C",
+      comentario: "Comentario breve",
+      archivo: "soporte3.txt"
+    }
+  ];
+
   ngOnInit() {
     this.cumplidosMidServices.cumplido$.subscribe(cumplido => {
       if (cumplido) {
@@ -97,4 +124,5 @@ export class SoporteCumplidoComponent {
        }
   }
 
+  
 }

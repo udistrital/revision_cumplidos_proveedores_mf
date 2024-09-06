@@ -30,7 +30,6 @@ export class ModalListarSoportes {
   ){
     this.soportesCumplido = data.soporteCumplido;
     this.idCumplido=data.idCumplido;
-     console.log(this.soportesCumplido[0].Documento.Id)
   }
 
  

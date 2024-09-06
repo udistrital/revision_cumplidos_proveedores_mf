@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TablaHistoricosComponent } from './tabla-historicos.component';
+import { ListadoHistoricosComponent } from './listado-historicos.component';
 
 describe('TablaHistoricosComponent', () => {
-  let component: TablaHistoricosComponent;
-  let fixture: ComponentFixture<TablaHistoricosComponent>;
+  let component: ListadoHistoricosComponent;
+  let fixture: ComponentFixture<ListadoHistoricosComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TablaHistoricosComponent]
+      declarations: [ListadoHistoricosComponent]
     });
-    fixture = TestBed.createComponent(TablaHistoricosComponent);
+    fixture = TestBed.createComponent(ListadoHistoricosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,21 +1,26 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { HistoricoCumplido } from 'src/app/models/historico-cumplido.model';
 import Swal from 'sweetalert2';
+import { CargarModalComponent } from '../../subir_soporte/cargar-modal/cargar-modal.component';
+import { VisualizarSoportesComponent } from '../../subir_soporte/visualizar-soportes/visualizar-soportes.component';
+import { SoporteCumplidoComponent } from '../../subir_soporte/soporte-cumplido/soporte-cumplido.component';
+import { ModalHistoricoComponent } from '../modal-historico/modal-historico.component';
 
 @Component({
-  selector: 'app-tabla-historicos',
-  templateUrl: './tabla-historicos.component.html',
-  styleUrls: ['./tabla-historicos.component.css'],
+  selector: 'app-listado-historicos',
+  templateUrl: './listado-historicos.component.html',
+  styleUrls: ['./listado-historicos.component.css'],
 })
-export class TablaHistoricosComponent implements OnInit {
+export class ListadoHistoricosComponent implements OnInit {
   @Input() displayedColumns: any[] = [];
   @Input() dataSource: HistoricoCumplido[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private alertService:AletManagerService ){}
+  constructor(private alertService:AletManagerService,private dialog:MatDialog ){}
   
   dataSourcetest = new MatTableDataSource<HistoricoCumplido>();
 
@@ -51,6 +56,24 @@ descargaTemp():Promise<void> {
     }, 2000);
   });
 }
+
+
+
+modalDocumentosCargados() {
+console.log("Entro");
+  this.dialog.open(ModalHistoricoComponent, {
+    disableClose: true,
+    height: '70vh',
+    width: '40vw',
+    maxWidth: '60vw',
+    maxHeight: '80vh',
+    panelClass: 'custom-dialog-container',
+    data: {
+    },
+  });
+}
+
+
   }
 
 

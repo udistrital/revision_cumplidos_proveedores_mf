@@ -42,8 +42,9 @@ import { ModalVerSoporteComponent } from './components/modal-ver-soporte/modal-v
 import { ModalListarSoportes } from './components/modal-listar-soportes/modal-listar-soportes.component';
 import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
 import { FormularioConsultaComponent } from './components/historico-cumplidos/formulario-consulta/formulario-consulta.component';
-import { TablaHistoricosComponent } from './components/historico-cumplidos/tabla-historicos/tabla-historicos.component';
+import { ListadoHistoricosComponent } from './components/historico-cumplidos/listado-historicos/listado-historicos.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ModalHistoricoComponent } from './components/historico-cumplidos/modal-historico/modal-historico.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
@@ -70,7 +71,8 @@ export function createTranslateLoader(http: HttpClient) {
     ModalListarSoportes,
     HistoricoCumplidosComponent,
     FormularioConsultaComponent,
-    TablaHistoricosComponent,
+    ListadoHistoricosComponent,
+    ModalHistoricoComponent,
     
   ],
   imports: [
