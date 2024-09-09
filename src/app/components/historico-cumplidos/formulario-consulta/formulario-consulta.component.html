@@ -16,7 +16,7 @@
                 <div class="">
                   <mat-form-field  appearance="outline">
                     <mat-label class="label">Seleccione año</mat-label>
-                    <mat-select  placeholder="Año">
+                    <mat-select  placeholder="Año" multiple>
                       <mat-option *ngFor="let anio of anios" [value]="anio">
                         {{ anio }}
                       </mat-option>
@@ -26,7 +26,7 @@
                 <div class="">
                   <mat-form-field appearance="outline">
                     <mat-label class="label">Seleccione mes</mat-label>
-                  <mat-select placeholder="Mes">
+                  <mat-select placeholder="Mes" multiple>
                     <mat-option *ngFor="let mes of meses" [value]="mes.mes">
                       {{ mes.nombre }}
                     </mat-option>
@@ -34,7 +34,7 @@
                 </mat-form-field></div>
                 <div class=""><mat-form-field appearance="outline">
                   <mat-label class="label">Seleccione vigencia</mat-label>
-                  <mat-select placeholder="Vigencia">
+                  <mat-select placeholder="Vigencia" multiple>
                     <mat-option *ngFor="let anio of anios" [value]="anio">
                       {{ anio }}
                     </mat-option>
@@ -50,7 +50,7 @@
                 <div  class="">
                   <mat-form-field appearance="outline">
                     <mat-label>Seleccione Estado</mat-label>
-                    <mat-select class="label" placeholder="Estado">
+                    <mat-select class="label" placeholder="Estado" multiple>
                     <mat-option *ngFor="let estado of estados" [value]="estado">
                       {{estado}}
                     </mat-option>
