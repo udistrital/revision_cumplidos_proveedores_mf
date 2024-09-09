@@ -1,0 +1,28 @@
+<main>
+  <article>
+    <mat-card>
+        <section class="title">
+          <mat-card-header>
+            <mat-card-title>
+              <div class="title-border">{{ title }}</div>
+            </mat-card-title>
+          </mat-card-header>
+        </section>
+
+        <section>
+          <mat-card-content>
+            <div *ngIf="dataVacio(); else elseBlock" class="containerButton">
+              <p class="nota"> No se encontraron cumplidos que cumplan las condiciones para revertir</p>
+              <button mat-button class="buttonInicio"> Inicio </button>
+            </div>
+
+            <ng-template #elseBlock>
+              <app-tabla [displayedColumns]="displayedColumns" [lista_cumplidos]="lista_cumplidos"></app-tabla>
+            </ng-template>
+
+
+          </mat-card-content>
+        </section>
+    </mat-card>
+  </article>
+</main>

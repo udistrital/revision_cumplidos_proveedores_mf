@@ -24,7 +24,6 @@ export class SoporteCumplidoComponent {
     private popUpManager: PopUpManager,
     private soporteService: SoportesServicesService,
     private cumplidosMidServices: CumplidosProveedoresMidService,
-    private utilsService: UtilsService,
     private aletManagerService:AletManagerService,
   ){
 
@@ -72,10 +71,10 @@ export class SoporteCumplidoComponent {
 
 
   async eliminarSoporte(soporte: any){
- 
+
        const confirm = await this.aletManagerService.alertConfirm("¿Deseas Eliminar el soporte?");
        if(confirm.isConfirmed){
-        
+
         console.log(soporte)
         try{
           this.cumplidosMidServices.delete(`/solicitud-pago/soportes`, soporte)
@@ -91,7 +90,7 @@ export class SoporteCumplidoComponent {
         }catch(error){
             this.aletManagerService.showCancelAlert("Error","Se produjo"+error)
         }
-        
+
        }else{
         this.aletManagerService.showCancelAlert("Cancelado","No se elimino")
        }

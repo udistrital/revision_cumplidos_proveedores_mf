@@ -40,6 +40,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
 import { ModalVerSoporteComponent } from './components/modal-ver-soporte/modal-ver-soporte.component';
 import { ModalListarSoportes } from './components/modal-listar-soportes/modal-listar-soportes.component';
+import { ComponentePrincipalComponent } from './components/reversion-cumplidos/componente-principal/componente-principal.component';
+import { TablaComponent } from './components/reversion-cumplidos/tabla/tabla.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort'
+
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -65,6 +70,9 @@ export function createTranslateLoader(http: HttpClient) {
     SafeUrlPipe,
     ModalVerSoporteComponent,
     ModalListarSoportes,
+    ComponentePrincipalComponent,
+    TablaComponent,
+
   ],
   imports: [
     HttpClientModule,
@@ -90,6 +98,8 @@ export function createTranslateLoader(http: HttpClient) {
     SweetAlert2Module,
     HttpClientModule,
     MatSnackBarModule,
+    MatPaginatorModule,
+    MatSortModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

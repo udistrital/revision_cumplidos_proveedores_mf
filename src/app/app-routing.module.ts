@@ -8,6 +8,7 @@ import { getSingleSpaExtraProviders } from 'single-spa-angular';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { TablaAprobacionPagoComponent } from './components/aprobacion-soportes/contratacion/tabla-aprobacion-pago/tabla-aprobacion-pago.component';
 import { TablaAprobacionPagoOrdenadorComponent } from './components/aprobacion-soportes/ordenador/tabla-aprobacion-pago/tabla-aprobacion-pago-ordenador.component';
+import { ComponentePrincipalComponent } from './components/reversion-cumplidos/componente-principal/componente-principal.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
   {
     path: 'ordenador/aprobacion-pago',
     component: TablaAprobacionPagoOrdenadorComponent,
+  },
+  {
+    path: 'ordenador/reversion-cumplidos',
+    component: ComponentePrincipalComponent
   }
 ];
 
