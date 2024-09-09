@@ -1,132 +1,142 @@
 <div>
-    <mat-card>
-      <div class="title">
-        <mat-card-header>
-          <mat-card-title
-            ><div class="title-border">APROBACION INFORMES</div></mat-card-title
-          >
-        </mat-card-header>
-      </div>
-      <div>
-        <mat-card-content>
-          <div>
-            <div class="texto-gris-negrita">
-              <div>
-                <p>PERSONA DE CONTRATACION</p>
-              </div>
-              <div class="border-data-supervisor">
-                <p>PEPITO PEREZ</p>
-              </div>
+  <mat-card>
+    <div class="title">
+      <mat-card-header>
+        <mat-card-title
+          ><div class="title-border">APROBACION INFORMES</div></mat-card-title
+        >
+      </mat-card-header>
+    </div>
+    <div>
+      <mat-card-content>
+        <div>
+          <div class="texto-gris-negrita">
+            <div>
+              <p>PERSONA DE CONTRATACION</p>
+            </div>
+            <div class="border-data-supervisor">
+              <p>PEPITO PEREZ</p>
             </div>
           </div>
+        </div>
 
-          <div class="div-card-table">
-            <div class="div-table">
-              <mat-card class="margin-10 card-table">
-                <mat-card-content>
-                  <div>
-                    <table mat-table [dataSource]="solicitudes">
-                      <div>
-                        <ng-container matColumnDef="numeroContrato">
-                          <th mat-header-cell *matHeaderCellDef>
-                            Numero Contrato
-                          </th>
-                          <td mat-cell *matCellDef="let element">
-                            {{ element.NumeroContrato }}
-                          </td>
-                        </ng-container>
-                      </div>
-                      <div>
-                        <ng-container matColumnDef="vigencia">
-                          <th mat-header-cell *matHeaderCellDef>Vigencia</th>
-                          <td mat-cell *matCellDef="let element">
-                            {{ element.Vigencia }}
-                          </td>
-                        </ng-container>
-                      </div>
-                      <div>
-                        <ng-container matColumnDef="rp">
-                          <th mat-header-cell *matHeaderCellDef>RP</th>
-                          <td mat-cell *matCellDef="let element">
-                            {{ element.Rp
-                            }}
-                          </td>
-                        </ng-container>
-                      </div>
-                      <div>
-                        <ng-container matColumnDef="vigenciaRp">
-                          <th mat-header-cell *matHeaderCellDef>VIGENCIA RP</th>
-                          <td mat-cell *matCellDef="let element">
-                            {{ element.VigenciaRP }}
-                          </td>
-                        </ng-container>
-                      </div>
-                      <div>
-                        <ng-container matColumnDef="fechaCreacion">
-                          <th mat-header-cell *matHeaderCellDef>
-                            FECHA CREACION
-                          </th>
-                          <td mat-cell *matCellDef="let element">
-                            {{ element.FechaCreacion }}
-                          </td>
-                        </ng-container>
-                      </div>
-                      <div>
-                        <ng-container matColumnDef="nombreProveedor">
-                          <th mat-header-cell *matHeaderCellDef>
-                            NOBRE PROVEEDOR
-                          </th>
-                          <td mat-cell *matCellDef="let element">
-                            {{ element.NombreProveedor }}
-                          </td>
-                        </ng-container>
-                      </div>
-                      <div>
-                        <ng-container matColumnDef="dependencia">
-                          <th mat-header-cell *matHeaderCellDef>DEPENDENCIA</th>
-                          <td mat-cell *matCellDef="let element">
-                            {{ element.Dependencia }}
-                          </td>
-                        </ng-container>
-                      </div>
-                      <div>
-                        <ng-container matColumnDef="acciones">
-                          <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-                          <td mat-cell *matCellDef="let element">
-                            <a mat-button (click)="obtenerSoprtes(element.Id)">
-                              <mat-icon
-                                color="primary"
-                                fontIcon="visibility"
-                              ></mat-icon>
-                            </a>
-                            <a mat-button class="mat-button-sm" (click)="aprobarSoportes(element)">
-                              <mat-icon
-                                color="primary"
-                                fontIcon="check"
-                              ></mat-icon>
-                            </a>
-                            <a mat-button class="mat-button-sm" (click)="rechazarSoportes(element)">
-                              <mat-icon
-                                color="primary"
-                                fontIcon="close"
-                              ></mat-icon>
-                            </a>
-                          </td>
-                        </ng-container>
-                      </div>
+        <div class="div-card-table">
+          <div class="div-table">
+            <mat-card class="margin-10 card-table">
+              <mat-card-content>
+                <div>
+                  <table mat-table [dataSource]="solicitudes">
+                    <div>
+                      <ng-container matColumnDef="numeroContrato">
+                        <th mat-header-cell *matHeaderCellDef>
+                          Numero Contrato
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.NumeroContrato }}
+                        </td>
+                      </ng-container>
+                    </div>
+                    <div>
+                      <ng-container matColumnDef="vigencia">
+                        <th mat-header-cell *matHeaderCellDef>Vigencia</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.Vigencia }}
+                        </td>
+                      </ng-container>
+                    </div>
+                    <div>
+                      <ng-container matColumnDef="rp">
+                        <th mat-header-cell *matHeaderCellDef>RP</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.Rp }}
+                        </td>
+                      </ng-container>
+                    </div>
+                    <div>
+                      <ng-container matColumnDef="vigenciaRp">
+                        <th mat-header-cell *matHeaderCellDef>VIGENCIA RP</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.VigenciaRP }}
+                        </td>
+                      </ng-container>
+                    </div>
+                    <div>
+                      <ng-container matColumnDef="fechaCreacion">
+                        <th mat-header-cell *matHeaderCellDef>
+                          FECHA CREACION
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.FechaCreacion }}
+                        </td>
+                      </ng-container>
+                    </div>
+                    <div>
+                      <ng-container matColumnDef="nombreProveedor">
+                        <th mat-header-cell *matHeaderCellDef>
+                          NOBRE PROVEEDOR
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.NombreProveedor }}
+                        </td>
+                      </ng-container>
+                    </div>
+                    <div>
+                      <ng-container matColumnDef="dependencia">
+                        <th mat-header-cell *matHeaderCellDef>DEPENDENCIA</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.Dependencia }}
+                        </td>
+                      </ng-container>
+                    </div>
+                    <div>
+                      <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
+                        <td mat-cell *matCellDef="let element">
+                          <a
+                            mat-button
+                            (click)="obtenerSoprtes(element.CumplidoId)"
+                          >
+                            <mat-icon
+                              color="primary"
+                              fontIcon="visibility"
+                            ></mat-icon>
+                          </a>
+                          <a
+                            mat-button
+                            class="mat-button-sm"
+                            (click)="aprobarSoportes(element)"
+                          >
+                            <mat-icon
+                              color="primary"
+                              fontIcon="check"
+                            ></mat-icon>
+                          </a>
+                          <a
+                            mat-button
+                            class="mat-button-sm"
+                            (click)="rechazarSoportes(element)"
+                          >
+                            <mat-icon
+                              color="primary"
+                              fontIcon="close"
+                            ></mat-icon>
+                          </a>
+                        </td>
+                      </ng-container>
+                    </div>
 
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                      <tr
-                        mat-row
-                        *matRowDef="let row; columns: displayedColumns"
-                      ></tr>
-                    </table>
-                  </div>
-                </mat-card-content>
-              </mat-card>
-            </div>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="let row; columns: displayedColumns"
+                    ></tr>
+                  </table>
+                </div>
+              </mat-card-content>
+            </mat-card>
           </div>
-        </mat-card-content>
-      </div>
-    </mat-card>
-  </div>
+        </div>
+      </mat-card-content>
+    </div>
+  </mat-card>
+</div>

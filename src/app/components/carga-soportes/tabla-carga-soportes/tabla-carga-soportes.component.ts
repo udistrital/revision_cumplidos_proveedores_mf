@@ -7,15 +7,14 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { UserService } from 'src/app/services/user.services';
 import Swal from 'sweetalert2';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
-
+import { AdministrativaAmazonService } from 'src/app/services/administrativa_amazon.service';
 
 @Component({
   selector: 'app-tabla-carga-soportes',
   templateUrl: './tabla-carga-soportes.component.html',
-  styleUrls: ['./tabla-carga-soportes.component.scss']
+  styleUrls: ['./tabla-carga-soportes.component.scss'],
 })
 export class TablaCargaSoportesComponent {
-
   documento_supervisor: string;
   contratos_supervisor: any;
   dependencias_supervisor: string = '';
@@ -28,62 +27,95 @@ export class TablaCargaSoportesComponent {
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private user: UserService,
-    private alertService:AletManagerService,
+    private alertService: AletManagerService,
+    private administrativaAmazonService: AdministrativaAmazonService
   ) {
-      this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      });
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
 
-      this.documento_supervisor = user.getPayload().documento;
+    this.documento_supervisor = user.getPayload().documento;
   }
 
   ngOnInit() {
-
     this.cargarContratos();
+    this.obtenerInfoPerosona();
   }
 
   cargarContratos() {
-    this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan los contratos disponibles")
-    this.cumplidosMidServices.get('/supervisor/contratos-supervisor/' + this.documento_supervisor)
+    this.alertService.showLoadingAlert(
+      'Cargando',
+      'Espera mientras se cargan los contratos disponibles'
+    );
+    this.cumplidosMidServices
+      .get('/supervisor/contratos-supervisor/' + this.documento_supervisor)
       .subscribe({
         next: (res: any) => {
-          Swal.close()
+          Swal.close();
           this.contratos_supervisor = res.Data;
-          this.nombreSupervisor = this.contratos_supervisor.nombre_supervisor;
-          this.dependencias_supervisor = this.contratos_supervisor.dependencias_supervisor.map((dep: any) => dep.Nombre).join(', ');
+          this.dependencias_supervisor =
+            this.contratos_supervisor.dependencias_supervisor
+              .map((dep: any) => dep.Nombre)
+              .join(', ');
           this.dataSource = this.contratos_supervisor.contratos;
-          this.dataSource = this.contratos_supervisor.contratos.map((contrato: any) => {
-            return {
-              Contrato: contrato,
-              numeroContrato: contrato.NumeroContratoSuscrito,
-              vigencia: contrato.Vigencia,
-              rp: contrato.NumeroRp,
-              vigenciaRp: contrato.VigenciaRp,
-              nombreProveedor: contrato.NombreProveedor,
-              dependencias: contrato.NombreDependencia,
-              acciones: 'Editar, Eliminar'
-            };
-          });
+          this.dataSource = this.contratos_supervisor.contratos.map(
+            (contrato: any) => {
+              return {
+                Contrato: contrato,
+                numeroContrato: contrato.NumeroContratoSuscrito,
+                vigencia: contrato.Vigencia,
+                rp: contrato.NumeroRp,
+                vigenciaRp: contrato.VigenciaRp,
+                nombreProveedor: contrato.NombreProveedor,
+                dependencias: contrato.NombreDependencia,
+                acciones: 'Editar, Eliminar',
+              };
+            }
+          );
         },
         error: (error: any) => {
-          this.popUpManager.showErrorAlert(this.translate.instant('Error al cargar los contratos del supervisor'));
-        }
+          this.popUpManager.showErrorAlert(
+            this.translate.instant(
+              'Error al cargar los contratos del supervisor'
+            )
+          );
+        },
       });
   }
 
-
-  openCargaSoportes(contrato:any ) {
-    
+  openCargaSoportes(contrato: any) {
     this.cumplidosMidServices.getContrato(contrato);
-    this.dialog.open(ModalCargaSoprotesComponent,{
+    this.dialog.open(ModalCargaSoprotesComponent, {
       disableClose: true,
-      maxHeight:"80vw",
-      maxWidth:"100vw",
-      height: "80vh",
-      width:"80%"
+      maxHeight: '80vw',
+      maxWidth: '100vw',
+      height: '80vh',
+      width: '80%',
     });
   }
 
-  displayedColumns: string[] = ['numeroContrato', 'vigencia', 'rp', 'vigenciaRp', 'nombreProveedor', 'dependencias', 'acciones'];
+  displayedColumns: string[] = [
+    'numeroContrato',
+    'vigencia',
+    'rp',
+    'vigenciaRp',
+    'nombreProveedor',
+    'dependencias',
+    'acciones',
+  ];
 
-
+  async obtenerInfoPerosona() {
+    let info = this.user.obtenerInformacionPersona().subscribe({
+      next: (response) => {
+        if (response != null) {
+          this.nombreSupervisor =
+            response[0].PrimerNombre +
+            ' ' +
+            response[0].SegundoNombre +
+            ' ' +
+            response[0].PrimerApellido +
+            ' ' +
+            response[0].SegundoApellido;
+        }
+      },
+    });
+  }
 }

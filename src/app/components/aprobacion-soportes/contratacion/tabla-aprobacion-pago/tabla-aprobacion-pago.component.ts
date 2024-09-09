@@ -51,7 +51,10 @@ export class TablaAprobacionPagoComponent {
       (response: any) => {
         Swal.close();
         if (response.Data != null && response.Data.length > 0) {
+          
           this.solicitudes = response.Data;
+
+          console.log("lista Solicitudes " ,this.solicitudes)
         } else {
           this.solicitudes = [];
         }
@@ -64,12 +67,14 @@ export class TablaAprobacionPagoComponent {
   }
 
   obtenerSoprtes(idCumplido: number) {
+    console.log(idCumplido)
     this.alertService.showLoadingAlert("Cargando", "Espera mientras se listan los documentos")
     this.cumplidos_provedore_mid_service.get('/solicitud-pago/soportes/' + idCumplido).subscribe(
       (response: any) => {
         if (response.Data.length > 0) {
           Swal.close()
           this.soporte_cumplido = response.Data;
+          console.log(response.Data)
           this.dialog.open(ModalListarSoportes, {
             disableClose: true,
             height: '70vh',

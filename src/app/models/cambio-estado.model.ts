@@ -1,11 +1,13 @@
 export class CambioEstado {
-    CodigoAbreviacionEstadoCumplido: string;
     CumplidoProveedorId: number;
+    CodigoAbreviacionEstadoCumplido: string;
+
  
 
     constructor(
-        CodigoAbreviacionEstadoCumplido: string,
-        CumplidoProveedorId:number
+        CumplidoProveedorId:number,
+        CodigoAbreviacionEstadoCumplido: string
+        
       
     ) {
         this.CodigoAbreviacionEstadoCumplido = CodigoAbreviacionEstadoCumplido;

@@ -29,8 +29,12 @@ export class ModalListarSoportes {
     @Inject (MAT_DIALOG_DATA) public data:{soporteCumplido:SoporteCumplido[], idCumplido: number}
   ){
     this.soportesCumplido = data.soporteCumplido;
+    console.log(this.soportesCumplido)
+
     this.idCumplido=data.idCumplido;
      console.log(this.soportesCumplido[0].Documento.Id)
+
+
   }
 
  

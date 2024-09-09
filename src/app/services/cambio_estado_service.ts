@@ -63,17 +63,11 @@ export class CambioEstadoService {
     estadoCumplido: string,
   ) {
     try {
-      const estado: any = await this.obtenerEstado(estadoCumplido).toPromise();
-      console.log('Estado desde cambiar: ', estado);
-      if (estado === undefined || estado === null) {
-        throw new Error('El ID obtenido es nulo o indefinido.');
-      }
-
-      const cambioEstado = new CambioEstado(estado.Id, idCumplido);
+      
+      const cambioEstado = new CambioEstado(idCumplido, estadoCumplido);
       this.solicituCambiarEstado(cambioEstado);
 
-      await this.obteneMensaje(estado.CodigoAbreviacion);
-
+      await this.obteneMensaje(estadoCumplido);
       const notificacion = new NotificacionBody(
         '66c8afeca6ee77849101664d',
         '66ac05deb6d4007375621835',

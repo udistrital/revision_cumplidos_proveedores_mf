@@ -64,6 +64,7 @@ export class ModalCargaSoprotesComponent {
   }
 
 
+
   getSolicitudesContrato(numero_contrato: string, vigencia_contrato: string){
     console.log(numero_contrato)
     console.log(vigencia_contrato)
@@ -151,14 +152,15 @@ export class ModalCargaSoprotesComponent {
     let confirm = await this.alertService.alertConfirm(
       '¿Esta seguro de aprobar los soportes?'
     );
-    console.log();
+    console.log(idCumplido);
     if (confirm.isConfirmed) {
       this.cambioEstadoService.cambiarEstado(idCumplido.cumplidoProveedor.Id,"PRC");
     }else{
       this.alertService.showCancelAlert("Cancelado","No se ha relizado ninguna accion");
     }
      
-
+    this.getSolicitudesContrato(idCumplido.cumplidoProveedor.NumeroContrato,idCumplido.cumplidoProveedor.VigenciaContrato)
   }
+  
 
 }
