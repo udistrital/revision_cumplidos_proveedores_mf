@@ -64,10 +64,10 @@ console.log("Entro");
   this.dialog.open(ModalHistoricoComponent, {
     disableClose: true,
     height: '70vh',
-    width: '40vw',
+    width: '100vw',
     maxWidth: '60vw',
     maxHeight: '80vh',
-    panelClass: 'custom-dialog-container',
+    panelClass: 'container-historico',
     data: {
     },
   });

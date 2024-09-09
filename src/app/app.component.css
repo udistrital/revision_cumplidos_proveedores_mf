@@ -19,3 +19,22 @@
   height: 56px;
 }
 
+
+
+.container-historico .mat-dialog-content {
+  width: 80vw;
+  max-width: 600px; 
+  height: 70vh; 
+  max-height: 80vh;
+  padding: 20px; 
+}
+
+
+@media (max-width: 1020px) {
+  .container-historico  .mat-dialog-content {
+    width: 100vw; 
+    height: 80vh;
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+}
