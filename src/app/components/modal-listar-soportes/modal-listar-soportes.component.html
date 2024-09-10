@@ -36,7 +36,7 @@
                         <div class="column">
                           <div>Observaciones</div>
                           <div>
-                            <textarea [(ngModel)]="observaciones[documento.Documento.Id]"> </textarea>
+                            <textarea [(ngModel)]="observaciones[documento.SoporteCumplidoId]" ></textarea>
                           </div>
                         </div>
                       </div>
@@ -45,7 +45,7 @@
                           <a mat-button color="primary" (click)="openVerSoporte(documento.Archivo.File)">Ver documento</a>
                         </div>
                         <div class="m-4">
-                          <a mat-button color="primary" (click)="enviarComentario(documento.Documento.Id)">Enviar Observaciones</a>
+                          <a mat-button color="primary" (click)="enviarComentario(documento.SoporteCumplidoId)">Enviar Observaciones</a>
                         </div>
                       </div>
                     </div>

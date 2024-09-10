@@ -48,10 +48,8 @@ export class ModalListarSoportes {
     if(enviarComnetario.isConfirmed && cambioEstado!=null){
 
       try{
-        const  observacionData= new Observacion(cambioEstado.CumplidoProveedorId.Id.toString(),cambioEstado.EstadoCumplidoId.Id.toString(),this.observaciones[soporteId]);
-        this.observaciones[soporteId]="";
-
-        this.cumplidos_provedore_mid_service.post("/solicitud-pago/comentario-soporte",observacionData).subscribe((response)=>{
+        const  observacionData= new Observacion(soporteId,cambioEstado.Id,this.observaciones[soporteId]);
+        this.cumplidos_provedore_crud_service.post("/comentario_soporte",observacionData).subscribe((response)=>{
           this.alerts.showSuccessAlert("Comentario Guardado", "Se ha guardado el comentario en el documento")
         });
       }catch(error){

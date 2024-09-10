@@ -37,7 +37,7 @@ export class TablaCargaSoportesComponent {
 
   ngOnInit() {
     this.cargarContratos();
-    this.obtenerInfoPerosona();
+    this.obtenerInfoPersona();
   }
 
   cargarContratos() {
@@ -102,7 +102,7 @@ export class TablaCargaSoportesComponent {
     'acciones',
   ];
 
-  async obtenerInfoPerosona() {
+  async obtenerInfoPersona() {
     let info = this.user.obtenerInformacionPersona().subscribe({
       next: (response) => {
         if (response != null) {

@@ -35,10 +35,12 @@ export class Documento {
   export class SoporteCumplido {
     Documento: Documento;
     Archivo: Archivo;
+    SoporteCumplidoId: number;
   
-    constructor(Documento: Documento, Archivo: Archivo) {
+    constructor(Documento: Documento, Archivo: Archivo, SoporteCumplidoId:number) {
       this.Documento = Documento;
       this.Archivo = Archivo;
+      this.SoporteCumplidoId = SoporteCumplidoId;
     }
   }
   

@@ -1,12 +1,19 @@
+import { CambioEstado } from "./cambio-estado.model";
+import { SoporteCumplido } from "./soporte_cumplido.model";
+
 export class Observacion {
-    soporte_id: string;
-    cambio_estado_id: string;
-    comentario: string;
+    SoporteCumplidoId: Object;
+    CambioEstadoCumplidoId: Object;
+    Comentario: string;
   
-    constructor(soporte_id: string, cambio_estado_id: string, comentario: string) {
-      this.soporte_id = soporte_id;
-      this.cambio_estado_id = cambio_estado_id;
-      this.comentario = comentario;
+    constructor(soporte_id: number, cambio_estado_id: number, comentario: string) {
+      this.SoporteCumplidoId = {
+        id: soporte_id
+      };
+      this.CambioEstadoCumplidoId = {
+        id:cambio_estado_id
+      };
+      this.Comentario = comentario;
     }
 
 }

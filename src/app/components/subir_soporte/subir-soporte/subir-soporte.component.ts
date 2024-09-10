@@ -126,6 +126,7 @@ export class SubirSoporteComponent {
     } else {
       this.popUpManager.showErrorAlert('No se ha seleccionado ningún archivo');
     }
+    console.log("Saliendo de carga de archivos",this.solicitudPago)
     this.cargarSoportes(this.solicitudPago);
   }
 

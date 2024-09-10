@@ -19,17 +19,16 @@ import { UserService } from 'src/app/services/user.services';
 export class TablaAprobacionPagoComponent {
   solicitudes: Cumplido[] = [];
   soporte_cumplido: SoporteCumplido[] = [];
-  documentoResponsable:string=""
+  documentoResponsable: string = '';
 
   constructor(
     private alertService: AletManagerService,
     public dialog: MatDialog,
-    private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
-    private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
-    private cambioEstadoService:CambioEstadoService,
-    private userService:UserService
+    private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
+    private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
+    private cambioEstadoService: CambioEstadoService,
+    private userService: UserService
   ) {
-   
     this.cargarTablaCumplidos();
   }
 
@@ -46,114 +45,113 @@ export class TablaAprobacionPagoComponent {
 
   cargarTablaCumplidos() {
     this.solicitudes = [];
-    this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
-    this.cumplidos_provedore_mid_service.get('/contratacion/solicitudes-pago/').subscribe(
-      (response: any) => {
-        Swal.close();
-        if (response.Data != null && response.Data.length > 0) {
-          
-          this.solicitudes = response.Data;
+    this.alertService.showLoadingAlert(
+      'Cargando',
+      'Espera mientras se cargan las solicitudes pendientes'
+    );
+    this.cumplidos_provedore_mid_service
+      .get('/contratacion/solicitudes-pago/')
+      .subscribe(
+        (response: any) => {
+          Swal.close();
+          if (response.Data != null && response.Data.length > 0) {
+            this.solicitudes = response.Data;
 
-          console.log("lista Solicitudes " ,this.solicitudes)
-        } else {
+            console.log('lista Solicitudes ', this.solicitudes);
+          } else {
+            this.solicitudes = [];
+          }
+        },
+        (error) => {
+          this.alertService.showCancelAlert(
+            'Error Al consultar',
+            'Se produjo ' + error + ' al consultar'
+          );
           this.solicitudes = [];
         }
-      },
-      (error) => {
-        this.alertService.showCancelAlert("Error Al consultar", "Se produjo " + error +" al consultar")
-        this.solicitudes = [];
-      }
-    );
+      );
   }
 
   obtenerSoprtes(idCumplido: number) {
-    console.log(idCumplido)
-    this.alertService.showLoadingAlert("Cargando", "Espera mientras se listan los documentos")
-    this.cumplidos_provedore_mid_service.get('/solicitud-pago/soportes/' + idCumplido).subscribe(
-      (response: any) => {
-        if (response.Data.length > 0) {
-          Swal.close()
-          this.soporte_cumplido = response.Data;
-          console.log(response.Data)
-          this.dialog.open(ModalListarSoportes, {
-            disableClose: true,
-            height: '70vh',
-            width: '40vw',
-            maxWidth: '60vw',
-            maxHeight: '80vh',
-            panelClass: 'custom-dialog-container',
-            data: { soporteCumplido: this.soporte_cumplido,idCumplido: idCumplido },
-          });
-        }
-      },
-      (error) => {
-        console.log('error', error);
-      }
+    console.log(idCumplido);
+    this.alertService.showLoadingAlert(
+      'Cargando',
+      'Espera mientras se listan los documentos'
     );
+    this.cumplidos_provedore_mid_service
+      .get('/solicitud-pago/soportes/' + idCumplido)
+      .subscribe(
+        (response: any) => {
+          if (response.Data.length > 0) {
+            Swal.close();
+            this.soporte_cumplido = response.Data;
+            console.log(response.Data);
+            this.dialog.open(ModalListarSoportes, {
+              disableClose: true,
+              height: '70vh',
+              width: '40vw',
+              maxWidth: '60vw',
+              maxHeight: '80vh',
+              panelClass: 'custom-dialog-container',
+              data: {
+                soporteCumplido: this.soporte_cumplido,
+                idCumplido: idCumplido,
+              },
+            });
+          }
+        },
+        (error) => {
+          console.log('error', error);
+        }
+      );
   }
 
   async aprobarSoportes(cumplido: any) {
-
-
-
-    console.log(cumplido)
+    console.log(cumplido);
     let confirm = await this.alertService.alertConfirm(
       '¿Esta seguro de aprobar los soportes?'
     );
     console.log(cumplido);
     if (confirm.isConfirmed) {
-      try{
-
-        this.cambiarEstado(cumplido.Id,"PRO");
-        this.alertService.showSuccessAlert(
-          'Rehzadado',
-          '!Se han rechazado los soprtes!'
-        );
-
-      this.alertService.showSuccessAlert('Aprobado', '!se Aprobo con exito!');
-      }catch(error){
-        this.alertService.showCancelAlert(
-          'Cancelado',
-          'No se pudo relizar la accion'+error
-        );
-      }
-    } else {
-      this.alertService.showCancelAlert(
-        'Cancelado',
-        'No se pudo relizar la accion'
-      );
+      this.cambioEstadoService
+        .cambiarEstado(cumplido.CumplidoId, 'AC')
+        .then((response) => {
+          this.alertService.showSuccessAlert(
+            'Aprobado',
+            '!Se ha Aprobado el  soprte!'
+          );
+        })
+        .catch((error) => {
+          this.alertService.showErrorAlert('Error al aprobar soporte');
+        });
     }
   }
 
   async rechazarSoportes(cumplido: any) {
-
-  this.obtenerResponsable("/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
+    console.log('Objecto', cumplido);
     let x = await this.alertService.alertConfirm(
       '¿Esta seguro de Rechazar los soportes?'
     );
     if (x.isConfirmed) {
-     
-
-      this.cambiarEstado(cumplido.Nombre,"RC");
-      this.alertService.showSuccessAlert(
-        'Rehzadado',
-        '!Se han rechazado los soprtes!'
-      );
+      this.cambioEstadoService
+        .cambiarEstado(cumplido.CumplidoId, 'RC')
+        .then((response) => {
+          this.alertService.showSuccessAlert(
+            'Rechazado',
+            '!Se han rechazado los soprtes!'
+          );
+        })
+        .catch((error) => {
+          this.alertService.showErrorAlert('Error al Rechazar el cumplido');
+          console.log(error);
+        });
     } else {
-      this.alertService.showCancelAlert(
-        'Cancelado',
-        'No se han rechazado los sooprtes'
-      );
     }
   }
 
-
-
   obtenerEstadoId(codigoAbreviacion: string): Observable<number | null> {
     return this.cumplidos_provedore_mid_service
-      .get(
-        `/estado_cumplido?query=CodigoAbreviación:${codigoAbreviacion}`
-      )
+      .get(`/estado_cumplido?query=CodigoAbreviación:${codigoAbreviacion}`)
       .pipe(
         map((response: any) => {
           if (response.Data != null && response.Data.length > 0) {
@@ -162,7 +160,7 @@ export class TablaAprobacionPagoComponent {
           return null;
         }),
         catchError((error) => {
-            this.alertService.showCancelAlert("Se genero un error", error);
+          this.alertService.showCancelAlert('Se genero un error', error);
           return of(null);
         })
       );
@@ -181,24 +179,9 @@ export class TablaAprobacionPagoComponent {
           return null;
         }),
         catchError((error) => {
-          this.alertService.showCancelAlert("Se genero un error", error);
+          this.alertService.showCancelAlert('Se genero un error', error);
           return of(null);
         })
       );
   }
-
-
-  private async obtenerResponsable(endPoint:string){
-    
-    this.documentoResponsable = await this.userService.obtenerResponsable(endPoint);
-   }
- 
- 
-
-  cambiarEstado(idCumplido:any,estado:string){
- 
-    this.cambioEstadoService.cambiarEstado(idCumplido,estado);
-      }
-
-
 }
