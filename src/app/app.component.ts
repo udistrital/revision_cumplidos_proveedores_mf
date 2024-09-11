@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CargarModalComponent } from './components/subir_soporte/cargar-modal/cargar-modal.component';
-
 
 @Component({
   selector: 'proveedores1',

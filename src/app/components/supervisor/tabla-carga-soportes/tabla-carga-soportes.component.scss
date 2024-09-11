@@ -1,0 +1,140 @@
+
+
+
+
+.text-center{
+  display: flex; 
+  justify-content: center;
+}
+
+.padding2px {
+    padding: 3px;
+    padding: 3px;
+    margin-top: 5px;
+  }
+
+  .margin-labels {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 20px;
+  }
+
+  .texto-gris-negrita {
+    color: grey;
+    font-weight: bold;
+  }
+
+  
+  .title-color{
+   color: #8c1a19;
+    padding-bottom: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+ 
+  }
+
+
+  .text-color{
+    color: #8c1a19;
+    padding-bottom: 10px;
+  }
+ 
+  .title-border {
+    border-bottom: 1px solid currentColor;
+  }
+
+    .texto-negro-negrita {
+      color: black;
+      font-weight: bold;
+    }
+
+ 
+  
+    .margin-table{
+      margin: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+   
+
+    .data-supervisor{
+margin-top: 20px;
+      margin-left: 20px;
+      
+    }
+
+    .border-data-supervisor{
+      display:flex;
+      border:  1px solid #8c1a19;
+       background-color:#F8CECC;
+       border-radius: 5px;
+       margin-top: 10px;
+       padding: 4px;
+       width: 50%;
+       
+    }
+
+    
+    .mat-column-acciones, 
+    .mat-column-vigenciaRp, 
+    .mat-column-fechaCrecion, 
+    .mat-column-mes,  
+    .mat-column-rp, 
+    .mat-column-vigencia, 
+    .mat-column-numeroContrato, 
+    .mat-column-dependencia  {
+      text-align: center;
+      font-size: 14px;
+ 
+    }
+
+    .width-card-table{
+      align-items: center;
+      width: 80%;
+    }
+
+
+    .mat-mdc-header-row {
+      box-shadow: none !important;
+      height: 30px !important;
+      background-color:#E8DADA;
+     
+  
+    }
+    .mat-mdc-row {
+      height:10px !important;
+      
+  }
+ 
+
+    @media screen and (max-width: 720px) {
+      .title-color {
+        text-align: center;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      .border-data-supervisor{
+        display:flex;
+        border:  1px solid #8c1a19;
+         background-color:#F8CECC;
+         border-radius: 5px;
+         margin-top: 10px;
+         padding: 4px;
+         width: 100%;
+         
+      }
+      
+      .mdc-data-table__cell, .mdc-data-table__header-cell {
+       padding: 0px;
+       align-items: center;
+       justify-content: center;
+       
+    }
+    
+    }
+    
+    
+      
