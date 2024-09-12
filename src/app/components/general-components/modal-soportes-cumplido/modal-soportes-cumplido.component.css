@@ -1,3 +1,11 @@
+.box-spiner{
+  display: grid !important;
+  grid-template-columns: repeat(1, 1fr) !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  place-items: center!important;
+}
 .modal-header {
   display: flex;
   justify-content: flex-end;
@@ -10,7 +18,7 @@ mat-icon {
 .ver-soportes-tittle{
     justify-content: center;
     color: white;
-    background-color: #98483c;
+    background-color: #8C1A19;
     padding: 10px;
   }
   
@@ -30,4 +38,8 @@ mat-icon {
   app-soporte-cumplido{
     margin-bottom: 50px;
   }
-  
+
+.form-soporte {
+border: 1px solid #98483c;
+
+}

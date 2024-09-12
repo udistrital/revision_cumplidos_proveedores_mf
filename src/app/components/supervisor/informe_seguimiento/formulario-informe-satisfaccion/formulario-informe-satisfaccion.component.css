@@ -15,11 +15,6 @@ form {
   box-sizing: border-box;
 }
 
-@media screen and (max-width: 1280px) {
-  form {
-    grid-template-columns: 1fr !important;
-  }
-}
 
 .wp-item-form {
   display: flex;
@@ -168,4 +163,10 @@ form {
 ::ng-deep .mat-calendar-table-header {
   text-align: center;
   padding: 0 0 0px 0;
+}
+
+@media screen and (max-width: 1280px) {
+  form {
+    grid-template-columns: 1fr !important;
+  }
 }

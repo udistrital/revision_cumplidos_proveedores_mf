@@ -8,4 +8,7 @@
 @import 'assets/styles/theme-angular-material.scss';
 
 
+.text-center{
+  text-align: center;
+}
 

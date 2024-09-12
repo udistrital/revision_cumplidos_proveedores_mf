@@ -1,12 +1,30 @@
 
+.box-info{
+  margin: 15px;
+  display: grid;
+  grid-template-columns: repeat(1,1fr);
+  gap: 10px;
+ 
+}
 
-
+.border-info{
+  border: 1px solid #8c1a19; 
+  width: 101%;
+  padding-left: 5px;
+  background-color: #E8DADA;
+  padding-right: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 7px;
+}
+.marging4px{
+  margin: 4px !important;
+}
 
 .text-center{
   display: flex; 
   justify-content: center;
 }
-
 .padding2px {
     padding: 3px;
     padding: 3px;
