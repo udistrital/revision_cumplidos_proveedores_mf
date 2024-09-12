@@ -149,6 +149,72 @@ export class ComponentePrincipalComponent {
         Dependencia: "Dependencia 1",
         Acciones: 'visibility,close'
       },
+      {
+        CumplidoId: 10,
+        NumeroContrato: "1234",
+        Vigencia: 2021,
+        Rp: "1234",
+        VigenciaRp: "2021",
+        FechaAprobacion: new Date("2021-07-01"),
+        NombreProveedor: "Proveedor 1",
+        Dependencia: "Dependencia 1",
+        Acciones: 'visibility,close'
+      },
+      {
+        CumplidoId: 11,
+        NumeroContrato: "1234",
+        Vigencia: 2021,
+        Rp: "1234",
+        VigenciaRp: "2021",
+        FechaAprobacion: new Date("2021-07-01"),
+        NombreProveedor: "Proveedor 1",
+        Dependencia: "Dependencia 1",
+        Acciones: 'visibility,close'
+      },
+      {
+        CumplidoId: 12,
+        NumeroContrato: "1234",
+        Vigencia: 2021,
+        Rp: "1234",
+        VigenciaRp: "2021",
+        FechaAprobacion: new Date("2021-07-01"),
+        NombreProveedor: "Proveedor 1",
+        Dependencia: "Dependencia 1",
+        Acciones: 'visibility,close'
+      },
+      {
+        CumplidoId: 13,
+        NumeroContrato: "1234",
+        Vigencia: 2021,
+        Rp: "1234",
+        VigenciaRp: "2021",
+        FechaAprobacion: new Date("2021-07-01"),
+        NombreProveedor: "Proveedor 1",
+        Dependencia: "Dependencia 1",
+        Acciones: 'visibility,close'
+      },
+      {
+        CumplidoId: 14,
+        NumeroContrato: "1234",
+        Vigencia: 2021,
+        Rp: "1234",
+        VigenciaRp: "2021",
+        FechaAprobacion: new Date("2021-07-01"),
+        NombreProveedor: "Proveedor 1",
+        Dependencia: "Dependencia 1",
+        Acciones: 'visibility,close'
+      },
+      {
+        CumplidoId: 15,
+        NumeroContrato: "1234",
+        Vigencia: 2021,
+        Rp: "1234",
+        VigenciaRp: "2021",
+        FechaAprobacion: new Date("2021-07-01"),
+        NombreProveedor: "Proveedor 1",
+        Dependencia: "Dependencia 1",
+        Acciones: 'visibility,close'
+      },
     ]
   }
 

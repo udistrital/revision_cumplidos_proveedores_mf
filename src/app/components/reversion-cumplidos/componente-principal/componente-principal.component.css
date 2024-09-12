@@ -29,7 +29,7 @@
   cursor: pointer;
   background-color: #60a917;
   width: 15rem;
-  color: white;
+  color: white !important;
   text-align: center;
 }
 

@@ -18,7 +18,7 @@
                 <a mat-button>
                   <mat-icon color="primary">{{element[column.def].split(',')[0]}}</mat-icon>
                 </a>
-                <a mat-button>
+                <a mat-button (click)="RechazarCumplido(element['CumplidoId'])">
                   <mat-icon color="primary">{{element[column.def].split(',')[1]}}</mat-icon>
                 </a>
               </div>

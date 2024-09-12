@@ -12,6 +12,10 @@
   justify-content: center !important;
 }
 
+::ng-deep table thead tr th:nth-child(n + 2) {
+  border-left: 0px solid var(--color200) !important;
+}
+
 
 .mat-mdc-header-row{
   background: #FFEAE6;

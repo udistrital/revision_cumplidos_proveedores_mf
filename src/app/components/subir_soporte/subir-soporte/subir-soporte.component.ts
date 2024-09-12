@@ -104,7 +104,7 @@ export class SubirSoporteComponent {
       });
   }
 
-  uploadFile() {
+  async uploadFile() {
     if (this.base64Output) {
       const payload = {
         SolicitudPagoID: this.solicitudPago,
@@ -114,7 +114,7 @@ export class SubirSoporteComponent {
         NombreArchivo: this.fileName,
         Archivo: this.base64Output
       };
-      this.cumplidosMidServices.post('/solicitud-pago/soportes', payload)
+      await this.cumplidosMidServices.post('/solicitud-pago/soportes', payload)
         .subscribe({
           next: (res: any) => {
             this.popUpManager.showSuccessAlert('Archivo cargado exitosamente');
