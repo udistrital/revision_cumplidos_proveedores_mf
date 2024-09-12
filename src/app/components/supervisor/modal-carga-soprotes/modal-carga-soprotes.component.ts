@@ -79,9 +79,6 @@ export class ModalCargaSoprotesComponent {
       }
     });
   }
-  getPayload() {
-    throw new Error('Method not implemented.');
-  }
 
   getSolicitudesContrato(numero_contrato: string, vigencia_contrato: string) {
     console.log(numero_contrato);
@@ -143,6 +140,7 @@ export class ModalCargaSoprotesComponent {
           this.popUpManager.showSuccessAlert(
             'Se ha creado el cumplido correctamente'
           );
+          this.getSolicitudesContrato(this.numeroContrato, this.vigencia);
         },
         error: (error: any) => {
           this.popUpManager.showErrorAlert(
