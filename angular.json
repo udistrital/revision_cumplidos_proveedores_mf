@@ -13,7 +13,10 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "outputPath": "dist/revision_cumplidos_proveedores_mf",
+            "allowedCommonJsDependencies": [
+              "lodash"
+           ],
+            "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.single-spa.ts",
             "polyfills": [
@@ -34,25 +37,42 @@
               "libraryName": "revision_cumplidos_proveedores_mf",
               "libraryTarget": "umd"
             },
-            "deployUrl": "http://localhost:4201/"
+            "deployUrl": "http://localhost:4202/"
           },
           "configurations": {
             "production": {
-              "budgets": [
+              "optimization":true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "buildOptimizer": true,
+              "fileReplacements": [
                 {
-                  "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
                 }
               ],
-              "outputHashing": "none"
+              "deployUrl": "https://revisoncumplidoprov.portaloas.udistrital.edu.co/"
             },
             "development": {
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ],
+              "deployUrl": "https://pruebasrevisoncumplidoprov.portaloas.udistrital.edu.co/"
+            },
+            "local": {
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -60,15 +80,10 @@
               "sourceMap": true,
               "namedChunks": true,
               "outputHashing": "none",
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
-                }
-              ]
+              "deployUrl": "http://localhost:4202/"
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "local"
         },
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
@@ -78,9 +93,12 @@
             },
             "development": {
               "browserTarget": "revision_cumplidos_proveedores_mf:build:development"
+            },
+            "local": {
+              "browserTarget": "revision_cumplidos_proveedores_mf:build:local"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "local"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
