@@ -24,6 +24,7 @@ export class CardSoporteComponent {
   @Input({required:true}) config!:ConfigSoportes
   @Input({required:true}) cambioEstadoCumplido!:CambioEstadoCumplido
   @Output() recargarSoportes = new EventEmitter<any>();
+  comentario: string = "";
   mode=Mode
   rolUsuario=RolUsuario
 
@@ -38,6 +39,7 @@ export class CardSoporteComponent {
   }
 
   ngOnInit() {
+    console.log("Soportes ", this.soporte)
     console.log("cambio estado id",this.cambioEstadoCumplido)
   }
 
@@ -81,23 +83,29 @@ export class CardSoporteComponent {
 
   async enviarComentario(){
 
-    let enviarComnetario = await this.aletManagerService.alertConfirm("¿Estas seguro de enviar las observaciones?").then(()=>{
-      try{
-        const  comentario:ComentarioSoporte= <ComentarioSoporte>{
-          SoporteCumplidoId: {
-            Id:this.soporte.SoporteCumplidoId
-          },
-          CambioEstadoCumplidoId:{
-            Id:this.cambioEstadoCumplido.Id
-          },
-          Comentario:""
+    await this.aletManagerService.alertConfirm("¿Estas seguro de enviar las observaciones?").then((confirmed: any)=>{
+
+      console.log(confirmed)
+
+      if(confirmed.isConfirmed){
+        console.log("Comentario",this.comentario)
+        try{
+          const  comentario:ComentarioSoporte= <ComentarioSoporte>{
+            SoporteCumplidoId: {
+              Id:this.soporte.SoporteCumplidoId
+            },
+            CambioEstadoCumplidoId:{
+              Id:this.cambioEstadoCumplido.Id
+            },
+            Comentario:this.comentario
+          }
+          this.cumplidos_provedore_crud_service.post("/comentario_soporte",comentario).subscribe((response)=>{
+            this.aletManagerService.showSuccessAlert("Comentario Guardado", "Se ha guardado el comentario en el documento")
+          });
+        }catch(error){
+          this.aletManagerService.showCancelAlert("Cancelado", "No se ha guardo ningun comentario");
         }
-        this.cumplidos_provedore_crud_service.post("/comentario_soporte",comentario).subscribe((response)=>{
-          this.aletManagerService.showSuccessAlert("Comentario Guardado", "Se ha guardado el comentario en el documento")
-        });
-      }catch(error){
-        this.aletManagerService.showCancelAlert("Cancelado", "No se ha guardo ningun comentario"+error);
-      }
+      } 
     }).catch(()=>{
       this.aletManagerService.showCancelAlert("Cancelado", "No se ha guardo ningun comentario");
     });

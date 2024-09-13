@@ -8,6 +8,8 @@ import { UserService } from './user.services';
 import { JbpmService } from './jbpm_service.service';
 import { NotificacionBody } from '../models/notificacion.model';
 import { NotificacionesService } from './notificaciones.service';
+import { EstadoCumplido } from './../models/basics/estado-cumplido.model';
+import { PopUpManager } from 'src/app/managers/popUpManager';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +26,8 @@ export class CambioEstadoService {
     private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
     private userService: UserService,
     private jbpmService: JbpmService,
-    private notificacionService: NotificacionesService
+    private notificacionService: NotificacionesService,
+    private popUpManager: PopUpManager
   ) {}
 
   obtenerEstado(codigoAbreviacion: string): Observable<number | null> {
@@ -63,7 +66,7 @@ export class CambioEstadoService {
     estadoCumplido: string,
   ) {
     try {
-      
+
       const cambioEstado = new CambioEstado(idCumplido, estadoCumplido);
       this.solicituCambiarEstado(cambioEstado);
 
@@ -129,4 +132,30 @@ export class CambioEstadoService {
         break;
     }
   }
+
+  obtenerEstadoCumplido(idCumplido: number): Observable<EstadoCumplido | null> {
+    return this.cumplidos_provedore_crud_service
+      .get(`/cambio_estado_cumplido/?query=Activo:true,CumplidoProveedorId.Id:${idCumplido}&sortby=FechaCreacion&order=desc`)
+      .pipe(
+        map((res: any) => {
+          // Verifica que res.Data exista y sea un array
+          if (res.Data && Array.isArray(res.Data) && res.Data.length > 0) {
+            const estado = res.Data[0]; // Toma el primer estado de la lista
+            return {
+              Id: estado.EstadoCumplidoId.Id,
+              Nombre: estado.EstadoCumplidoId.Nombre,
+              CodigoAbreviacion: estado.EstadoCumplidoId.CodigoAbreviacion,
+              Descripcion: estado.EstadoCumplidoId.Descripcion,
+              Activo: estado.EstadoCumplidoId.Activo
+            };
+          } else {
+            return null; // Si no hay estados, retorna null
+          }
+        }),
+        catchError((error: any) => {
+          return of(error);
+        })
+      );
+  }
+
 }

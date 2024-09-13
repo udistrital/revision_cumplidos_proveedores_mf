@@ -38,7 +38,8 @@ import { CardSoporteComponent } from './components/general-components/card-sopor
 import { ModalSoportesCumplidoComponent } from './components/general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
 import { FormSoporteComponent } from './components/general-components/form-soporte/form-soporte.component';
 import { ModalVisualizarSoporteComponent } from './components/general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
-
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
@@ -86,6 +87,8 @@ export function createTranslateLoader(http: HttpClient) {
     HttpClientModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatPaginatorModule,
+    MatSortModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

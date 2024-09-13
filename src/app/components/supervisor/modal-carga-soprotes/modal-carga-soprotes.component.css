@@ -30,11 +30,7 @@ h5 {
   padding: 10px;
 }
 
-.text-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 
 .inline-elements {
   display: flex;
@@ -97,3 +93,65 @@ table {
   max-width: 150px;
   word-wrap: break-word;
 }
+
+::ng-deep .mat-sort-header-container{
+  display: flex !important;
+  cursor: pointer !important;
+  align-items: center !important;
+  letter-spacing: normal !important;
+  outline: 0 !important;
+  justify-content: center !important;
+}
+
+::ng-deep table thead tr th:nth-child(n + 2) {
+  border-left: 0px solid var(--color200) !important;
+}
+
+.mat-mdc-header-row{
+  background: #FFEAE6;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.mat-sort-header{
+  text-align: center;
+  vertical-align: middle;
+}
+
+.responsive-table {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.pt10 {
+  padding-top: 10px;
+}
+
+.prl15 {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.mb5 {
+  margin-bottom: 5px;
+}
+
+.text-center {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.header{
+  color: black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.btn-box{
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: 8px;
+}
+

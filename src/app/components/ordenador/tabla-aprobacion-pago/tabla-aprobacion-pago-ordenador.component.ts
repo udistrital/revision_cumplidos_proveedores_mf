@@ -16,16 +16,26 @@ import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
 import { ModalSoportesCumplidoComponent } from 'src/app/components/general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
 import { Mode, RolUsuario, ModalSoportesCumplidoData } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { ModalVisualizarSoporteComponent } from 'src/app/components/general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+
+
+
 @Component({
   selector: 'app-tabla-aprobacion-ordenador-pago',
   templateUrl: './tabla-aprobacion-pago-ordenador.component.html',
   styleUrls: ['./tabla-aprobacion-pago-ordenador.component.css'],
 })
 export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
   solicitudes: Cumplido[] = [];
   soporte_cumplido: SoporteCumplido[] = [];
   documentoResponsable:string="";
   nombreResponsable:string="";
+  data!:any;
+  nombreOrdenador: string = "";
   constructor(
     private alertService: AletManagerService,
     public dialog: MatDialog,
@@ -33,13 +43,14 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
     private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
     private cambioEstadoService:CambioEstadoService,
     private userService:UserService,
-    
-     
+
+
   ) {}
   ngOnInit(): void {
-   this.documentoResponsable= this.userService.getPayload().documento 
+   this.documentoResponsable= this.userService.getPayload().documento
     this.CargarTablaCumplidos();
     this.nombreResponsable=this.userService.getPayload().sub
+    this.obtenerInfoPersona();
 
   }
   displayedColumns = [
@@ -56,15 +67,21 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   CargarTablaCumplidos() {
     this.solicitudes = [];
     this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
-   
+
     this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/'+ this.documentoResponsable).subscribe(
       (response: any) => {
-    
+
         Swal.close();
         if (response.Data != null && response.Data.length > 0) {
           this.solicitudes = response.Data;
+          this.data = new MatTableDataSource<any>(this.solicitudes);
+          this.data.paginator = this.paginator;
+          this.data.sort = this.sort;
         } else {
           this.solicitudes = [];
+          this.data = new MatTableDataSource<any>(this.solicitudes);
+          this.data.paginator = this.paginator;
+          this.data.sort = this.sort;
         }
       },
       (error) => {
@@ -72,6 +89,9 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
         this.alertService.showCancelAlert("Error al consultar","Se produjo un error"+error);
         console.log('error', error);
         this.solicitudes = [];
+        this.data = new MatTableDataSource<any>(this.solicitudes);
+        this.data.paginator = this.paginator;
+        this.data.sort = this.sort;
       }
     );
   }
@@ -92,7 +112,7 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
             data:{
               CumplidoProveedorId:idCumplido,
               Config:{
-                mode:Mode.RO,
+                mode:Mode.PRO,
                 rolUsuario:RolUsuario.O
               }
             } as ModalSoportesCumplidoData
@@ -100,35 +120,52 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
         }
       },
       (error) => {
-        this.alertService.showCancelAlert("Error alcargar documentos","Se peodujo"+ error)
+        this.alertService.showInfoAlert("Cumplido sin soportes","No se encontraron soportes para este cumplido proveedor")
       }
     );
   }
 
-  async verAutorizacionDePago(idCumplido: number) {
+  async obtenerInfoPersona() {
+    let info = this.userService.obtenerInformacionPersona().subscribe({
+      next: (response) => {
+        if (response != null) {
+          this.nombreOrdenador =
+            response[0].PrimerNombre +
+            ' ' +
+            response[0].SegundoNombre +
+            ' ' +
+            response[0].PrimerApellido +
+            ' ' +
+            response[0].SegundoApellido;
+        }
+      },
+    });
+  }
 
+  async verAutorizacionDePago(idCumplido: number) {
     const autorizacionPago = await this.GenerarAutotizacionDePago(
       idCumplido
     ).toPromise()
     if (autorizacionPago != null) {
       this.modalVerSoporte(autorizacionPago, idCumplido);
     }
-  
+    
   }
 
   async rechazarCumplido(idCumplido: any) {
-    
+
     let x = await this.alertService.alertConfirm(
       '¿Esta seguro de Rechazar los soportes?'
     );
     if (x.isConfirmed) {
-     
 
-      this.cambiarEstado(idCumplido.Id,"RO");
+
+      this.cambiarEstado(idCumplido,"RO");
       this.alertService.showSuccessAlert(
-        'Rehzadado',
+        'Rechazadado',
         '!Se han rechazado los soprtes!'
       );
+      this.CargarTablaCumplidos();
     } else {
       this.alertService.showCancelAlert(
         'Cancelado',
@@ -171,19 +208,19 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   }
 
   GenerarAutotizacionDePago(cumplidoId: number): Observable<SolicituDeFirma | null> {
-  
+
     return this.cumplidos_provedore_mid_service
-      .get('/ordenador/certificado-aprobacion-pago/' + cumplidoId)
+      .get('/ordenador/autorizacion-giro/' + cumplidoId)
       .pipe(
         map((response: any) => {
           if (response.Data != null) {
               console.log(response)
             return new SolicituDeFirma(
-      
+
               response.Data.NombreArchivo,
               response.Data.NombreResponsable ,
-               response.Data.CargoResponsable, 
-               response.Data.DescripcionDocumento, 
+               response.Data.CargoResponsable,
+               response.Data.DescripcionDocumento,
                response.Data.Archivo);
           }
           console.log()
@@ -210,9 +247,6 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   }
 
   modalVerSoporte(autorizacionPago: SolicituDeFirma, idCumplido: number) {
-    console.log("---")
-    console.log(autorizacionPago)
-    console.log("----")
     this.dialog.open(ModalVisualizarSoporteComponent, {
       disableClose: true,
       height: '70vh',
@@ -235,9 +269,9 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
     });
   }
 
-  
+
   cambiarEstado(idCumplido:any,estado:string){
- 
+
     this.cambioEstadoService.cambiarEstado(idCumplido,estado);
       }
 

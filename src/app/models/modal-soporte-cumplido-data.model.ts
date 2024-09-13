@@ -11,7 +11,10 @@ export interface ConfigSoportes {
 export enum Mode {
   CD = 'CargandoDocumentos',
   RC = 'RevisionContratacion',
-  RO = 'RevisionOrdenador',
+  PRC = 'PendienteRevisionContratacion',
+  PRO = 'PendienteRevisionOrdenador',
+  AO = 'AprobadoOrdenador',
+  RO = 'RechazadoOrdenador',
 }
 
 export enum RolUsuario {

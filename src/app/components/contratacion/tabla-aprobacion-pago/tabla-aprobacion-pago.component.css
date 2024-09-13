@@ -1,11 +1,11 @@
 
 .title{
-    display: flex; 
+    display: flex;
     justify-content: center;
     color: #8c1a19;
-  
+
   }
-  
+
   .title-border {
     border-bottom: 1px solid currentColor;
   padding-left: 50px;
@@ -13,13 +13,13 @@
   font-size: 20px;
   padding-bottom: 10px;
   }
-  
+
   .texto-gris-negrita {
     color: grey;
     font-weight: bold;
   }
-  
-  
+
+
      .border-data-supervisor>p{
         display:flex;
         border:  1px solid #8c1a19;
@@ -28,91 +28,152 @@
          margin-top: 10px;
          padding: 4px;
          width: 50%;
-         
+
       }
-  
+
       .margin-10{
         margin-top: 30px;
         margin-bottom: 30px;
       }
-  
+
       .mat-mdc-header-row {
         box-shadow: none !important;
         height: 30px !important;
         background-color:#E8DADA;
         font-weight: bold;
-       
-    
+
+
       }
       .mat-mdc-row {
         height:10px !important;
-        
+
     }
     .mat-button-sm {
       padding: 10px 20px; /* padding vertical de 10px y padding horizontal de 20px */
     }
-    
+
     .mat-button-sm mat-icon {
       margin-right: 10px; /* margen a la derecha del icono dentro del botón */
     }
-  
-    .mat-column-numeroContrato, 
-      .mat-column-vigencia, 
-      .mat-column-vigenciaRp, 
-      .mat-column-mfechaCreacion,  
-      .mat-column-rp, 
-      .mat-column-nombreProveedor, 
-      .mat-column-acciones, 
+
+    .mat-column-numeroContrato,
+      .mat-column-vigencia,
+      .mat-column-vigenciaRp,
+      .mat-column-mfechaCreacion,
+      .mat-column-rp,
+      .mat-column-nombreProveedor,
+      .mat-column-acciones,
       .mat-column-dependencia  {
         text-align: center;
         font-size: 14px;
       }
-  
-  
+
+
       .card-table{
         display: flex;
         align-items: center;
         width:100%;
       }
-  
-  
-      
+
+
+
       .div-table{
         display: flex;
         width:90%;
-  
+
         justify-content: center;
         align-content:  center;
       }
-  
-      
+
+
       .div-card-table{
         margin-bottom: 0;
         display: flex;
         justify-content: center;
-        
+
       }
-  
-  
+
+
       .mdc-data-table__cell, .mdc-data-table__header-cell {
         padding: 4px !important;
       }
-    
-      
+
+
       @media screen and (max-width: 720px) {
         .title-color {
           text-align: center;
           white-space: pre-wrap;
           word-wrap: break-word;
         }
-  
-        
+
+
         .mdc-data-table__cell, .mdc-data-table__header-cell {
          padding: 0px;
          align-items: center;
          justify-content: center;
          width: auto;
-         
+
       }
-      
+
+      }
+
+      ::ng-deep .mat-sort-header-container{
+        display: flex !important;
+        cursor: pointer !important;
+        align-items: center !important;
+        letter-spacing: normal !important;
+        outline: 0 !important;
+        justify-content: center !important;
+      }
+
+      ::ng-deep table thead tr th:nth-child(n + 2) {
+        border-left: 0px solid var(--color200) !important;
+      }
+
+      .mat-mdc-header-row{
+        background: #FFEAE6;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .mat-sort-header{
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .responsive-table {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+
+      .pt10 {
+        padding-top: 10px;
+      }
+
+      .prl15 {
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+
+      .mb5 {
+        margin-bottom: 5px;
+      }
+
+      .text-center {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .header{
+        color: black;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .btn-box{
+        display: flex;
+        justify-content: center;
+        box-sizing: border-box;
+        gap: 8px;
       }

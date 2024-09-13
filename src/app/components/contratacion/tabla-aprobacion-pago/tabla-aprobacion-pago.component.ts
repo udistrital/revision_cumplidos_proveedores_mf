@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Cumplido } from 'src/app/models/cumplido.model';
@@ -11,15 +11,25 @@ import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
 import { UserService } from 'src/app/services/user.services';
 import { ModalSoportesCumplidoComponent } from 'src/app/components/general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
 import { Mode, RolUsuario, ModalSoportesCumplidoData } from 'src/app/models/modal-soporte-cumplido-data.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+
+
+
 @Component({
   selector: 'app-tabla-aprobacion-pago-contratacion',
   templateUrl: './tabla-aprobacion-pago.component.html',
   styleUrls: ['./tabla-aprobacion-pago.component.css'],
 })
 export class TablaAprobacionPagoComponent {
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
   solicitudes: Cumplido[] = [];
   soporte_cumplido: SoporteCumplido[] = [];
   documentoResponsable: string = '';
+  nombreContratacion!: string;
+  data!: any;
 
   constructor(
     private alertService: AletManagerService,
@@ -27,8 +37,10 @@ export class TablaAprobacionPagoComponent {
     private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
     private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
     private cambioEstadoService: CambioEstadoService,
-    private userService: UserService
+    private userService: UserService,
+
   ) {
+    this.obtenerInfoPersona();
     this.cargarTablaCumplidos();
   }
 
@@ -56,20 +68,44 @@ export class TablaAprobacionPagoComponent {
           Swal.close();
           if (response.Data != null && response.Data.length > 0) {
             this.solicitudes = response.Data;
-
-            console.log('lista Solicitudes ', this.solicitudes);
+            this.data = new MatTableDataSource<any>(this.solicitudes);
+            this.data.paginator = this.paginator;
+            this.data.sort = this.sort;
           } else {
             this.solicitudes = [];
+            this.data = new MatTableDataSource<any>(this.solicitudes);
+            this.data.paginator = this.paginator;
+            this.data.sort = this.sort;
           }
         },
         (error) => {
-          this.alertService.showCancelAlert(
-            'Error Al consultar',
-            'Se produjo ' + error + ' al consultar'
+          this.alertService.showInfoAlert(
+            'Sin cumplidos pendientes',
+            'No hay cumplidos pendientes para revision por parte de contratación'
           );
           this.solicitudes = [];
+          this.data = new MatTableDataSource<any>(this.solicitudes);
+          this.data.paginator = this.paginator;
+          this.data.sort = this.sort;
         }
       );
+  }
+
+  async obtenerInfoPersona() {
+    let info = this.userService.obtenerInformacionPersona().subscribe({
+      next: (response) => {
+        if (response != null) {
+          this.nombreContratacion =
+            response[0].PrimerNombre +
+            ' ' +
+            response[0].SegundoNombre +
+            ' ' +
+            response[0].PrimerApellido +
+            ' ' +
+            response[0].SegundoApellido;
+        }
+      },
+    });
   }
 
   obtenerSoprtes(idCumplido: number) {
@@ -95,7 +131,7 @@ export class TablaAprobacionPagoComponent {
               data:{
                 CumplidoProveedorId:idCumplido,
                 Config:{
-                  mode:Mode.RC,
+                  mode:Mode.PRC,
                   rolUsuario:RolUsuario.C
                 }
               } as ModalSoportesCumplidoData
@@ -103,6 +139,11 @@ export class TablaAprobacionPagoComponent {
           }
         },
         (error) => {
+          Swal.close();
+          this.alertService.showInfoAlert(
+            'Cumplido sin soportes',
+            'No se encontraron soportes para este cumplido'
+          );
           console.log('error', error);
         }
       );
@@ -122,6 +163,7 @@ export class TablaAprobacionPagoComponent {
             'Aprobado',
             '!Se ha Aprobado el  soprte!'
           );
+          this.cargarTablaCumplidos()
         })
         .catch((error) => {
           this.alertService.showErrorAlert('Error al aprobar soporte');
@@ -142,6 +184,7 @@ export class TablaAprobacionPagoComponent {
             'Rechazado',
             '!Se han rechazado los soprtes!'
           );
+          this.cargarTablaCumplidos()
         })
         .catch((error) => {
           this.alertService.showErrorAlert('Error al Rechazar el cumplido');

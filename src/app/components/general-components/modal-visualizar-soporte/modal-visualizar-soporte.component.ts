@@ -16,7 +16,8 @@ export class ModalVisualizarSoporteComponent {
   ) {
     this.documentLoad=false
     this.documentData='data:application/pdf;base64,'+this.data.url
-    
+
+    console.log("Data ", this.data)
     console.log(this.documentData)
   }
 

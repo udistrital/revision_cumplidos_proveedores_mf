@@ -312,7 +312,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         aprobarSoportes: true,
         idCumplido: this.cumplidoId,
         tipoDocumento: 168,
-        base64: this.pdfBase64,
+        url: this.pdfBase64,
         cargoResponsable: 'Supervisor',
         cumplido: this.cumplido,
         regresarACargaDocumentos: false,

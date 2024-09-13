@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
@@ -13,6 +13,10 @@ import { CrearSolicitudCumplido } from 'src/app/models/crear-solicitud-cumplido.
 import { AdministrativaAmazonService } from 'src/app/services/administrativa_amazon.service';
 import { Mode, RolUsuario, ModalSoportesCumplidoData } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { ModalSoportesCumplidoComponent } from '../../general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { EstadoCumplido } from 'src/app/models/basics/estado-cumplido.model';
 
 @Component({
   selector: 'app-modal-carga-soprotes',
@@ -20,6 +24,8 @@ import { ModalSoportesCumplidoComponent } from '../../general-components/modal-s
   styleUrls: ['./modal-carga-soprotes.component.css'],
 })
 export class ModalCargaSoprotesComponent {
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
   documento_supervisor!: string;
   numeroContrato!: string;
   vigencia!: string;
@@ -27,6 +33,7 @@ export class ModalCargaSoprotesComponent {
   dataSource: any[] = [];
   newCumplidoProveedor!: CrearSolicitudCumplido;
   newCambioEstado!: BodyCambioEstado;
+  data!: any;
 
   constructor(
     private cumplidosMidServices: CumplidosProveedoresMidService,
@@ -111,8 +118,14 @@ export class ModalCargaSoprotesComponent {
                   };
                 }
               );
+              this.data = new MatTableDataSource<any>(this.dataSource);
+              this.data.paginator = this.paginator;
+              this.data.sort = this.sort;
             },
             error: (error: any) => {
+              this.data = new MatTableDataSource<any>(this.dataSource);
+              this.data.paginator = this.paginator;
+              this.data.sort = this.sort;
               this.popUpManager.showErrorAlert(
                 'El Proveedor no tiene ninguna solicitud reciente'
               );
@@ -151,24 +164,49 @@ export class ModalCargaSoprotesComponent {
   }
 
   openDialog(cumplido: any) {
-    console.log('cumplido', cumplido);
-    this.dialog.open(ModalSoportesCumplidoComponent, {
-      disableClose: true,
-      maxHeight: '80vw',
-      maxWidth: '100vw',
-      height: '80vh',
-      width: '80vw',
-      data:{
-        CumplidoProveedorId:cumplido.cumplidoProveedor.Id,
-        Config:{
-          mode:Mode.CD,
-          rolUsuario:RolUsuario.S
-        }
-      } as ModalSoportesCumplidoData
+    this.cambioEstadoService.obtenerEstadoCumplido(cumplido.cumplidoProveedor.Id).subscribe({
+      next: (res: any) => {
+        console.log('cumplido', cumplido);
+        this.dialog.open(ModalSoportesCumplidoComponent, {
+          disableClose: true,
+          maxHeight: '80vw',
+          maxWidth: '100vw',
+          height: '80vh',
+          width: '80vw',
+          data:{
+            CumplidoProveedorId:cumplido.cumplidoProveedor.Id,
+            Config:{
+              mode:this.obtenerModo(res.CodigoAbreviacion),
+              rolUsuario:RolUsuario.S
+            }
+          } as ModalSoportesCumplidoData
+        });
+      },
+      error: (error: any) => {
+        this.popUpManager.showErrorAlert(
+          'No fue Posible obtener el estado del cumplido'
+        );
+      },
     });
+  }
 
+  obtenerModo(codigoAbreviacionCumplido: string): Mode{
+    switch (codigoAbreviacionCumplido) {
+      case 'CD':
+        return Mode.CD;
+      case 'RC':
+        return Mode.PRC;
+      case 'RO':
+        return Mode.RO;
+      case 'AO':
+        return Mode.AO;
+      case 'PRO':
+        return Mode.PRO;
+      default:
+        return Mode.PRC;
 
   }
+}
 
   async cambiarEstado(idCumplido: any) {
     let confirm = await this.alertService.alertConfirm(

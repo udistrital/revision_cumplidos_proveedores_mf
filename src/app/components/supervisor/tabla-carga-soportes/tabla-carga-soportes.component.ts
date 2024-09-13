@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalCargaSoprotesComponent } from '../modal-carga-soprotes/modal-carga-soprotes.component';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
@@ -10,6 +10,9 @@ import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { AdministrativaAmazonService } from 'src/app/services/administrativa_amazon.service';
 import { ModalSoportesCumplidoComponent } from '../../general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
 import { ModalSoportesCumplidoData, Mode, RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-tabla-carga-soportes',
@@ -17,11 +20,16 @@ import { ModalSoportesCumplidoData, Mode, RolUsuario } from 'src/app/models/moda
   styleUrls: ['./tabla-carga-soportes.component.scss'],
 })
 export class TablaCargaSoportesComponent {
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
   documento_supervisor: string;
   contratos_supervisor: any;
   dependencias_supervisor: string = '';
   dataSource: any[] = [];
   nombreSupervisor: string = '';
+  data!: any;
+
+
 
   constructor(
     public dialog: MatDialog,
@@ -38,6 +46,9 @@ export class TablaCargaSoportesComponent {
   }
 
   ngOnInit() {
+
+
+
     this.cargarContratos();
     this.obtenerInfoPersona();
   }
@@ -58,6 +69,9 @@ export class TablaCargaSoportesComponent {
               .map((dep: any) => dep.Nombre)
               .join(', ');
           if (this.contratos_supervisor.contratos == null) {
+            this.data = new MatTableDataSource<any>(this.dataSource);
+            this.data.paginator = this.paginator;
+            this.data.sort = this.sort;
             this.alertService.showInfoAlert("Sin contratos","No se encontraron contratos asociados a la(s) depenendencia(s)")
           } else {
             this.dataSource = this.contratos_supervisor.contratos;
@@ -75,14 +89,21 @@ export class TablaCargaSoportesComponent {
                 };
               }
             );
+            this.data = new MatTableDataSource<any>(this.dataSource);
+            this.data.paginator = this.paginator;
+            this.data.sort = this.sort;
           }
         },
         error: (error: any) => {
+          this.data = new MatTableDataSource<any>(this.dataSource);
+          this.data.paginator = this.paginator;
+          this.data.sort = this.sort;
           this.popUpManager.showErrorAlert(
             this.translate.instant(
               'Error al cargar los contratos del supervisor'
             )
           );
+
         },
       });
   }
@@ -126,7 +147,7 @@ export class TablaCargaSoportesComponent {
   }
 
   openTest() {
-    
+
     this.dialog.open(ModalSoportesCumplidoComponent, {
       disableClose: true,
       maxHeight: '80vw',

@@ -6,7 +6,7 @@
 <div mat-dialog-content>
   <app-form-soporte [cumplidoProveedorId]="cumplidoProveedorId"
     (recargarSoportes)="cargarSoportes()"
-    *ngIf="data.Config.mode==mode.CD"
+    *ngIf="data.Config.mode==mode.CD || data.Config.mode==mode.RC || data.Config.mode==mode.RO"
   ></app-form-soporte>
   <!-- <app-subir-soporte> </app-subir-soporte>
     <br>
@@ -22,7 +22,7 @@
     <ng-template #Cargando><mat-spinner></mat-spinner></ng-template>
     <ng-template #listarSoportes>
       <section *ngIf="soportes.length != 0;then conSoportes else  sinSoportes">
-       
+
       </section>
       <ng-template #conSoportes>
         <p class="spaced-paragraph">

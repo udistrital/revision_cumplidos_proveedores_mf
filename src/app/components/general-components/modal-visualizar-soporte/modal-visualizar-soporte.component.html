@@ -3,7 +3,7 @@
       <mat-icon color="warn">close</mat-icon>
     </button>
   </div>
-  <div mat-dialog-content>
+  <div style="height:88%" mat-dialog-content>
     <object [data]="documentData|safeUrl" type="application/pdf" *ngIf="documentLoad"></object>
 </div>
 <div class="nofile" *ngIf="!documentLoad">
