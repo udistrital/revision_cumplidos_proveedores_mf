@@ -39,7 +39,8 @@ import { ModalSoportesCumplidoComponent } from './components/general-components/
 import { FormSoporteComponent } from './components/general-components/form-soporte/form-soporte.component';
 import { ModalVisualizarSoporteComponent } from './components/general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort'
+import { MatSortModule } from '@angular/material/sort';
+import { TablaComponent } from './components/general-components/tabla/tabla.component'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
@@ -61,6 +62,7 @@ export function createTranslateLoader(http: HttpClient) {
     ModalSoportesCumplidoComponent,
     FormSoporteComponent,
     ModalVisualizarSoporteComponent,
+    TablaComponent,
   ],
   imports: [
     HttpClientModule,

@@ -22,111 +22,12 @@
 
         <br>
         <br>
-        <mat-card>
-          <div class="mat-elevation-z8">
-            <div class="responsive-table">
-              <table mat-table [dataSource]="data" matSort>
-                <div>
-                  <ng-container matColumnDef="numeroContrato">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="header">
-                      Numero Contrato
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
 
-                      {{ element.NumeroContrato }}
-                    </td>
-                  </ng-container>
-                </div>
-                <div>
-                  <ng-container matColumnDef="vigencia">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="header">Vigencia</th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
-                      {{ element.VigenciaContrato }}
-                    </td>
-                  </ng-container>
-                </div>
-                <div>
-                  <ng-container matColumnDef="rp">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="header">RP</th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
-                      {{ element.Rp }}
-                    </td>
-                  </ng-container>
-                </div>
-                <div>
-                  <ng-container matColumnDef="vigenciaRp">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="header">VIGENCIA RP</th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
-                      {{ element.VigenciaRP }}
-                    </td>
-                  </ng-container>
-                </div>
-                <div>
-                  <ng-container matColumnDef="fechaCreacion">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="header">
-                      FECHA CREACION
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
-                      {{ element.FechaCreacion | date: "dd/MM/yyyy" }}
-                    </td>
-                  </ng-container>
-                </div>
-                <div>
-                  <ng-container matColumnDef="nombreProveedor">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="header">
-                      NOBRE PROVEEDOR
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
-                      {{ element.NombreProveedor }}
-                    </td>
-                  </ng-container>
-                </div>
-                <div>
-                  <ng-container matColumnDef="dependencia">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="header">DEPENDENCIA</th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
-                      {{ element.Dependencia }}
-                    </td>
-                  </ng-container>
-                </div>
-                <div>
-                  <ng-container matColumnDef="acciones">
-                    <th mat-header-cell *matHeaderCellDef  class="header">ACCIONES</th>
-                    <td mat-cell *matCellDef="let element" class="btn-box">
-                      <a mat-button (click)="ListarSoportes(element.CumplidoId)">
-                        <mat-icon
-                          color="primary"
-                          fontIcon="visibility"
-                        ></mat-icon>
-                      </a>
-                      <a mat-button class="mat-button-sm" (click)="verAutorizacionDePago(element.CumplidoId)">
-                        <mat-icon
-                          color="primary"
-                          fontIcon="check"
-                        ></mat-icon>
-                      </a>
-                      <a mat-button class="mat-button-sm" (click)="rechazarCumplido(element.CumplidoId)">
-                        <mat-icon
-                          color="primary"
-                          fontIcon="close"
-                        ></mat-icon>
-                      </a>
-                    </td>
-                  </ng-container>
-                </div>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr
-                  mat-row
-                  *matRowDef="let row; columns: displayedColumns"
-                ></tr>
-              </table>
-            </div>
-            <div *ngIf="data.length > 10">
-              <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
-            </div>
-          </div>
-        </mat-card>
+        <div *ngIf="!loading">
+          <app-tabla [data]="dataSource" [displayedColumns]="displayedColumns"
+          (actionClicked)="handleActionClick($event)" />
+        </div>
+        
       </mat-card-content>
     </div>
   </mat-card>

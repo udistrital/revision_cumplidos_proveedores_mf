@@ -16,6 +16,7 @@ export class ModalSoportesCumplidoComponent {
   soportes!: SoporteCumplido[];
   cumplidoProveedorId!:number;
   cambioEstadoCumplido!:CambioEstadoCumplido;
+  loading: boolean = true;
   mode=Mode
 
   constructor(
@@ -27,7 +28,7 @@ export class ModalSoportesCumplidoComponent {
   ) {}
 
   ngOnInit() {
-    
+
     this.cumplidoProveedorId=this.data.CumplidoProveedorId
     console.log(this.soportes)
     this.cargarSoportes()
@@ -59,6 +60,7 @@ export class ModalSoportesCumplidoComponent {
           console.log(this.cambioEstadoCumplido)
         }
         this.cambioEstadoCumplido=response.Data[0]
+        this.loading=false
         console.log(response)
       },
       error: err=>{

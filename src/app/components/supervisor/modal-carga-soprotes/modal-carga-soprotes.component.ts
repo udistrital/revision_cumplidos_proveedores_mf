@@ -17,6 +17,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { EstadoCumplido } from 'src/app/models/basics/estado-cumplido.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-modal-carga-soprotes',
@@ -33,7 +34,8 @@ export class ModalCargaSoprotesComponent {
   dataSource: any[] = [];
   newCumplidoProveedor!: CrearSolicitudCumplido;
   newCambioEstado!: BodyCambioEstado;
-  data!: any;
+  loading: boolean = true;
+  codigoAbreviacion!: string;
 
   constructor(
     private cumplidosMidServices: CumplidosProveedoresMidService,
@@ -87,62 +89,85 @@ export class ModalCargaSoprotesComponent {
     });
   }
 
-  getSolicitudesContrato(numero_contrato: string, vigencia_contrato: string) {
+  async getSolicitudesContrato(numero_contrato: string, vigencia_contrato: string) {
     console.log(numero_contrato);
     console.log(vigencia_contrato);
-    this.cumplidosMidServices.contrato$.subscribe((contrato) => {
+
+    this.cumplidosMidServices.contrato$.subscribe(async (contrato) => {
       if (contrato) {
-        this.cumplidosMidServices
-          .get(
-            '/supervisor/solicitudes-contrato/' +
-              numero_contrato +
-              '/' +
-              vigencia_contrato
-          )
-          .subscribe({
-            next: (res: any) => {
-              var count = 1;
-              this.solicitudes_contrato = res.Data;
-              this.dataSource = this.solicitudes_contrato.map(
-                (solicitud: any) => {
-                  console.log(res.Data, '..Dataparalafecha');
-                  return {
-                    noSolicitud: count++,
-                    numeroContrato:
-                      solicitud.CumplidoProveedorId.NumeroContrato,
-                    fechaCreacion: new Date(solicitud.FechaCreacion),
-                    periodo: solicitud.Periodo,
-                    estadoSoliciatud: solicitud.EstadoCumplido,
-                    acciones: 'Editar, Eliminar',
-                    cumplidoProveedor: solicitud.CumplidoProveedorId,
-                  };
-                }
+        try {
+          const res = await firstValueFrom(
+            this.cumplidosMidServices.get(
+              `/supervisor/solicitudes-contrato/${numero_contrato}/${vigencia_contrato}`
+            )
+          );
+
+          this.solicitudes_contrato = res.Data;
+
+          // Mapear las solicitudes
+          this.dataSource = await Promise.all(
+            this.solicitudes_contrato.map(async (solicitud: any) => {
+              const codigoAbreviacion = await this.obtenerCodigoAbreviacionCumplido(
+                solicitud.CumplidoProveedorId.Id
               );
-              this.data = new MatTableDataSource<any>(this.dataSource);
-              this.data.paginator = this.paginator;
-              this.data.sort = this.sort;
-            },
-            error: (error: any) => {
-              this.data = new MatTableDataSource<any>(this.dataSource);
-              this.data.paginator = this.paginator;
-              this.data.sort = this.sort;
-              this.popUpManager.showErrorAlert(
-                'El Proveedor no tiene ninguna solicitud reciente'
-              );
-            },
-          });
+              return {
+                noSolicitud: solicitud.ConsecutivoCumplido,
+                numeroContrato: solicitud.CumplidoProveedorId.NumeroContrato,
+                fechaCreacion: new Date(solicitud.FechaCreacion),
+                periodo: solicitud.Periodo,
+                estadoSoliciatud: solicitud.EstadoCumplido,
+                cumplidoProveedor: solicitud.CumplidoProveedorId,
+                acciones: [
+                  { icon: 'folder_open', actionName: 'folder_open', isActive: true },
+                  {
+                    icon: 'send',
+                    actionName: 'send',
+                    isActive: codigoAbreviacion === 'CD' || codigoAbreviacion === 'RO' || codigoAbreviacion === 'RC'
+                  },
+                ],
+              };
+            })
+          );
+
+          this.loading = false;
+        } catch (error) {
+          this.loading = false;
+          this.popUpManager.showErrorAlert(
+            'El Proveedor no tiene ninguna solicitud reciente'
+          );
+        }
       }
     });
   }
 
-  displayedColumns: string[] = [
-    'noSolicitud',
-    'numeroContrato',
-    'fechaCreacion',
-    'periodo',
-    'estadoSoliciatud',
-    'acciones',
+
+  displayedColumns: any[] = [
+    {def: 'noSolicitud', header: 'N° SOLICITUD' },
+    {def: 'numeroContrato', header: 'N° CONTRATO' },
+    {def: 'fechaCreacion', header: 'FECHA CREACION' },
+    {def: 'periodo', header: 'PERIODO' },
+    {def: 'estadoSoliciatud', header: 'ESTADO SOLICITUD' },
+    {
+      def: 'acciones',
+      header: 'ACCIONES',
+      isAction: true,
+    }
   ];
+
+  async obtenerCodigoAbreviacionCumplido(idCumplido: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.cambioEstadoService.obtenerEstadoCumplido(idCumplido).subscribe({
+        next: (res: any) => {
+          resolve(res.CodigoAbreviacion);
+        },
+        error: (error: any) => {
+          this.popUpManager.showErrorAlert('No fue posible obtener el estado del cumplido');
+          reject('');
+        }
+      });
+    });
+  }
+
 
   crearCumplidoProveedor() {
     this.cumplidosCrudService
@@ -214,9 +239,12 @@ export class ModalCargaSoprotesComponent {
     );
     console.log(idCumplido);
     if (confirm.isConfirmed) {
-      this.cambioEstadoService.cambiarEstado(
+      await this.cambioEstadoService.cambiarEstado(
         idCumplido.cumplidoProveedor.Id,
         'PRC'
+      );
+      this.popUpManager.showSuccessAlert(
+        'Se han aprobado los soportes correctamente'
       );
     } else {
       this.alertService.showCancelAlert(
@@ -225,9 +253,17 @@ export class ModalCargaSoprotesComponent {
       );
     }
 
-    this.getSolicitudesContrato(
+    await this.getSolicitudesContrato(
       idCumplido.cumplidoProveedor.NumeroContrato,
       idCumplido.cumplidoProveedor.VigenciaContrato
     );
+  }
+
+  handleActionClick(event: {action: any, element: any}) {
+    if (event.action.actionName === 'folder_open') {
+      this.openDialog(event.element);
+    } else if (event.action.actionName === 'send'){
+      this.cambiarEstado(event.element)
+    }
   }
 }

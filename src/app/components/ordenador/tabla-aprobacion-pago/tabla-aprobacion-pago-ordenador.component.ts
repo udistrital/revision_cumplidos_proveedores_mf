@@ -19,6 +19,7 @@ import { ModalVisualizarSoporteComponent } from 'src/app/components/general-comp
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { PopUpManager } from 'src/app/managers/popUpManager';
 
 
 
@@ -35,6 +36,8 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   documentoResponsable:string="";
   nombreResponsable:string="";
   data!:any;
+  dataSource: Cumplido[] = [];
+  loading: boolean = true;
   nombreOrdenador: string = "";
   constructor(
     private alertService: AletManagerService,
@@ -43,6 +46,7 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
     private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
     private cambioEstadoService:CambioEstadoService,
     private userService:UserService,
+    private popUpManager: PopUpManager,
 
 
   ) {}
@@ -53,47 +57,47 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
     this.obtenerInfoPersona();
 
   }
+
   displayedColumns = [
-    'numeroContrato',
-    'vigencia',
-    'rp',
-    'vigenciaRp',
-    'fechaCreacion',
-    'nombreProveedor',
-    'dependencia',
-    'acciones',
+    {def:  'NumeroContrato', header: 'N° CONTRATO'},
+    {def:  'VigenciaContrato', header: 'VIGENCIA'},
+    {def:  'Rp', header: 'RP'},
+    {def:  'VigenciaRP', header: 'VIGENCIA RP'},
+    {def:  'FechaCreacion', header: 'FECHA CREACION'},
+    {def:  'NombreProveedor', header: 'PROVEEDOR'},
+    {def:  'Dependencia', header: 'DEPENDENCIA'},
+    {def: 'acciones', header: 'ACCIONES', isAction: true}
   ];
 
+
+
   CargarTablaCumplidos() {
-    this.solicitudes = [];
+    this.dataSource = [];
     this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
-
-    this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/'+ this.documentoResponsable).subscribe(
-      (response: any) => {
-
+    this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/'+ this.documentoResponsable).subscribe({
+      next: (res: any) => {
         Swal.close();
-        if (response.Data != null && response.Data.length > 0) {
-          this.solicitudes = response.Data;
-          this.data = new MatTableDataSource<any>(this.solicitudes);
-          this.data.paginator = this.paginator;
-          this.data.sort = this.sort;
+        if (res.Data != null && res.Data.length > 0){
+          this.dataSource = res.Data.map(
+            (solicitud: any) => {
+              return {
+                ...solicitud,
+                acciones: [
+                  {icon: 'visibility', actionName: 'visibility', isActive: true},
+                  {icon: 'check', actionName: 'check', isActive: true},
+                  {icon: 'close', actionName: 'close', isActive: true}
+                ]
+              }
+            }
+          )
+          this.loading = false;
         } else {
-          this.solicitudes = [];
-          this.data = new MatTableDataSource<any>(this.solicitudes);
-          this.data.paginator = this.paginator;
-          this.data.sort = this.sort;
+          this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte del ordenador');
+          this.dataSource = [];
+          this.loading = false;
         }
-      },
-      (error) => {
-        console.log("si entro");
-        this.alertService.showCancelAlert("Error al consultar","Se produjo un error"+error);
-        console.log('error', error);
-        this.solicitudes = [];
-        this.data = new MatTableDataSource<any>(this.solicitudes);
-        this.data.paginator = this.paginator;
-        this.data.sort = this.sort;
       }
-    );
+    })
   }
 
   ListarSoportes(idCumplido: number) {
@@ -273,6 +277,16 @@ export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
   cambiarEstado(idCumplido:any,estado:string){
 
     this.cambioEstadoService.cambiarEstado(idCumplido,estado);
+      }
+
+      handleActionClick(event: {action: any, element: any}) {
+        if (event.action.actionName === 'visibility') {
+          this.ListarSoportes(event.element.CumplidoId);
+        } else if (event.action.actionName === 'check'){
+          this.verAutorizacionDePago(event.element.CumplidoId)
+        } else if (event.action.actionName === 'close'){
+          this.rechazarCumplido(event.element.CumplidoId)
+        }
       }
 
 }
