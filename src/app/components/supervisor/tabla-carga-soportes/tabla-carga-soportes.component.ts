@@ -169,4 +169,5 @@ export class TablaCargaSoportesComponent {
       this.openCargaSoportes(event.element);
     }
   }
+
 }
