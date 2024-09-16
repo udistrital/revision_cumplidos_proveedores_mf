@@ -16,7 +16,7 @@ import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
 @Component({
   selector: 'app-card-soporte',
   templateUrl: './card-soporte.component.html',
-  styleUrls: ['./card-soporte.component.css']
+  styleUrls: ['./card-soporte.component.scss']
 })
 export class CardSoporteComponent {
 

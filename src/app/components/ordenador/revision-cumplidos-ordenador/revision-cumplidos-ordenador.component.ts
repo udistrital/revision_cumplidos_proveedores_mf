@@ -23,11 +23,11 @@ import { MatSort } from '@angular/material/sort';
 
 
 @Component({
-  selector: 'app-tabla-aprobacion-ordenador-pago',
-  templateUrl: './tabla-aprobacion-pago-ordenador.component.html',
-  styleUrls: ['./tabla-aprobacion-pago-ordenador.component.css'],
+  selector: 'app-revision-cumplidos-ordenador',
+  templateUrl: './revision-cumplidos-ordenador.component.html',
+  styleUrls: ['./revision-cumplidos-ordenador.component.scss'],
 })
-export class TablaAprobacionPagoOrdenadorComponent implements OnInit {
+export class RevisionCumplidosOrdenadorComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   solicitudes: Cumplido[] = [];

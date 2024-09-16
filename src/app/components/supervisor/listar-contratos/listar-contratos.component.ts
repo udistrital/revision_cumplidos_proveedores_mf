@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalCargaSoprotesComponent } from '../modal-carga-soprotes/modal-carga-soprotes.component';
+import { ModalListarCumplidosComponent } from '../modal-listar-cumplidos/modal-listar-cumplidos.component';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
@@ -15,11 +15,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 @Component({
-  selector: 'app-tabla-carga-soportes',
-  templateUrl: './tabla-carga-soportes.component.html',
-  styleUrls: ['./tabla-carga-soportes.component.scss'],
+  selector: 'app-listar-contratos',
+  templateUrl: './listar-contratos.component.html',
+  styleUrls: ['./listar-contratos.component.scss'],
 })
-export class TablaCargaSoportesComponent {
+export class ListarContratosComponent {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   documento_supervisor: string;
@@ -110,7 +110,7 @@ export class TablaCargaSoportesComponent {
 
   openCargaSoportes(contrato: any) {
     this.cumplidosMidServices.getContrato(contrato);
-    this.dialog.open(ModalCargaSoprotesComponent, {
+    this.dialog.open(ModalListarCumplidosComponent, {
       disableClose: true,
       maxHeight: '80vw',
       maxWidth: '100vw',

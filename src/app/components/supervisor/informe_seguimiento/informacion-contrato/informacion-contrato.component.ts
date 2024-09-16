@@ -8,7 +8,7 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 @Component({
   selector: 'app-informacion-contrato',
   templateUrl: './informacion-contrato.component.html',
-  styleUrls: ['./informacion-contrato.component.css']
+  styleUrls: ['./informacion-contrato.component.scss']
 })
 export class InformacionContratoComponent {
 

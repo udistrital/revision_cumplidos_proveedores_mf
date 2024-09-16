@@ -27,7 +27,7 @@ import { ModalVisualizarSoporteComponent } from '../../../general-components/mod
 @Component({
   selector: 'app-formulario-informe-satisfaccion',
   templateUrl: './formulario-informe-satisfaccion.component.html',
-  styleUrls: ['./formulario-informe-satisfaccion.component.css'],
+  styleUrls: ['./formulario-informe-satisfaccion.component.scss'],
 })
 export class FormularioInformeSatisfaccionComponent implements OnInit {
   formularioInformeSeguimiento: FormGroup;

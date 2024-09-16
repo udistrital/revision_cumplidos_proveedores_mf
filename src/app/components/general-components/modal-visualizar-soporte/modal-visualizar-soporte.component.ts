@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-modal-visualizar-soporte',
   templateUrl: './modal-visualizar-soporte.component.html',
-  styleUrls: ['./modal-visualizar-soporte.component.css'],
+  styleUrls: ['./modal-visualizar-soporte.component.scss'],
 })
 export class ModalVisualizarSoporteComponent {
   documentLoad:boolean=false

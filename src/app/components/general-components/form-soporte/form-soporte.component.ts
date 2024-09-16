@@ -8,7 +8,7 @@ import { SoportesService } from 'src/app/services/soportes.service';
 @Component({
   selector: 'app-form-soporte',
   templateUrl: './form-soporte.component.html',
-  styleUrls: ['./form-soporte.component.css']
+  styleUrls: ['./form-soporte.component.scss']
 })
 export class FormSoporteComponent {
 

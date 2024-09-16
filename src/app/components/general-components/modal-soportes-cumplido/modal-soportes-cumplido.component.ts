@@ -10,7 +10,7 @@ import { SoportesService } from 'src/app/services/soportes.service';
 @Component({
   selector: 'app-modal-soportes-cumplido',
   templateUrl: './modal-soportes-cumplido.component.html',
-  styleUrls: ['./modal-soportes-cumplido.component.css'],
+  styleUrls: ['./modal-soportes-cumplido.component.scss'],
 })
 export class ModalSoportesCumplidoComponent {
   soportes!: SoporteCumplido[];

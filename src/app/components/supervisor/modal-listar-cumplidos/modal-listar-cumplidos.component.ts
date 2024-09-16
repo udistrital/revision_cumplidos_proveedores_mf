@@ -16,14 +16,13 @@ import { ModalSoportesCumplidoComponent } from '../../general-components/modal-s
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { EstadoCumplido } from 'src/app/models/basics/estado-cumplido.model';
 
 @Component({
-  selector: 'app-modal-carga-soprotes',
-  templateUrl: './modal-carga-soprotes.component.html',
-  styleUrls: ['./modal-carga-soprotes.component.css'],
+  selector: 'app-modal-listar-cumplidos',
+  templateUrl: './modal-listar-cumplidos.component.html',
+  styleUrls: ['./modal-listar-cumplidos.component.scss'],
 })
-export class ModalCargaSoprotesComponent {
+export class ModalListarCumplidosComponent {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   documento_supervisor!: string;
