@@ -45,6 +45,7 @@ import { FormSoporteComponent } from './components/general-components/form-sopor
 import { ModalVisualizarSoporteComponent } from './components/general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { TablaComponent } from './components/general-components/tabla/tabla.component'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -69,6 +70,7 @@ export function createTranslateLoader(http: HttpClient) {
     ModalSoportesCumplidoComponent,
     FormSoporteComponent,
     ModalVisualizarSoporteComponent,
+    TablaComponent,
   ],
   imports: [
     HttpClientModule,

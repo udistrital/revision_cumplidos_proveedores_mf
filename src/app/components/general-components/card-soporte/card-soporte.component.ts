@@ -1,15 +1,14 @@
 import { Component, EventEmitter, Input, numberAttribute, Output } from '@angular/core';
-import { Soporte } from 'src/app/models/soporte.model';
 import { MatDialog } from '@angular/material/dialog';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
-import { ComentarioSoporte } from 'src/app/models/basics/comentario-soporte.model';
+import { ComentarioSoporte } from 'src/app/models/revision_cumplidos_proveedores_crud/comentario-soporte.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { ModalVisualizarSoporteComponent } from '../modal-visualizar-soporte/modal-visualizar-soporte.component';
-import { CambioEstadoCumplido } from 'src/app/models/basics/cambio-estado-cumplio.model';
+import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
 import { ConfigSoportes, Mode,RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
-import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
+import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 
 
 
@@ -20,7 +19,7 @@ import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
 })
 export class CardSoporteComponent {
 
-  @Input({required:true}) soporte!:SoporteCumplido
+  @Input({required:true}) soporte!:InformacionSoporteCumplido
   @Input({required:true}) config!:ConfigSoportes
   @Input({required:true}) cambioEstadoCumplido!:CambioEstadoCumplido
   @Output() recargarSoportes = new EventEmitter<any>();

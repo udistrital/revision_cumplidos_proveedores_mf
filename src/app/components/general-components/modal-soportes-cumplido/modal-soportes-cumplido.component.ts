@@ -1,11 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { CambioEstadoCumplido } from 'src/app/models/basics/cambio-estado-cumplio.model';
+import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
 import { ModalSoportesCumplidoData,Mode } from 'src/app/models/modal-soporte-cumplido-data.model';
-import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { SoportesService } from 'src/app/services/soportes.service';
+import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 
 @Component({
   selector: 'app-modal-soportes-cumplido',
@@ -13,9 +13,10 @@ import { SoportesService } from 'src/app/services/soportes.service';
   styleUrls: ['./modal-soportes-cumplido.component.scss'],
 })
 export class ModalSoportesCumplidoComponent {
-  soportes!: SoporteCumplido[];
+  soportes!: InformacionSoporteCumplido[];
   cumplidoProveedorId!:number;
   cambioEstadoCumplido!:CambioEstadoCumplido;
+  loading: boolean = true;
   mode=Mode
 
   constructor(
@@ -27,7 +28,7 @@ export class ModalSoportesCumplidoComponent {
   ) {}
 
   ngOnInit() {
-    
+
     this.cumplidoProveedorId=this.data.CumplidoProveedorId
     console.log(this.soportes)
     this.cargarSoportes()
@@ -37,7 +38,7 @@ export class ModalSoportesCumplidoComponent {
   cargarSoportes() {
     console.log(this.data)
     this.soporteService.getDocumentosCumplidos(this.cumplidoProveedorId).subscribe({
-      next: (soportes: SoporteCumplido[]) => {
+      next: (soportes: InformacionSoporteCumplido[]) => {
         this.soportes = soportes;
         console.log(this.soportes);
       },
@@ -59,6 +60,7 @@ export class ModalSoportesCumplidoComponent {
           console.log(this.cambioEstadoCumplido)
         }
         this.cambioEstadoCumplido=response.Data[0]
+        this.loading=false
         console.log(response)
       },
       error: err=>{

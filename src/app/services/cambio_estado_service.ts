@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CumplidosProveedoresCrudService } from './cumplidos_proveedores_crud.service';
 import { CumplidosProveedoresMidService } from './cumplidos_proveedores_mid.service';
-import { CambioEstado } from '../models/cambio-estado.model';
 import { catchError, map, Observable, of } from 'rxjs';
 import { AletManagerService } from '../managers/alert-manager.service';
 import { UserService } from './user.services';
 import { JbpmService } from './jbpm_service.service';
 import { NotificacionBody } from '../models/notificacion.model';
 import { NotificacionesService } from './notificaciones.service';
-import { EstadoCumplido } from './../models/basics/estado-cumplido.model';
 import { PopUpManager } from 'src/app/managers/popUpManager';
+import { BodyCambioEstado } from '../models/revision_cumplidos_proveedores_mid/body_cambio_estado.model';
 
 @Injectable({
   providedIn: 'root',
@@ -47,7 +46,7 @@ export class CambioEstadoService {
       );
   }
 
-  private solicituCambiarEstado(cambioEstado: CambioEstado) {
+  private solicituCambiarEstado(cambioEstado: BodyCambioEstado) {
     this.cumplidos_provedore_mid_service
       .post('/solicitud-pago/cambio-estado', cambioEstado)
       .subscribe(
@@ -67,7 +66,7 @@ export class CambioEstadoService {
   ) {
     try {
 
-      const cambioEstado: CambioEstado = {
+      const cambioEstado: BodyCambioEstado = {
         CumplidoProveedorId: idCumplido,
         CodigoAbreviacionEstadoCumplido: estadoCumplido,
       }
