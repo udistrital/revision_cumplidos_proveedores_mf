@@ -108,10 +108,11 @@ export class ModalListarCumplidosComponent {
                   return {
                     noSolicitud: count++,
                     numeroContrato:
-                      solicitud.CumplidoProveedorId.NumeroContrato,
+                    solicitud.CumplidoProveedorId.NumeroContrato,
                     fechaCreacion: new Date(solicitud.FechaCreacion),
                     periodo: solicitud.Periodo,
-                    estadoSoliciatud: solicitud.EstadoCumplido,
+                    estadoSolicitud: solicitud.EstadoCumplido,
+                    CodigoAbreviacionEstadoCumplido: solicitud.CodigoAbreviacionEstadoCumplido,
                     acciones: 'Editar, Eliminar',
                     cumplidoProveedor: solicitud.CumplidoProveedorId,
                   };
@@ -163,8 +164,6 @@ export class ModalListarCumplidosComponent {
   }
 
   openDialog(cumplido: any) {
-    this.cambioEstadoService.obtenerEstadoCumplido(cumplido.cumplidoProveedor.Id).subscribe({
-      next: (res: any) => {
         console.log('cumplido', cumplido);
         this.dialog.open(ModalSoportesCumplidoComponent, {
           disableClose: true,
@@ -175,18 +174,11 @@ export class ModalListarCumplidosComponent {
           data:{
             CumplidoProveedorId:cumplido.cumplidoProveedor.Id,
             Config:{
-              mode:this.obtenerModo(res.CodigoAbreviacion),
+              mode:this.obtenerModo(cumplido.CodigoAbreviacionEstadoCumplido),
               rolUsuario:RolUsuario.S
             }
           } as ModalSoportesCumplidoData
         });
-      },
-      error: (error: any) => {
-        this.popUpManager.showErrorAlert(
-          'No fue Posible obtener el estado del cumplido'
-        );
-      },
-    });
   }
 
   obtenerModo(codigoAbreviacionCumplido: string): Mode{

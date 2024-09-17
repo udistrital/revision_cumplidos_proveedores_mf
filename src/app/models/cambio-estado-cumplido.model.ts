@@ -1,33 +1,27 @@
-export class EstadoCumplido {
-    constructor(
-      public Id: number,
-      public Nombre: string,
-      public CodigoAbreviacion: string,
-      public Descripcion: string,
-      public Activo: boolean
-    ) {}
+export interface EstadoCumplido {
+       Id: number,
+       Nombre: string,
+       CodigoAbreviacion: string,
+       Descripcion: string,
+       Activo: boolean
   }
 
-  export class CumplidoProveedor {
-    constructor(
-      public Id: number,
-      public NumeroContrato: string,
-      public VigenciaContrato: number,
-      public Activo: boolean,
-      public FechaCreacion: string, 
-      public FechaModificacion: string
-    ) {}
+  export interface CumplidoProveedor {
+       Id: number,
+       NumeroContrato: string,
+       VigenciaContrato: number,
+       Activo: boolean,
+       FechaCreacion: string,
+       FechaModificacion: string
   }
 
-  export class CambioEstadoCumplido {
-    constructor(
-      public Id: number,
-      public EstadoCumplidoId: EstadoCumplido,
-      public CumplidoProveedorId: CumplidoProveedor,
-      public DocumentoResponsable: number,
-      public CargoReponsable: string,
-      public Activo: boolean,
-      public FechaCreacion: string,
-      public FechaModificacion: string 
-    ) {}
+  export interface CambioEstadoCumplido {
+       Id: number,
+       EstadoCumplidoId: EstadoCumplido,
+       CumplidoProveedorId: CumplidoProveedor,
+       DocumentoResponsable: number,
+       CargoReponsable: string,
+       Activo: boolean,
+       FechaCreacion: string,
+       FechaModificacion: string
   }

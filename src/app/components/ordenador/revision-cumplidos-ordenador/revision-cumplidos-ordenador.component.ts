@@ -149,7 +149,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     if (autorizacionPago != null) {
       this.modalVerSoporte(autorizacionPago, idCumplido);
     }
-    
+
   }
 
   async rechazarCumplido(idCumplido: any) {
@@ -215,13 +215,12 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
         map((response: any) => {
           if (response.Data != null) {
               console.log(response)
-            return new SolicituDeFirma(
-
+            return  (
               response.Data.NombreArchivo,
               response.Data.NombreResponsable ,
-               response.Data.CargoResponsable,
-               response.Data.DescripcionDocumento,
-               response.Data.Archivo);
+              response.Data.CargoResponsable,
+              response.Data.DescripcionDocumento,
+              response.Data.Archivo);
           }
           console.log()
           return null;

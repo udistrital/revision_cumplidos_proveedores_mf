@@ -258,7 +258,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           .subscribe({
             next: (res: any) => {
               console.log('response', res.Data);
-              this.solicituDeFirma = new SolicituDeFirma(
+              this.solicituDeFirma = (
                 res.Data.NombreArchivo,
                 res.Data.NombreResponsable,
                 res.Data.CargoResponsable,

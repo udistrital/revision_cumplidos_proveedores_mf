@@ -67,21 +67,24 @@ export class CambioEstadoService {
   ) {
     try {
 
-      const cambioEstado = new CambioEstado(idCumplido, estadoCumplido);
+      const cambioEstado: CambioEstado = {
+        CumplidoProveedorId: idCumplido,
+        CodigoAbreviacionEstadoCumplido: estadoCumplido,
+      }
       this.solicituCambiarEstado(cambioEstado);
 
       await this.obteneMensaje(estadoCumplido);
-      const notificacion = new NotificacionBody(
-        '66c8afeca6ee77849101664d',
-        '66ac05deb6d4007375621835',
-        ['265313'],
-        "265313",
-        this.asunto,
-        this.mensaje,
-        false,
-        {},
-        true
-      );
+      const notificacion:NotificacionBody = {
+        sistema_id: '66c8afeca6ee77849101664d',
+        tipo_notificacion_id: '66ac05deb6d4007375621835',
+        destinatarios: ['265313'],
+        remitente: "265313",
+        asunto: this.asunto,
+        mensaje: this.mensaje,
+        lectura: false,
+        metadatos: {},
+        activo: true
+      }
 
       if (this.mensaje != '') {
         try {
@@ -131,31 +134,6 @@ export class CambioEstadoService {
         this.mensaje = '';
         break;
     }
-  }
-
-  obtenerEstadoCumplido(idCumplido: number): Observable<EstadoCumplido | null> {
-    return this.cumplidos_provedore_crud_service
-      .get(`/cambio_estado_cumplido/?query=Activo:true,CumplidoProveedorId.Id:${idCumplido}&sortby=FechaCreacion&order=desc`)
-      .pipe(
-        map((res: any) => {
-          // Verifica que res.Data exista y sea un array
-          if (res.Data && Array.isArray(res.Data) && res.Data.length > 0) {
-            const estado = res.Data[0]; // Toma el primer estado de la lista
-            return {
-              Id: estado.EstadoCumplidoId.Id,
-              Nombre: estado.EstadoCumplidoId.Nombre,
-              CodigoAbreviacion: estado.EstadoCumplidoId.CodigoAbreviacion,
-              Descripcion: estado.EstadoCumplidoId.Descripcion,
-              Activo: estado.EstadoCumplidoId.Activo
-            };
-          } else {
-            return null; // Si no hay estados, retorna null
-          }
-        }),
-        catchError((error: any) => {
-          return of(error);
-        })
-      );
   }
 
 }
