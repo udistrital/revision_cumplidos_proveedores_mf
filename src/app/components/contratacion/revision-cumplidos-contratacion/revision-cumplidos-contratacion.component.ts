@@ -1,19 +1,19 @@
 import { Component, ViewChild } from '@angular/core';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { MatDialog } from '@angular/material/dialog';
-import { Cumplido } from 'src/app/models/cumplido.model';
 import { catchError, map, Observable, of } from 'rxjs';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import Swal from 'sweetalert2';
-import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
 import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
 import { UserService } from 'src/app/services/user.services';
 import { ModalSoportesCumplidoComponent } from 'src/app/components/general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
 import { Mode, RolUsuario, ModalSoportesCumplidoData } from 'src/app/models/modal-soporte-cumplido-data.model';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { PopUpManager } from 'src/app/managers/popUpManager';
+import { TablaRevisionCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/tabla_revision_cumplido';
+import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 
 
 
@@ -25,11 +25,12 @@ import { MatSort } from '@angular/material/sort';
 export class RevisionCumplidosContratacionComponent {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
-  solicitudes: Cumplido[] = [];
-  soporte_cumplido: SoporteCumplido[] = [];
+  soporte_cumplido: InformacionSoporteCumplido[] = [];
   documentoResponsable: string = '';
   nombreContratacion!: string;
-  data!: any;
+  dataSource: TablaRevisionCumplido[] = [];
+  loading: boolean = true;
+
 
   constructor(
     private alertService: AletManagerService,
@@ -38,61 +39,67 @@ export class RevisionCumplidosContratacionComponent {
     private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
     private cambioEstadoService: CambioEstadoService,
     private userService: UserService,
+    private popUpManager: PopUpManager,
 
   ) {
     this.obtenerInfoPersona();
     this.cargarTablaCumplidos();
   }
 
+
+
+  ngOnInit(): void {
+     this.obtenerInfoPersona();
+   }
+
   displayedColumns = [
-    'numeroContrato',
-    'vigencia',
-    'rp',
-    'vigenciaRp',
-    'fechaCreacion',
-    'nombreProveedor',
-    'dependencia',
-    'acciones',
+    {def:  'NumeroContrato', header: 'N° CONTRATO'},
+    {def:  'VigenciaContrato', header: 'VIGENCIA'},
+    {def:  'Rp', header: 'RP'},
+    {def:  'VigenciaRP', header: 'VIGENCIA RP'},
+    {def:  'FechaCreacion', header: 'FECHA CREACION'},
+    {def:  'NombreProveedor', header: 'PROVEEDOR'},
+    {def:  'Dependencia', header: 'DEPENDENCIA'},
+    {def: 'acciones', header: 'ACCIONES', isAction: true}
   ];
 
   cargarTablaCumplidos() {
-    this.solicitudes = [];
+    this.dataSource = [];
     this.alertService.showLoadingAlert(
       'Cargando',
       'Espera mientras se cargan las solicitudes pendientes'
     );
     this.cumplidos_provedore_mid_service
       .get('/contratacion/solicitudes-pago/')
-      .subscribe(
-        (response: any) => {
+      .subscribe({
+        next: (res: any) => {
           Swal.close();
-          if (response.Data != null && response.Data.length > 0) {
-            this.solicitudes = response.Data;
-            this.data = new MatTableDataSource<any>(this.solicitudes);
-            this.data.paginator = this.paginator;
-            this.data.sort = this.sort;
+          if (res.Data != null && res.Data.length > 0){
+            this.dataSource = res.Data.map(
+              (solicitud: any) => {
+                return {
+                  ...solicitud,
+                  acciones: [
+                    {icon: 'visibility', actionName: 'visibility', isActive: true},
+                    {icon: 'check', actionName: 'check', isActive: true},
+                    {icon: 'close', actionName: 'close', isActive: true}
+                  ]
+                }
+              }
+            )
+            this.loading = false;
           } else {
-            this.solicitudes = [];
-            this.data = new MatTableDataSource<any>(this.solicitudes);
-            this.data.paginator = this.paginator;
-            this.data.sort = this.sort;
+            this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte de contratación');
+            this.dataSource = [];
+            this.loading = false;
           }
-        },
-        (error) => {
-          this.alertService.showInfoAlert(
-            'Sin cumplidos pendientes',
-            'No hay cumplidos pendientes para revision por parte de contratación'
-          );
-          this.solicitudes = [];
-          this.data = new MatTableDataSource<any>(this.solicitudes);
-          this.data.paginator = this.paginator;
-          this.data.sort = this.sort;
         }
-      );
+      })
+
   }
 
   async obtenerInfoPersona() {
-    let info = this.userService.obtenerInformacionPersona().subscribe({
+    this.userService.obtenerInformacionPersona().subscribe({
       next: (response) => {
         if (response != null) {
           this.nombreContratacion =
@@ -228,5 +235,15 @@ export class RevisionCumplidosContratacionComponent {
           return of(null);
         })
       );
+  }
+
+  handleActionClick(event: {action: any, element: any}) {
+    if (event.action.actionName === 'visibility') {
+      this.obtenerSoprtes(event.element.CumplidoId);
+    } else if (event.action.actionName === 'check'){
+      this.aprobarSoportes(event.element)
+    } else if (event.action.actionName === 'close'){
+      this.rechazarSoportes(event.element)
+    }
   }
 }

@@ -27,7 +27,7 @@ export class ListarContratosComponent {
   dependencias_supervisor: string = '';
   dataSource: any[] = [];
   nombreSupervisor: string = '';
-  data!: any;
+  loading: boolean = true;
 
 
 
@@ -46,9 +46,6 @@ export class ListarContratosComponent {
   }
 
   ngOnInit() {
-
-
-
     this.cargarContratos();
     this.obtenerInfoPersona();
   }
@@ -69,10 +66,8 @@ export class ListarContratosComponent {
               .map((dep: any) => dep.Nombre)
               .join(', ');
           if (this.contratos_supervisor.contratos == null) {
-            this.data = new MatTableDataSource<any>(this.dataSource);
-            this.data.paginator = this.paginator;
-            this.data.sort = this.sort;
             this.alertService.showInfoAlert("Sin contratos","No se encontraron contratos asociados a la(s) depenendencia(s)")
+            this.loading = false;
           } else {
             this.dataSource = this.contratos_supervisor.contratos;
             this.dataSource = this.contratos_supervisor.contratos.map(
@@ -85,19 +80,20 @@ export class ListarContratosComponent {
                   vigenciaRp: contrato.VigenciaRp,
                   nombreProveedor: contrato.NombreProveedor,
                   dependencias: contrato.NombreDependencia,
-                  acciones: 'Editar, Eliminar',
+                  acciones: [
+                    {
+                      icon: 'upload_2',
+                      actionName: 'upload',
+                      isActive: true,
+                    },
+                  ],
                 };
               }
             );
-            this.data = new MatTableDataSource<any>(this.dataSource);
-            this.data.paginator = this.paginator;
-            this.data.sort = this.sort;
+            this.loading = false;
           }
         },
         error: (error: any) => {
-          this.data = new MatTableDataSource<any>(this.dataSource);
-          this.data.paginator = this.paginator;
-          this.data.sort = this.sort;
           this.popUpManager.showErrorAlert(
             this.translate.instant(
               'Error al cargar los contratos del supervisor'
@@ -107,6 +103,7 @@ export class ListarContratosComponent {
         },
       });
   }
+
 
   openCargaSoportes(contrato: any) {
     this.cumplidosMidServices.getContrato(contrato);
@@ -119,14 +116,18 @@ export class ListarContratosComponent {
     });
   }
 
-  displayedColumns: string[] = [
-    'numeroContrato',
-    'vigencia',
-    'rp',
-    'vigenciaRp',
-    'nombreProveedor',
-    'dependencias',
-    'acciones',
+  displayedColumns: any[] = [
+    {def: 'numeroContrato', header: 'NUMERO CONTRATO' },
+    {def: 'vigencia', header: 'VIGENCIA' },
+    {def: 'rp', header: 'RP' },
+    {def: 'vigenciaRp', header: 'VIGENCIA RP' },
+    {def: 'nombreProveedor', header: 'NOMBRE PROVEEDOR' },
+    {def: 'dependencias', header: 'DEPENDENCIAS' },
+    {
+      def: 'acciones',
+      header: 'ACCIONES',
+      isAction: true,
+    }
   ];
 
   async obtenerInfoPersona() {
@@ -147,7 +148,6 @@ export class ListarContratosComponent {
   }
 
   openTest() {
-
     this.dialog.open(ModalSoportesCumplidoComponent, {
       disableClose: true,
       maxHeight: '80vw',
@@ -163,4 +163,11 @@ export class ListarContratosComponent {
       } as ModalSoportesCumplidoData
     });
   }
+
+  handleActionClick(event: {action: any, element: any}) {
+    if (event.action.actionName === 'upload') {
+      this.openCargaSoportes(event.element);
+    }
+  }
+
 }

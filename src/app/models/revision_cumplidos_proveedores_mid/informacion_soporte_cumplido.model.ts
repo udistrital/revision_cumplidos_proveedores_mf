@@ -1,8 +1,8 @@
-import { ComentarioSoporte } from "./basics/comentario-soporte.model";
+import { ComentarioSoporte } from "../revision_cumplidos_proveedores_crud/comentario-soporte.model";
 
 
   
-  export interface SoporteCumplido {
+  export interface InformacionSoporteCumplido {
     SoporteCumplidoId: number
     Documento: Documento
     Archivo: Archivo
