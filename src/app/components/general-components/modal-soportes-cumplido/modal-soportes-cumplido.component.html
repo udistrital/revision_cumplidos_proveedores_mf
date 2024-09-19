@@ -4,14 +4,22 @@
   </button>
 </div>
 <div mat-dialog-content>
-  <app-form-soporte [cumplidoProveedorId]="cumplidoProveedorId"
-    (recargarSoportes)="cargarSoportes()"
-    *ngIf="data.Config.mode==mode.CD || data.Config.mode==mode.RC || data.Config.mode==mode.RO"
-  ></app-form-soporte>
+  <div>
+    <div>
+      <app-form-soporte
+        [cumplidoProveedorId]="cumplidoProveedorId"
+        (recargarSoportes)="cargarSoportes()"
+        *ngIf="data.Config.mode == mode.CD"
+      >
+      </app-form-soporte>
+    </div>
+  </div>
+
   <!-- <app-subir-soporte> </app-subir-soporte>
     <br>
     <app-visualizar-soportes></app-visualizar-soportes> -->
-  <mat-card class="ver-soportes-card">
+
+  <mat-card>
     <mat-card-header class="ver-soportes-tittle">
       <mat-card-title>Soportes</mat-card-title>
     </mat-card-header>
@@ -19,11 +27,15 @@
       *ngIf="soportes == undefined; then Cargando; else listarSoportes"
     >
     </mat-card-content>
-    <ng-template #Cargando><mat-spinner></mat-spinner></ng-template>
+    <div class="box-spiner">
+      <div>
+        <ng-template #Cargando><mat-spinner></mat-spinner></ng-template>
+      </div>
+    </div>
     <ng-template #listarSoportes>
-      <section *ngIf="soportes.length != 0;then conSoportes else  sinSoportes">
-
-      </section>
+      <section
+        *ngIf="soportes.length != 0; then conSoportes; else sinSoportes"
+      ></section>
       <ng-template #conSoportes>
         <p class="spaced-paragraph">
           A continuación se muestran los soportes asociados al cumplido
@@ -39,13 +51,16 @@
                 [config]="this.data.Config"
                 [cambioEstadoCumplido]="cambioEstadoCumplido"
                 (recargarSoportes)="cargarSoportes()"
+                [bunttons]="buttons"
               ></app-card-soporte>
             </mat-card>
           </div>
         </mat-card>
       </ng-template>
       <ng-template #sinSoportes>
-        <p>No se encontraron soportes!</p>
+        <div class="text-center">
+          <p>No se encontraron soportes!</p>
+        </div>
       </ng-template>
     </ng-template>
   </mat-card>
