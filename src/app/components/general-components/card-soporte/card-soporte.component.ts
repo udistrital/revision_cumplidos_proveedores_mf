@@ -37,7 +37,7 @@ export class CardSoporteComponent {
     private fb: FormBuilder 
   ){
     this.comentarioForm = this.fb.group({
-      comentario: ['', [Validators.minLength(5)]],
+      comentario: ['', [Validators.minLength(10), Validators.pattern(/^(?!\s)[\s\S]*\S+$/)]],
     });
   }
 
