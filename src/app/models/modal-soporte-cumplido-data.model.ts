@@ -1,6 +1,10 @@
+import { Button } from "./button.model";
+
 export interface ModalSoportesCumplidoData {
   CumplidoProveedorId: number;
   Config: ConfigSoportes;
+  Buttons:Button[]
+  ModalButtonsFunc:Button[]
 }
 
 export interface ConfigSoportes {
@@ -22,3 +26,4 @@ export enum RolUsuario {
   C = 'Contratacion',
   O = 'Ordenador',
 }
+
