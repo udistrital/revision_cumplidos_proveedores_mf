@@ -185,7 +185,7 @@ export class ModalListarCumplidosComponent {
             Color: 'white',
             FontIcon: 'visibility',
             Function: (file: any) => {
-              this.dialog.open(ModalVisualizarSoporteComponent, {
+            const visualizarSoporetes=   this.dialog.open(ModalVisualizarSoporteComponent, {
                 disableClose: true,
                 height: '70vh',
                 width: '50vw',
@@ -198,8 +198,8 @@ export class ModalListarCumplidosComponent {
                     {
                       Color: '#F5B907',
                       FontIcon: 'visibility',
-                      Function: (dialog: MatDialogRef<any>) => {
-                        dialog.close;
+                      Function: () => {
+                        visualizarSoporetes.close()
                       },
                       Classes: 'ver-documentos-button',
                       Text: 'Cerrar',

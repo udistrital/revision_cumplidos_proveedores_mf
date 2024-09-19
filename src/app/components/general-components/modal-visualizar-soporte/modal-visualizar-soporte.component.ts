@@ -21,6 +21,7 @@ export class ModalVisualizarSoporteComponent {
     this.modalButtonsFunc= this.data.ModalButtonsFunc
     console.log("Data ", this.data)
     console.log(this.documentData)
+  
   }
 
   ngOnInit() {
@@ -29,7 +30,7 @@ export class ModalVisualizarSoporteComponent {
     }
   }
 
-  close(): void {
+  public close(): void {
     this.dialogRef.close();
   }
 }

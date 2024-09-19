@@ -14,6 +14,7 @@ import { Mode, RolUsuario, ModalSoportesCumplidoData } from 'src/app/models/moda
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 
 
 
@@ -130,9 +131,32 @@ export class RevisionCumplidosContratacionComponent {
               width: '80vw',
               data:{
                 CumplidoProveedorId:idCumplido,
+                Buttons: [
+                  {
+                    Color: 'white',
+                    FontIcon: 'visibility',
+                    Function: (file: any) => {
+                    const visualizarSoporetes=   this.dialog.open(ModalVisualizarSoporteComponent, {
+                        disableClose: true,
+                        height: '70vh',
+                        width: '50vw',
+                        maxWidth: '60vw',
+                        maxHeight: '80vh',
+                        panelClass: 'custom-dialog-container',
+                        data: {
+                          url: file.Archivo.File,
+
+                        },
+                      });
+                    },
+                    Classes: 'ver-documentos-button',
+                    Text: 'Ver',
+                  },
+                ],
                 Config:{
                   mode:Mode.PRC,
-                  rolUsuario:RolUsuario.C
+                  rolUsuario:RolUsuario.C,
+                  
                 }
               } as ModalSoportesCumplidoData
             });
