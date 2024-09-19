@@ -6,16 +6,22 @@ import { BodyCumplidoProveedor } from 'src/app/models/CargaSoportes/body_cumplid
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { BodyCambioEstado } from 'src/app/models/CargaSoportes/body_cambio_estado.model';
 import { UserService } from 'src/app/services/user.services';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { CrearSolicitudCumplido } from 'src/app/models/crear-solicitud-cumplido.model';
 import { AdministrativaAmazonService } from 'src/app/services/administrativa_amazon.service';
-import { Mode, RolUsuario, ModalSoportesCumplidoData } from 'src/app/models/modal-soporte-cumplido-data.model';
+import {
+  Mode,
+  RolUsuario,
+  ModalSoportesCumplidoData,
+} from 'src/app/models/modal-soporte-cumplido-data.model';
 import { ModalSoportesCumplidoComponent } from '../../general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Button } from './../../../models/button.model';
+import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 
 @Component({
   selector: 'app-modal-listar-cumplidos',
@@ -108,11 +114,12 @@ export class ModalListarCumplidosComponent {
                   return {
                     noSolicitud: count++,
                     numeroContrato:
-                    solicitud.CumplidoProveedorId.NumeroContrato,
+                      solicitud.CumplidoProveedorId.NumeroContrato,
                     fechaCreacion: new Date(solicitud.FechaCreacion),
                     periodo: solicitud.Periodo,
                     estadoSolicitud: solicitud.EstadoCumplido,
-                    CodigoAbreviacionEstadoCumplido: solicitud.CodigoAbreviacionEstadoCumplido,
+                    CodigoAbreviacionEstadoCumplido:
+                      solicitud.CodigoAbreviacionEstadoCumplido,
                     acciones: 'Editar, Eliminar',
                     cumplidoProveedor: solicitud.CumplidoProveedorId,
                   };
@@ -149,7 +156,7 @@ export class ModalListarCumplidosComponent {
       .post('/crear_solicitud_cumplido', this.newCumplidoProveedor)
       .subscribe({
         next: (res: any) => {
-          console.log(res)
+          console.log(res);
           this.popUpManager.showSuccessAlert(
             'Se ha creado el cumplido correctamente'
           );
@@ -164,24 +171,56 @@ export class ModalListarCumplidosComponent {
   }
 
   openDialog(cumplido: any) {
-        console.log('cumplido', cumplido);
-        this.dialog.open(ModalSoportesCumplidoComponent, {
-          disableClose: true,
-          maxHeight: '80vw',
-          maxWidth: '100vw',
-          height: '80vh',
-          width: '80vw',
-          data:{
-            CumplidoProveedorId:cumplido.cumplidoProveedor.Id,
-            Config:{
-              mode:this.obtenerModo(cumplido.CodigoAbreviacionEstadoCumplido),
-              rolUsuario:RolUsuario.S
-            }
-          } as ModalSoportesCumplidoData
-        });
+    console.log('cumplido', cumplido);
+    const dialog = this.dialog.open(ModalSoportesCumplidoComponent, {
+      disableClose: true,
+      maxHeight: '80vw',
+      maxWidth: '100vw',
+      height: '80vh',
+      width: '80vw',
+      data: {
+        CumplidoProveedorId: cumplido.cumplidoProveedor.Id,
+        Buttons: [
+          {
+            Color: 'white',
+            FontIcon: 'visibility',
+            Function: (file: any) => {
+              this.dialog.open(ModalVisualizarSoporteComponent, {
+                disableClose: true,
+                height: '70vh',
+                width: '50vw',
+                maxWidth: '60vw',
+                maxHeight: '80vh',
+                panelClass: 'custom-dialog-container',
+                data: {
+                  url: file.Archivo.File,
+                  ModalButtonsFunc: [
+                    {
+                      Color: '#F5B907',
+                      FontIcon: 'visibility',
+                      Function: (dialog: MatDialogRef<any>) => {
+                        dialog.close;
+                      },
+                      Classes: 'ver-documentos-button',
+                      Text: 'Cerrar',
+                    },
+                  ],
+                },
+              });
+            },
+            Classes: 'ver-documentos-button',
+            Text: 'Ver',
+          },
+        ],
+        Config: {
+          mode: this.obtenerModo(cumplido.CodigoAbreviacionEstadoCumplido),
+          rolUsuario: RolUsuario.S,
+        },
+      } as ModalSoportesCumplidoData,
+    });
   }
 
-  obtenerModo(codigoAbreviacionCumplido: string): Mode{
+  obtenerModo(codigoAbreviacionCumplido: string): Mode {
     switch (codigoAbreviacionCumplido) {
       case 'CD':
         return Mode.CD;
@@ -195,9 +234,8 @@ export class ModalListarCumplidosComponent {
         return Mode.PRO;
       default:
         return Mode.PRC;
-
+    }
   }
-}
 
   async cambiarEstado(idCumplido: any) {
     let confirm = await this.alertService.alertConfirm(
