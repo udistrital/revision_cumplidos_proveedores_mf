@@ -10,7 +10,7 @@ export interface ConfigSoportes {
 
 export enum Mode {
   CD = 'CargandoDocumentos',
-  RC = 'RevisionContratacion',
+  RC = 'RechazadoContratacion',
   PRC = 'PendienteRevisionContratacion',
   PRO = 'PendienteRevisionOrdenador',
   AO = 'AprobadoOrdenador',

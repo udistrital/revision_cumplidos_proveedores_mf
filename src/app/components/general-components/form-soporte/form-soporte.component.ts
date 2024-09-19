@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
-import { SoportesService } from 'src/app/services/soportes.service';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-form-soporte',
@@ -12,13 +12,14 @@ import { SoportesService } from 'src/app/services/soportes.service';
 })
 export class FormSoporteComponent {
 
-  opcionSeleccionada:number=0;
   opciones!:any;
   observaciones = "";
   base64Output: string | ArrayBuffer | null = '';
   fileName: string = '';
   idTipoDocumento!: number;
-  
+  cumplidoSatisfaccionSeleccionado: boolean = false;
+  soporteForm!: FormGroup;
+
   @Input({required:true,transform:numberAttribute})cumplidoProveedorId!:number
   @Output() recargarSoportes = new EventEmitter<any>();
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -27,14 +28,22 @@ export class FormSoporteComponent {
     private cumplidosMidServices: CumplidosProveedoresMidService,
     private popUpManager: PopUpManager,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private fb: FormBuilder
   ){
 
+    this.soporteForm = this.fb.group({
+      opcionSeleccionada: ['', [Validators.required]],
+      observaciones: ['', [Validators.minLength(10), Validators.pattern(/^(?!\s)[\s\S]*\S+$/)]],
+      fileName: [{ value: '', disabled: true }, [Validators.required]]
+    });
   }
 
+
   ngOnInit(){
-    console.log(this.opcionSeleccionada)
+    console.log(this.soporteForm.value.opcionSeleccionada)
     this.getTipoDocumentosCumplido()
+
   }
 
   getTipoDocumentosCumplido(){
@@ -42,6 +51,7 @@ export class FormSoporteComponent {
     .subscribe({
       next: (res: any) => {
         this.opciones = res.Data;
+        console.log("Tipo documentos:", this.opciones)
       },
       error: (error: any) => {
         this.popUpManager.showErrorAlert('No fue posible obtener los documentos posibles a subir en el cumplido')
@@ -50,12 +60,13 @@ export class FormSoporteComponent {
   }
 
   onFileSelected(event: Event) {
-    console.log(this.opcionSeleccionada)
+    console.log(this.soporteForm.value.opcionSeleccionada)
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       if (file.type === 'application/pdf') {
         this.fileName = file.name;
+        this.soporteForm.patchValue({ fileName: this.fileName })
         const reader = new FileReader();
         reader.onload = () => {
           const base64Result = reader.result as string;
@@ -78,6 +89,7 @@ export class FormSoporteComponent {
   removeFile() {
     this.fileInput.nativeElement.value = '';
     this.fileName = '';
+    this.soporteForm.patchValue({ fileName: ''})
     this.base64Output = '';
   }
 
@@ -87,7 +99,7 @@ export class FormSoporteComponent {
         SolicitudPagoID: this.cumplidoProveedorId,
         TipoDocumento: "application/pdf",
         observaciones: this.observaciones,
-        ItemID: Number(this.opcionSeleccionada),
+        ItemID: Number(this.soporteForm.value.opcionSeleccionada),
         NombreArchivo: this.fileName,
         Archivo: this.base64Output
       };
@@ -107,8 +119,16 @@ export class FormSoporteComponent {
   }
 
   crearDocumento() {
-    console.log(this.opcionSeleccionada)
+    console.log(this.soporteForm.value.opcionSeleccionada)
     this.dialog.closeAll();
     this.router.navigate(['/informe-seguimiento',this.cumplidoProveedorId]);
+  }
+
+  cambioTipoDocumento(tipoDocumento: string){
+    if (tipoDocumento === "IS"){
+      this.cumplidoSatisfaccionSeleccionado = true
+    } else {
+      this.cumplidoSatisfaccionSeleccionado = false
+    }
   }
 }

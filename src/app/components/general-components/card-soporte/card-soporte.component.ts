@@ -9,6 +9,7 @@ import { ModalVisualizarSoporteComponent } from '../modal-visualizar-soporte/mod
 import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
 import { ConfigSoportes, Mode,RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 
@@ -23,7 +24,7 @@ export class CardSoporteComponent {
   @Input({required:true}) config!:ConfigSoportes
   @Input({required:true}) cambioEstadoCumplido!:CambioEstadoCumplido
   @Output() recargarSoportes = new EventEmitter<any>();
-  comentario: string = "";
+  comentarioForm: FormGroup;
   mode=Mode
   rolUsuario=RolUsuario
 
@@ -33,8 +34,11 @@ export class CardSoporteComponent {
     private cumplidosMidServices: CumplidosProveedoresMidService,
     private aletManagerService:AletManagerService,
     private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
+    private fb: FormBuilder 
   ){
-
+    this.comentarioForm = this.fb.group({
+      comentario: ['', [Validators.minLength(5)]],
+    });
   }
 
   ngOnInit() {
@@ -87,7 +91,7 @@ export class CardSoporteComponent {
       console.log(confirmed)
 
       if(confirmed.isConfirmed){
-        console.log("Comentario",this.comentario)
+        console.log("Comentario",this.comentarioForm.value.comentario)
         try{
           const  comentario:ComentarioSoporte= <ComentarioSoporte>{
             SoporteCumplidoId: {
@@ -96,7 +100,7 @@ export class CardSoporteComponent {
             CambioEstadoCumplidoId:{
               Id:this.cambioEstadoCumplido.Id
             },
-            Comentario:this.comentario
+            Comentario:this.comentarioForm.value.comentario
           }
           this.cumplidos_provedore_crud_service.post("/comentario_soporte",comentario).subscribe((response)=>{
             this.aletManagerService.showSuccessAlert("Comentario Guardado", "Se ha guardado el comentario en el documento")
