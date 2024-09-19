@@ -25,7 +25,7 @@
                 formControlName="opcionSeleccionada"
                 (selectionChange)="cambioTipoDocumento($event.value)"
                 placeholder="--Seleccione el item del cual cargara soporte--">
-                <mat-option *ngFor="let opcion of opciones" [value]="opcion.CodigoAbreviacionTipoDocumento">
+                <mat-option *ngFor="let opcion of opciones" [value]="opcion.CodigoAbreviacionTipoDocumento" (click)="asignarItemId(opcion.IdTipoDocumento)">
                   {{ opcion.Nombre }}
                 </mat-option>
               </mat-select>

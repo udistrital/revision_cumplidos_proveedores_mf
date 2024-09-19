@@ -19,6 +19,7 @@ export class FormSoporteComponent {
   idTipoDocumento!: number;
   cumplidoSatisfaccionSeleccionado: boolean = false;
   soporteForm!: FormGroup;
+  itemId!: number;
 
   @Input({required:true,transform:numberAttribute})cumplidoProveedorId!:number
   @Output() recargarSoportes = new EventEmitter<any>();
@@ -99,7 +100,7 @@ export class FormSoporteComponent {
         SolicitudPagoID: this.cumplidoProveedorId,
         TipoDocumento: "application/pdf",
         observaciones: this.observaciones,
-        ItemID: Number(this.soporteForm.value.opcionSeleccionada),
+        ItemID: this.itemId,
         NombreArchivo: this.fileName,
         Archivo: this.base64Output
       };
@@ -116,6 +117,11 @@ export class FormSoporteComponent {
     } else {
       this.popUpManager.showErrorAlert('No se ha seleccionado ningún archivo');
     }
+  }
+
+  asignarItemId(item: number){
+    this.itemId = item
+    console.log("Itemid:", this.itemId)
   }
 
   crearDocumento() {
