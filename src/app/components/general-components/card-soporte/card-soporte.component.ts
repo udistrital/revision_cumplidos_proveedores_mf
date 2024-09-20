@@ -30,7 +30,7 @@ import { Button } from 'src/app/models/button.model';
 export class CardSoporteComponent {
   @Input({ required: true }) soporte!: SoporteCumplido;
   @Input({ required: true }) config!: ConfigSoportes;
-  @Input() bunttons!: Button[];
+  @Input() buttons!: Button[];
   @Input({ required: true }) cambioEstadoCumplido!: CambioEstadoCumplido;
   @Output() recargarSoportes = new EventEmitter<any>();
   comentario: string = '';
