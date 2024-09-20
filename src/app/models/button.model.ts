@@ -1,9 +1,9 @@
 export interface Button {
     Color:string,
-     FontIcon: string,
+     FontIcon?: string,
      Function: (data?:any)=> any,
      Classes:string,
-     Text:string,
+     Text?:string,
      TextColor:string
     
 }
