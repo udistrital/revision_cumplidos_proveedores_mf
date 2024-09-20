@@ -20,6 +20,7 @@ export class ModalSoportesCumplidoComponent {
   mode=Mode
   buttons!:Button[]
   modalButtonsFunc!:Button[]
+  
 
   constructor(
     public dialogRef: MatDialogRef<ModalSoportesCumplidoComponent>,

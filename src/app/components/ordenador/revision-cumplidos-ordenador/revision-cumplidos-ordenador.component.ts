@@ -19,6 +19,7 @@ import { ModalVisualizarSoporteComponent } from 'src/app/components/general-comp
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { ModoService } from 'src/app/services/modo_service.service';
 
 
 
@@ -43,6 +44,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
     private cambioEstadoService:CambioEstadoService,
     private userService:UserService,
+    private modeService:ModoService
 
 
   ) {}
@@ -96,33 +98,46 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     );
   }
 
-  ListarSoportes(idCumplido: number) {
-    this.alertService.showLoadingAlert("Cargando", "Espera mientras se listan los documentos")
-    this.cumplidos_provedore_mid_service.get('/solicitud-pago/soportes/' + idCumplido).subscribe(
-      (response: any) => {
-        Swal.close()
-        if (response.Data.length > 0) {
-          this.soporte_cumplido = response.Data;
-          this.dialog.open(ModalSoportesCumplidoComponent, {
-            disableClose: true,
-            maxHeight: '80vw',
-            maxWidth: '100vw',
-            height: '80vh',
-            width: '80vw',
-            data:{
-              CumplidoProveedorId:idCumplido,
-              Config:{
-                mode:Mode.PRO,
-                rolUsuario:RolUsuario.O
-              }
-            } as ModalSoportesCumplidoData
-          });
-        }
-      },
-      (error) => {
-        this.alertService.showInfoAlert("Cumplido sin soportes","No se encontraron soportes para este cumplido proveedor")
-      }
-    );
+  ListarSoportes(idCumplido: any) {
+    console.log(idCumplido.CumplidoId)
+  
+
+
+    const dialog = this.dialog.open(ModalSoportesCumplidoComponent, {
+      disableClose: true,
+      maxHeight: '80vw',
+      maxWidth: '100vw',
+      height: '80vh',
+      width: '80vw',
+      data: {
+        CumplidoProveedorId: idCumplido.CumplidoId,
+        Buttons: [
+          {
+            Color: 'white',
+            FontIcon: 'visibility',
+            Function: (file: any) => {
+            const visualizarSoporetes=   this.dialog.open(ModalVisualizarSoporteComponent, {
+                disableClose: true,
+                height: '70vh',
+                width: '50vw',
+                maxWidth: '60vw',
+                maxHeight: '80vh',
+                panelClass: 'custom-dialog-container',
+                data: {
+                  url: file.Archivo.File,
+                },
+              });
+            },
+            Classes: 'ver-documentos-button',
+            Text: 'Ver',
+          },
+        ],
+        Config: {
+          mode: this.modeService.obtenerModo("RC"),
+          rolUsuario: RolUsuario.O,
+        },
+      } as ModalSoportesCumplidoData,
+    });
   }
 
   async obtenerInfoPersona() {

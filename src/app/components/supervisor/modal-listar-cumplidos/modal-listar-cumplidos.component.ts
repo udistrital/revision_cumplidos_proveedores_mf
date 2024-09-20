@@ -22,6 +22,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Button } from './../../../models/button.model';
 import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
+import { ModoService } from 'src/app/services/modo_service.service';
 
 @Component({
   selector: 'app-modal-listar-cumplidos',
@@ -40,6 +41,7 @@ export class ModalListarCumplidosComponent {
   newCambioEstado!: BodyCambioEstado;
   data!: any;
 
+
   constructor(
     private cumplidosMidServices: CumplidosProveedoresMidService,
     private popUpManager: PopUpManager,
@@ -49,7 +51,8 @@ export class ModalListarCumplidosComponent {
     public dialog: MatDialog,
     private cambioEstadoService: CambioEstadoService,
     private alertService: AletManagerService,
-    private administrativaAmazonService: AdministrativaAmazonService
+    private administrativaAmazonService: AdministrativaAmazonService,
+    private modeService:ModoService
   ) {
     this.documento_supervisor = user.getPayload().documento;
   }
@@ -93,8 +96,6 @@ export class ModalListarCumplidosComponent {
   }
 
   getSolicitudesContrato(numero_contrato: string, vigencia_contrato: string) {
-    console.log(numero_contrato);
-    console.log(vigencia_contrato);
     this.cumplidosMidServices.contrato$.subscribe((contrato) => {
       if (contrato) {
         this.cumplidosMidServices
@@ -194,17 +195,6 @@ export class ModalListarCumplidosComponent {
                 panelClass: 'custom-dialog-container',
                 data: {
                   url: file.Archivo.File,
-                  ModalButtonsFunc: [
-                    {
-                      Color: '#F5B907',
-                      FontIcon: 'visibility',
-                      Function: () => {
-                        visualizarSoporetes.close()
-                      },
-                      Classes: 'ver-documentos-button',
-                      Text: 'Cerrar',
-                    },
-                  ],
                 },
               });
             },
@@ -213,29 +203,14 @@ export class ModalListarCumplidosComponent {
           },
         ],
         Config: {
-          mode: this.obtenerModo(cumplido.CodigoAbreviacionEstadoCumplido),
+          mode: this.modeService.obtenerModo(cumplido.CodigoAbreviacionEstadoCumplido),
           rolUsuario: RolUsuario.S,
         },
       } as ModalSoportesCumplidoData,
     });
   }
 
-  obtenerModo(codigoAbreviacionCumplido: string): Mode {
-    switch (codigoAbreviacionCumplido) {
-      case 'CD':
-        return Mode.CD;
-      case 'RC':
-        return Mode.PRC;
-      case 'RO':
-        return Mode.RO;
-      case 'AO':
-        return Mode.AO;
-      case 'PRO':
-        return Mode.PRO;
-      default:
-        return Mode.PRC;
-    }
-  }
+
 
   async cambiarEstado(idCumplido: any) {
     let confirm = await this.alertService.alertConfirm(
