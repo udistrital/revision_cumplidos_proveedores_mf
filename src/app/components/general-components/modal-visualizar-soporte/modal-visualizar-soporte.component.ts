@@ -11,6 +11,7 @@ export class ModalVisualizarSoporteComponent {
   documentLoad:boolean=false
   documentData:string
   modalButtonsFunc:Button[]
+  bunttonClose:Button
 
   constructor(
     public dialogRef: MatDialogRef<ModalVisualizarSoporteComponent>,
@@ -19,6 +20,7 @@ export class ModalVisualizarSoporteComponent {
     this.documentLoad=false
     this.documentData='data:application/pdf;base64,'+this.data.url
     this.modalButtonsFunc= this.data.ModalButtonsFunc
+    this.bunttonClose=this.data.BunttonClose;
     console.log("Data ", this.data)
     console.log(this.documentData)
   

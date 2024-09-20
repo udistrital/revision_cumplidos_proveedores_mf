@@ -1,8 +1,27 @@
-<div class="modal-header">
-    <button mat-icon-button (click)="close()" >
-      <mat-icon color="warn">close</mat-icon>
-    </button>
+ <div class="button-close">
+    <ng-container *ngIf="bunttonClose; else cerrarDialog">
+      <button
+        mat-icon-button
+        (click)="bunttonClose.Function()"
+        aria-label="Cerrar"
+        class="btn-close"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </ng-container>
+  
+    <ng-template #cerrarDialog>
+      <button
+        mat-icon-button
+        mat-dialog-close
+        aria-label="Cerrar"
+        class="btn-close"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </ng-template>
   </div>
+
   <div style="height:88%" mat-dialog-content>
     <object [data]="documentData|safeUrl" type="application/pdf" *ngIf="documentLoad"></object>
 </div>
