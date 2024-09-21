@@ -3,6 +3,13 @@ export interface ModalSoportesCumplidoData {
   Config: ConfigSoportes;
 }
 
+export interface ModalComentariosSoporteData{
+  SoporteId: number;
+  CambioEstadoCumplidoId: number;
+  TipoSoporte: string;
+  Config: ConfigSoportes;
+}
+
 export interface ConfigSoportes {
   mode: Mode;
   rolUsuario: RolUsuario;

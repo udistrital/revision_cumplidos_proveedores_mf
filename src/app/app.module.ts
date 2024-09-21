@@ -45,7 +45,10 @@ import { FormSoporteComponent } from './components/general-components/form-sopor
 import { ModalVisualizarSoporteComponent } from './components/general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { TablaComponent } from './components/general-components/tabla/tabla.component'
+import { TablaComponent } from './components/general-components/tabla/tabla.component';
+import { ModalComentariosSoporteComponent } from './components/general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
+import { ComentarioIndividualSoporteComponent } from './components/general-components/modal-comentarios-soporte/comentario-individual-soporte/comentario-individual-soporte.component';
+import { GenerarComentarioSoporteComponent } from './components/general-components/modal-comentarios-soporte/generar-comentario-soporte/generar-comentario-soporte.component'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -71,6 +74,9 @@ export function createTranslateLoader(http: HttpClient) {
     FormSoporteComponent,
     ModalVisualizarSoporteComponent,
     TablaComponent,
+    ModalComentariosSoporteComponent,
+    ComentarioIndividualSoporteComponent,
+    GenerarComentarioSoporteComponent,
   ],
   imports: [
     HttpClientModule,

@@ -7,9 +7,10 @@ import { ComentarioSoporte } from 'src/app/models/revision_cumplidos_proveedores
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { ModalVisualizarSoporteComponent } from '../modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
-import { ConfigSoportes, Mode,RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
+import { ConfigSoportes, ModalComentariosSoporteData, ModalSoportesCumplidoData, Mode,RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ModalComentariosSoporteComponent } from '../modal-comentarios-soporte/modal-comentarios-soporte.component';
 
 
 
@@ -34,7 +35,7 @@ export class CardSoporteComponent {
     private cumplidosMidServices: CumplidosProveedoresMidService,
     private aletManagerService:AletManagerService,
     private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
-    private fb: FormBuilder 
+    private fb: FormBuilder
   ){
     this.comentarioForm = this.fb.group({
       comentario: ['', [Validators.minLength(10), Validators.pattern(/^(?!\s)[\s\S]*\S+$/)]],
@@ -42,8 +43,7 @@ export class CardSoporteComponent {
   }
 
   ngOnInit() {
-    console.log("Soportes ", this.soporte)
-    console.log("cambio estado id",this.cambioEstadoCumplido)
+
   }
 
   openVerSoporte() {
@@ -59,10 +59,10 @@ export class CardSoporteComponent {
   }
 
   async eliminarSoporte(){
- 
+
        const confirm = await this.aletManagerService.alertConfirm("¿Deseas Eliminar el soporte?");
        if(confirm.isConfirmed){
-        
+
         console.log(this.soporte)
         try{
           this.cumplidosMidServices.delete(`/solicitud-pago/soportes`, this.soporte.Documento)
@@ -78,7 +78,7 @@ export class CardSoporteComponent {
         }catch(error){
             this.aletManagerService.showCancelAlert("Error","Se produjo"+error)
         }
-        
+
        }else{
         this.aletManagerService.showCancelAlert("Cancelado","No se elimino")
        }
@@ -108,9 +108,28 @@ export class CardSoporteComponent {
         }catch(error){
           this.aletManagerService.showCancelAlert("Cancelado", "No se ha guardo ningun comentario");
         }
-      } 
+      }
     }).catch(()=>{
       this.aletManagerService.showCancelAlert("Cancelado", "No se ha guardo ningun comentario");
     });
    }
+
+   openDialog(soporte_id: number, cambio_estado_cumplido_id: number, tipo_soporte: string) {
+    this.dialog.open(ModalComentariosSoporteComponent, {
+      disableClose: true,
+      maxHeight: '80vw',
+      maxWidth: '100vw',
+      height: '80vh',
+      width: '80vw',
+      data:{
+        SoporteId: soporte_id,
+        CambioEstadoCumplidoId: cambio_estado_cumplido_id,
+        TipoSoporte: tipo_soporte,
+        Config:{
+          mode:this.config.mode,
+          rolUsuario: this.config.rolUsuario
+        }
+      } as ModalComentariosSoporteData
+    });
+}
 }
