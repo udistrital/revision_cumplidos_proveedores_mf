@@ -82,7 +82,7 @@ export class FirmaElectronicaService {
         },
       ];
 
-      this.popUpManager.showConfirmAlert(
+      this.aletManagerService.showLoadingAlert(
         'Firmando',
         'Espera mientras el documento se firma'
       );
@@ -150,6 +150,8 @@ export class FirmaElectronicaService {
         },
         (error) => {
           console.error('Error al registrar soporte de pago:', error);
+          Swal.close();
+          this.popUpManager.showConfirmAlert("Error al registar el soporte");
         }
       );
   }
