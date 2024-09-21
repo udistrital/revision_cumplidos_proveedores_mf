@@ -1,11 +1,12 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
-import { ModalSoportesCumplidoData,Mode } from 'src/app/models/modal-soporte-cumplido-data.model';
+import { ModalSoportesCumplidoData,Mode, RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { SoportesService } from 'src/app/services/soportes.service';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import { ModalComentariosSoporteComponent } from '../modal-comentarios-soporte/modal-comentarios-soporte.component';
 
 @Component({
   selector: 'app-modal-soportes-cumplido',
@@ -24,6 +25,7 @@ export class ModalSoportesCumplidoComponent {
     private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
     private soporteService: SoportesService,
     private popUpManager: PopUpManager,
+    public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ModalSoportesCumplidoData
   ) {}
 
@@ -72,4 +74,6 @@ export class ModalSoportesCumplidoComponent {
   close(): void {
     this.dialogRef.close();
   }
+
+
 }

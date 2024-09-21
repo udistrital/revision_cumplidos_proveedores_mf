@@ -20,11 +20,11 @@
         <ul>
           <ng-template *ngFor="let comentario of soporte.Comentarios">
             <li *ngIf="comentario.Comentario !=''">
-              <p >{{comentario.CambioEstadoCumplidoId.CargoResponsable}} : {{ comentario.Comentario }} </p> 
+              <p >{{comentario.CambioEstadoCumplidoId.CargoResponsable}} : {{ comentario.Comentario }} </p>
             </li>
           </ng-template>
-          
-          
+
+
         </ul>
       </div>
       <div>
@@ -32,16 +32,16 @@
       </div> -->
       <div *ngIf="(config.mode == mode.PRC || config.mode == mode.PRO) && (config.rolUsuario == rolUsuario.C || config.rolUsuario == rolUsuario.O)" style="margin-top: 5px;">
         <form [formGroup]="comentarioForm" (ngSubmit)="enviarComentario()">
-          <textarea id="comentario" formControlName="comentario" placeholder="Escribe un comentario" class="box-text-area"></textarea>
-      
+          <!-- <textarea id="comentario" formControlName="comentario" placeholder="Escribe un comentario" class="box-text-area"></textarea> -->
+
           <div *ngIf="comentarioForm.get('comentario')?.invalid && comentarioForm.get('comentario')?.touched">
-            <span *ngIf="comentarioForm.get('comentario')?.hasError('minlength')">El comentario debe tener al menos 5 caracteres</span>
+            <span *ngIf="comentarioForm.get('comentario')?.hasError('minlength')">El comentario debe tener al menos 10 caracteres</span>
           </div>
-      
+
         </form>
       </div>
-      
-        
+
+
     </mat-card-content>
   </div>
 
@@ -57,10 +57,9 @@
         <button mat-button class="ver-documentos-button" (click)="openVerSoporte()">
           Ver
         </button>
-        <button mat-button type="submit" [disabled]="comentarioForm.invalid" class="btn-eliminar" (click)="enviarComentario()"
-          *ngIf="(config.mode==mode.PRC || config.mode==mode.PRO) && (config.rolUsuario==rolUsuario.C ||config.rolUsuario==rolUsuario.O)">
-          Comentar
-        </button> 
+        <button mat-button type="submit" [disabled]="comentarioForm.invalid" class="btn-eliminar" (click)="openDialog(soporte.SoporteCumplidoId, cambioEstadoCumplido.Id, soporte.Documento.TipoDocumento)">
+          Comentarios
+        </button>
       </div>
     </div>
   </mat-card-footer>

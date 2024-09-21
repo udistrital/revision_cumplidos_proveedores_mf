@@ -13,14 +13,14 @@
     <br />
     <form [formGroup]="soporteForm">
       <div class="container-item">
-        <mat-grid-list cols="2" rowHeight="4:1">
-          <mat-grid-tile>
+        <mat-grid-list cols="2" rowHeight="90px">
+          <mat-grid-tile  colspan="1" rowspan="1">
             <div class="grid-item">
               <p>Item</p>
             </div>
           </mat-grid-tile>
-          <mat-grid-tile>
-            <mat-form-field appearance="outline" class="grid-form">
+          <mat-grid-tile  colspan="1" rowspan="1">
+            <mat-form-field appearance="outline" class="grid-tipo-documento">
               <mat-select
                 formControlName="opcionSeleccionada"
                 (selectionChange)="cambioTipoDocumento($event.value)"
@@ -35,15 +35,15 @@
             </mat-form-field>
           </mat-grid-tile>
           <div *ngIf="!cumplidoSatisfaccionSeleccionado">
-            <mat-grid-tile>
+            <mat-grid-tile  colspan="1" rowspan="1">
               <div class="grid-observaciones">
                 <p>Observaciones</p>
               </div>
             </mat-grid-tile>
-            <mat-grid-tile>
+            <mat-grid-tile  colspan="1" rowspan="2" class="tile-observaciones">
               <mat-form-field appearance="outline" class="grid-form">
                 <textarea matInput formControlName="observaciones" class="text-area-observaciones"></textarea>
-                <div *ngIf="soporteForm.get('observaciones')?.invalid && soporteForm.get('observaciones')?.touched">
+                <div style="font-size: 12px" *ngIf="soporteForm.get('observaciones')?.invalid && soporteForm.get('observaciones')?.touched">
                   <mat-error *ngIf="soporteForm.get('observaciones')?.errors?.['minlength']">
                     Las observaciones deben tener al menos 10 caracteres.
                   </mat-error>
@@ -85,7 +85,7 @@
           Crear Documento
         </button>
         <ng-template #cargarSoporte>
-          <button mat-button class="cargar-button" (click)="uploadFile()" [disabled]="soporteForm.invalid">
+          <button mat-button [class.mat-button-disabled]="soporteForm.invalid" class="cargar-button" (click)="uploadFile()">
             Cargar Soporte
           </button>
         </ng-template>
