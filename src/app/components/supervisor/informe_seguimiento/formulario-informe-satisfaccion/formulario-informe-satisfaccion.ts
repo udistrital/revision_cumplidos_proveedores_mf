@@ -35,6 +35,8 @@ import { ModalListarCumplidosComponent } from '../../modal-listar-cumplidos/moda
 })
 export class FormularioInformeSatisfaccionComponent implements OnInit {
   formularioInformeSeguimiento: FormGroup;
+  informacionBancariaForm: FormGroup;
+  habilitarInformacionBancaria = true;
   numeroContrato: string = '';
   vigencia: string = '';
   pdfBase64: string = '';
@@ -72,17 +74,20 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         fecha_inicio: [''],
         fecha_fin: [''],
         tipo_cobro: [null, Validators.required],
-        numero_cuenta: [
-          '',
-          [Validators.required, Validators.pattern('^[0-9]*$')],
-        ],
+
         numero_factura: [''],
         valor_cumplido: [''],
-        banco: [null, Validators.required],
-        tipo_cuenta: [null, Validators.required],
       },
       { validator: this.validarFecha() }
     );
+    this.informacionBancariaForm = this.fg.group({
+      banco: [{ value: null, disabled: this.habilitarInformacionBancaria }, Validators.required],
+      tipo_cuenta: [{ value: null, disabled: this.habilitarInformacionBancaria }, Validators.required],
+      numero_cuenta: [
+        { value: null, disabled: this.habilitarInformacionBancaria },
+        [Validators.required, Validators.pattern('^[0-9]*$')],
+      ],
+    });
   }
 
   async ngOnInit() {
@@ -98,7 +103,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       const idParam = params.get('cumplidoId');
       this.cumplidoId = idParam ? +idParam : 0;
     });
-
 
     this.cumplidosMidServices.contrato$.subscribe((contrato) => {
       if (contrato) {
@@ -124,6 +128,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           this.listaTiposCuentaBancaria = [];
         }
       });
+    this.informacionBancariaForm.disable;
   }
 
   async obtenerBancos() {
@@ -190,11 +195,11 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
   async guardarIformacionPago() {
     let confirm = await this.alertService.alertConfirm('Guardado');
-    console.log("antes de guardar ", this.nuevoFormuario)
+    console.log('antes de guardar ', this.nuevoFormuario);
     if (confirm.isConfirmed) {
       const body = this.obtenerInformacionPago();
-     console.log("Despues de guardar ", this.nuevoFormuario)
-   this.guardatinformacionPagoSolictud(body);
+      console.log('Despues de guardar ', this.nuevoFormuario);
+      this.guardatinformacionPagoSolictud(body);
     } else {
       this.alertService.showCancelAlert(
         'Cancelado',
@@ -207,10 +212,11 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     console.log('Test de que se ejecuta el fomulario ');
     let confirm = await this.alertService.alertConfirm('¿Generar soporte?');
 
-   
-
     if (confirm.isConfirmed) {
-      if (this.formularioInformeSeguimiento.valid) {
+      if (
+        this.formularioInformeSeguimiento.valid &&
+        this.informacionBancariaForm.valid
+      ) {
         this.alertService.showLoadingAlert(
           'Espera por favor',
           'Estamos generando tu documento. Esto puede tardar unos momentos. Gracias.'
@@ -231,10 +237,9 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
               };
               console.log('Archivo', this.solicituDeFirma);
               this.nameFile = this.solicituDeFirma.NombreArchivo;
-              this.pdfBase64= res.Data.Archivo;
-              console.log("test de archvio : ", res.Data.Archivo)
-              console.log("test de asignacion: ", res.Data.Archivo)
-              
+              this.pdfBase64 = res.Data.Archivo;
+              console.log('test de archvio : ', res.Data.Archivo);
+              console.log('test de asignacion: ', res.Data.Archivo);
             },
 
             error: (error: any) => {
@@ -278,7 +283,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         panelClass: 'custom-dialog-container',
         data: {
           aprobarSoportes: true,
-          url:   this.pdfBase64,
+          url: this.pdfBase64,
           cargoResponsable: 'Supervisor',
           regresarACargaDocumentos: false,
           ModalButtonsFunc: [
@@ -310,7 +315,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async buscarInformacionPago() {
-  
     try {
       this.alertService.showLoadingAlert(
         'Cargado',
@@ -346,7 +350,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
         console.log('tipo cuenta:', tipoCuentaBancaria);
         this.formularioInformeSeguimiento.patchValue({
-          banco: bancoSeleccionado,
           numero_cuenta: informePago.NumeroCuenta,
           fecha_inicio: informePago.FechaInicial,
           fecha_fin: informePago.FechaFinal,
@@ -354,7 +357,11 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           valor_cumplido: informePago.ValorCumplido,
           numero_factura: informePago.NumeroFactura,
           tipo_cobro: tipoCobroSelecconado,
+        });
+        this.informacionBancariaForm.patchValue({
+          banco: bancoSeleccionado,
           tipo_cuenta: tipoCuentaBancaria,
+          numero_cuenta: informePago.NumeroCuenta,
         });
       }
       Swal.close();
@@ -367,29 +374,33 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   obtenerInformacionPago() {
-
-    console.log(this.formularioInformeSeguimiento)
+    console.log(this.formularioInformeSeguimiento);
     return {
-      BancoId:
-        this.formularioInformeSeguimiento.get('banco')?.value.Id ?? 0,
+      BancoId: this.informacionBancariaForm.get('banco')?.value.Id ?? 0,
       NumeroContratoSuscrito: Number(this.numeroContrato) ?? 0,
-      NumeroCuenta:this.formularioInformeSeguimiento.value.numero_cuenta ?? "",
+      NumeroCuenta: this.informacionBancariaForm.value.numero_cuenta ?? '',
       NumeroFactura:
-       this.formularioInformeSeguimiento.value.numero_factura ?? "",
-        TipoCuentaBancariaId:
-     Number(this.formularioInformeSeguimiento.get('tipo_cuenta')?.value.Id ?? 0),
-     TipoPagoId:
-        {"id":Number(this.formularioInformeSeguimiento.get('tipo_pago')?.value.Id ?? 0)},
-        CumplidoProveedorId:{"id":this.cumplidoId},
-        TipoDocumentoCobroId:
-        Number(this.formularioInformeSeguimiento.get('tipo_cobro')?.value.Id ?? 0),
-        ValorCumplido: Number(this.formularioInformeSeguimiento.get('valor_cumplido')?.value ?? 0),
+        this.formularioInformeSeguimiento.value.numero_factura ?? '',
+      TipoCuentaBancariaId: Number(
+        this.informacionBancariaForm.get('tipo_cuenta')?.value.Id ?? 0
+      ),
+      TipoPagoId: {
+        id: Number(
+          this.formularioInformeSeguimiento.get('tipo_pago')?.value.Id ?? 0
+        ),
+      },
+      CumplidoProveedorId: { id: this.cumplidoId },
+      TipoDocumentoCobroId: Number(
+        this.formularioInformeSeguimiento.get('tipo_cobro')?.value.Id ?? 0
+      ),
+      ValorCumplido: Number(
+        this.formularioInformeSeguimiento.get('valor_cumplido')?.value ?? 0
+      ),
       VigenciaContrato: this.vigencia ?? '',
       FechaInicial:
         this.formularioInformeSeguimiento.get('fecha_inicio')?.value ?? null,
-        FechaFinal:
+      FechaFinal:
         this.formularioInformeSeguimiento.get('fecha_fin')?.value ?? null,
-
     };
   }
 
@@ -410,14 +421,13 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     };
   }
 
-
-  private guardatinformacionPagoSolictud(body:any){
+  private guardatinformacionPagoSolictud(body: any) {
     if (this.nuevoFormuario) {
       try {
         this.cumplidosCrudServices.post('/informacion_pago/', body).subscribe(
-          (response:any) => {
+          (response: any) => {
             this.nuevoFormuario = false;
-           this.informacionPagoId = response.Data.Id;
+            this.informacionPagoId = response.Data.Id;
             this.alertService.showSuccessAlert(
               'Guardado',
               'Se guardo el infrome'
@@ -463,4 +473,12 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     }
   }
 
+  async habilitarInfromacionBancaria(){
+    let confirm = await this.alertService.alertConfirm('¿Modificar Informacion Bancaria?', "Los cambios realizados no se guardarán en la información del proveedor, sino únicamente en la información de pago y solo para esta solicitud.");
+
+    if (confirm.isConfirmed) {
+      this.informacionBancariaForm.enable();
+    }
+
+  }
 }

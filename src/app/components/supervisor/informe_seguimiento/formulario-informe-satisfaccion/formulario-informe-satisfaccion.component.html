@@ -122,7 +122,7 @@
           </mat-form-field>
         </div>
 
-        <div class="wp-bank-info">
+        <div class="wp-bank-info" [formGroup]="informacionBancariaForm">
           <p class="title-bank-info">Información bancaria</p>
           <div class="bank-info-items">
             <p class="labels">BANCO:</p>
@@ -155,7 +155,7 @@
           </div>
 
           <div class="wp-change-info">
-            <button type="submit" class="btn btn-view">
+            <button type="button"  (click)="habilitarInfromacionBancaria()" class="btn btn-view">
               Cambiar información
             </button>
             <svg
