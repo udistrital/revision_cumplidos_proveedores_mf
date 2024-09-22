@@ -99,6 +99,18 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       this.cumplidoId = idParam ? +idParam : 0;
     });
 
+
+    this.cumplidosMidServices.contrato$.subscribe((contrato) => {
+      if (contrato) {
+        this.numeroContrato = contrato.Contrato.NumeroContratoSuscrito;
+        this.vigencia = contrato.Contrato.Vigencia;
+      } else {
+        this.popUpManager.showErrorAlert(
+          'No se registra informacion del contrato'
+        );
+      }
+    });
+
     await this.obtenerBancos();
     await this.obtenerTiposPago();
     await this.obtenerTiposDocumentoCobro();
@@ -178,56 +190,11 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
   async guardarIformacionPago() {
     let confirm = await this.alertService.alertConfirm('Guardado');
-
+    console.log("antes de guardar ", this.nuevoFormuario)
     if (confirm.isConfirmed) {
       const body = this.obtenerInformacionPago();
-      if (this.nuevoFormuario) {
-        try {
-          this.cumplidosCrudServices.post('/informacion_pago/', body).subscribe(
-            (response) => {
-              this.alertService.showSuccessAlert(
-                'Guardado',
-                'Se guardo el infrome'
-              );
-            },
-            (error) => {
-              this.alertService.showCancelAlert(
-                'Error',
-                'Se produjo el error' + error
-              );
-            }
-          );
-        } catch (error) {
-          this.alertService.showCancelAlert(
-            'Error',
-            'Se produjo el error' + error
-          );
-        }
-      } else {
-        try {
-          this.cumplidosCrudServices
-            .put(`/informacion_pago/${this.informacionPagoId}`, body)
-            .subscribe(
-              (response) => {
-                this.alertService.showSuccessAlert(
-                  'Guardado',
-                  'Se guardo el infrome'
-                );
-              },
-              (error) => {
-                this.alertService.showCancelAlert(
-                  'Error',
-                  'Se produjo el error' + error
-                );
-              }
-            );
-        } catch (error) {
-          this.alertService.showCancelAlert(
-            'Error',
-            'Se produjo el error' + error
-          );
-        }
-      }
+     console.log("Despues de guardar ", this.nuevoFormuario)
+   this.guardatinformacionPagoSolictud(body);
     } else {
       this.alertService.showCancelAlert(
         'Cancelado',
@@ -240,16 +207,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     console.log('Test de que se ejecuta el fomulario ');
     let confirm = await this.alertService.alertConfirm('¿Generar soporte?');
 
-    this.cumplidosMidServices.contrato$.subscribe((contrato) => {
-      if (contrato) {
-        this.numeroContrato = contrato.Contrato.NumeroContratoSuscrito;
-        this.vigencia = contrato.Contrato.Vigencia;
-      } else {
-        this.popUpManager.showErrorAlert(
-          'No se registra informacion del contrato'
-        );
-      }
-    });
+   
 
     if (confirm.isConfirmed) {
       if (this.formularioInformeSeguimiento.valid) {
@@ -258,7 +216,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           'Estamos generando tu documento. Esto puede tardar unos momentos. Gracias.'
         );
         const body = this.obtenerInformacionPago();
-
+        this.guardatinformacionPagoSolictud(body);
         this.cumplidosMidServices
           .post('/supervisor/cumplido-satisfaccion', body)
           .subscribe({
@@ -276,6 +234,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
               this.pdfBase64= res.Data.Archivo;
               console.log("test de archvio : ", res.Data.Archivo)
               console.log("test de asignacion: ", res.Data.Archivo)
+              
             },
 
             error: (error: any) => {
@@ -351,6 +310,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async buscarInformacionPago() {
+  
     try {
       this.alertService.showLoadingAlert(
         'Cargado',
@@ -407,27 +367,29 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   obtenerInformacionPago() {
+
+    console.log(this.formularioInformeSeguimiento)
     return {
-      Banco:
-        this.formularioInformeSeguimiento.get('banco')?.value.NombreBanco ?? 0,
+      BancoId:
+        this.formularioInformeSeguimiento.get('banco')?.value.Id ?? 0,
       NumeroContratoSuscrito: Number(this.numeroContrato) ?? 0,
-      NumeroCuenta: this.formularioInformeSeguimiento.value.numero_cuenta ?? '',
-      NumeroCuentaFactura:
-        this.formularioInformeSeguimiento.value.numero_factura ?? '',
-      TipoCuenta:
-        this.formularioInformeSeguimiento.get('tipo_cuenta')?.value.Nombre ?? 0,
-      TipoPago:
-        this.formularioInformeSeguimiento.get('tipo_pago')?.value.Nombre ?? 0,
-      TipoFactura:
-        this.formularioInformeSeguimiento.get('tipo_cobro')?.value.Nombre ?? 0,
-      ValorPagar: Number(
-        this.formularioInformeSeguimiento.value.valor_cumplido
-      ),
+      NumeroCuenta:this.formularioInformeSeguimiento.value.numero_cuenta ?? "",
+      NumeroFactura:
+       this.formularioInformeSeguimiento.value.numero_factura ?? "",
+        TipoCuentaBancariaId:
+     Number(this.formularioInformeSeguimiento.get('tipo_cuenta')?.value.Id ?? 0),
+     TipoPagoId:
+        {"id":Number(this.formularioInformeSeguimiento.get('tipo_pago')?.value.Id ?? 0)},
+        CumplidoProveedorId:{"id":this.cumplidoId},
+        TipoDocumentoCobroId:
+        Number(this.formularioInformeSeguimiento.get('tipo_cobro')?.value.Id ?? 0),
+        ValorCumplido: Number(this.formularioInformeSeguimiento.get('valor_cumplido')?.value ?? 0),
       VigenciaContrato: this.vigencia ?? '',
-      PeriodoInicio:
+      FechaInicial:
         this.formularioInformeSeguimiento.get('fecha_inicio')?.value ?? null,
-      PeriodoFin:
+        FechaFinal:
         this.formularioInformeSeguimiento.get('fecha_fin')?.value ?? null,
+
     };
   }
 
@@ -446,6 +408,59 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
       return null;
     };
+  }
+
+
+  private guardatinformacionPagoSolictud(body:any){
+    if (this.nuevoFormuario) {
+      try {
+        this.cumplidosCrudServices.post('/informacion_pago/', body).subscribe(
+          (response:any) => {
+            this.nuevoFormuario = false;
+           this.informacionPagoId = response.Data.Id;
+            this.alertService.showSuccessAlert(
+              'Guardado',
+              'Se guardo el infrome'
+            );
+          },
+          (error) => {
+            this.alertService.showCancelAlert(
+              'Error',
+              'Se produjo el error' + error
+            );
+          }
+        );
+      } catch (error) {
+        this.alertService.showCancelAlert(
+          'Error',
+          'Se produjo el error' + error
+        );
+      }
+    } else {
+      try {
+        this.cumplidosCrudServices
+          .put(`/informacion_pago/${this.informacionPagoId}`, body)
+          .subscribe(
+            (response) => {
+              this.alertService.showSuccessAlert(
+                'Guardado',
+                'Se guardo el infrome'
+              );
+            },
+            (error) => {
+              this.alertService.showCancelAlert(
+                'Error',
+                'Se produjo el error' + error
+              );
+            }
+          );
+      } catch (error) {
+        this.alertService.showCancelAlert(
+          'Error',
+          'Se produjo el error' + error
+        );
+      }
+    }
   }
 
 }
