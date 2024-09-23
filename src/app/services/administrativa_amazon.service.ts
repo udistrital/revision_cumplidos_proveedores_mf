@@ -23,4 +23,9 @@ export class AdministrativaAmazonService {
     return this.requestManager.get(endpoint);
   }
 
+  getProd(endpoint: string) {
+    this.requestManager.setPath('ADMINISTRATIVA_AMAZON_API_PROD');
+    return this.requestManager.get(endpoint);
+  }
+
 }
