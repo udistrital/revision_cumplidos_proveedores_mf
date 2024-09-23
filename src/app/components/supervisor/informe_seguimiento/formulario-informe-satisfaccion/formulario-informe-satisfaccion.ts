@@ -53,6 +53,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   informacionPagoId: number = 0;
   cumplido: any;
   contrato: any;
+  idProveedor!:string;
 
   constructor(
     private fg: FormBuilder,
@@ -91,6 +92,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async ngOnInit() {
+
+
     this.cumplidoService.cumplido$.subscribe((cumplido) => {
       this.cumplido = cumplido;
     });
@@ -99,6 +102,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       this.contrato = contrato;
     });
 
+
+    console.log("cumplido",this.contrato);
     this.route.paramMap.subscribe((params) => {
       const idParam = params.get('cumplidoId');
       this.cumplidoId = idParam ? +idParam : 0;
@@ -129,6 +134,12 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         }
       });
     this.informacionBancariaForm.disable;
+  /*  this.userService.obtenerInformacionContrato("1512","2023").subscribe({
+      next:(response:any)=>{
+       this.idProveedor= response.Data.Contratista
+      }
+    })
+      */
   }
 
   async obtenerBancos() {
@@ -479,6 +490,11 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     if (confirm.isConfirmed) {
       this.informacionBancariaForm.enable();
     }
+
+  }
+
+
+  consultarInformacionBnacaria(){
 
   }
 }
