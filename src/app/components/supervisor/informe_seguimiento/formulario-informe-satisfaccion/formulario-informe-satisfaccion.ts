@@ -53,7 +53,10 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   informacionPagoId: number = 0;
   cumplido: any;
   contrato: any;
-  idProveedor!:string;
+  idProveedor!: string;
+  tipoCuentaBancaria!: any;
+  banco!: any;
+  numeroDeCuenta!: string;
 
   constructor(
     private fg: FormBuilder,
@@ -82,8 +85,14 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       { validator: this.validarFecha() }
     );
     this.informacionBancariaForm = this.fg.group({
-      banco: [{ value: null, disabled: this.habilitarInformacionBancaria }, Validators.required],
-      tipo_cuenta: [{ value: null, disabled: this.habilitarInformacionBancaria }, Validators.required],
+      banco: [
+        { value: null, disabled: this.habilitarInformacionBancaria },
+        Validators.required,
+      ],
+      tipo_cuenta: [
+        { value: null, disabled: this.habilitarInformacionBancaria },
+        Validators.required,
+      ],
       numero_cuenta: [
         { value: null, disabled: this.habilitarInformacionBancaria },
         [Validators.required, Validators.pattern('^[0-9]*$')],
@@ -92,8 +101,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async ngOnInit() {
-
-
     this.cumplidoService.cumplido$.subscribe((cumplido) => {
       this.cumplido = cumplido;
     });
@@ -102,8 +109,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       this.contrato = contrato;
     });
 
-
-    console.log("cumplido",this.contrato);
+    console.log('cumplido', this.contrato);
     this.route.paramMap.subscribe((params) => {
       const idParam = params.get('cumplidoId');
       this.cumplidoId = idParam ? +idParam : 0;
@@ -123,7 +129,14 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     await this.obtenerBancos();
     await this.obtenerTiposPago();
     await this.obtenerTiposDocumentoCobro();
-    await this.buscarInformacionPago();
+    if (this.nuevoFormuario) {
+      await this.consultarInformacionBnacariaFormularioNuevo();
+      await this.cargarIfnformacionBancaria();
+      await this.cargarFormularioIfnformacionBancaria();
+    }else{
+      await this.buscarInformacionPago();
+    }
+
     this.informacionBancariaForm
       .get('banco')
       ?.valueChanges.subscribe(async (banco) => {
@@ -135,13 +148,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       });
     this.informacionBancariaForm.disable;
 
-    this.userService.obtenerInformacionContrato("1512","2023").subscribe({
-      next:(response:any)=>{
-       this.idProveedor= response.Data.Contratista
-      }
-    })
-      
-    console.log("id Proveedor", this.idProveedor)
+    
   }
 
   async obtenerBancos() {
@@ -173,7 +180,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async obtenerTipoCuentaBancaria(bancoId: number) {
-    console.log("Buscando tipos de cuenta ")
+    console.log('Buscando tipos de cuenta ');
     console.log(bancoId);
     try {
       const response = await lastValueFrom(
@@ -339,7 +346,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           `/informacion_pago?query=CumplidoProveedorId.Id:${this.cumplidoId}`
         )
       );
-      Swal.close();
+      
 
       if (response.Data[0]?.Id != undefined) {
         this.cumplido = response.Data[0];
@@ -347,14 +354,11 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         this.nuevoFormuario = false;
         this.informacionPagoId = response.Data[0].Id;
         const informePago = response.Data[0];
-        const bancoSeleccionado = this.listaBancos.find(
-          (banco) => banco.Id == informePago.BancoId
-        );
-        await this.obtenerTipoCuentaBancaria(bancoSeleccionado?.Id ?? 0);
+        this.bancoId = informePago.BancoId;
+        this.tipoCuentaBancaria = informePago.TipoCuentaBancariaId;
+        this.numeroDeCuenta = informePago.NumeroCuenta;
+        await this.cargarIfnformacionBancaria();
 
-        const tipoCuentaBancaria = this.listaTiposCuentaBancaria.find(
-          (tipocuenta) => tipocuenta.Id == informePago.TipoCuentaBancariaId
-        );
         const tipoPagoSeleccionado = this.listaTipoDePago.find(
           (tipoPago) => tipoPago.Id == informePago.TipoPagoId.Id
         );
@@ -362,7 +366,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           (tipoCobro) => tipoCobro.Id == informePago.TipoDocumentoCobroId
         );
 
-        console.log('tipo cuenta:', tipoCuentaBancaria);
         this.formularioInformeSeguimiento.patchValue({
           fecha_inicio: informePago.FechaInicial,
           fecha_fin: informePago.FechaFinal,
@@ -371,11 +374,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           numero_factura: informePago.NumeroFactura,
           tipo_cobro: tipoCobroSelecconado,
         });
-        this.informacionBancariaForm.patchValue({
-          banco: bancoSeleccionado,
-          tipo_cuenta: tipoCuentaBancaria,
-          numero_cuenta: informePago.NumeroCuenta,
-        });
+        await this.cargarFormularioIfnformacionBancaria();
       }
       Swal.close();
     } catch (error) {
@@ -384,6 +383,38 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         'Se genereo el siguiente error' + error
       );
     }
+  }
+
+  async cargarIfnformacionBancaria() {
+    this.banco = this.listaBancos.find((banco) => banco.Id == this.bancoId);
+    console.log(this.tipoCuentaBancaria);
+    await this.obtenerTipoCuentaBancaria(this.banco?.Id ?? 0);
+
+    if (typeof this.tipoCuentaBancaria === 'string') {
+      console.log('tipos cuenta', this.listaTiposCuentaBancaria);
+      this.tipoCuentaBancaria = this.listaTiposCuentaBancaria.find(
+        (tipocuenta) => {
+          return tipocuenta.Nombre.toLowerCase().includes(
+            this.tipoCuentaBancaria.toLowerCase()
+          );
+        }
+      );
+    }else  if (typeof this.tipoCuentaBancaria === 'number') {
+      this.tipoCuentaBancaria = this.listaTiposCuentaBancaria.find(
+        (tipocuenta) => tipocuenta.Id == this.tipoCuentaBancaria
+      );
+    }else{
+      this.alertService.showCancelAlert("Error","Error al consultar tipo de cuenta")
+    }
+  }
+
+  async cargarFormularioIfnformacionBancaria() {
+    console.log("Test nuevooooo", this.tipoCuentaBancaria)
+    this.informacionBancariaForm.patchValue({
+      banco: this.banco,
+      tipo_cuenta: this.tipoCuentaBancaria,
+      numero_cuenta: this.numeroDeCuenta,
+    });
   }
 
   obtenerInformacionPago() {
@@ -486,17 +517,44 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     }
   }
 
-  async habilitarInfromacionBancaria(){
-    let confirm = await this.alertService.alertConfirm('¿Modificar Informacion Bancaria?', "Los cambios realizados no se guardarán en la información del proveedor, sino únicamente en la información de pago y solo para esta solicitud.");
+  async habilitarInfromacionBancaria() {
+    let confirm = await this.alertService.alertConfirm(
+      '¿Modificar Informacion Bancaria?',
+      'Los cambios realizados no se guardarán en la información del proveedor, sino únicamente en la información de pago y solo para esta solicitud.'
+    );
 
     if (confirm.isConfirmed) {
       this.informacionBancariaForm.enable();
     }
-
   }
 
-
-  consultarInformacionBnacaria(){
-
+  async consultarInformacionBnacariaFormularioNuevo() {
+    this.alertService.showLoadingAlert(
+      'Cargado',
+      'Espera mientras se carga la informacion'
+    );
+    try {
+      const infoContrato = await lastValueFrom(
+        this.userService.obtenerInformacionContrato(
+          this.numeroContrato,
+          this.vigencia
+        )
+      );
+      this.idProveedor = infoContrato[0].Contratista;
+      const infoProveedor = await lastValueFrom(
+        this.userService.obtenerInformacioProveedor(this.idProveedor)
+      );
+      console.log('info proveedor', infoProveedor);
+      this.numeroDeCuenta = infoProveedor[0].NumCuentaBancaria;
+      this.tipoCuentaBancaria = infoProveedor[0].TipoCuentaBancaria;
+      this.banco = infoProveedor[0].IdEntidadBancaria;
+      console.log('Desde el formulario nuevo', this.tipoCuentaBancaria);
+      Swal.close()
+    } catch (error) {
+      console.error('Error al consultar informacion del contrato');
+      this.alertService.showErrorAlert(
+        'Error al consultar informacion del contrato'
+      );
+    }
   }
 }
