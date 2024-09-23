@@ -124,7 +124,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     await this.obtenerTiposPago();
     await this.obtenerTiposDocumentoCobro();
     await this.buscarInformacionPago();
-    this.formularioInformeSeguimiento
+    this.informacionBancariaForm
       .get('banco')
       ?.valueChanges.subscribe(async (banco) => {
         if (banco) {
@@ -134,12 +134,14 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         }
       });
     this.informacionBancariaForm.disable;
-  /*  this.userService.obtenerInformacionContrato("1512","2023").subscribe({
+
+    this.userService.obtenerInformacionContrato("1512","2023").subscribe({
       next:(response:any)=>{
        this.idProveedor= response.Data.Contratista
       }
     })
-      */
+      
+    console.log("id Proveedor", this.idProveedor)
   }
 
   async obtenerBancos() {
@@ -171,6 +173,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async obtenerTipoCuentaBancaria(bancoId: number) {
+    console.log("Buscando tipos de cuenta ")
     console.log(bancoId);
     try {
       const response = await lastValueFrom(
@@ -361,7 +364,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
         console.log('tipo cuenta:', tipoCuentaBancaria);
         this.formularioInformeSeguimiento.patchValue({
-          numero_cuenta: informePago.NumeroCuenta,
           fecha_inicio: informePago.FechaInicial,
           fecha_fin: informePago.FechaFinal,
           tipo_pago: tipoPagoSeleccionado,
