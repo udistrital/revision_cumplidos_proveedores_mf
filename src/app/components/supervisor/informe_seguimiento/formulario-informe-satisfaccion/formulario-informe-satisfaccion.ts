@@ -57,6 +57,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   tipoCuentaBancaria!: any;
   banco!: any;
   numeroDeCuenta!: string;
+  botonCambiarInfomacionActivo = false;
 
   constructor(
     private fg: FormBuilder,
@@ -129,12 +130,9 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     await this.obtenerBancos();
     await this.obtenerTiposPago();
     await this.obtenerTiposDocumentoCobro();
+    await this.buscarInformacionPago();
     if (this.nuevoFormuario) {
       await this.consultarInformacionBnacariaFormularioNuevo();
-      await this.cargarIfnformacionBancaria();
-      await this.cargarFormularioIfnformacionBancaria();
-    }else{
-      await this.buscarInformacionPago();
     }
 
     this.informacionBancariaForm
@@ -147,8 +145,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         }
       });
     this.informacionBancariaForm.disable;
-
-    
   }
 
   async obtenerBancos() {
@@ -230,20 +226,20 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async generarSoporte() {
-    console.log('Test de que se ejecuta el fomulario ');
+    const body = this.obtenerInformacionPago();
+
     let confirm = await this.alertService.alertConfirm('¿Generar soporte?');
 
     if (confirm.isConfirmed) {
       if (
         this.formularioInformeSeguimiento.valid &&
-        this.informacionBancariaForm.valid
+        this.validarInformacionbancaria()
       ) {
         this.alertService.showLoadingAlert(
           'Espera por favor',
           'Estamos generando tu documento. Esto puede tardar unos momentos. Gracias.'
         );
-        const body = this.obtenerInformacionPago();
-        this.guardatinformacionPagoSolictud(body);
+
         this.cumplidosMidServices
           .post('/supervisor/cumplido-satisfaccion', body)
           .subscribe({
@@ -269,8 +265,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
               );
             },
             complete: () => {
-              Swal.close();
               this.modalVerSoporte();
+              Swal.close();
             },
           });
       } else {
@@ -321,14 +317,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
               Clases: '',
               Text: 'Firmar',
             },
-            {
-              Color: 'red',
-              Function: () => {
-                visualizarSoportes.close();
-              },
-              Clases: '',
-              Text: 'Cerar',
-            },
           ],
         },
       }
@@ -346,7 +334,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           `/informacion_pago?query=CumplidoProveedorId.Id:${this.cumplidoId}`
         )
       );
-      
 
       if (response.Data[0]?.Id != undefined) {
         this.cumplido = response.Data[0];
@@ -399,17 +386,20 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           );
         }
       );
-    }else  if (typeof this.tipoCuentaBancaria === 'number') {
+    } else if (typeof this.tipoCuentaBancaria === 'number') {
       this.tipoCuentaBancaria = this.listaTiposCuentaBancaria.find(
         (tipocuenta) => tipocuenta.Id == this.tipoCuentaBancaria
       );
-    }else{
-      this.alertService.showCancelAlert("Error","Error al consultar tipo de cuenta")
+    } else {
+      this.alertService.showCancelAlert(
+        'Error',
+        'Error al consultar tipo de cuenta'
+      );
     }
   }
 
   async cargarFormularioIfnformacionBancaria() {
-    console.log("Test nuevooooo", this.tipoCuentaBancaria)
+    console.log('Test nuevooooo', this.tipoCuentaBancaria);
     this.informacionBancariaForm.patchValue({
       banco: this.banco,
       tipo_cuenta: this.tipoCuentaBancaria,
@@ -418,33 +408,47 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   obtenerInformacionPago() {
-    console.log(this.formularioInformeSeguimiento);
+    console.log(
+      'Formulario',
+      this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()?.Id
+    );
+
     return {
-      BancoId: this.informacionBancariaForm.get('banco')?.value.Id ?? 0,
+      BancoId:
+        this.informacionBancariaForm.get('banco')?.getRawValue()?.Id ?? 0,
       NumeroContratoSuscrito: Number(this.numeroContrato) ?? 0,
-      NumeroCuenta: this.informacionBancariaForm.value.numero_cuenta ?? '',
+      NumeroCuenta:
+        this.informacionBancariaForm.getRawValue().numero_cuenta ?? '',
       NumeroFactura:
-        this.formularioInformeSeguimiento.value.numero_factura ?? '',
+        this.formularioInformeSeguimiento
+          .get('numero_factura')
+          ?.getRawValue() ?? '',
       TipoCuentaBancariaId: Number(
-        this.informacionBancariaForm.get('tipo_cuenta')?.value.Id ?? 0
+        this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()?.Id ?? 0
       ),
       TipoPagoId: {
         id: Number(
-          this.formularioInformeSeguimiento.get('tipo_pago')?.value.Id ?? 0
+          this.formularioInformeSeguimiento.get('tipo_pago')?.getRawValue()
+            ?.Id ?? 0
         ),
       },
       CumplidoProveedorId: { id: this.cumplidoId },
       TipoDocumentoCobroId: Number(
-        this.formularioInformeSeguimiento.get('tipo_cobro')?.value.Id ?? 0
+        this.formularioInformeSeguimiento.get('tipo_cobro')?.getRawValue()
+          ?.Id ?? 0
       ),
       ValorCumplido: Number(
-        this.formularioInformeSeguimiento.get('valor_cumplido')?.value ?? 0
+        this.formularioInformeSeguimiento
+          .get('valor_cumplido')
+          ?.getRawValue() ?? 0
       ),
       VigenciaContrato: this.vigencia ?? '',
       FechaInicial:
-        this.formularioInformeSeguimiento.get('fecha_inicio')?.value ?? null,
+        this.formularioInformeSeguimiento.get('fecha_inicio')?.getRawValue() ??
+        null,
       FechaFinal:
-        this.formularioInformeSeguimiento.get('fecha_fin')?.value ?? null,
+        this.formularioInformeSeguimiento.get('fecha_fin')?.getRawValue() ??
+        null,
     };
   }
 
@@ -468,6 +472,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   private guardatinformacionPagoSolictud(body: any) {
     if (this.nuevoFormuario) {
       try {
+        this.alertService.showLoadingAlert('Guardando', 'Porfavor espera');
         this.cumplidosCrudServices.post('/informacion_pago/', body).subscribe(
           (response: any) => {
             this.nuevoFormuario = false;
@@ -476,6 +481,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
               'Guardado',
               'Se guardo el infrome'
             );
+            this.alertService.showLoadingAlert('Cargando', 'Porfavor espera');
           },
           (error) => {
             this.alertService.showCancelAlert(
@@ -500,6 +506,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
                 'Guardado',
                 'Se guardo el infrome'
               );
+              this.alertService.showLoadingAlert('Cargando', 'Porfavor espera');
             },
             (error) => {
               this.alertService.showCancelAlert(
@@ -525,7 +532,19 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
     if (confirm.isConfirmed) {
       this.informacionBancariaForm.enable();
+      this.botonCambiarInfomacionActivo = true;
     }
+  }
+
+  validarInformacionbancaria() {
+    const bancoValid = this.informacionBancariaForm.get('banco')?.value != null;
+    const tipoCuentaValid =
+      this.informacionBancariaForm.get('tipo_cuenta')?.value != null;
+    const numeroCuentaValid =
+      this.informacionBancariaForm.get('numero_cuenta')?.value &&
+      /^[0-9]*$/.test(this.informacionBancariaForm.get('numero_cuenta')?.value);
+
+    return bancoValid && tipoCuentaValid && numeroCuentaValid;
   }
 
   async consultarInformacionBnacariaFormularioNuevo() {
@@ -548,8 +567,10 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       this.numeroDeCuenta = infoProveedor[0].NumCuentaBancaria;
       this.tipoCuentaBancaria = infoProveedor[0].TipoCuentaBancaria;
       this.banco = infoProveedor[0].IdEntidadBancaria;
+      await this.cargarIfnformacionBancaria();
+      await this.cargarFormularioIfnformacionBancaria();
       console.log('Desde el formulario nuevo', this.tipoCuentaBancaria);
-      Swal.close()
+      Swal.close();
     } catch (error) {
       console.error('Error al consultar informacion del contrato');
       this.alertService.showErrorAlert(
