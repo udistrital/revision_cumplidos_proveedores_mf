@@ -76,12 +76,12 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     this.formularioInformeSeguimiento = this.fg.group(
       {
         tipo_pago: [null, Validators.required],
-        fecha_inicio: [''],
-        fecha_fin: [''],
+        fecha_inicio: ['',Validators.required],
+        fecha_fin: ['',Validators.required],
         tipo_cobro: [null, Validators.required],
 
-        numero_factura: [''],
-        valor_cumplido: [''],
+        numero_factura: ['',Validators.required],
+        valor_cumplido: ['', Validators.required],
       },
       { validator: this.validarFecha() }
     );
@@ -271,6 +271,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           });
       } else {
         this.showDetailedErrors();
+        this.informacionBancariaForm.markAllAsTouched();
+        this.formularioInformeSeguimiento.markAllAsTouched();
         this.popUpManager.showErrorAlert('Datos incorrectos o faltantes');
       }
     }
@@ -470,38 +472,14 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   private guardatinformacionPagoSolictud(body: any) {
-    if (this.nuevoFormuario) {
-      try {
-        this.alertService.showLoadingAlert('Guardando', 'Porfavor espera');
-        this.cumplidosCrudServices.post('/informacion_pago/', body).subscribe(
-          (response: any) => {
-            this.nuevoFormuario = false;
-            this.informacionPagoId = response.Data.Id;
-            this.alertService.showSuccessAlert(
-              'Guardado',
-              'Se guardo el infrome'
-            );
-            this.alertService.showLoadingAlert('Cargando', 'Porfavor espera');
-          },
-          (error) => {
-            this.alertService.showCancelAlert(
-              'Error',
-              'Se produjo el error' + error
-            );
-          }
-        );
-      } catch (error) {
-        this.alertService.showCancelAlert(
-          'Error',
-          'Se produjo el error' + error
-        );
-      }
-    } else {
-      try {
-        this.cumplidosCrudServices
-          .put(`/informacion_pago/${this.informacionPagoId}`, body)
-          .subscribe(
-            (response) => {
+    if(this.validacionGuardar()){
+      if (this.nuevoFormuario) {
+        try {
+          this.alertService.showLoadingAlert('Guardando', 'Porfavor espera');
+          this.cumplidosCrudServices.post('/informacion_pago/', body).subscribe(
+            (response: any) => {
+              this.nuevoFormuario = false;
+              this.informacionPagoId = response.Data.Id;
               this.alertService.showSuccessAlert(
                 'Guardado',
                 'Se guardo el infrome'
@@ -515,11 +493,37 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
               );
             }
           );
-      } catch (error) {
-        this.alertService.showCancelAlert(
-          'Error',
-          'Se produjo el error' + error
-        );
+        } catch (error) {
+          this.alertService.showCancelAlert(
+            'Error',
+            'Se produjo el error' + error
+          );
+        }
+      } else {
+        try {
+          this.cumplidosCrudServices
+            .put(`/informacion_pago/${this.informacionPagoId}`, body)
+            .subscribe(
+              (response) => {
+                this.alertService.showSuccessAlert(
+                  'Guardado',
+                  'Se guardo el infrome'
+                );
+                this.alertService.showLoadingAlert('Cargando', 'Porfavor espera');
+              },
+              (error) => {
+                this.alertService.showCancelAlert(
+                  'Error',
+                  'Se produjo el error' + error
+                );
+              }
+            );
+        } catch (error) {
+          this.alertService.showCancelAlert(
+            'Error',
+            'Se produjo el error' + error
+          );
+        }
       }
     }
   }
@@ -577,5 +581,46 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         'Error al consultar informacion del contrato'
       );
     }
+  }
+
+
+  validacionGuardar():boolean {
+    let isValid=true;
+    const numeroCuentaControl = this.formularioInformeSeguimiento.get('tipo_pago');
+    const fechaInicioControl = this.formularioInformeSeguimiento.get('fecha_inicio');
+    const fechaFinControl = this.formularioInformeSeguimiento.get('fecha_fin');
+    const TipoCobroControl = this.formularioInformeSeguimiento.get('tipo_cobro');
+    const TipoCuentaControl = this.informacionBancariaForm.get('tipo_cuenta');
+    const BancoControl = this.informacionBancariaForm.get('banco');
+    if (numeroCuentaControl?.invalid) {
+      numeroCuentaControl.markAsTouched();
+      isValid=false
+    }
+
+    if (fechaInicioControl?.invalid) {
+      fechaInicioControl.markAsTouched();
+      isValid=false
+    }
+    if (fechaFinControl?.invalid) {
+      fechaFinControl.markAsTouched();
+      isValid=false
+    }
+    if (TipoCuentaControl?.invalid) {
+      TipoCuentaControl.markAsTouched();
+      isValid=false
+    }
+    if (BancoControl?.invalid) {
+      BancoControl.markAsTouched();
+      isValid=false
+    }
+
+
+
+    if (TipoCobroControl?.invalid) {
+      TipoCobroControl.markAsTouched();
+      isValid=false
+    }
+
+    return isValid
   }
 }
