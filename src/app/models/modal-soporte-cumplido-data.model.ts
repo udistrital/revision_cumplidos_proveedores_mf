@@ -3,6 +3,13 @@ export interface ModalSoportesCumplidoData {
   Config: ConfigSoportes;
 }
 
+export interface ModalComentariosSoporteData{
+  SoporteId: number;
+  CambioEstadoCumplidoId: number;
+  TipoSoporte: string;
+  Config: ConfigSoportes;
+}
+
 export interface ConfigSoportes {
   mode: Mode;
   rolUsuario: RolUsuario;
@@ -10,7 +17,7 @@ export interface ConfigSoportes {
 
 export enum Mode {
   CD = 'CargandoDocumentos',
-  RC = 'RevisionContratacion',
+  RC = 'RechazadoContratacion',
   PRC = 'PendienteRevisionContratacion',
   PRO = 'PendienteRevisionOrdenador',
   AO = 'AprobadoOrdenador',

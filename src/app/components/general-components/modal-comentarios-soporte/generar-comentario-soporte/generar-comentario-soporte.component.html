@@ -1,0 +1,22 @@
+<mat-card>
+    <mat-card-content>
+      <form [formGroup]="comentarioForm">
+          <div>
+            <textarea matInput formControlName="comentario" class="box-text-area"></textarea>
+          </div>
+          <div *ngIf="comentarioForm.get('comentario')?.invalid && comentarioForm.get('comentario')?.touched">
+            <mat-error *ngIf="comentarioForm.get('comentario')?.errors?.['minlength']">
+              El comentario debe tener al menos 10 caracteres.
+            </mat-error>
+            <mat-error *ngIf="comentarioForm.get('comentario')?.errors?.['pattern']">
+              No deben haber espacios en blanco al inicio ni al final.
+            </mat-error>
+          </div>
+        <div class="container-enviar">
+          <button mat-button class="enviar-comentario-button"  [class.mat-button-disabled]="comentarioForm.invalid" (click)="registrarComentarioSoporte()">
+            Crear Comentario
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+</mat-card>
