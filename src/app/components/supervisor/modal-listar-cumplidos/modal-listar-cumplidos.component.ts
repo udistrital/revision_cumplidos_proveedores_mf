@@ -2,9 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { BodyCumplidoProveedor } from 'src/app/models/CargaSoportes/body_cumplido_proveedor.model';
+import { BodyCumplidoProveedor } from 'src/app/models/revision_cumplidos_proveedores_mid/body_cumplido_proveedor.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
-import { BodyCambioEstado } from 'src/app/models/CargaSoportes/body_cambio_estado.model';
+import { BodyCambioEstado } from 'src/app/models/revision_cumplidos_proveedores_mid/body_cambio_estado.model';
 import { UserService } from 'src/app/services/user.services';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
@@ -23,6 +23,8 @@ import { MatSort } from '@angular/material/sort';
 import { Button } from './../../../models/button.model';
 import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { ModoService } from 'src/app/services/modo_service.service';
+import { EstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/estado-cumplido.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-modal-listar-cumplidos',
@@ -39,7 +41,7 @@ export class ModalListarCumplidosComponent {
   dataSource: any[] = [];
   newCumplidoProveedor!: CrearSolicitudCumplido;
   newCambioEstado!: BodyCambioEstado;
-  data!: any;
+  loading: boolean = true;
 
 
   constructor(
@@ -113,27 +115,29 @@ export class ModalListarCumplidosComponent {
                 (solicitud: any) => {
                   console.log(res.Data, '..Dataparalafecha');
                   return {
-                    noSolicitud: count++,
-                    numeroContrato:
-                      solicitud.CumplidoProveedorId.NumeroContrato,
+                    noSolicitud: solicitud.ConsecutivoCumplido,
+                    numeroContrato: solicitud.CumplidoProveedorId.NumeroContrato,
                     fechaCreacion: new Date(solicitud.FechaCreacion),
                     periodo: solicitud.Periodo,
-                    estadoSolicitud: solicitud.EstadoCumplido,
-                    CodigoAbreviacionEstadoCumplido:
-                      solicitud.CodigoAbreviacionEstadoCumplido,
-                    acciones: 'Editar, Eliminar',
+                    estadoSoliciatud: solicitud.EstadoCumplido,
+                    CodigoAbreviacionEstadoCumplido: solicitud.CodigoAbreviacionEstadoCumplido,
                     cumplidoProveedor: solicitud.CumplidoProveedorId,
+                    acciones: [
+                      { icon: 'folder_open', actionName: 'folder_open', isActive: true },
+                      {
+                        icon: 'send',
+                        actionName: 'send',
+                        isActive: solicitud.CodigoAbreviacionEstadoCumplido === 'CD' || solicitud.CodigoAbreviacionEstadoCumplido === 'RO' || solicitud.CodigoAbreviacionEstadoCumplido === 'RC'
+                      },
+                    ],
                   };
+                  this.loading = false;
                 }
               );
-              this.data = new MatTableDataSource<any>(this.dataSource);
-              this.data.paginator = this.paginator;
-              this.data.sort = this.sort;
+              this.loading = false;
             },
             error: (error: any) => {
-              this.data = new MatTableDataSource<any>(this.dataSource);
-              this.data.paginator = this.paginator;
-              this.data.sort = this.sort;
+              this.loading = false;
               this.popUpManager.showErrorAlert(
                 'El Proveedor no tiene ninguna solicitud reciente'
               );
@@ -143,14 +147,26 @@ export class ModalListarCumplidosComponent {
     });
   }
 
-  displayedColumns: string[] = [
-    'noSolicitud',
-    'numeroContrato',
-    'fechaCreacion',
-    'periodo',
-    'estadoSoliciatud',
-    'acciones',
+
+  displayedColumns: any[] = [
+    {def: 'noSolicitud', header: 'N° SOLICITUD' },
+    {def: 'numeroContrato', header: 'N° CONTRATO' },
+    {def: 'fechaCreacion', header: 'FECHA CREACION' },
+    {def: 'periodo', header: 'PERIODO' },
+    {def: 'estadoSoliciatud', header: 'ESTADO SOLICITUD' },
+    {
+      def: 'acciones',
+      header: 'ACCIONES',
+      isAction: true,
+    }
   ];
+
+  async obtenerCodigoAbreviacionCumplido(idCumplido: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      console.log(idCumplido)
+    });
+  }
+
 
   crearCumplidoProveedor() {
     this.cumplidosCrudService
@@ -218,9 +234,12 @@ export class ModalListarCumplidosComponent {
     );
     console.log(idCumplido);
     if (confirm.isConfirmed) {
-      this.cambioEstadoService.cambiarEstado(
+      await this.cambioEstadoService.cambiarEstado(
         idCumplido.cumplidoProveedor.Id,
         'PRC'
+      );
+      this.popUpManager.showSuccessAlert(
+        'Se han aprobado los soportes correctamente'
       );
     } else {
       this.alertService.showCancelAlert(
@@ -229,9 +248,17 @@ export class ModalListarCumplidosComponent {
       );
     }
 
-    this.getSolicitudesContrato(
+    await this.getSolicitudesContrato(
       idCumplido.cumplidoProveedor.NumeroContrato,
       idCumplido.cumplidoProveedor.VigenciaContrato
     );
+  }
+
+  handleActionClick(event: {action: any, element: any}) {
+    if (event.action.actionName === 'folder_open') {
+      this.openDialog(event.element);
+    } else if (event.action.actionName === 'send'){
+      this.cambiarEstado(event.element)
+    }
   }
 }

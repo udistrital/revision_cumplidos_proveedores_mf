@@ -4,7 +4,7 @@ import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_prove
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { UtilsService } from './utils.service';
-import { SoporteCumplido } from '../models/soporte_cumplido.model';
+import { InformacionSoporteCumplido } from '../models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,14 +17,14 @@ export class SoportesService {
     private utilService:UtilsService
   ) { }
 
-  getDocumentosCumplidos(cumplido_proveedor: number): Observable<SoporteCumplido[]> {
+  getDocumentosCumplidos(cumplido_proveedor: number): Observable<InformacionSoporteCumplido[]> {
     return this.cumplidosMidServices.get('/solicitud-pago/soportes/' + cumplido_proveedor).pipe(
       map((res: any) => {
 
         if (res.Data==null){
           return []
         }
-        return res.Data.map((soporte: SoporteCumplido) => {
+        return res.Data.map((soporte: InformacionSoporteCumplido) => {
           soporte.Documento.FechaCreacion=this.utilService.formatearFecha(soporte.Documento.FechaCreacion)
           return soporte
         });

@@ -1,0 +1,47 @@
+// .comentario-individual{
+//   margin-top: 2%;
+//   margin-bottom: 2%;
+//   background-color: #fff;
+//   //background-color: #fdeae6;
+// }
+
+.tile-comentario{
+  padding: 1%;
+  margin-bottom: 4px;
+  width: 70% !important ;
+  text-align: start !important;
+  display:flex;
+  justify-content: flex-start;
+}
+
+
+
+.tile{
+  padding: 1%;
+  margin-bottom: 4px;
+  width: 30% !important ;
+  display:flex;
+}
+
+.text-comentario{
+  flex:1;
+}
+
+.texto-grid{
+  text-align: center;
+  font-size: 80% !important;
+  color: #98483c;
+}
+
+
+
+.box-text-area{
+  border-width: 0;
+  background-color: #f8cecc;
+  color: rgb(85, 83, 83) !important;
+  border-radius: 10px;
+  border: 1px solid #b85450;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+

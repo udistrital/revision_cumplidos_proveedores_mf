@@ -1,12 +1,16 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CambioEstadoCumplido } from 'src/app/models/basics/cambio-estado-cumplio.model';
 import { Button } from 'src/app/models/button.model';
 import { ModalSoportesCumplidoData,Mode } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
+import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
+import { ModalSoportesCumplidoData,Mode, RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { SoportesService } from 'src/app/services/soportes.service';
+import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import { ModalComentariosSoporteComponent } from '../modal-comentarios-soporte/modal-comentarios-soporte.component';
 
 @Component({
   selector: 'app-modal-soportes-cumplido',
@@ -14,9 +18,10 @@ import { SoportesService } from 'src/app/services/soportes.service';
   styleUrls: ['./modal-soportes-cumplido.component.scss'],
 })
 export class ModalSoportesCumplidoComponent {
-  soportes!: SoporteCumplido[];
+  soportes!: InformacionSoporteCumplido[];
   cumplidoProveedorId!:number;
   cambioEstadoCumplido!:CambioEstadoCumplido;
+  loading: boolean = true;
   mode=Mode
   buttons!:Button[]
   modalButtonsFunc!:Button[]
@@ -27,6 +32,7 @@ export class ModalSoportesCumplidoComponent {
     private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
     private soporteService: SoportesService,
     private popUpManager: PopUpManager,
+    public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ModalSoportesCumplidoData
   ) {}
 
@@ -41,7 +47,7 @@ export class ModalSoportesCumplidoComponent {
   cargarSoportes() {
     console.log(this.data)
     this.soporteService.getDocumentosCumplidos(this.cumplidoProveedorId).subscribe({
-      next: (soportes: SoporteCumplido[]) => {
+      next: (soportes: InformacionSoporteCumplido[]) => {
         this.soportes = soportes;
         console.log(this.soportes);
       },
@@ -63,6 +69,7 @@ export class ModalSoportesCumplidoComponent {
           console.log(this.cambioEstadoCumplido)
         }
         this.cambioEstadoCumplido=response.Data[0]
+        this.loading=false
         console.log(response)
       },
       error: err=>{
@@ -74,4 +81,6 @@ export class ModalSoportesCumplidoComponent {
   close(): void {
     this.dialogRef.close();
   }
+
+
 }

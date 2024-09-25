@@ -11,91 +11,86 @@
       </p>
     </div>
     <br />
-    <div class="container-item">
-      <mat-grid-list cols="2" rowHeight="4:1">
-        <mat-grid-tile>
-          <div class="grid-item">
-            <p>Item</p>
-          </div>
-        </mat-grid-tile>
-        <mat-grid-tile>
-          <mat-form-field appearance="outline" class="grid-form">
-            <mat-select
-              [(ngModel)]="opcionSeleccionada"
-              placeholder="--Seleccione el item del cual cargara soporte--"
-            >
-              <mat-option
-                *ngFor="let opcion of opciones"
-                [value]="opcion.IdTipoDocumento"
-              >
-                {{ opcion.Nombre }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </mat-grid-tile>
-        <ng-template *ngIf="opcionSeleccionada != 157">
-          <mat-grid-tile>
-            <div class="grid-observaciones">
-              <p>Observaciones</p>
+    <form [formGroup]="soporteForm">
+      <div class="container-item">
+        <mat-grid-list cols="2" rowHeight="90px">
+          <mat-grid-tile  colspan="1" rowspan="1">
+            <div class="grid-item">
+              <p>Item</p>
             </div>
           </mat-grid-tile>
-          <mat-grid-tile>
-            <mat-form-field appearance="outline" class="grid-form">
-              <textarea
-                matInput
-                [(ngModel)]="observaciones"
-                class="text-area-observaciones"
-              ></textarea>
+          <mat-grid-tile  colspan="1" rowspan="1">
+            <mat-form-field appearance="outline" class="grid-tipo-documento">
+              <mat-select
+                formControlName="opcionSeleccionada"
+                (selectionChange)="cambioTipoDocumento($event.value)"
+                placeholder="--Seleccione el item del cual cargara soporte--">
+                <mat-option *ngFor="let opcion of opciones" [value]="opcion.CodigoAbreviacionTipoDocumento" (click)="asignarItemId(opcion.IdTipoDocumento)">
+                  {{ opcion.Nombre }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="soporteForm.get('opcionSeleccionada')?.invalid && soporteForm.get('opcionSeleccionada')?.touched">
+                Debe seleccionar una opción.
+              </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-        </ng-template>
-      </mat-grid-list>
-    </div>
-    <br />
-    <div class="container-subir-documento">
-      <input
-        type="file"
-        #fileInput
-        (change)="onFileSelected($event)"
-        style="display: none"
-      />
-      <mat-form-field appearance="outline" class="input-subir-documento">
-        <input
-          matInput
-          placeholder="Seleccione el archivo ..."
-          [value]="fileName"
-          disabled="true"
-        />
-      </mat-form-field>
+          <div *ngIf="!cumplidoSatisfaccionSeleccionado">
+            <mat-grid-tile  colspan="1" rowspan="1">
+              <div class="grid-observaciones">
+                <p>Observaciones</p>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile  colspan="1" rowspan="2" class="tile-observaciones">
+              <mat-form-field appearance="outline" class="grid-form">
+                <textarea matInput formControlName="observaciones" class="text-area-observaciones"></textarea>
+                <div style="font-size: 12px" *ngIf="soporteForm.get('observaciones')?.invalid && soporteForm.get('observaciones')?.touched">
+                  <mat-error *ngIf="soporteForm.get('observaciones')?.errors?.['minlength']">
+                    Las observaciones deben tener al menos 10 caracteres.
+                  </mat-error>
+                  <mat-error *ngIf="soporteForm.get('observaciones')?.errors?.['pattern']">
+                    No deben haber espacios en blanco al inicio ni al final.
+                  </mat-error>
+                </div>
+              </mat-form-field>
+            </mat-grid-tile>
+          </div>
+        </mat-grid-list>
+      </div>
+      <br />
+      <div *ngIf="!cumplidoSatisfaccionSeleccionado" class="container-subir-documento">
+        <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none" />
+        <mat-form-field appearance="outline" class="input-subir-documento">
+          <input matInput placeholder="Seleccione el archivo ..." formControlName="fileName" [value]="fileName" />
+        </mat-form-field>
 
-      <button mat-button class="button-browse" (click)="triggerFileInput()">
-        Browse ..
-      </button>
-    </div>
-
-    <div class="container-remover-boton">
-      <button mat-button class="remover-button" (click)="removeFile()">
-        Remover
-      </button>
-    </div>
-
-    <br />
-
-    <div class="container-cargar">
-      <button
-        routerLink="/informe-seguimiento"
-        mat-button
-        class="cargar-button"
-        *ngIf="opcionSeleccionada == 157; else cargarSoporte"
-        (click)="crearDocumento()"
-      >
-        Crear Documento
-      </button>
-      <ng-template #cargarSoporte>
-        <button mat-button class="cargar-button" (click)="uploadFile()">
-          Cargar Soporte
+        <button mat-button class="button-browse" (click)="triggerFileInput()">
+          Browse ..
         </button>
-      </ng-template>
-    </div>
+        <div *ngIf="soporteForm.get('fileName')?.invalid && soporteForm.get('fileName')?.touched">
+          <mat-error>Debe seleccionar un archivo PDF.</mat-error>
+        </div>
+      </div>
+
+      <div *ngIf="!cumplidoSatisfaccionSeleccionado" class="container-remover-boton">
+        <button mat-button class="remover-button" (click)="removeFile()">
+          Remover
+        </button>
+      </div>
+
+      <br />
+
+      <div class="container-cargar">
+        <button routerLink="/informe-seguimiento" mat-button class="cargar-button"
+          *ngIf="cumplidoSatisfaccionSeleccionado; else cargarSoporte" (click)="crearDocumento()">
+          Crear Documento
+        </button>
+        <ng-template #cargarSoporte>
+          <button mat-button [class.mat-button-disabled]="soporteForm.invalid" class="cargar-button" (click)="uploadFile()">
+            Cargar Soporte
+          </button>
+        </ng-template>
+      </div>
+    </form>
+
   </mat-card-content>
 </mat-card>
