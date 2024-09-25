@@ -43,14 +43,9 @@
             <mat-grid-tile  colspan="1" rowspan="2" class="tile-observaciones">
               <mat-form-field appearance="outline" class="grid-form">
                 <textarea matInput formControlName="observaciones" class="text-area-observaciones"></textarea>
-                <div style="font-size: 12px" *ngIf="soporteForm.get('observaciones')?.invalid && soporteForm.get('observaciones')?.touched">
                   <mat-error *ngIf="soporteForm.get('observaciones')?.errors?.['minlength']">
                     Las observaciones deben tener al menos 10 caracteres.
                   </mat-error>
-                  <mat-error *ngIf="soporteForm.get('observaciones')?.errors?.['pattern']">
-                    No deben haber espacios en blanco al inicio ni al final.
-                  </mat-error>
-                </div>
               </mat-form-field>
             </mat-grid-tile>
           </div>
@@ -85,7 +80,7 @@
           Crear Documento
         </button>
         <ng-template #cargarSoporte>
-          <button mat-button [class.mat-button-disabled]="soporteForm.invalid" class="cargar-button" (click)="uploadFile()">
+          <button mat-button [class.mat-button-disabled]="soporteForm.invalid" class="cargar-button" type="submit" [disabled]="soporteForm.invalid" (click)="uploadFile()">
             Cargar Soporte
           </button>
         </ng-template>
