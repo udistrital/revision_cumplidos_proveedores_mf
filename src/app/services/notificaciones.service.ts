@@ -11,7 +11,11 @@ import { NotificacionBody } from '../models/notificacion.model';
 })
 export class NotificacionesService {
   private socket$: WebSocketSubject<any> | undefined;
-
+  mensaje: string = '';
+  documentoDestinatario: string = '';
+  asunto: string = '';
+  destinatarios:string[]=[]
+  documentoResponsable!:string
   constructor(
     private userService: UserService,
     private requestManager: RequestManager
@@ -31,9 +35,9 @@ export class NotificacionesService {
     return this.requestManager.post(endpoint, element);
   }
 
-  async publicarNotificaciones(notificacion: NotificacionBody) {
-   
-    console.log("Entro 2",notificacion)
+  async publicarNotificaciones(estado:string,enopint:string) {
+    await this.obteneMensaje(estado,enopint);
+   const notificacion= this.crearNotificacion();
     const notificaciones: any = await new Promise((resolve, reject) => {
       this.post('/notificacion', notificacion).subscribe(
         response=>{
@@ -53,6 +57,65 @@ export class NotificacionesService {
    
   }
 
+
+  private crearNotificacion(){
+    const notificacion:NotificacionBody=
+    {sistema_id:"66c8afeca6ee77849101664d",
+      tipo_notificacion_id:"66ac05deb6d4007375621835",
+      destinatarios:this.destinatarios,
+      remitente:this.userService.getPayload().documento,
+      asunto:this.asunto, 
+      mensaje:  this.mensaje,
+      lectura:false ,
+      metadatos:{} ,
+      activo:true ,
+    }
+     return notificacion;
+  }
+
+
+  private async obteneMensaje(estado: string,endpoint:string) {
+    console.log('obtenerAsunto', estado);
+    switch (estado) {
+      case 'PRO':
+        this.mensaje = 'Contratación te asignó una de cumplido proveedor';
+        this.asunto = 'Asignacion de Cumplido';
+        await this.obtenerDestinatario(endpoint);
+        this.destinatarios.push(this.documentoResponsable)
+        break;
+      case 'PRC':
+        this.mensaje = 'El supervisor te asignó una de cumplido proveedor';
+        this.asunto = 'Asignacion de Cumplido';
+        break;
+      case 'AO':
+        this.mensaje =
+          'El ordenador ha aprobado una solicitud de cumplido proveedor';
+        this.asunto = 'Aprobacion de Cumplido';
+        await this.obtenerDestinatario(endpoint);
+        this.destinatarios.push(this.documentoResponsable)
+        break;
+      case 'RO':
+        this.mensaje =
+          'El Ordenador rechazo  la solicitud de  cumplido proveedor';
+        this.asunto = 'Rechazo de Cumplido';
+        break;
+      case 'RC':
+        this.mensaje =
+          'Contratación ha rechazado la solicitud de cumplido proveedor';
+          this.asunto = 'Rechazo de Cumplido';
+          await this.obtenerDestinatario(endpoint);
+         this.destinatarios.push(this.documentoResponsable)
+        break;
+      default:
+        this.mensaje = '';
+        break;
+    }
+  }
+
+  private async obtenerDestinatario(endPoint:string){
+    this.documentoResponsable = await this.userService.obtenerResponsable(endPoint);
+   }
+ 
 
 
 }
