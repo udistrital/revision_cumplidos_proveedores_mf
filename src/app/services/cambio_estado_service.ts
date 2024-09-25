@@ -71,20 +71,8 @@ export class CambioEstadoService {
         CumplidoProveedorId: idCumplido,
         CodigoAbreviacionEstadoCumplido: estadoCumplido,
       }
-   /*   this.solicituCambiarEstado(cambioEstado);
+   this.solicituCambiarEstado(cambioEstado);
 
-      await this.obteneMensaje(estadoCumplido);
-      const notificacion:NotificacionBody = {
-        sistema_id: '66c8afeca6ee77849101664d',
-        tipo_notificacion_id: '66ac05deb6d4007375621835',
-        destinatarios: ['265313'],
-        remitente: "265313",
-        asunto: this.asunto,
-        mensaje: this.mensaje,
-        lectura: false,
-        metadatos: {},
-        activo: true
-      }*/
 
       if (this.mensaje != '') {
         try {
@@ -105,35 +93,5 @@ export class CambioEstadoService {
     }
   }
 
-  private async obteneMensaje(estado: string) {
-    console.log('obtenerAsunto', estado);
-    switch (estado) {
-      case 'PRO':
-        this.mensaje = 'Contratación te asignó una de cumplido proveedor';
-        this.asunto = 'Asignacion de Cumplido';
-        break;
-      case 'PRC':
-        this.mensaje = 'El supervisor te asignó una de cumplido proveedor';
-        this.asunto = 'Asignacion de Cumplido';
-        break;
-      case 'AO':
-        this.mensaje =
-          'El ordenador ha aprobado una solicitud de cumplido proveedor';
-        this.asunto = 'Aprobacion de Cumplido';
-        break;
-      case 'RO':
-        this.mensaje =
-          'El Ordenador rechazo  la solicitud de  cumplido proveedor';
-        this.asunto = 'Rechazo de Cumplido';
-        break;
-      case 'RC':
-        this.mensaje =
-          'Contratación ha rechazado la solicitud de cumplido proveedor';
-        break;
-      default:
-        this.mensaje = '';
-        break;
-    }
-  }
 
 }

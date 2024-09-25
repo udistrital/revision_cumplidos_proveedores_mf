@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Cumplido } from 'src/app/models/cumplido.model';
 import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
 import { catchError, lastValueFrom, map, Observable, of } from 'rxjs';
 import { CambioEstado } from 'src/app/models/cambio-estado.model';
@@ -25,6 +24,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ModoService } from 'src/app/services/modo_service.service';
 import { FirmaElectronicaService } from 'src/app/services/firma_electronica_mid.service';
+import { NotificacionesService } from 'src/app/services/notificaciones.service';
+import { Cumplido } from './../../../models/cumplido.model';
 
 @Component({
   selector: 'app-revision-cumplidos-ordenador',
@@ -50,7 +51,8 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     private cambioEstadoService: CambioEstadoService,
     private userService: UserService,
     private modeService: ModoService,
-    private firmaElectronica: FirmaElectronicaService
+    private firmaElectronica: FirmaElectronicaService,
+    private notificacionesService:NotificacionesService
   ) {}
   ngOnInit(): void {
     this.documentoResponsable = this.userService.getPayload().documento;
@@ -168,13 +170,13 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     });
   }
 
-  async verAutorizacionDePago(idCumplido: number) {
+  async verAutorizacionDePago(cumplido: any) {
     console.log('Si esta Ejecutando');
     const autorizacionPago = await this.GenerarAutotizacionDePago(
-      idCumplido
+      cumplido.CumplidoId
     ).toPromise();
     if (autorizacionPago != null) {
-      this.modalVerSoporte(idCumplido);
+      this.modalVerSoporte(cumplido);
     }
   }
 
@@ -274,7 +276,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
       );
   }
 
-  modalVerSoporte(idCumplido: number) {
+  modalVerSoporte(cumplido:any) {
     this.dialog.open(ModalVisualizarSoporteComponent, {
       disableClose: true,
       height: '70vh',
@@ -290,9 +292,12 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
             Color: 'red',
             Function: () => {
               this.firmaElectronica
-                .firmarDocumento(this.solicituDeFirma, idCumplido, 168, false)
+                .firmarDocumento(this.solicituDeFirma, cumplido.CumplidoId, 168, false)
                 .then(() => {
-                  this.cambioEstadoService.cambiarEstado(idCumplido, 'AO');
+                  this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'AO').then(()=>{
+                    this.notificacionesService.publicarNotificaciones("RC","/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
+
+                  });
                 });
             },
             Clases: '',
@@ -305,6 +310,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
 
   cambiarEstado(idCumplido: any, estado: string) {
     this.cambioEstadoService.cambiarEstado(idCumplido, estado);
+    
   }
 }
 

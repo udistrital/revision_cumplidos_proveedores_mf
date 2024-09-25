@@ -36,12 +36,13 @@ export class NotificacionesService {
   }
 
   async publicarNotificaciones(estado:string,enopint:string) {
+    console.log("Entro a notificaar")
     await this.obteneMensaje(estado,enopint);
    const notificacion= this.crearNotificacion();
     const notificaciones: any = await new Promise((resolve, reject) => {
       this.post('/notificacion', notificacion).subscribe(
         response=>{
-          console.log(response)
+          console.log("Envio de notifiacion",response)
         },
         error=>{
           console.log(error)
@@ -70,6 +71,7 @@ export class NotificacionesService {
       metadatos:{} ,
       activo:true ,
     }
+    console.log("Notificacion", notificacion)
      return notificacion;
   }
 
@@ -105,6 +107,7 @@ export class NotificacionesService {
           this.asunto = 'Rechazo de Cumplido';
           await this.obtenerDestinatario(endpoint);
          this.destinatarios.push(this.documentoResponsable)
+         
         break;
       default:
         this.mensaje = '';

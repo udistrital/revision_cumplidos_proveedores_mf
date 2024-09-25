@@ -15,6 +15,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
+import { NotificacionesService } from './../../../services/notificaciones.service';
 
 
 
@@ -39,6 +40,7 @@ export class RevisionCumplidosContratacionComponent {
     private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
     private cambioEstadoService: CambioEstadoService,
     private userService: UserService,
+    private  notificacionesService:NotificacionesService
 
   ) {
     this.obtenerInfoPersona();
@@ -187,6 +189,7 @@ export class RevisionCumplidosContratacionComponent {
             'Aprobado',
             '!Se ha Aprobado el  soprte!'
           );
+         this.notificacionesService.publicarNotificaciones("AC","/informacion_ordenador_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
           this.cargarTablaCumplidos()
         })
         .catch((error) => {
@@ -208,6 +211,8 @@ export class RevisionCumplidosContratacionComponent {
             'Rechazado',
             '!Se han rechazado los soprtes!'
           );
+
+          this.notificacionesService.publicarNotificaciones("RC","/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
           this.cargarTablaCumplidos()
         })
         .catch((error) => {
