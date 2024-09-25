@@ -23,4 +23,6 @@ export class AdministrativaAmazonService {
     return this.requestManager.get(endpoint);
   }
 
+
+
 }

@@ -1,6 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PopUpManager } from 'src/app/managers/popUpManager';
+import { CambioEstadoCumplido } from 'src/app/models/basics/cambio-estado-cumplio.model';
+import { Button } from 'src/app/models/button.model';
+import { ModalSoportesCumplidoData,Mode } from 'src/app/models/modal-soporte-cumplido-data.model';
+import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
 import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
 import { ModalSoportesCumplidoData,Mode, RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
@@ -19,6 +23,9 @@ export class ModalSoportesCumplidoComponent {
   cambioEstadoCumplido!:CambioEstadoCumplido;
   loading: boolean = true;
   mode=Mode
+  buttons!:Button[]
+  modalButtonsFunc!:Button[]
+  
 
   constructor(
     public dialogRef: MatDialogRef<ModalSoportesCumplidoComponent>,
@@ -30,9 +37,9 @@ export class ModalSoportesCumplidoComponent {
   ) {}
 
   ngOnInit() {
-
+    this.buttons=this.data.Buttons
+    this.modalButtonsFunc=this.data.ModalButtonsFunc
     this.cumplidoProveedorId=this.data.CumplidoProveedorId
-    console.log(this.soportes)
     this.cargarSoportes()
     this.ObtenerUltimoCambioEstado()
   }

@@ -85,14 +85,21 @@
     justify-content: center;
   }
   
-  .ver-documentos-button{
-    background-color: #f8cecc;
-    color: #1f1e1e;
+  .ver-documentos-button {
+    background-color: #98483C;
+    color: white;
     border-radius: 5px;
     border: 1px solid #b85450;
     cursor: pointer;
-  }
-  
+    padding: 10px 20px; 
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.ver-documentos-button:hover {
+    background-color: #e8a3a1; 
+    transform: scale(1.05); 
+}
   .margin-section{
     margin: 3px;
   }

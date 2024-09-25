@@ -11,10 +11,11 @@ export class AletManagerService {
 
 
 
-alertConfirm(tile:string): Promise<any>{
+alertConfirm(tile:string,text?:string): Promise<any>{
 
     return Swal.fire({
     title: tile,
+    text:text,
     icon: "warning",
     showCancelButton: true,
     confirmButtonText: "Aceptar",

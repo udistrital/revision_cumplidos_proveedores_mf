@@ -26,15 +26,15 @@
             </text>
           </svg>
           <p class="labels">TIPO DE PAGO:</p>
-          <mat-form-field appearance="outline" class="input-tipo-pago">
+          <mat-form-field appearance="outline" class="input-tipo-pago" color="primary">
             <mat-select formControlName="tipo_pago">
-              <mat-option
-                *ngFor="let tipo_pago of listaTipoDePago"
-                [value]="tipo_pago"
-              >
+              <mat-option *ngFor="let tipo_pago of listaTipoDePago" [value]="tipo_pago">
                 {{ tipo_pago.Nombre }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="formularioInformeSeguimiento.get('tipo_pago')?.invalid" class="label-error">
+              Selecciona un tipo de pago
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="wp-dates">
@@ -51,6 +51,9 @@
               [for]="datepickerInicio"
             ></mat-datepicker-toggle>
             <mat-datepicker #datepickerInicio></mat-datepicker>
+            <mat-error *ngIf="formularioInformeSeguimiento.get('fecha_inicio')?.invalid" class="label-error">
+              Ingresa la fecha de Inico
+            </mat-error>
           </mat-form-field>
           <p class="p-final-date">Hasta</p>
           <mat-form-field appearance="fill" class="selects-fecha">
@@ -65,11 +68,11 @@
               [for]="datepickerFin"
             ></mat-datepicker-toggle>
             <mat-datepicker #datepickerFin></mat-datepicker>
+            <mat-error *ngIf="formularioInformeSeguimiento.get('fecha_fin')?.invalid" class="label-error">
+              Ingresa la fecha de finalizacion
+            </mat-error>
           </mat-form-field>
-          <div class="error-message" *ngIf="formularioInformeSeguimiento.errors?.['dateRangeInvalid']">
-            La Fecha Inicio no puede ser posterior a la Fecha Fin.
-          </div>
-          
+          <mat-error *ngIf="formularioInformeSeguimiento.errors?.['dateRangeInvalid']" class="label-error" >  La Fecha Inicio no puede ser posterior a la Fecha Fin.</mat-error>
         </div>
         <div class="wp-collection-account">
           <div class="wp-collection-item">
@@ -83,6 +86,9 @@
                   {{ tipo_cobro.Nombre }}
                 </mat-option>
               </mat-select>
+              <mat-error *ngIf="formularioInformeSeguimiento.get('tipo_cobro')?.invalid" class="label-error">
+                Selecciona un tipo de cobro
+              </mat-error>
             </mat-form-field>
           </div>
 
@@ -90,6 +96,9 @@
             <p class="label">NÚMERO DE CUENTA O FACTURA</p>
             <mat-form-field>
               <input matInput formControlName="numero_factura" type="text" />
+              <mat-error *ngIf="formularioInformeSeguimiento.get('numero_factura')?.invalid" class="label-error">
+                Ingresa numero de factura
+              </mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -119,20 +128,26 @@
           <p class="labels">VALOR A PAGAR:</p>
           <mat-form-field>
             <input matInput formControlName="valor_cumplido" type="text" />
+            <mat-error *ngIf="formularioInformeSeguimiento.get('valor_cumplido')?.invalid" class="label-error">
+              Ingresa el valor a pagar
+            </mat-error>
           </mat-form-field>
         </div>
 
-        <div class="wp-bank-info">
+        <div class="wp-bank-info" [formGroup]="informacionBancariaForm">
           <p class="title-bank-info">Información bancaria</p>
           <div class="bank-info-items">
             <p class="labels">BANCO:</p>
-         <mat-form-field>
-             <mat-select formControlName="banco">
-              <mat-option *ngFor="let banco of listaBancos" [value]="banco">
-                {{ banco.NombreBanco }}
-              </mat-option>
-            </mat-select>
-         </mat-form-field>
+            <mat-form-field>
+              <mat-select formControlName="banco">
+                <mat-option *ngFor="let banco of listaBancos" [value]="banco">
+                  {{ banco.NombreBanco }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="informacionBancariaForm.get('banco')?.invalid" class="label-error">
+                Selecciona el banco
+              </mat-error>
+            </mat-form-field>
           </div>
           <div class="bank-info-items">
             <p class="labels">TIPO DE CUENTA:</p>
@@ -145,17 +160,28 @@
                   {{ tipo_cuenta.Nombre }}
                 </mat-option>
               </mat-select>
+              <mat-error *ngIf="informacionBancariaForm.get('tipo_cuenta')?.invalid" class="label-error">
+                Selecciona el tipo de cuenta
+              </mat-error>
             </mat-form-field>
           </div>
           <div class="bank-info-items">
             <p class="labels">N° CUENTA:</p>
             <mat-form-field>
               <input matInput formControlName="numero_cuenta" type="text" />
+              <mat-error *ngIf="informacionBancariaForm.get('numero_cuenta')?.invalid" class="label-error">
+               Ingresa el numero de cuenta
+              </mat-error>
             </mat-form-field>
           </div>
 
           <div class="wp-change-info">
-            <button type="submit" class="btn btn-view">
+            <button
+              type="button"
+              [disabled]="botonCambiarInfomacionActivo"
+              (click)="habilitarInfromacionBancaria()"
+              class="btn btn-view"
+            >
               Cambiar información
             </button>
             <svg

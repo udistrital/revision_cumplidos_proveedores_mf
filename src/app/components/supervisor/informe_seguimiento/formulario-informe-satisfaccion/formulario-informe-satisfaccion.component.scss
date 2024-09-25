@@ -169,3 +169,14 @@ form {
   text-align: center;
   padding: 0 0 0px 0;
 }
+
+.label-error{
+color: #98483c;
+}
+
+.mat-form-field.ng-invalid .mat-select .mat-select-outline {
+  border-color: #c62828 !important; /* Cambia al color rojo cuando es inválido */
+}
+
+.mat-form-field.ng-invalid .mat-error {
+  color: #c62828 !important}

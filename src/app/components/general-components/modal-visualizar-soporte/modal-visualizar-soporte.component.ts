@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Button } from 'src/app/models/button.model';
 
 @Component({
   selector: 'app-modal-visualizar-soporte',
@@ -9,6 +10,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class ModalVisualizarSoporteComponent {
   documentLoad:boolean=false
   documentData:string
+  modalButtonsFunc:Button[]
+  bunttonClose:Button
 
   constructor(
     public dialogRef: MatDialogRef<ModalVisualizarSoporteComponent>,
@@ -16,9 +19,11 @@ export class ModalVisualizarSoporteComponent {
   ) {
     this.documentLoad=false
     this.documentData='data:application/pdf;base64,'+this.data.url
-
+    this.modalButtonsFunc= this.data.ModalButtonsFunc
+    this.bunttonClose=this.data.BunttonClose;
     console.log("Data ", this.data)
     console.log(this.documentData)
+  
   }
 
   ngOnInit() {
@@ -27,7 +32,7 @@ export class ModalVisualizarSoporteComponent {
     }
   }
 
-  close(): void {
+  public close(): void {
     this.dialogRef.close();
   }
 }

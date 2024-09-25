@@ -13,5 +13,5 @@ export const environment = {
   NOTIFICACIONES_CRUD:
     'http://pruebasapi2.intranetoas.udistrital.edu.co:8561',
     NOTIFICACION_MID_WS: "ws://autenticacion.portaloas.udistrital.edu.co/apioas/notificacion_mid/v1/ws",
-    ADMINISTRATIVA_AMAZON_API: "http://pruebasapi.intranetoas.udistrital.edu.co:8104/v1"
+    ADMINISTRATIVA_AMAZON_API: "http://api.intranetoas.udistrital.edu.co:8104/v1"
 };

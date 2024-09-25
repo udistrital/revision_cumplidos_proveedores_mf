@@ -42,4 +42,20 @@ export class UserService {
 
     return infoPerson;
   }
+
+  public obtenerInformacionContrato(numeroContrato:string,vigencia:string): Observable<any> {
+    const infoProveedor = this.administrativaAmazonService.get(
+      `/contrato_general/?query=ContratoSuscrito.NumeroContratoSuscrito:${numeroContrato},VigenciaContrato:${vigencia}`
+    );
+
+    return infoProveedor;
+  }
+
+  public obtenerInformacioProveedor(idProoveedor:string): Observable<any> {
+    const infoProveedor = this.administrativaAmazonService.get(
+      `/informacion_proveedor/?query=Id:${idProoveedor}`
+    );
+
+    return infoProveedor;
+  }
 }

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, numberAttribute, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  numberAttribute,
+  Output,
+} from '@angular/core';
+import { Soporte } from 'src/app/models/soporte.model';
 import { MatDialog } from '@angular/material/dialog';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
@@ -6,6 +13,8 @@ import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { ComentarioSoporte } from 'src/app/models/revision_cumplidos_proveedores_crud/comentario-soporte.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { ModalVisualizarSoporteComponent } from '../modal-visualizar-soporte/modal-visualizar-soporte.component';
+import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
+import { Button } from 'src/app/models/button.model';
 import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
 import { ConfigSoportes, ModalComentariosSoporteData, ModalSoportesCumplidoData, Mode,RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
@@ -13,17 +22,17 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { ModalComentariosSoporteComponent } from '../modal-comentarios-soporte/modal-comentarios-soporte.component';
 
 
-
 @Component({
   selector: 'app-card-soporte',
   templateUrl: './card-soporte.component.html',
-  styleUrls: ['./card-soporte.component.scss']
+  styleUrls: ['./card-soporte.component.scss'],
 })
 export class CardSoporteComponent {
-
+  
   @Input({required:true}) soporte!:InformacionSoporteCumplido
   @Input({required:true}) config!:ConfigSoportes
   @Input({required:true}) cambioEstadoCumplido!:CambioEstadoCumplido
+  @Input() buttons!: Button[];
   @Output() recargarSoportes = new EventEmitter<any>();
   comentarioForm: FormGroup;
   mode=Mode
@@ -44,18 +53,6 @@ export class CardSoporteComponent {
 
   ngOnInit() {
 
-  }
-
-  openVerSoporte() {
-    this.dialog.open(ModalVisualizarSoporteComponent, {
-      disableClose: true,
-      height: '70vh',
-      width: '50vw',
-      maxWidth: '60vw',
-      maxHeight: '80vh',
-      panelClass: 'custom-dialog-container',
-      data: { url: this.soporte.Archivo.File }
-    });
   }
 
   async eliminarSoporte(){
@@ -84,12 +81,11 @@ export class CardSoporteComponent {
        }
   }
 
-  async enviarComentario(){
-
-    await this.aletManagerService.alertConfirm("¿Estas seguro de enviar las observaciones?").then((confirmed: any)=>{
-
-      console.log(confirmed)
-
+  async enviarComentario() {
+    await this.aletManagerService
+      .alertConfirm('¿Estas seguro de enviar las observaciones?')
+      .then((confirmed: any) => {
+        console.log(confirmed);
       if(confirmed.isConfirmed){
         console.log("Comentario",this.comentarioForm.value.comentario)
         try{
@@ -102,11 +98,6 @@ export class CardSoporteComponent {
             },
             Comentario:this.comentarioForm.value.comentario
           }
-          this.cumplidos_provedore_crud_service.post("/comentario_soporte",comentario).subscribe((response)=>{
-            this.aletManagerService.showSuccessAlert("Comentario Guardado", "Se ha guardado el comentario en el documento")
-          });
-        }catch(error){
-          this.aletManagerService.showCancelAlert("Cancelado", "No se ha guardo ningun comentario");
         }
       }
     }).catch(()=>{
@@ -131,5 +122,5 @@ export class CardSoporteComponent {
         }
       } as ModalComentariosSoporteData
     });
-}
+    }
 }

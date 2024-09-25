@@ -22,12 +22,10 @@
 
         <br>
         <br>
-
         <div *ngIf="!loading">
           <app-tabla [data]="dataSource" [displayedColumns]="displayedColumns"
           (actionClicked)="handleActionClick($event)" />
         </div>
-        
       </mat-card-content>
     </div>
   </mat-card>
