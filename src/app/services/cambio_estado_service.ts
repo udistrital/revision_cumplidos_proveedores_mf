@@ -71,7 +71,7 @@ export class CambioEstadoService {
         CumplidoProveedorId: idCumplido,
         CodigoAbreviacionEstadoCumplido: estadoCumplido,
       }
-      this.solicituCambiarEstado(cambioEstado);
+   /*   this.solicituCambiarEstado(cambioEstado);
 
       await this.obteneMensaje(estadoCumplido);
       const notificacion:NotificacionBody = {
@@ -84,12 +84,12 @@ export class CambioEstadoService {
         lectura: false,
         metadatos: {},
         activo: true
-      }
+      }*/
 
       if (this.mensaje != '') {
         try {
           console.log('Entro');
-          this.notificacionService.publicarNotificaciones(notificacion);
+         // this.notificacionService.publicarNotificaciones(notificacion);
         } catch (error) {
           this.alertService.showCancelAlert(
             'Error',
