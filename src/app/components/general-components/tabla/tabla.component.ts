@@ -11,7 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaComponent {
 
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
   // Inputs para recibir datos
@@ -28,11 +28,16 @@ export class TablaComponent {
   ngOnInit(): void {
     this.dataSource.data = this.data;
     console.log("Data:", this.data)
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
+    //this.dataSource.sort = this.sort;
 
     // Claves de las columnas para el mat-table
     this.columnKeys = this.displayedColumns.map(c => c.def);
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   // Método para manejar los clics en las acciones

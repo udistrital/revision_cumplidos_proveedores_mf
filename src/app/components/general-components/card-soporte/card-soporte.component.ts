@@ -119,8 +119,8 @@ export class CardSoporteComponent {
       disableClose: true,
       maxHeight: '80vh',
       maxWidth: '100vw',
-      height: '100vh',
-      width: '80vw',
+      height: 'auto',
+      width: 'auto',
       data:{
         SoporteId: soporte_id,
         CambioEstadoCumplidoId: cambio_estado_cumplido_id,
