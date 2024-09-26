@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { MatDialog } from '@angular/material/dialog';
 
-import { catchError, lastValueFrom, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { SolicituDeFirma } from 'src/app/models/certificado-pago.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
@@ -35,7 +35,6 @@ import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_pr
 export class RevisionCumplidosOrdenadorComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
-  solicitudes: Cumplido[] = [];
   pdfBase64: string = '';
   solicituDeFirma!: SolicituDeFirma;
   soporte_cumplido: InformacionSoporteCumplido[] = [];
@@ -104,16 +103,16 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   }
 
   ListarSoportes(idCumplido: any) {
-    console.log(idCumplido.CumplidoId);
+    console.log(idCumplido);
 
     const dialog = this.dialog.open(ModalSoportesCumplidoComponent, {
       disableClose: true,
       maxHeight: '80vw',
-      maxWidth: '100vw',
+      maxWidth: '60vw',
       height: '80vh',
       width: '80vw',
       data: {
-        CumplidoProveedorId: idCumplido.CumplidoId,
+        CumplidoProveedorId: idCumplido,
         Buttons: [
           {
             Color: 'white',
@@ -307,9 +306,9 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
         if (event.action.actionName === 'visibility') {
           this.ListarSoportes(event.element.CumplidoId);
         } else if (event.action.actionName === 'check'){
-          this.verAutorizacionDePago(event.element.CumplidoId)
+          this.verAutorizacionDePago(event.element)
         } else if (event.action.actionName === 'close'){
-          this.rechazarCumplido(event.element.CumplidoId)
+          this.rechazarCumplido(event.element)
         }
       }
 }

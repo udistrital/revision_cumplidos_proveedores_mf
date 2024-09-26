@@ -117,7 +117,7 @@ export class RevisionCumplidosContratacionComponent {
     });
   }
 
-  obtenerSoprtes(idCumplido: number) {
+  obtenerSoportes(idCumplido: number) {
     console.log(idCumplido);
     this.alertService.showLoadingAlert(
       'Cargando',
@@ -164,7 +164,7 @@ export class RevisionCumplidosContratacionComponent {
                 Config:{
                   mode:Mode.PRC,
                   rolUsuario:RolUsuario.C,
-                  
+
                 }
               } as ModalSoportesCumplidoData
             });
@@ -264,7 +264,7 @@ export class RevisionCumplidosContratacionComponent {
 
   handleActionClick(event: {action: any, element: any}) {
     if (event.action.actionName === 'visibility') {
-      this.obtenerSoprtes(event.element.CumplidoId);
+      this.obtenerSoportes(event.element.CumplidoId);
     } else if (event.action.actionName === 'check'){
       this.aprobarSoportes(event.element)
     } else if (event.action.actionName === 'close'){

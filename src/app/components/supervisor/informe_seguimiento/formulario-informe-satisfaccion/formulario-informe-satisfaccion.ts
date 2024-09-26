@@ -295,8 +295,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       ModalVisualizarSoporteComponent,
       {
         disableClose: true,
-        height: '70vh',
-        width: '40vw',
+        height: 'auto',
+        width: 'auto',
         maxWidth: '60vw',
         maxHeight: '80vh',
         panelClass: 'custom-dialog-container',
@@ -307,7 +307,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           regresarACargaDocumentos: false,
           ModalButtonsFunc: [
             {
-              Color: 'red',
+              Color: '#731b14',
+              TextColor: '#ffffff',
               Function: () => {
                 this.firmaElectronica.firmarDocumento(
                   this.solicituDeFirma,

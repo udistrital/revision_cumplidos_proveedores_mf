@@ -40,7 +40,7 @@ export class FirmaElectronicaService {
     private aletManagerService: AletManagerService,
     private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
     public dialog: MatDialog,
-    private router:Router 
+    private router:Router
   ) {
     this.decode_token = this.userService.getPayload();
     this.requestManager.setPath('FIRMA_ELECTRONICA_MID');
@@ -120,7 +120,7 @@ export class FirmaElectronicaService {
       );
 
       if (documentoFiltrado) {
-     
+
         if (this.dialog) {
           this.dialog.closeAll();
         }
@@ -167,8 +167,8 @@ export class FirmaElectronicaService {
       this.router.navigate(['/supervisor/subir-soportes']).then(()=>{
         this.dialog.open(ModalListarCumplidosComponent, {
           disableClose: true,
-          height: '70vh',
-          width: '50vw',
+          height: 'auto',
+          width: 'auto',
           maxWidth: '60vw',
           maxHeight: '80vh',
           panelClass: 'custom-dialog-container',
@@ -181,7 +181,7 @@ export class FirmaElectronicaService {
       Text: 'cerar',
     }
     }
-    
+
     const dialog = this.dialog.open(ModalVisualizarSoporteComponent, {
       disableClose: true,
       maxHeight: '80vw',

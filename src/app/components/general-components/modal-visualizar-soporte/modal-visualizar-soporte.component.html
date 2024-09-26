@@ -9,7 +9,7 @@
         <mat-icon>close</mat-icon>
       </button>
     </ng-container>
-  
+
     <ng-template #cerrarDialog>
       <button
         mat-icon-button
@@ -22,7 +22,7 @@
     </ng-template>
   </div>
 
-  <div style="height:88%" mat-dialog-content>
+  <div style="height:100vh; width: 60vw; overflow:initial" mat-dialog-content>
     <object [data]="documentData|safeUrl" type="application/pdf" *ngIf="documentLoad"></object>
 </div>
 <div class="nofile" *ngIf="!documentLoad">
@@ -35,7 +35,8 @@
         mat-button
         [ngClass]="button.Classes"
         (click)="button.Function()"
-        [style.background-color]="button.Color">
+        [style.background-color]="button.Color"
+        [style.color]="button.TextColor">
    {{ button.Text }}
       </button>
     </div>

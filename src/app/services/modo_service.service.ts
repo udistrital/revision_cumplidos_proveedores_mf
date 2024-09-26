@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
-import { Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
 import { UtilsService } from './utils.service';
-import { SoporteCumplido } from '../models/soporte_cumplido.model';
 import { Mode } from '../models/modal-soporte-cumplido-data.model';
 
 @Injectable({

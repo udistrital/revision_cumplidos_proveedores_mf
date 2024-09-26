@@ -204,8 +204,8 @@ export class ModalListarCumplidosComponent {
             Function: (file: any) => {
             const visualizarSoporetes=   this.dialog.open(ModalVisualizarSoporteComponent, {
                 disableClose: true,
-                height: '70vh',
-                width: '50vw',
+                height: 'auto',
+                width: 'auto',
                 maxWidth: '60vw',
                 maxHeight: '80vh',
                 panelClass: 'custom-dialog-container',

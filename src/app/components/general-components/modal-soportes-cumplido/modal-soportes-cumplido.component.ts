@@ -1,16 +1,12 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { CambioEstadoCumplido } from 'src/app/models/basics/cambio-estado-cumplio.model';
 import { Button } from 'src/app/models/button.model';
 import { ModalSoportesCumplidoData,Mode } from 'src/app/models/modal-soporte-cumplido-data.model';
-import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
 import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
-import { ModalSoportesCumplidoData,Mode, RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { SoportesService } from 'src/app/services/soportes.service';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
-import { ModalComentariosSoporteComponent } from '../modal-comentarios-soporte/modal-comentarios-soporte.component';
 
 @Component({
   selector: 'app-modal-soportes-cumplido',
@@ -25,7 +21,7 @@ export class ModalSoportesCumplidoComponent {
   mode=Mode
   buttons!:Button[]
   modalButtonsFunc!:Button[]
-  
+
 
   constructor(
     public dialogRef: MatDialogRef<ModalSoportesCumplidoComponent>,
