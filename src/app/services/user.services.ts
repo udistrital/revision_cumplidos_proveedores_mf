@@ -28,7 +28,9 @@ export class UserService {
   async obtenerResponsable(endpoint: string): Promise<string> {
     try {
       const response: any = await this.jbmpServie.get(endpoint).toPromise();
-      return response.documento as string;
+      console.log("responable",response)
+     // return response.documento as string;
+     return "null";
     } catch (error) {
       console.error('Error al obtener el documento:', error);
       throw new Error('Error al obtener el documento');

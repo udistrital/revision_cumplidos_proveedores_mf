@@ -36,7 +36,7 @@ export class NotificacionesService {
   }
 
   async publicarNotificaciones(estado:string,enopint:string) {
-    console.log("Entro a notificaar")
+    console.log("Entro a notificaar",enopint )
     await this.obteneMensaje(estado,enopint);
    const notificacion= this.crearNotificacion();
     const notificaciones: any = await new Promise((resolve, reject) => {
@@ -109,6 +109,14 @@ export class NotificacionesService {
          this.destinatarios.push(this.documentoResponsable)
          
         break;
+        case 'AC':
+          this.mensaje =
+            'Contratación ha rechazado la solicitud de cumplido proveedor';
+            this.asunto = 'Rechazo de Cumplido';
+            await this.obtenerDestinatario(endpoint);
+           this.destinatarios.push(this.documentoResponsable)
+           
+          break;
       default:
         this.mensaje = '';
         break;
@@ -116,6 +124,7 @@ export class NotificacionesService {
   }
 
   private async obtenerDestinatario(endPoint:string){
+    console.log("Si esta buscando")
     this.documentoResponsable = await this.userService.obtenerResponsable(endPoint);
    }
  
