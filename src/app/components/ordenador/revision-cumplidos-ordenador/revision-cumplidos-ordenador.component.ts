@@ -162,22 +162,22 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     });
   }
 
-  async verAutorizacionDePago(idCumplido: number) {
+  async verAutorizacionDePago(Cumplido: any) {
     console.log('Si esta Ejecutando');
     const autorizacionPago = await this.GenerarAutotizacionDePago(
-      idCumplido
+      Cumplido.CumplidoId
     ).toPromise();
     if (autorizacionPago != null) {
-      this.modalVerSoporte(idCumplido);
+      this.modalVerSoporte(Cumplido.CumplidoId);
     }
   }
 
-  async rechazarCumplido(idCumplido: any) {
+  async rechazarCumplido(Cumplido: any) {
     let x = await this.alertService.alertConfirm(
       '¿Esta seguro de Rechazar los soportes?'
     );
     if (x.isConfirmed) {
-      this.cambiarEstado(idCumplido, 'RO');
+      this.cambiarEstado(Cumplido.CumplidoId, 'RO');
       this.alertService.showSuccessAlert(
         'Rechazadado',
         '!Se han rechazado los soprtes!'

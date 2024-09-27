@@ -14,43 +14,38 @@
     <form [formGroup]="soporteForm">
       <div class="container-item">
         <mat-grid-list cols="2" rowHeight="90px">
-          <mat-grid-tile  colspan="1" rowspan="1">
+          <mat-grid-tile colspan="1" rowspan="1">
             <div class="grid-item">
               <p>Item</p>
             </div>
           </mat-grid-tile>
-          <mat-grid-tile  colspan="1" rowspan="1">
+          <mat-grid-tile colspan="1" rowspan="1">
             <mat-form-field appearance="outline" class="grid-tipo-documento">
-              <mat-select
-                formControlName="opcionSeleccionada"
-                (selectionChange)="cambioTipoDocumento($event.value)"
+              <mat-select formControlName="opcionSeleccionada" (selectionChange)="cambioTipoDocumento($event.value)"
                 placeholder="--Seleccione el item del cual cargara soporte--">
-                <mat-option *ngFor="let opcion of opciones" [value]="opcion.CodigoAbreviacionTipoDocumento" (click)="asignarItemId(opcion.IdTipoDocumento)">
+                <mat-option *ngFor="let opcion of opciones" [value]="opcion.CodigoAbreviacionTipoDocumento"
+                  (click)="asignarItemId(opcion.IdTipoDocumento)">
                   {{ opcion.Nombre }}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="soporteForm.get('opcionSeleccionada')?.invalid && soporteForm.get('opcionSeleccionada')?.touched">
+              <mat-error
+                *ngIf="soporteForm.get('opcionSeleccionada')?.invalid && soporteForm.get('opcionSeleccionada')?.touched">
                 Debe seleccionar una opción.
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
           <div *ngIf="!cumplidoSatisfaccionSeleccionado">
-            <mat-grid-tile  colspan="1" rowspan="1">
+            <mat-grid-tile colspan="1" rowspan="1">
               <div class="grid-observaciones">
                 <p>Observaciones</p>
               </div>
             </mat-grid-tile>
-            <mat-grid-tile  colspan="1" rowspan="2" class="tile-observaciones">
+            <mat-grid-tile colspan="1" rowspan="2" class="tile-observaciones">
               <mat-form-field appearance="outline" class="grid-form">
                 <textarea matInput formControlName="observaciones" class="text-area-observaciones"></textarea>
-                <div style="font-size: 12px" *ngIf="soporteForm.get('observaciones')?.invalid && soporteForm.get('observaciones')?.touched">
-                  <mat-error *ngIf="soporteForm.get('observaciones')?.errors?.['minlength']">
-                    Las observaciones deben tener al menos 10 caracteres.
-                  </mat-error>
-                  <mat-error *ngIf="soporteForm.get('observaciones')?.errors?.['pattern']">
-                    No deben haber espacios en blanco al inicio ni al final.
-                  </mat-error>
-                </div>
+                <mat-error *ngIf="soporteForm.get('observaciones')?.errors?.['minlength']">
+                  Las observaciones deben tener al menos 10 caracteres.
+                </mat-error>
               </mat-form-field>
             </mat-grid-tile>
           </div>
@@ -85,7 +80,7 @@
           Crear Documento
         </button>
         <ng-template #cargarSoporte>
-          <button mat-button [class.mat-button-disabled]="soporteForm.invalid" class="cargar-button" (click)="uploadFile()">
+          <button mat-button [class.mat-button-disabled]="soporteForm.invalid" class="cargar-button" type="submit" [disabled]="soporteForm.invalid" (click)="uploadFile()">
             Cargar Soporte
           </button>
         </ng-template>

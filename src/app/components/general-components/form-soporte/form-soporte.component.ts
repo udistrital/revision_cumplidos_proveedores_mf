@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Component({
   selector: 'app-form-soporte',
@@ -35,7 +35,7 @@ export class FormSoporteComponent {
 
     this.soporteForm = this.fb.group({
       opcionSeleccionada: ['', [Validators.required]],
-      observaciones: ['', [Validators.minLength(10), Validators.pattern(/^(?!\s)[\s\S]*\S+$/)]],
+      observaciones: ['', [Validators.minLength(10)]],
       fileName: [{ value: '', disabled: true }, [Validators.required]]
     });
   }
@@ -99,7 +99,7 @@ export class FormSoporteComponent {
       const payload = {
         SolicitudPagoID: this.cumplidoProveedorId,
         TipoDocumento: "application/pdf",
-        observaciones: this.observaciones,
+        observaciones: this.soporteForm.value.observaciones.trim(),
         ItemID: this.itemId,
         NombreArchivo: this.fileName,
         Archivo: this.base64Output

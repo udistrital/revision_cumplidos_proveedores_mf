@@ -38,8 +38,6 @@
 
       </table>
     </div>
-    <div *ngIf="data.length > 10">
-      <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
-    </div>
+    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons *ngIf="data.length > 10"></mat-paginator>
   </div>
 </mat-card>

@@ -106,7 +106,7 @@ export class CardSoporteComponent {
    openDialog(soporte_id: number, cambio_estado_cumplido_id: number, tipo_soporte: string) {
     this.dialog.open(ModalComentariosSoporteComponent, {
       disableClose: true,
-      maxHeight: '80vw',
+      maxHeight: '80vh',
       maxWidth: '60vw',
       height: 'auto',
       width: 'auto',
