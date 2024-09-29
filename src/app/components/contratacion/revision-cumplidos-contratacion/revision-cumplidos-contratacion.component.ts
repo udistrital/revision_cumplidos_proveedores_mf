@@ -15,6 +15,7 @@ import { ModalVisualizarSoporteComponent } from '../../general-components/modal-
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TablaRevisionCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/tabla_revision_cumplido';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import { NotificacionesService } from './../../../services/notificaciones.service';
 
 
 
@@ -42,6 +43,7 @@ export class RevisionCumplidosContratacionComponent {
     private cambioEstadoService: CambioEstadoService,
     private userService: UserService,
     private popUpManager: PopUpManager,
+    private  notificacionesService:NotificacionesService
 
   ) {
     this.obtenerInfoPersona();
@@ -195,6 +197,7 @@ export class RevisionCumplidosContratacionComponent {
             'Aprobado',
             '!Se ha Aprobado el  soprte!'
           );
+          this.notificacionesService.publicarNotificaciones("AC","/informacion_ordenador_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
           this.cargarTablaCumplidos()
         })
         .catch((error) => {
@@ -216,6 +219,7 @@ export class RevisionCumplidosContratacionComponent {
             'Rechazado',
             '!Se han rechazado los soprtes!'
           );
+          this.notificacionesService.publicarNotificaciones("RC","/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
           this.cargarTablaCumplidos()
         })
         .catch((error) => {
