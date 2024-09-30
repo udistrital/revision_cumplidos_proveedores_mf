@@ -35,6 +35,6 @@ export class CumplidosProveedoresCrudService {
 
   delete(endpoint: any, element: any) {
     this.requestManager.setPath('CUMPLIDOS_PROVEEDORES_CRUD_SERVICE');
-    return this.requestManager.delete(endpoint, element.Id);
+    return this.requestManager.delete(endpoint, element);
   }
 }

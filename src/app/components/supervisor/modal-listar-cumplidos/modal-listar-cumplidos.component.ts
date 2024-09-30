@@ -1,12 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { BodyCumplidoProveedor } from 'src/app/models/revision_cumplidos_proveedores_mid/body_cumplido_proveedor.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { BodyCambioEstado } from 'src/app/models/revision_cumplidos_proveedores_mid/body_cambio_estado.model';
 import { UserService } from 'src/app/services/user.services';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
 import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { CrearSolicitudCumplido } from 'src/app/models/crear-solicitud-cumplido.model';
@@ -17,14 +16,10 @@ import {
   ModalSoportesCumplidoData,
 } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { ModalSoportesCumplidoComponent } from '../../general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Button } from './../../../models/button.model';
 import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { ModoService } from 'src/app/services/modo_service.service';
-import { EstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/estado-cumplido.model';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-modal-listar-cumplidos',
@@ -54,7 +49,7 @@ export class ModalListarCumplidosComponent {
     private cambioEstadoService: CambioEstadoService,
     private alertService: AletManagerService,
     private administrativaAmazonService: AdministrativaAmazonService,
-    private modeService:ModoService
+    private modeService:ModoService,
   ) {
     this.documento_supervisor = user.getPayload().documento;
   }
@@ -97,8 +92,8 @@ export class ModalListarCumplidosComponent {
     });
   }
 
-  getSolicitudesContrato(numero_contrato: string, vigencia_contrato: string) {
-    this.cumplidosMidServices.contrato$.subscribe((contrato) => {
+  async getSolicitudesContrato(numero_contrato: string, vigencia_contrato: string) {
+      this.cumplidosMidServices.contrato$.subscribe((contrato) => {
       if (contrato) {
         this.cumplidosMidServices
           .get(
@@ -168,8 +163,8 @@ export class ModalListarCumplidosComponent {
   }
 
 
-  crearCumplidoProveedor() {
-    this.cumplidosCrudService
+  async crearCumplidoProveedor() {
+    await this.cumplidosCrudService
       .post('/crear_solicitud_cumplido', this.newCumplidoProveedor)
       .subscribe({
         next: (res: any) => {
@@ -228,30 +223,32 @@ export class ModalListarCumplidosComponent {
 
 
 
-  async cambiarEstado(idCumplido: any) {
+  async cambiarEstado(cumplido: any) {
     let confirm = await this.alertService.alertConfirm(
       '¿Esta seguro de aprobar los soportes?'
     );
-    console.log(idCumplido);
+    console.log(cumplido);
     if (confirm.isConfirmed) {
       await this.cambioEstadoService.cambiarEstado(
-        idCumplido.cumplidoProveedor.Id,
+        cumplido.cumplidoProveedor.Id,
         'PRC'
       );
       this.popUpManager.showSuccessAlert(
         'Se han aprobado los soportes correctamente'
       );
+      setTimeout(async () => {
+        await this.getSolicitudesContrato(
+            cumplido.cumplidoProveedor.NumeroContrato,
+            cumplido.cumplidoProveedor.VigenciaContrato
+        );
+        this.dataSource = [...this.dataSource];
+    }, 1000);
     } else {
       this.alertService.showCancelAlert(
         'Cancelado',
         'No se ha relizado ninguna accion'
       );
     }
-
-    await this.getSolicitudesContrato(
-      idCumplido.cumplidoProveedor.NumeroContrato,
-      idCumplido.cumplidoProveedor.VigenciaContrato
-    );
   }
 
   handleActionClick(event: {action: any, element: any}) {

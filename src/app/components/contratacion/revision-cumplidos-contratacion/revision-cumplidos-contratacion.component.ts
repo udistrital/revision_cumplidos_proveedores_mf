@@ -67,7 +67,7 @@ export class RevisionCumplidosContratacionComponent {
     {def: 'acciones', header: 'ACCIONES', isAction: true}
   ];
 
-  cargarTablaCumplidos() {
+  async cargarTablaCumplidos() {
     this.dataSource = [];
     this.alertService.showLoadingAlert(
       'Cargando',
@@ -97,6 +97,12 @@ export class RevisionCumplidosContratacionComponent {
             this.dataSource = [];
             this.loading = false;
           }
+        },
+        error: (error: any) => {
+          Swal.close();
+          this.loading = false;
+          this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte de contratación');
+          console.error(error);
         }
       })
 
@@ -186,47 +192,52 @@ export class RevisionCumplidosContratacionComponent {
   async aprobarSoportes(cumplido: any) {
     console.log(cumplido);
     let confirm = await this.alertService.alertConfirm(
-      '¿Esta seguro de aprobar los soportes?'
+      '¿Está seguro de aprobar los soportes?'
     );
-    console.log(cumplido);
+
     if (confirm.isConfirmed) {
-      this.cambioEstadoService
-        .cambiarEstado(cumplido.CumplidoId, 'AC')
-        .then((response) => {
-          this.alertService.showSuccessAlert(
-            'Aprobado',
-            '!Se ha Aprobado el  soprte!'
-          );
-          this.notificacionesService.publicarNotificaciones("AC","/informacion_ordenador_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
-          this.cargarTablaCumplidos()
-        })
-        .catch((error) => {
-          this.alertService.showErrorAlert('Error al aprobar soporte');
-        });
+
+      try {
+        await this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'AC');
+        this.alertService.showSuccessAlert(
+          'Aprobado',
+          '!Se ha aprobado el soporte!'
+        );
+        this.notificacionesService.publicarNotificaciones("AC","/informacion_ordenador_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
+        setTimeout(async () => {
+          await this.cargarTablaCumplidos();
+          this.dataSource = [...this.dataSource]
+        }, 1000)
+
+
+      } catch (error) {
+        this.alertService.showErrorAlert('Error al aprobar soporte');
+        console.error(error);
+      }
     }
   }
 
   async rechazarSoportes(cumplido: any) {
-    console.log('Objecto', cumplido);
-    let x = await this.alertService.alertConfirm(
-      '¿Esta seguro de Rechazar los soportes?'
+    console.log('Objeto', cumplido);
+    let confirm = await this.alertService.alertConfirm(
+      '¿Está seguro de rechazar los soportes?'
     );
-    if (x.isConfirmed) {
-      this.cambioEstadoService
-        .cambiarEstado(cumplido.CumplidoId, 'RC')
-        .then((response) => {
-          this.alertService.showSuccessAlert(
-            'Rechazado',
-            '!Se han rechazado los soprtes!'
-          );
-          this.notificacionesService.publicarNotificaciones("RC","/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
-          this.cargarTablaCumplidos()
-        })
-        .catch((error) => {
-          this.alertService.showErrorAlert('Error al Rechazar el cumplido');
-          console.log(error);
-        });
-    } else {
+    if (confirm.isConfirmed) {
+      try {
+        await this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'RC');
+        this.alertService.showSuccessAlert(
+          'Rechazado',
+          '!Se han rechazado los soportes!'
+        );
+        this.notificacionesService.publicarNotificaciones("RC","/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
+        setTimeout(async () => {
+          await this.cargarTablaCumplidos();
+          this.dataSource = [...this.dataSource]
+        }, 1000)
+      } catch (error) {
+        this.alertService.showErrorAlert('Error al rechazar el cumplido');
+        console.error(error);
+      }
     }
   }
 

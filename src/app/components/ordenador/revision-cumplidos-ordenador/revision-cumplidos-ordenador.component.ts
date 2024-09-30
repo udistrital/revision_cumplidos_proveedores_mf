@@ -89,27 +89,27 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
               return {
                 ...solicitud,
                 acciones: [
-                  {
-                    icon: 'visibility',
-                    actionName: 'visibility',
-                    isActive: true,
-                  },
-                  { icon: 'check', actionName: 'check', isActive: true },
-                  { icon: 'close', actionName: 'close', isActive: true },
-                ],
-              };
-            });
-            this.loading = false;
-          } else {
-            this.popUpManager.showAlert(
-              'Sin cumplidos pendientes',
-              'No hay cumplidos pendientes para revision por parte del ordenador'
-            );
-            this.dataSource = [];
-            this.loading = false;
-          }
-        },
-      });
+                  {icon: 'visibility', actionName: 'visibility', isActive: true},
+                  {icon: 'check', actionName: 'check', isActive: true},
+                  {icon: 'close', actionName: 'close', isActive: true}
+                ]
+              }
+            }
+          )
+          this.loading = false;
+        } else {
+          this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte del ordenador');
+          this.dataSource = [];
+          this.loading = false;
+        }
+      },
+      error: (error: any) => {
+        Swal.close();
+        this.loading = false;
+        this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte del ordenador');
+        console.error(error);
+      }
+    });
   }
 
   ListarSoportes(idCumplido: any) {
@@ -187,12 +187,15 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
       '¿Esta seguro de Rechazar los soportes?'
     );
     if (x.isConfirmed) {
-      this.cambiarEstado(Cumplido.CumplidoId, 'RO');
+      await this.cambiarEstado(Cumplido.CumplidoId, 'RO');
       this.alertService.showSuccessAlert(
         'Rechazadado',
         '!Se han rechazado los soprtes!'
       );
-      this.CargarTablaCumplidos();
+      setTimeout(async () => {
+        await this.CargarTablaCumplidos();
+        this.dataSource = [...this.dataSource]
+      }, 1000)
     } else {
       this.alertService.showCancelAlert(
         'Cancelado',
@@ -235,8 +238,9 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   GenerarAutotizacionDePago(
     cumplidoId: number
   ): Observable<SolicituDeFirma | null> {
-    console.log('Entro al segundo metodo');
-    this.cumplidos_provedore_mid_service
+
+    //console.log('Entro al segundo metodo');
+    return this.cumplidos_provedore_mid_service
       .get('/ordenador/autorizacion-giro/' + cumplidoId)
       .pipe(
         map((response: any) => {
