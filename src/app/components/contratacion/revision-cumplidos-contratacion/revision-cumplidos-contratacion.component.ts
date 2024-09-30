@@ -200,8 +200,13 @@ export class RevisionCumplidosContratacionComponent {
           'Aprobado',
           '!Se ha aprobado el soporte!'
         );
-        await this.cargarTablaCumplidos();
-        this.dataSource = [...this.dataSource]
+
+        setTimeout(async () => {
+          await this.cargarTablaCumplidos();
+          this.dataSource = [...this.dataSource]
+        }, 1000)
+
+
       } catch (error) {
         this.alertService.showErrorAlert('Error al aprobar soporte');
         console.error(error);
@@ -222,8 +227,10 @@ export class RevisionCumplidosContratacionComponent {
           'Rechazado',
           '!Se han rechazado los soportes!'
         );
-        await this.cargarTablaCumplidos();
-        this.dataSource = [...this.dataSource]
+        setTimeout(async () => {
+          await this.cargarTablaCumplidos();
+          this.dataSource = [...this.dataSource]
+        }, 1000)
       } catch (error) {
         this.alertService.showErrorAlert('Error al rechazar el cumplido');
         console.error(error);

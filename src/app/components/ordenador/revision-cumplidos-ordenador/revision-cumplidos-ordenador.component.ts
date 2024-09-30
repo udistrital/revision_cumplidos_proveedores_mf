@@ -98,6 +98,12 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
           this.dataSource = [];
           this.loading = false;
         }
+      },
+      error: (error: any) => {
+        Swal.close();
+        this.loading = false;
+        this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte del ordenador');
+        console.error(error);
       }
     })
   }
@@ -182,8 +188,10 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
         'Rechazadado',
         '!Se han rechazado los soprtes!'
       );
-      await this.CargarTablaCumplidos();
-      this.dataSource = [...this.dataSource]
+      setTimeout(async () => {
+        await this.CargarTablaCumplidos();
+        this.dataSource = [...this.dataSource]
+      }, 1000)
     } else {
       this.alertService.showCancelAlert(
         'Cancelado',
@@ -226,7 +234,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   GenerarAutotizacionDePago(
     cumplidoId: number
   ): Observable<SolicituDeFirma | null> {
-    console.log('Entro al segundo metodo');
+    //console.log('Entro al segundo metodo');
     return this.cumplidos_provedore_mid_service
       .get('/ordenador/autorizacion-giro/' + cumplidoId)
       .pipe(

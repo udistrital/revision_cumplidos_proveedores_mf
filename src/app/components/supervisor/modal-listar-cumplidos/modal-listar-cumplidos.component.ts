@@ -236,8 +236,13 @@ export class ModalListarCumplidosComponent {
       this.popUpManager.showSuccessAlert(
         'Se han aprobado los soportes correctamente'
       );
-      await this.getSolicitudesContrato(cumplido.cumplidoProveedor.NumeroContrato,cumplido.cumplidoProveedor.VigenciaContrato)
-      this.dataSource = [...this.dataSource]
+      setTimeout(async () => {
+        await this.getSolicitudesContrato(
+            cumplido.cumplidoProveedor.NumeroContrato,
+            cumplido.cumplidoProveedor.VigenciaContrato
+        );
+        this.dataSource = [...this.dataSource];
+    }, 1000);
     } else {
       this.alertService.showCancelAlert(
         'Cancelado',
