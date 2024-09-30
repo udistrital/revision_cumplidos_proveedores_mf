@@ -24,8 +24,7 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { BodyCambioEstado } from 'src/app/models/revision_cumplidos_proveedores_mid/body_cambio_estado.model';
 import { TablaRevisionCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/tabla_revision_cumplido';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
-
-
+import { NotificacionesService } from 'src/app/services/notificaciones.service';
 
 @Component({
   selector: 'app-revision-cumplidos-ordenador',
@@ -38,22 +37,23 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   pdfBase64: string = '';
   solicituDeFirma!: SolicituDeFirma;
   soporte_cumplido: InformacionSoporteCumplido[] = [];
-  documentoResponsable:string="";
-  nombreResponsable:string="";
-  data!:any;
+  documentoResponsable: string = '';
+  nombreResponsable: string = '';
+  data!: any;
   dataSource: TablaRevisionCumplido[] = [];
   loading: boolean = true;
-  nombreOrdenador: string = "";
+  nombreOrdenador: string = '';
   constructor(
     private alertService: AletManagerService,
     public dialog: MatDialog,
-    private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
-    private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
-    private cambioEstadoService:CambioEstadoService,
-    private userService:UserService,
+    private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
+    private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
+    private cambioEstadoService: CambioEstadoService,
+    private userService: UserService,
     private popUpManager: PopUpManager,
     private modeService: ModoService,
-    private firmaElectronica: FirmaElectronicaService
+    private firmaElectronica: FirmaElectronicaService,
+    private notificacionesService: NotificacionesService
   ) {}
   ngOnInit(): void {
     this.documentoResponsable = this.userService.getPayload().documento;
@@ -63,25 +63,29 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   }
 
   displayedColumns = [
-    {def:  'NumeroContrato', header: 'N° CONTRATO'},
-    {def:  'VigenciaContrato', header: 'VIGENCIA'},
-    {def:  'Rp', header: 'RP'},
-    {def:  'VigenciaRP', header: 'VIGENCIA RP'},
-    {def:  'FechaCreacion', header: 'FECHA CREACION'},
-    {def:  'NombreProveedor', header: 'PROVEEDOR'},
-    {def:  'Dependencia', header: 'DEPENDENCIA'},
-    {def: 'acciones', header: 'ACCIONES', isAction: true}
+    { def: 'NumeroContrato', header: 'N° CONTRATO' },
+    { def: 'VigenciaContrato', header: 'VIGENCIA' },
+    { def: 'Rp', header: 'RP' },
+    { def: 'VigenciaRP', header: 'VIGENCIA RP' },
+    { def: 'FechaCreacion', header: 'FECHA CREACION' },
+    { def: 'NombreProveedor', header: 'PROVEEDOR' },
+    { def: 'Dependencia', header: 'DEPENDENCIA' },
+    { def: 'acciones', header: 'ACCIONES', isAction: true },
   ];
 
   CargarTablaCumplidos() {
     this.dataSource = [];
-    this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
-    this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/'+ this.documentoResponsable).subscribe({
-      next: (res: any) => {
-        Swal.close();
-        if (res.Data != null && res.Data.length > 0){
-          this.dataSource = res.Data.map(
-            (solicitud: any) => {
+    this.alertService.showLoadingAlert(
+      'Cargando',
+      'Espera mientras se cargan las solicitudes pendientes'
+    );
+    this.cumplidos_provedore_mid_service
+      .get('/ordenador/solicitudes-pago/' + this.documentoResponsable)
+      .subscribe({
+        next: (res: any) => {
+          Swal.close();
+          if (res.Data != null && res.Data.length > 0) {
+            this.dataSource = res.Data.map((solicitud: any) => {
               return {
                 ...solicitud,
                 acciones: [
@@ -105,7 +109,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
         this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte del ordenador');
         console.error(error);
       }
-    })
+    });
   }
 
   ListarSoportes(idCumplido: any) {
@@ -174,7 +178,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
       Cumplido.CumplidoId
     ).toPromise();
     if (autorizacionPago != null) {
-      this.modalVerSoporte(Cumplido.CumplidoId);
+      this.modalVerSoporte(Cumplido);
     }
   }
 
@@ -234,6 +238,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   GenerarAutotizacionDePago(
     cumplidoId: number
   ): Observable<SolicituDeFirma | null> {
+
     //console.log('Entro al segundo metodo');
     return this.cumplidos_provedore_mid_service
       .get('/ordenador/autorizacion-giro/' + cumplidoId)
@@ -277,7 +282,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
       );
   }
 
-  modalVerSoporte(idCumplido: number) {
+  modalVerSoporte(cumplido: any) {
     this.dialog.open(ModalVisualizarSoporteComponent, {
       disableClose: true,
       height: '70vh',
@@ -293,9 +298,19 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
             Color: 'red',
             Function: () => {
               this.firmaElectronica
-                .firmarDocumento(this.solicituDeFirma, idCumplido, 168, false)
+                .firmarDocumento(this.solicituDeFirma, cumplido, 168, false)
                 .then(() => {
-                  this.cambioEstadoService.cambiarEstado(idCumplido, 'AO');
+                  this.cambioEstadoService
+                    .cambiarEstado(cumplido, 'AO')
+                    .then(() => {
+                      this.notificacionesService.publicarNotificaciones(
+                        'RC',
+                        '/informacion_supervisor_contrato/' +
+                          cumplido.NumeroContrato +
+                          '/' +
+                          cumplido.VigenciaContrato
+                      );
+                    });
                 });
             },
             Clases: '',
@@ -306,19 +321,17 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     });
   }
 
-  cambiarEstado(idCumplido:any,estado:string){
+  cambiarEstado(idCumplido: any, estado: string) {
+    this.cambioEstadoService.cambiarEstado(idCumplido, estado);
+  }
 
-    this.cambioEstadoService.cambiarEstado(idCumplido,estado);
-      }
-
-      handleActionClick(event: {action: any, element: any}) {
-        if (event.action.actionName === 'visibility') {
-          this.ListarSoportes(event.element.CumplidoId);
-        } else if (event.action.actionName === 'check'){
-          this.verAutorizacionDePago(event.element)
-        } else if (event.action.actionName === 'close'){
-          this.rechazarCumplido(event.element)
-        }
-      }
+  handleActionClick(event: { action: any; element: any }) {
+    if (event.action.actionName === 'visibility') {
+      this.ListarSoportes(event.element.CumplidoId);
+    } else if (event.action.actionName === 'check') {
+      this.verAutorizacionDePago(event.element);
+    } else if (event.action.actionName === 'close') {
+      this.rechazarCumplido(event.element);
+    }
+  }
 }
-

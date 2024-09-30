@@ -15,6 +15,7 @@ import { ModalVisualizarSoporteComponent } from '../../general-components/modal-
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TablaRevisionCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/tabla_revision_cumplido';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import { NotificacionesService } from './../../../services/notificaciones.service';
 
 
 
@@ -42,6 +43,7 @@ export class RevisionCumplidosContratacionComponent {
     private cambioEstadoService: CambioEstadoService,
     private userService: UserService,
     private popUpManager: PopUpManager,
+    private  notificacionesService:NotificacionesService
 
   ) {
     this.obtenerInfoPersona();
@@ -194,13 +196,14 @@ export class RevisionCumplidosContratacionComponent {
     );
 
     if (confirm.isConfirmed) {
+
       try {
         await this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'AC');
         this.alertService.showSuccessAlert(
           'Aprobado',
           '!Se ha aprobado el soporte!'
         );
-
+        this.notificacionesService.publicarNotificaciones("AC","/informacion_ordenador_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
         setTimeout(async () => {
           await this.cargarTablaCumplidos();
           this.dataSource = [...this.dataSource]
@@ -219,7 +222,6 @@ export class RevisionCumplidosContratacionComponent {
     let confirm = await this.alertService.alertConfirm(
       '¿Está seguro de rechazar los soportes?'
     );
-
     if (confirm.isConfirmed) {
       try {
         await this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'RC');
@@ -227,6 +229,7 @@ export class RevisionCumplidosContratacionComponent {
           'Rechazado',
           '!Se han rechazado los soportes!'
         );
+        this.notificacionesService.publicarNotificaciones("RC","/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
         setTimeout(async () => {
           await this.cargarTablaCumplidos();
           this.dataSource = [...this.dataSource]
