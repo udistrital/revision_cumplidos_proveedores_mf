@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -26,10 +26,23 @@ export class TablaComponent {
 
   // Se inicializan los datos de la tabla, la paginacion y la ordenacion
   ngOnInit(): void {
-    this.dataSource.data = this.data;
-
     // Claves de las columnas para el mat-table
     this.columnKeys = this.displayedColumns.map(c => c.def);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Detecta si hay cambios en el input de datos
+    if (changes['data']) {
+      // Asigna los nuevos datos al dataSource
+      this.dataSource.data = this.data;
+      // Reinicia el paginador y el sort si es necesario
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+      }
+      if (this.sort) {
+        this.dataSource.sort = this.sort;
+      }
+    }
   }
 
   ngAfterViewInit(): void {
@@ -37,7 +50,7 @@ export class TablaComponent {
     this.dataSource.sort = this.sort;
   }
 
-  // Método para manejar los clics en las acciones
+  // Método para manejar los cliks en las acciones
   actionClick(action: any, element: any): void {
     this.actionClicked.emit({action, element});
   }

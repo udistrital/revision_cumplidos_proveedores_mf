@@ -45,6 +45,7 @@ export class CardSoporteComponent {
     this.comentarioForm = this.fb.group({
       comentario: ['', [Validators.minLength(10), Validators.pattern(/^(?!\s)[\s\S]*\S+$/)]],
     });
+
   }
 
   ngOnInit() {
@@ -58,7 +59,7 @@ export class CardSoporteComponent {
 
         console.log(this.soporte)
         try{
-          this.cumplidosMidServices.delete(`/solicitud-pago/soportes`, this.soporte.Documento)
+          this.cumplidos_provedore_crud_service.delete(`/soporte_cumplido`, this.soporte.SoporteCumplidoId)
         .subscribe({
           next: (res: any) => {
             this.recargarSoportes.emit(res)
@@ -104,10 +105,13 @@ export class CardSoporteComponent {
   //  }
 
    openDialog(soporte_id: number, cambio_estado_cumplido_id: number, tipo_soporte: string) {
+    console.log("Soportes: ", this.soporte)
     this.dialog.open(ModalComentariosSoporteComponent, {
       disableClose: true,
       maxHeight: '80vh',
       maxWidth: '60vw',
+      minHeight: '30vh',
+      minWidth: '30vw',
       height: 'auto',
       width: 'auto',
       data:{

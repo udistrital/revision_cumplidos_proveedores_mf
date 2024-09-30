@@ -177,12 +177,13 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
       '¿Esta seguro de Rechazar los soportes?'
     );
     if (x.isConfirmed) {
-      this.cambiarEstado(Cumplido.CumplidoId, 'RO');
+      await this.cambiarEstado(Cumplido.CumplidoId, 'RO');
       this.alertService.showSuccessAlert(
         'Rechazadado',
         '!Se han rechazado los soprtes!'
       );
-      this.CargarTablaCumplidos();
+      await this.CargarTablaCumplidos();
+      this.dataSource = [...this.dataSource]
     } else {
       this.alertService.showCancelAlert(
         'Cancelado',
