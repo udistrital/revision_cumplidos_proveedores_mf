@@ -1,9 +1,6 @@
 import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { RequestManager } from '../managers/requestManager';
 import { JbpmService } from './jbpm_service.service';
-import { AletManagerService } from '../managers/alert-manager.service';
 import { AdministrativaAmazonService } from './administrativa_amazon.service';
 
 @Injectable({
@@ -12,7 +9,6 @@ import { AdministrativaAmazonService } from './administrativa_amazon.service';
 export class UserService {
   constructor(
     private jbmpServie: JbpmService,
-    private alertService: AletManagerService,
     private administrativaAmazonService: AdministrativaAmazonService
   ) {}
 

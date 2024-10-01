@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 import { CumplidosProveedoresCrudService } from './cumplidos_proveedores_crud.service';
 import { CumplidosProveedoresMidService } from './cumplidos_proveedores_mid.service';
 import { catchError, map, Observable, of } from 'rxjs';
-import { AletManagerService } from '../managers/alert-manager.service';
-import { UserService } from './user.services';
-import { JbpmService } from './jbpm_service.service';
 import { NotificacionBody } from '../models/notificacion.model';
 import { NotificacionesService } from './notificaciones.service';
 import { PopUpManager } from 'src/app/managers/popUpManager';
@@ -20,11 +17,8 @@ export class CambioEstadoService {
   asunto: string = '';
 
   constructor(
-    private alertService: AletManagerService,
     private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
     private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
-    private userService: UserService,
-    private jbpmService: JbpmService,
     private notificacionService: NotificacionesService,
     private popUpManager: PopUpManager
   ) {}
@@ -90,16 +84,14 @@ export class CambioEstadoService {
           console.log('Entro');
           this.notificacionService.publicarNotificaciones(notificacion);
         } catch (error) {
-          this.alertService.showCancelAlert(
-            'Error',
-            'Se genero un error al enviar la notificacion' + '\n' + error
+          this.popUpManager.showErrorAlert(
+            'Se genero un error al enviar la notificación'
           );
         }
       }
     } catch (error) {
-      this.alertService.showCancelAlert(
-        'Cancelado',
-        'No se pudo relizar la accion' + error
+      this.popUpManager.showErrorAlert(
+        'Error al cambiar el estado'
       );
     }
   }

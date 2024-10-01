@@ -6,11 +6,8 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { UserService } from 'src/app/services/user.services';
 import Swal from 'sweetalert2';
-import { AletManagerService } from 'src/app/managers/alert-manager.service';
-import { AdministrativaAmazonService } from 'src/app/services/administrativa_amazon.service';
 import { ModalSoportesCumplidoComponent } from '../../general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
 import { ModalSoportesCumplidoData, Mode, RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
@@ -37,8 +34,6 @@ export class ListarContratosComponent {
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private user: UserService,
-    private alertService: AletManagerService,
-    private administrativaAmazonService: AdministrativaAmazonService
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
 
@@ -51,7 +46,7 @@ export class ListarContratosComponent {
   }
 
   cargarContratos() {
-    this.alertService.showLoadingAlert(
+    this.popUpManager.showLoadingAlert(
       'Cargando',
       'Espera mientras se cargan los contratos disponibles'
     );
@@ -66,7 +61,7 @@ export class ListarContratosComponent {
               .map((dep: any) => dep.Nombre)
               .join(', ');
           if (this.contratos_supervisor.contratos == null) {
-            this.alertService.showInfoAlert("Sin contratos","No se encontraron contratos asociados a la(s) depenendencia(s)")
+            this.popUpManager.showAlert("Sin contratos","No se encontraron contratos asociados a la(s) depenendencia(s)")
             this.loading = false;
           } else {
             this.dataSource = this.contratos_supervisor.contratos;

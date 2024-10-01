@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { MatDialog } from '@angular/material/dialog';
 
 import { catchError, map, Observable, of } from 'rxjs';
@@ -45,7 +44,6 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   loading: boolean = true;
   nombreOrdenador: string = "";
   constructor(
-    private alertService: AletManagerService,
     public dialog: MatDialog,
     private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
     private cumplidos_provedore_mid_service:CumplidosProveedoresMidService,
@@ -75,7 +73,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
 
   CargarTablaCumplidos() {
     this.dataSource = [];
-    this.alertService.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
+    this.popUpManager.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
     this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/'+ this.documentoResponsable).subscribe({
       next: (res: any) => {
         Swal.close();
@@ -173,22 +171,18 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   }
 
   async rechazarCumplido(Cumplido: any) {
-    let x = await this.alertService.alertConfirm(
+    let x = await this.popUpManager.showConfirmAlert(
       '¿Esta seguro de Rechazar los soportes?'
     );
     if (x.isConfirmed) {
       await this.cambiarEstado(Cumplido.CumplidoId, 'RO');
-      this.alertService.showSuccessAlert(
-        'Rechazadado',
+      this.popUpManager.showSuccessAlert(
         '!Se han rechazado los soprtes!'
       );
-      await this.CargarTablaCumplidos();
-      this.dataSource = [...this.dataSource]
-    } else {
-      this.alertService.showCancelAlert(
-        'Cancelado',
-        'No se han rechazado los sooprtes'
-      );
+      setTimeout(async () => {
+        await this.CargarTablaCumplidos();
+        this.dataSource = [...this.dataSource]
+      }, 1000)
     }
   }
 

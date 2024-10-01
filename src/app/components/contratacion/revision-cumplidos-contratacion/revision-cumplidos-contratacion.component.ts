@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map, Observable, of } from 'rxjs';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
@@ -35,7 +34,6 @@ export class RevisionCumplidosContratacionComponent {
 
 
   constructor(
-    private alertService: AletManagerService,
     public dialog: MatDialog,
     private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
     private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
@@ -67,7 +65,7 @@ export class RevisionCumplidosContratacionComponent {
 
   async cargarTablaCumplidos() {
     this.dataSource = [];
-    this.alertService.showLoadingAlert(
+    this.popUpManager.showLoadingAlert(
       'Cargando',
       'Espera mientras se cargan las solicitudes pendientes'
     );
@@ -91,7 +89,7 @@ export class RevisionCumplidosContratacionComponent {
             )
             this.loading = false;
           } else {
-            this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte de contratación');
+            this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revisión por parte de contratación');
             this.dataSource = [];
             this.loading = false;
           }
@@ -125,7 +123,7 @@ export class RevisionCumplidosContratacionComponent {
 
   obtenerSoportes(idCumplido: number) {
     console.log(idCumplido);
-    this.alertService.showLoadingAlert(
+    this.popUpManager.showLoadingAlert(
       'Cargando',
       'Espera mientras se listan los documentos'
     );
@@ -178,7 +176,7 @@ export class RevisionCumplidosContratacionComponent {
         },
         (error) => {
           Swal.close();
-          this.alertService.showInfoAlert(
+          this.popUpManager.showAlert(
             'Cumplido sin soportes',
             'No se encontraron soportes para este cumplido'
           );
@@ -189,21 +187,20 @@ export class RevisionCumplidosContratacionComponent {
 
   async aprobarSoportes(cumplido: any) {
     console.log(cumplido);
-    let confirm = await this.alertService.alertConfirm(
+    let confirm = await this.popUpManager.showConfirmAlert(
       '¿Está seguro de aprobar los soportes?'
     );
 
     if (confirm.isConfirmed) {
       try {
         await this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'AC');
-        this.alertService.showSuccessAlert(
-          'Aprobado',
-          '!Se ha aprobado el soporte!'
+        this.popUpManager.showSuccessAlert(
+          '!Se han aprobado los soportes del cumplido!'
         );
         await this.cargarTablaCumplidos();
         this.dataSource = [...this.dataSource]
       } catch (error) {
-        this.alertService.showErrorAlert('Error al aprobar soporte');
+        this.popUpManager.showErrorAlert('Error al aprobar los soportes');
         console.error(error);
       }
     }
@@ -211,21 +208,20 @@ export class RevisionCumplidosContratacionComponent {
 
   async rechazarSoportes(cumplido: any) {
     console.log('Objeto', cumplido);
-    let confirm = await this.alertService.alertConfirm(
+    let confirm = await this.popUpManager.showConfirmAlert(
       '¿Está seguro de rechazar los soportes?'
     );
 
     if (confirm.isConfirmed) {
       try {
         await this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'RC');
-        this.alertService.showSuccessAlert(
-          'Rechazado',
+        this.popUpManager.showSuccessAlert(
           '!Se han rechazado los soportes!'
         );
         await this.cargarTablaCumplidos();
         this.dataSource = [...this.dataSource]
       } catch (error) {
-        this.alertService.showErrorAlert('Error al rechazar el cumplido');
+        this.popUpManager.showErrorAlert('Error al rechazar los soportes del cumplido');
         console.error(error);
       }
     }
@@ -242,7 +238,7 @@ export class RevisionCumplidosContratacionComponent {
           return null;
         }),
         catchError((error) => {
-          this.alertService.showCancelAlert('Se genero un error', error);
+          this.popUpManager.showErrorAlert('Error al obtener el estado del cumplido');
           return of(null);
         })
       );
@@ -261,7 +257,7 @@ export class RevisionCumplidosContratacionComponent {
           return null;
         }),
         catchError((error) => {
-          this.alertService.showCancelAlert('Se genero un error', error);
+          this.popUpManager.showErrorAlert('Error al obtener los tipos de documentos del cumplido');
           return of(null);
         })
       );

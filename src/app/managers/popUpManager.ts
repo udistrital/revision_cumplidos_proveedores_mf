@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 // @ts-ignore
-import Swal from 'sweetalert2/dist/sweetalert2';
+import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
@@ -52,6 +52,18 @@ export class PopUpManager {
     });
   }
 
+  showLoadingAlert(title: string, message: string): Promise<any> {
+    return Swal.fire({
+      title: title,
+      text: message,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      allowOutsideClick: false,
+      width: '400px',
+    });
+  }
+
   showSuccessAlert(text: string):Promise<any> {
     return Swal.fire({
       icon: 'success',
@@ -78,6 +90,7 @@ export class PopUpManager {
       showCancelButton: true,
       confirmButtonText: this.translate.instant('Aceptar'),
       cancelButtonText: this.translate.instant('Cancelar'),
+      reverseButtons: true,
     });
   }
 

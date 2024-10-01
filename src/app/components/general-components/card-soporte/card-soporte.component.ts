@@ -8,7 +8,6 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
-import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { Button } from 'src/app/models/button.model';
 import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
@@ -37,8 +36,6 @@ export class CardSoporteComponent {
   constructor(
     public dialog: MatDialog,
     private popUpManager: PopUpManager,
-    private cumplidosMidServices: CumplidosProveedoresMidService,
-    private aletManagerService:AletManagerService,
     private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
     private fb: FormBuilder
   ){
@@ -54,7 +51,7 @@ export class CardSoporteComponent {
 
   async eliminarSoporte(){
 
-       const confirm = await this.aletManagerService.alertConfirm("¿Deseas Eliminar el soporte?");
+       const confirm = await this.popUpManager.showConfirmAlert("¿Deseas Eliminar el soporte?");
        if(confirm.isConfirmed){
 
         console.log(this.soporte)
@@ -70,11 +67,9 @@ export class CardSoporteComponent {
           }
         });
         }catch(error){
-            this.aletManagerService.showCancelAlert("Error","Se produjo"+error)
+            this.popUpManager.showErrorAlert("Error al eliminar el soporte")
         }
 
-       }else{
-        this.aletManagerService.showCancelAlert("Cancelado","No se elimino")
        }
   }
 

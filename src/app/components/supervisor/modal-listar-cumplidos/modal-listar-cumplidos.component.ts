@@ -7,7 +7,6 @@ import { BodyCambioEstado } from 'src/app/models/revision_cumplidos_proveedores_
 import { UserService } from 'src/app/services/user.services';
 import { MatDialog } from '@angular/material/dialog';
 import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
-import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { CrearSolicitudCumplido } from 'src/app/models/crear-solicitud-cumplido.model';
 import { AdministrativaAmazonService } from 'src/app/services/administrativa_amazon.service';
 import {
@@ -47,14 +46,13 @@ export class ModalListarCumplidosComponent {
     private user: UserService,
     public dialog: MatDialog,
     private cambioEstadoService: CambioEstadoService,
-    private alertService: AletManagerService,
     private administrativaAmazonService: AdministrativaAmazonService,
     private modeService:ModoService,
   ) {
     this.documento_supervisor = user.getPayload().documento;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.cumplidosMidServices.contrato$.subscribe((contrato) => {
       console.log(contrato);
       if (contrato) {
@@ -84,7 +82,7 @@ export class ModalListarCumplidosComponent {
             },
             error: (error: any) => {
               this.popUpManager.showErrorAlert(
-                'El Proveedor no tiene ninguna solicitud reciente'
+                'Error al obtener los datos del supervisor'
               );
             },
           });
@@ -224,7 +222,7 @@ export class ModalListarCumplidosComponent {
 
 
   async cambiarEstado(cumplido: any) {
-    let confirm = await this.alertService.alertConfirm(
+    let confirm = await this.popUpManager.showConfirmAlert(
       '¿Esta seguro de aprobar los soportes?'
     );
     console.log(cumplido);
@@ -236,14 +234,14 @@ export class ModalListarCumplidosComponent {
       this.popUpManager.showSuccessAlert(
         'Se han aprobado los soportes correctamente'
       );
-      await this.getSolicitudesContrato(cumplido.cumplidoProveedor.NumeroContrato,cumplido.cumplidoProveedor.VigenciaContrato)
-      this.dataSource = [...this.dataSource]
-    } else {
-      this.alertService.showCancelAlert(
-        'Cancelado',
-        'No se ha relizado ninguna accion'
-      );
-    }
+      setTimeout(async () => {
+        await this.getSolicitudesContrato(
+            cumplido.cumplidoProveedor.NumeroContrato,
+            cumplido.cumplidoProveedor.VigenciaContrato
+        );
+        this.dataSource = [...this.dataSource];
+    }, 1000);
+    } 
   }
 
   handleActionClick(event: {action: any, element: any}) {

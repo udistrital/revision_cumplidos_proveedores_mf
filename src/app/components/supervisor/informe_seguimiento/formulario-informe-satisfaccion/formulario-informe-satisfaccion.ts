@@ -9,14 +9,12 @@ import {
 } from '@angular/forms';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { DatePipe } from '@angular/common';
+import { MatDialog  } from '@angular/material/dialog';
 import { SolicituDeFirma } from 'src/app/models/certificado-pago.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CoreApiService } from '../../../../services/core_api.service';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { Banco } from 'src/app/models/banco.model';
-import { AletManagerService } from 'src/app/managers/alert-manager.service';
 import { TipoPago } from 'src/app/models/tipo_pago.model';
 import { TipoCuentaBancaria } from 'src/app/models/tipo_cuenta_bancaria.model';
 import { lastValueFrom } from 'rxjs';
@@ -24,9 +22,7 @@ import { DocumentoCobro } from 'src/app/models/documento_cobro.model';
 import Swal from 'sweetalert2';
 import { ModalVisualizarSoporteComponent } from '../../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { UserService } from './../../../../services/user.services';
-import { DecodedToken } from './../../../../models/decode_token';
 import { FirmaElectronicaService } from 'src/app/services/firma_electronica_mid.service';
-import { ModalListarCumplidosComponent } from '../../modal-listar-cumplidos/modal-listar-cumplidos.component';
 
 @Component({
   selector: 'app-formulario-informe-satisfaccion',
@@ -67,9 +63,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private coreApiService: CoreApiService,
-    private alertService: AletManagerService,
     private cumplidoService: CumplidosProveedoresMidService,
-    private router: Router,
     private userService: UserService,
     private firmaElectronica: FirmaElectronicaService
   ) {
@@ -154,7 +148,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       );
       this.listaBancos = response;
     } catch (error) {
-      this.alertService.showErrorAlert('Error');
+      this.popUpManager.showErrorAlert('Error al recuperar el listado de bancos');
       throw error;
     }
   }
@@ -168,8 +162,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       this.listaDocumentoCobro = response;
       console.log(this.listaDocumentoCobro);
     } catch (error) {
-      this.alertService.showErrorAlert(
-        'Se produjo un errro al colsultar los tipos de cobro'
+      this.popUpManager.showErrorAlert(
+        'Se produjo un error al colsultar los tipos de cobro'
       );
       throw error;
     }
@@ -189,7 +183,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         console.log('response', response);
       }
     } catch (error) {
-      this.alertService.showErrorAlert('Error');
+      this.popUpManager.showErrorAlert('Error al consultar los tipos de cuentas bancarias');
       throw error;
     }
   }
@@ -211,31 +205,26 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async guardarIformacionPago() {
-    let confirm = await this.alertService.alertConfirm('Guardado');
+    let confirm = await this.popUpManager.showConfirmAlert('Información pago guardada');
     console.log('antes de guardar ', this.nuevoFormuario);
     if (confirm.isConfirmed) {
       const body = this.obtenerInformacionPago();
       console.log('Despues de guardar ', this.nuevoFormuario);
       this.guardatinformacionPagoSolictud(body);
-    } else {
-      this.alertService.showCancelAlert(
-        'Cancelado',
-        'No se realizaron Cambios'
-      );
-    }
+    } 
   }
 
   async generarSoporte() {
     const body = this.obtenerInformacionPago();
 
-    let confirm = await this.alertService.alertConfirm('¿Generar soporte?');
+    let confirm = await this.popUpManager.showConfirmAlert('¿Generar soporte?');
 
     if (confirm.isConfirmed) {
       if (
         this.formularioInformeSeguimiento.valid &&
         this.validarInformacionbancaria()
       ) {
-        this.alertService.showLoadingAlert(
+        this.popUpManager.showLoadingAlert(
           'Espera por favor',
           'Estamos generando tu documento. Esto puede tardar unos momentos. Gracias.'
         );
@@ -328,9 +317,9 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
   async buscarInformacionPago() {
     try {
-      this.alertService.showLoadingAlert(
+      this.popUpManager.showLoadingAlert(
         'Cargado',
-        'Espera mientras se carga la informacion'
+        'Espera mientras se carga la información'
       );
       const response = await lastValueFrom(
         this.cumplidosCrudServices.get(
@@ -368,9 +357,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       }
       Swal.close();
     } catch (error) {
-      this.alertService.showCancelAlert(
-        'Error',
-        'Se genereo el siguiente error' + error
+      this.popUpManager.showErrorAlert(
+        'Error al consultar la información de pago'
       );
     }
   }
@@ -394,8 +382,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         (tipocuenta) => tipocuenta.Id == this.tipoCuentaBancaria
       );
     } else {
-      this.alertService.showCancelAlert(
-        'Error',
+      this.popUpManager.showErrorAlert(
         'Error al consultar tipo de cuenta'
       );
     }
@@ -476,28 +463,25 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     if(this.validacionGuardar()){
       if (this.nuevoFormuario) {
         try {
-          this.alertService.showLoadingAlert('Guardando', 'Porfavor espera');
+          this.popUpManager.showLoadingAlert('Guardando', 'Por favor, espera');
           this.cumplidosCrudServices.post('/informacion_pago/', body).subscribe(
             (response: any) => {
               this.nuevoFormuario = false;
               this.informacionPagoId = response.Data.Id;
-              this.alertService.showSuccessAlert(
-                'Guardado',
-                'Se guardo el infrome'
+              this.popUpManager.showSuccessAlert(
+                'Se guardo el informe'
               );
-              this.alertService.showLoadingAlert('Cargando', 'Porfavor espera');
+              this.popUpManager.showLoadingAlert('Cargando', 'Por favor, espera');
             },
             (error) => {
-              this.alertService.showCancelAlert(
-                'Error',
-                'Se produjo el error' + error
+              this.popUpManager.showErrorAlert(
+                'Error al guardar la información de pago'
               );
             }
           );
         } catch (error) {
-          this.alertService.showCancelAlert(
-            'Error',
-            'Se produjo el error' + error
+          this.popUpManager.showErrorAlert(
+            'Error al guardar la información de pago'
           );
         }
       } else {
@@ -506,23 +490,20 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
             .put(`/informacion_pago/${this.informacionPagoId}`, body)
             .subscribe(
               (response) => {
-                this.alertService.showSuccessAlert(
-                  'Guardado',
-                  'Se guardo el infrome'
+                this.popUpManager.showSuccessAlert(
+                  'Se guardo el informe'
                 );
-                this.alertService.showLoadingAlert('Cargando', 'Porfavor espera');
+                this.popUpManager.showLoadingAlert('Cargando', 'Por favor, espera');
               },
               (error) => {
-                this.alertService.showCancelAlert(
-                  'Error',
-                  'Se produjo el error' + error
+                this.popUpManager.showErrorAlert(
+                  'Error al guardar la información de pago'
                 );
               }
             );
         } catch (error) {
-          this.alertService.showCancelAlert(
-            'Error',
-            'Se produjo el error' + error
+          this.popUpManager.showErrorAlert(
+            'Error al guardar la información de pago'
           );
         }
       }
@@ -530,7 +511,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async habilitarInfromacionBancaria() {
-    let confirm = await this.alertService.alertConfirm(
+    let confirm = await this.popUpManager.showConfirmAlert(
       '¿Modificar Informacion Bancaria?',
       'Los cambios realizados no se guardarán en la información del proveedor, sino únicamente en la información de pago y solo para esta solicitud.'
     );
@@ -553,9 +534,9 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async consultarInformacionBnacariaFormularioNuevo() {
-    this.alertService.showLoadingAlert(
+    this.popUpManager.showLoadingAlert(
       'Cargado',
-      'Espera mientras se carga la informacion'
+      'Espera mientras se carga la información'
     );
     try {
       const infoContrato = await lastValueFrom(
@@ -578,8 +559,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       Swal.close();
     } catch (error) {
       console.error('Error al consultar informacion del contrato');
-      this.alertService.showErrorAlert(
-        'Error al consultar informacion del contrato'
+      this.popUpManager.showErrorAlert(
+        'Error al consultar la información del contrato'
       );
     }
   }

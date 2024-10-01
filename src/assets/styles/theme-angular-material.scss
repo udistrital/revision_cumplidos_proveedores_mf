@@ -123,4 +123,14 @@ $light-theme: mat.define-light-theme(
 @include mat.all-component-themes($light-theme);
 
 
+.swal2-confirm {
+  background-color: #358227 !important; 
+  color: white !important;              
 
+}
+
+/* Estilo global para el botón de cancelación en SweetAlert2 */
+.swal2-cancel {
+  background-color: #731b14 !important; 
+  color: white !important;
+}

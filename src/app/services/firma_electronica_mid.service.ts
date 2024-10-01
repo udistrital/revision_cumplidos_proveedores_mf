@@ -12,7 +12,6 @@ import { UserService } from './user.services';
 import Swal from 'sweetalert2';
 import { CumplidosProveedoresCrudService } from './cumplidos_proveedores_crud.service';
 import { CumplidosProveedoresMidService } from './cumplidos_proveedores_mid.service';
-import { AletManagerService } from './../managers/alert-manager.service';
 import { ModalVisualizarSoporteComponent } from '../components/general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalListarCumplidosComponent } from '../components/supervisor/modal-listar-cumplidos/modal-listar-cumplidos.component';
@@ -37,7 +36,6 @@ export class FirmaElectronicaService {
     private popUpManager: PopUpManager,
     private userService: UserService,
     private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
-    private aletManagerService: AletManagerService,
     private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
     public dialog: MatDialog,
     private router:Router
@@ -82,7 +80,7 @@ export class FirmaElectronicaService {
         },
       ];
 
-      this.aletManagerService.showLoadingAlert(
+      this.popUpManager.showLoadingAlert(
         'Firmando',
         'Espera mientras el documento se firma'
       );
@@ -134,7 +132,7 @@ export class FirmaElectronicaService {
   }
 
   registarSoportePagoFirmado(respuesta: any, idCumplido: number) {
-    this.aletManagerService.showLoadingAlert(
+    this.popUpManager.showLoadingAlert(
       'Cargando',
       'Espera mientras el documento se carga'
     );
