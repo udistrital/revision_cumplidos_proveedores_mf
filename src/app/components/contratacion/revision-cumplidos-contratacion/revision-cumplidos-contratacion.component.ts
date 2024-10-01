@@ -14,6 +14,7 @@ import { ModalVisualizarSoporteComponent } from '../../general-components/modal-
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TablaRevisionCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/tabla_revision_cumplido';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import { NotificacionesService } from './../../../services/notificaciones.service';
 
 
 
@@ -40,6 +41,7 @@ export class RevisionCumplidosContratacionComponent {
     private cambioEstadoService: CambioEstadoService,
     private userService: UserService,
     private popUpManager: PopUpManager,
+    private  notificacionesService:NotificacionesService
 
   ) {
     this.obtenerInfoPersona();
@@ -192,13 +194,19 @@ export class RevisionCumplidosContratacionComponent {
     );
 
     if (confirm.isConfirmed) {
+
       try {
         await this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'AC');
         this.popUpManager.showSuccessAlert(
           '!Se han aprobado los soportes del cumplido!'
         );
-        await this.cargarTablaCumplidos();
-        this.dataSource = [...this.dataSource]
+        this.notificacionesService.publicarNotificaciones("AC","/informacion_ordenador_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
+        setTimeout(async () => {
+          await this.cargarTablaCumplidos();
+          this.dataSource = [...this.dataSource]
+        }, 1000)
+
+
       } catch (error) {
         this.popUpManager.showErrorAlert('Error al aprobar los soportes');
         console.error(error);
@@ -211,15 +219,17 @@ export class RevisionCumplidosContratacionComponent {
     let confirm = await this.popUpManager.showConfirmAlert(
       '¿Está seguro de rechazar los soportes?'
     );
-
     if (confirm.isConfirmed) {
       try {
         await this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'RC');
         this.popUpManager.showSuccessAlert(
           '!Se han rechazado los soportes!'
         );
-        await this.cargarTablaCumplidos();
-        this.dataSource = [...this.dataSource]
+        this.notificacionesService.publicarNotificaciones("RC","/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
+        setTimeout(async () => {
+          await this.cargarTablaCumplidos();
+          this.dataSource = [...this.dataSource]
+        }, 1000)
       } catch (error) {
         this.popUpManager.showErrorAlert('Error al rechazar los soportes del cumplido');
         console.error(error);

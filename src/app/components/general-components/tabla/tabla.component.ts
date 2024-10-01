@@ -21,7 +21,7 @@ export class TablaComponent {
   // Output para emitir eventos cuando se haga clic en un botón de acción
   @Output() actionClicked = new EventEmitter<{action: any, element: any}>();
 
-  dataSource = new MatTableDataSource<any>(this.data);
+  dataSource = new MatTableDataSource<any>([]);
   columnKeys!: string[];
 
   // Se inicializan los datos de la tabla, la paginacion y la ordenacion
