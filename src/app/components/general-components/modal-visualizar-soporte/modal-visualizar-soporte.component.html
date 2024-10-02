@@ -26,7 +26,7 @@
     <object [data]="documentData|safeUrl" type="application/pdf" *ngIf="documentLoad"></object>
 </div>
 <div class="nofile" *ngIf="!documentLoad">
-  Error al cargar el documento
+  Error al cargar el documento.
 </div>
 <mat-dialog-actions align="center">
   <div *ngIf="modalButtonsFunc && modalButtonsFunc.length > 0">

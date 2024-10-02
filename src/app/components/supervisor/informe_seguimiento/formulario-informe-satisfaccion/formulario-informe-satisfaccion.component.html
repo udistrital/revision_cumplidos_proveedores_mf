@@ -33,7 +33,7 @@
               </mat-option>
             </mat-select>
             <mat-error *ngIf="formularioInformeSeguimiento.get('tipo_pago')?.invalid" class="label-error">
-              Selecciona un tipo de pago
+              Selecciona un tipo de pago.
             </mat-error>
           </mat-form-field>
         </div>
@@ -52,7 +52,7 @@
             ></mat-datepicker-toggle>
             <mat-datepicker #datepickerInicio></mat-datepicker>
             <mat-error *ngIf="formularioInformeSeguimiento.get('fecha_inicio')?.invalid" class="label-error">
-              Ingresa la fecha de Inico
+              Ingresa la fecha de Inicio.
             </mat-error>
           </mat-form-field>
           <p class="p-final-date">Hasta</p>
@@ -69,14 +69,14 @@
             ></mat-datepicker-toggle>
             <mat-datepicker #datepickerFin></mat-datepicker>
             <mat-error *ngIf="formularioInformeSeguimiento.get('fecha_fin')?.invalid" class="label-error">
-              Ingresa la fecha de finalizacion
+              Ingresa la fecha de finalización.
             </mat-error>
           </mat-form-field>
-          <mat-error *ngIf="formularioInformeSeguimiento.errors?.['dateRangeInvalid']" class="label-error" >  La Fecha Inicio no puede ser posterior a la Fecha Fin.</mat-error>
+          <mat-error *ngIf="formularioInformeSeguimiento.errors?.['dateRangeInvalid']" class="label-error" >La fecha de inicio no puede ser posterior a la fecha de fin.</mat-error>
         </div>
         <div class="wp-collection-account">
           <div class="wp-collection-item">
-            <p class="label">TIPO DE COBRO</p>
+            <p class="label">TIPO DE COBRO.</p>
             <mat-form-field>
               <mat-select formControlName="tipo_cobro" placeholder="-- Tipo">
                 <mat-option
@@ -170,7 +170,7 @@
             <mat-form-field>
               <input matInput formControlName="numero_cuenta" type="text" />
               <mat-error *ngIf="informacionBancariaForm.get('numero_cuenta')?.invalid" class="label-error">
-               Ingresa el numero de cuenta
+                Ingresa el número de cuenta.
               </mat-error>
             </mat-form-field>
           </div>
