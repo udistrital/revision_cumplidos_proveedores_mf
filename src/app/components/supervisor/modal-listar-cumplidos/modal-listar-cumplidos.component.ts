@@ -9,16 +9,20 @@ import { MatDialog } from '@angular/material/dialog';
 import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
 import { CrearSolicitudCumplido } from 'src/app/models/crear-solicitud-cumplido.model';
 import { AdministrativaAmazonService } from 'src/app/services/administrativa_amazon.service';
+
 import {
   Mode,
   RolUsuario,
   ModalSoportesCumplidoData,
+  ModalComentariosSoporteData,
+  ConfigSoportes,
 } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { ModalSoportesCumplidoComponent } from '../../general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { ModoService } from 'src/app/services/modo_service.service';
+import { ModalComentariosSoporteComponent } from '../../general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
 
 @Component({
   selector: 'app-modal-listar-cumplidos',
@@ -193,6 +197,61 @@ export class ModalListarCumplidosComponent {
         Buttons: [
           {
             Color: 'white',
+            FontIcon: 'clear',
+            Function: async (soporte: any) => {
+              const confirm = await this.popUpManager.showConfirmAlert("¿Deseas Eliminar el soporte?");
+              if(confirm.isConfirmed){
+
+                console.log(soporte)
+                try{
+                  this.cumplidosCrudService.delete(`/soporte_cumplido`, soporte.SoporteCumplidoId)
+                .subscribe({
+                  next: (res: any) => {
+                    this.popUpManager.showSuccessAlert('Soporte eliminado correctamente');
+                  },
+                  error: (error: any) => {
+                    this.popUpManager.showErrorAlert('No fue posible eliminar el soporte');
+                  }
+                });
+                }catch(error){
+                    this.popUpManager.showErrorAlert("Error al eliminar el soporte")
+                }
+
+              }
+            },
+            Classes: 'eliminar-documento-button',
+            Text: 'Eliminar',
+            Condicional: true
+          },
+          {
+            Color: 'white',
+            FontIcon: 'chat',
+            Function: (config: ConfigSoportes, soporte_id: number, cambio_estado_cumplido_id: number, tipo_soporte: string) => {
+              this.dialog.open(ModalComentariosSoporteComponent, {
+                disableClose: true,
+                maxHeight: '80vh',
+                maxWidth: '60vw',
+                minHeight: '30vh',
+                minWidth: '30vw',
+                height: 'auto',
+                width: 'auto',
+                data:{
+                  SoporteId: soporte_id,
+                  CambioEstadoCumplidoId: cambio_estado_cumplido_id,
+                  TipoSoporte: tipo_soporte,
+                  Config:{
+                    mode:config.mode,
+                    rolUsuario: config.rolUsuario
+                  }
+                } as ModalComentariosSoporteData
+              });
+            },
+            Classes: 'comentarios-documento-button',
+            Text: 'Comentarios',
+            Condicional: true
+          },
+          {
+            Color: 'white',
             FontIcon: 'visibility',
             Function: (file: any) => {
             const visualizarSoporetes=   this.dialog.open(ModalVisualizarSoporteComponent, {
@@ -209,7 +268,7 @@ export class ModalListarCumplidosComponent {
             },
             Classes: 'ver-documentos-button',
             Text: 'Ver',
-          },
+          }
         ],
         Config: {
           mode: this.modeService.obtenerModo(cumplido.CodigoAbreviacionEstadoCumplido),
@@ -241,7 +300,7 @@ export class ModalListarCumplidosComponent {
         );
         this.dataSource = [...this.dataSource];
     }, 1000);
-    } 
+    }
   }
 
   handleActionClick(event: {action: any, element: any}) {

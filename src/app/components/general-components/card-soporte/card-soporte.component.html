@@ -44,24 +44,24 @@
   </div>
 
   <mat-card-footer>
-    <div class="btn-box">
-      <div>
+    <div >
+      <!-- <div>
         <button mat-button class="btn-eliminar" (click)="eliminarSoporte()"
           *ngIf="(config.mode == mode.CD || config.mode == mode.RC || config.mode == mode.RO) && config.rolUsuario == rolUsuario.S">
           Eliminar
         </button>
-      </div>
-      <div *ngIf="buttons && buttons.length > 0">
-        <div *ngFor="let button of buttons">
-          <button mat-button [ngClass]="button.Classes" (click)="button.Function(soporte)">
+        <button mat-button type="submit" [disabled]="comentarioForm.invalid" class="btn-eliminar" (click)="openDialog(soporte.SoporteCumplidoId, cambioEstadoCumplido.Id, soporte.Documento.TipoDocumento)">
+          Comentarios
+        </button>
+      </div> -->
+      <div *ngIf="buttons && buttons.length > 0" class="btn-box">
+        <div *ngFor="let button of buttons" style="margin-left:5%; margin-right:5%;">
+          <button mat-button [ngClass]="button.Classes" *ngIf="evaluarCondicional(button)" (click)="button.Function(soporte)">
             <mat-icon [color]="button.Color">{{ button.FontIcon }}</mat-icon>
             {{ button.Text }}
           </button>
         </div>
       </div>
-      <button mat-button type="submit" [disabled]="comentarioForm.invalid" class="btn-eliminar" (click)="openDialog(soporte.SoporteCumplidoId, cambioEstadoCumplido.Id, soporte.Documento.TipoDocumento)">
-        Comentarios
-      </button>
     </div>
   </mat-card-footer>
 </div>

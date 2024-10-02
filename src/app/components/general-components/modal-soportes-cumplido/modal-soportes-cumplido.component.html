@@ -9,7 +9,7 @@
       <app-form-soporte
         [cumplidoProveedorId]="cumplidoProveedorId"
         (recargarSoportes)="cargarSoportes()"
-        *ngIf="data.Config.mode == mode.CD"
+        *ngIf="(data.Config.mode == mode.CD || data.Config.mode == mode.RC || data.Config.mode == mode.RO) && data.Config.rolUsuario == rolUsuario.S "
       >
       </app-form-soporte>
     </div>

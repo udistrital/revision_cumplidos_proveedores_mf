@@ -20,7 +20,7 @@ export class ModoService {
       case 'CD':
         return Mode.CD;
       case 'RC':
-        return Mode.PRC;
+        return Mode.RC;
       case 'RO':
         return Mode.RO;
       case 'AO':

@@ -61,6 +61,7 @@ export class CardSoporteComponent {
           this.cumplidos_provedore_crud_service.delete(`/soporte_cumplido`, this.soporte.SoporteCumplidoId)
         .subscribe({
           next: (res: any) => {
+            console.log("Buttons:", this.buttons)
             this.recargarSoportes.emit(res)
             this.popUpManager.showSuccessAlert(
               'El soporte se ha eliminado correctamente.'
@@ -127,5 +128,13 @@ export class CardSoporteComponent {
         }
       } as ModalComentariosSoporteData
     });
+    }
+
+    evaluarCondicional(button: any): boolean{
+      if (!button.Condicional){
+        return true;
+      }
+
+      return ((this.config.mode == this.mode.CD || this.config.mode == this.mode.RC || this.config.mode == this.mode.RO) && this.config.rolUsuario == this.rolUsuario.S);
     }
 }

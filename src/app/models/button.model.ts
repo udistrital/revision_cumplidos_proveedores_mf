@@ -5,5 +5,5 @@ export interface Button {
      Classes:string,
      Text?:string,
      TextColor:string
-    
+     Condicional?: boolean
 }
