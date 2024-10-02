@@ -21,8 +21,7 @@ export class ModalVisualizarSoporteComponent {
     this.documentData='data:application/pdf;base64,'+this.data.url
     this.modalButtonsFunc= this.data.ModalButtonsFunc
     this.bunttonClose=this.data.BunttonClose;
-    console.log("Data ", this.data)
-    console.log(this.documentData)
+
   
   }
 
