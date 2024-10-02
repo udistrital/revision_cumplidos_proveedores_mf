@@ -50,9 +50,9 @@ export class ModalSoportesCumplidoComponent {
       error: (error: any) => {
         console.log(error)
         this.soportes=[]
-        // this.popUpManager.showErrorAlert(
-        //   'Por el momento no hay soportes subidos para esta solicitud de pago'
-        // );
+       // this.popUpManager.showErrorAlert(
+     //     'Por el momento, no hay soportes subidos para esta solicitud de pago.'
+      //  );
       },
     });
   }

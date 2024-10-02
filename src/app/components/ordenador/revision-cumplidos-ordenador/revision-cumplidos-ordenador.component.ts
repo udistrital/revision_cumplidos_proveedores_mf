@@ -75,7 +75,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     this.dataSource = [];
     this.popUpManager.showLoadingAlert(
       'Cargando',
-      'Espera mientras se cargan las solicitudes pendientes'
+      'Por favor, espera mientras se cargan las solicitudes pendientes.'
     );
     this.cumplidos_provedore_mid_service
       .get('/ordenador/solicitudes-pago/' + this.documentoResponsable)
@@ -101,7 +101,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
           } else {
             this.popUpManager.showAlert(
               'Sin cumplidos pendientes',
-              'No hay cumplidos pendientes para revision por parte del ordenador'
+              'No hay cumplidos pendientes para revisión por parte del ordenador.'
             );
             this.dataSource = [];
             this.loading = false;
@@ -112,7 +112,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
           this.loading = false;
           this.popUpManager.showAlert(
             'Sin cumplidos pendientes',
-            'No hay cumplidos pendientes para revision por parte del ordenador'
+            'No hay cumplidos pendientes para revisión por parte del ordenador.'
           );
           console.error(error);
         },
@@ -181,7 +181,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   async verAutorizacionDePago(cumplido: any) {
     this.popUpManager.showLoadingAlert(
       'Cargando',
-      'Esperar mientras se genera el documento'
+      'Por favor, espera mientras se genera el documento.'
     );
     try {
       const autorizacionPago = await lastValueFrom(
@@ -193,17 +193,21 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
         this.modalVerSoporte(cumplido);
       }
     } catch (error) {
-      this.popUpManager.showErrorAlert('Error al generar autoriacion de pago');
+      this.popUpManager.showErrorAlert(
+        'Error al intentar generar la autorización de pago.'
+      );
     }
   }
 
   async rechazarCumplido(Cumplido: any) {
     let x = await this.popUpManager.showConfirmAlert(
-      '¿Esta seguro de Rechazar los soportes?'
+      '¿Está seguro de que desea rechazar los soportes?'
     );
     if (x.isConfirmed) {
       await this.cambiarEstado(Cumplido.CumplidoId, 'RO');
-      this.popUpManager.showSuccessAlert('!Se han rechazado los soprtes!');
+      this.popUpManager.showSuccessAlert(
+        '¡Se han rechazado los soportes!'
+      );
       setTimeout(async () => {
         await this.CargarTablaCumplidos();
         this.dataSource = [...this.dataSource];
@@ -236,7 +240,9 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
           return null;
         }),
         catchError((error) => {
-          this.popUpManager.showErrorAlert('Error al ');
+          this.popUpManager.showErrorAlert(
+            'Error al intentar obtener el estado.'
+          );
           return of(null);
         })
       );
@@ -264,7 +270,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
         }),
         catchError((error) => {
           this.popUpManager.showErrorAlert(
-            'Error al generar la autorización de pago.'
+            'Error al intentar generar la autorización de pago.'
           );
           return of(null);
         })
@@ -314,7 +320,9 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
                 );
             
               } catch (error) {
-                this.popUpManager.showErrorAlert('Error al Firmar Documento');
+                this.popUpManager.showErrorAlert(
+                  'Error al intentar firmar el documento.'
+                );
               }
             },
             Clases: '',

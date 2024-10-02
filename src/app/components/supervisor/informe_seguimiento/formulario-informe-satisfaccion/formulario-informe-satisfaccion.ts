@@ -116,7 +116,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         this.vigencia = contrato.Contrato.Vigencia;
       } else {
         this.popUpManager.showErrorAlert(
-          'No se registra informacion del contrato'
+          'No se registra información del contrato.'
         );
       }
     });
@@ -148,7 +148,9 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       );
       this.listaBancos = response;
     } catch (error) {
-      this.popUpManager.showErrorAlert('Error al recuperar el listado de bancos');
+      this.popUpManager.showErrorAlert(
+        'Error al intentar recuperar el listado de bancos.'
+      );
       throw error;
     }
   }
@@ -163,7 +165,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       console.log(this.listaDocumentoCobro);
     } catch (error) {
       this.popUpManager.showErrorAlert(
-        'Se produjo un error al colsultar los tipos de cobro'
+        'Se produjo un error al consultar los tipos de cobro.'
       );
       throw error;
     }
@@ -183,7 +185,9 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         console.log('response', response);
       }
     } catch (error) {
-      this.popUpManager.showErrorAlert('Error al consultar los tipos de cuentas bancarias');
+      this.popUpManager.showErrorAlert(
+        'Error al intentar consultar los tipos de cuentas bancarias.'
+      );
       throw error;
     }
   }
@@ -217,7 +221,9 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   async generarSoporte() {
     const body = this.obtenerInformacionPago();
 
-    let confirm = await this.popUpManager.showConfirmAlert('¿Generar soporte?');
+    let confirm = await this.popUpManager.showConfirmAlert(
+      '¿Deseas generar el soporte?'
+    );
 
     if (confirm.isConfirmed) {
       if (
@@ -225,8 +231,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         this.validarInformacionbancaria()
       ) {
         this.popUpManager.showLoadingAlert(
-          'Espera por favor',
-          'Estamos generando tu documento. Esto puede tardar unos momentos. Gracias.'
+          'Espera, por favor',
+          'Estamos generando tu documento. Esto puede tardar unos momentos. ¡Gracias por tu paciencia!'
         );
 
         this.cumplidosMidServices
@@ -250,7 +256,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
             error: (error: any) => {
               this.popUpManager.showErrorAlert(
-                'Error al crear el informe de seguimiento'
+                'Error al intentar crear el informe de seguimiento.'
               );
             },
             complete: () => {
@@ -262,7 +268,9 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         this.showDetailedErrors();
         this.informacionBancariaForm.markAllAsTouched();
         this.formularioInformeSeguimiento.markAllAsTouched();
-        this.popUpManager.showErrorAlert('Datos incorrectos o faltantes');
+        this.popUpManager.showErrorAlert(
+          'Datos incorrectos o faltantes. Por favor, verifica la información.'
+        );
       }
     }
   }
@@ -318,8 +326,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   async buscarInformacionPago() {
     try {
       this.popUpManager.showLoadingAlert(
-        'Cargado',
-        'Espera mientras se carga la información'
+        'Cargando',
+        'Por favor, espera mientras se carga la información.'
       );
       const response = await lastValueFrom(
         this.cumplidosCrudServices.get(
@@ -358,7 +366,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       Swal.close();
     } catch (error) {
       this.popUpManager.showErrorAlert(
-        'Error al consultar la información de pago'
+        'Error al intentar consultar la información de pago.'
       );
     }
   }
@@ -383,7 +391,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       );
     } else {
       this.popUpManager.showErrorAlert(
-        'Error al consultar tipo de cuenta'
+        'Error al intentar consultar el tipo de cuenta.'
       );
     }
   }
@@ -463,25 +471,31 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     if(this.validacionGuardar()){
       if (this.nuevoFormuario) {
         try {
-          this.popUpManager.showLoadingAlert('Guardando', 'Por favor, espera');
+          this.popUpManager.showLoadingAlert(
+            'Guardando',
+            'Por favor, espera mientras se guarda la información.'
+          );
           this.cumplidosCrudServices.post('/informacion_pago/', body).subscribe(
             (response: any) => {
               this.nuevoFormuario = false;
               this.informacionPagoId = response.Data.Id;
               this.popUpManager.showSuccessAlert(
-                'Se guardo el informe'
+                'Se guardó el informe correctamente.'
               );
-              this.popUpManager.showLoadingAlert('Cargando', 'Por favor, espera');
+              this.popUpManager.showLoadingAlert(
+                'Cargando',
+                'Por favor, espera mientras se carga la información.'
+              );
             },
             (error) => {
               this.popUpManager.showErrorAlert(
-                'Error al guardar la información de pago'
+                'Error al intentar guardar la información de pago.'
               );
             }
           );
         } catch (error) {
           this.popUpManager.showErrorAlert(
-            'Error al guardar la información de pago'
+            'Error al intentar guardar la información de pago.'
           );
         }
       } else {
@@ -491,19 +505,22 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
             .subscribe(
               (response) => {
                 this.popUpManager.showSuccessAlert(
-                  'Se guardo el informe'
+                  'Se guardó el informe correctamente.'
                 );
-                this.popUpManager.showLoadingAlert('Cargando', 'Por favor, espera');
+                this.popUpManager.showLoadingAlert(
+                  'Cargando',
+                  'Por favor, espera mientras se carga la información.'
+                );
               },
               (error) => {
                 this.popUpManager.showErrorAlert(
-                  'Error al guardar la información de pago'
+                  'Error al intentar guardar la información de pago.'
                 );
               }
             );
         } catch (error) {
           this.popUpManager.showErrorAlert(
-            'Error al guardar la información de pago'
+            'Error al intentar guardar la información de pago.'
           );
         }
       }
@@ -512,8 +529,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
   async habilitarInfromacionBancaria() {
     let confirm = await this.popUpManager.showConfirmAlert(
-      '¿Modificar Informacion Bancaria?',
-      'Los cambios realizados no se guardarán en la información del proveedor, sino únicamente en la información de pago y solo para esta solicitud.'
+      '¿Modificar información bancaria?',
+      'Los cambios realizados no se guardarán en la información del proveedor, sino solo en la información de pago y únicamente para esta solicitud.'
     );
 
     if (confirm.isConfirmed) {
@@ -535,8 +552,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
 
   async consultarInformacionBnacariaFormularioNuevo() {
     this.popUpManager.showLoadingAlert(
-      'Cargado',
-      'Espera mientras se carga la información'
+      'Cargando',
+      'Por favor, espera mientras se carga la información.'
     );
     try {
       const infoContrato = await lastValueFrom(
@@ -560,7 +577,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     } catch (error) {
       console.error('Error al consultar informacion del contrato');
       this.popUpManager.showErrorAlert(
-        'Error al consultar la información del contrato'
+        'Error al intentar consultar la información del contrato.'
       );
     }
   }

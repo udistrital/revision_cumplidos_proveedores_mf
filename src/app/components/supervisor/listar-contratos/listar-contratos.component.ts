@@ -48,7 +48,7 @@ export class ListarContratosComponent {
   cargarContratos() {
     this.popUpManager.showLoadingAlert(
       'Cargando',
-      'Espera mientras se cargan los contratos disponibles'
+      'Por favor, espera mientras se cargan los contratos disponibles.'
     );
     this.cumplidosMidServices
       .get('/supervisor/contratos-supervisor/' + this.documento_supervisor)
@@ -61,7 +61,11 @@ export class ListarContratosComponent {
               .map((dep: any) => dep.Nombre)
               .join(', ');
           if (this.contratos_supervisor.contratos == null) {
-            this.popUpManager.showAlert("Sin contratos","No se encontraron contratos asociados a la(s) depenendencia(s)")
+            this.popUpManager.showAlert(
+              "Sin contratos",
+              "No se encontraron contratos asociados a la(s) dependencia(s)."
+            );
+            
             this.loading = false;
           } else {
             this.dataSource = this.contratos_supervisor.contratos;
@@ -91,9 +95,10 @@ export class ListarContratosComponent {
         error: (error: any) => {
           this.popUpManager.showErrorAlert(
             this.translate.instant(
-              'Error al cargar los contratos del supervisor'
+              'Error al intentar cargar los contratos del supervisor.'
             )
           );
+          
 
         },
       });

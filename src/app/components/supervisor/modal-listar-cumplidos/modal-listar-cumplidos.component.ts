@@ -82,7 +82,7 @@ export class ModalListarCumplidosComponent {
             },
             error: (error: any) => {
               this.popUpManager.showErrorAlert(
-                'Error al obtener los datos del supervisor'
+                'Error al intentar obtener los datos del supervisor.'
               );
             },
           });
@@ -132,7 +132,7 @@ export class ModalListarCumplidosComponent {
             error: (error: any) => {
               this.loading = false;
               this.popUpManager.showErrorAlert(
-                'El Proveedor no tiene ninguna solicitud reciente'
+                'El proveedor no tiene ninguna solicitud reciente.'
               );
             },
           });
@@ -168,13 +168,13 @@ export class ModalListarCumplidosComponent {
         next: (res: any) => {
           console.log(res);
           this.popUpManager.showSuccessAlert(
-            'Se ha creado el cumplido correctamente'
+            'El cumplido se ha creado correctamente.'
           );
           this.getSolicitudesContrato(this.numeroContrato, this.vigencia);
         },
         error: (error: any) => {
           this.popUpManager.showErrorAlert(
-            'No fue Posible crear la solicitud de pago'
+            'No fue posible crear la solicitud de pago.'
           );
         },
       });
@@ -223,7 +223,7 @@ export class ModalListarCumplidosComponent {
 
   async cambiarEstado(cumplido: any) {
     let confirm = await this.popUpManager.showConfirmAlert(
-      '¿Esta seguro de aprobar los soportes?'
+      '¿Está seguro de que desea aprobar los soportes?'
     );
     console.log(cumplido);
     if (confirm.isConfirmed) {
@@ -232,7 +232,7 @@ export class ModalListarCumplidosComponent {
         'PRC'
       );
       this.popUpManager.showSuccessAlert(
-        'Se han aprobado los soportes correctamente'
+        'Los soportes se han aprobado correctamente.'
       );
       setTimeout(async () => {
         await this.getSolicitudesContrato(

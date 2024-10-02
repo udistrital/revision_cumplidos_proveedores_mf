@@ -51,7 +51,9 @@ export class CardSoporteComponent {
 
   async eliminarSoporte(){
 
-       const confirm = await this.popUpManager.showConfirmAlert("¿Deseas Eliminar el soporte?");
+    const confirm = await this.popUpManager.showConfirmAlert(
+      "¿Deseas eliminar el soporte?"
+    );
        if(confirm.isConfirmed){
 
         console.log(this.soporte)
@@ -60,14 +62,20 @@ export class CardSoporteComponent {
         .subscribe({
           next: (res: any) => {
             this.recargarSoportes.emit(res)
-            this.popUpManager.showSuccessAlert('Soporte eliminado correctamente');
+            this.popUpManager.showSuccessAlert(
+              'El soporte se ha eliminado correctamente.'
+            );
           },
           error: (error: any) => {
-            this.popUpManager.showErrorAlert('No fue posible eliminar el soporte');
+            this.popUpManager.showErrorAlert(
+              'No fue posible eliminar el soporte.'
+            );
           }
         });
         }catch(error){
-            this.popUpManager.showErrorAlert("Error al eliminar el soporte")
+          this.popUpManager.showErrorAlert(
+            "Error al intentar eliminar el soporte."
+          );
         }
 
        }

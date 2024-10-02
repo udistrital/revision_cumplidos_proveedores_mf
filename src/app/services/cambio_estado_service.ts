@@ -74,13 +74,13 @@ export class CambioEstadoService {
           //this.notificacionService.publicarNotificaciones(notificacion);
         } catch (error) {
           this.popUpManager.showErrorAlert(
-            'Se genero un error al enviar la notificación'
+            'Se generó un error al enviar la notificación.'
           );
         }
       }
     } catch (error) {
       this.popUpManager.showErrorAlert(
-        'Error al cambiar el estado'
+        'Error al intentar cambiar el estado.'
       );
     }
   }

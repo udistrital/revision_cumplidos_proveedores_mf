@@ -49,14 +49,19 @@ export class ModalComentariosSoporteComponent implements OnInit {
           } else {
             this.comentarios = [];
             this.informacionComentarioIndividual = [];
-            this.popUpManager.showAlert('Soporte sin comentarios', 'Este soporte no tiene comentarios registrados');
+            this.popUpManager.showAlert(
+              'Soporte sin comentarios',
+              'Este soporte no tiene comentarios registrados.'
+            );
           }
         },
         error: () => {
           this.isLoading = false;
           this.comentarios = [];
           this.informacionComentarioIndividual = [];
-          this.popUpManager.showErrorAlert('Hubo un error al recuperar los comentarios del soporte');
+          this.popUpManager.showErrorAlert(
+            'Hubo un error al intentar recuperar los comentarios del soporte.'
+          );
         }
       });
     }

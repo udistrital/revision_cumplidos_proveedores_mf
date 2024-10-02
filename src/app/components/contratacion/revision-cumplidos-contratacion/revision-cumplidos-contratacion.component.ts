@@ -7,7 +7,11 @@ import Swal from 'sweetalert2';
 import { CambioEstadoService } from 'src/app/services/cambio_estado_service';
 import { UserService } from 'src/app/services/user.services';
 import { ModalSoportesCumplidoComponent } from 'src/app/components/general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
-import { Mode, RolUsuario, ModalSoportesCumplidoData } from 'src/app/models/modal-soporte-cumplido-data.model';
+import {
+  Mode,
+  RolUsuario,
+  ModalSoportesCumplidoData,
+} from 'src/app/models/modal-soporte-cumplido-data.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
@@ -15,9 +19,6 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TablaRevisionCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/tabla_revision_cumplido';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 import { NotificacionesService } from './../../../services/notificaciones.service';
-
-
-
 
 @Component({
   selector: 'app-revision-cumplidos-contratacion',
@@ -33,7 +34,6 @@ export class RevisionCumplidosContratacionComponent {
   dataSource: TablaRevisionCumplido[] = [];
   loading: boolean = true;
 
-
   constructor(
     public dialog: MatDialog,
     private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
@@ -41,57 +41,59 @@ export class RevisionCumplidosContratacionComponent {
     private cambioEstadoService: CambioEstadoService,
     private userService: UserService,
     private popUpManager: PopUpManager,
-    private  notificacionesService:NotificacionesService
-
+    private notificacionesService: NotificacionesService
   ) {
     this.obtenerInfoPersona();
     this.cargarTablaCumplidos();
   }
 
-
-
   ngOnInit(): void {
-     this.obtenerInfoPersona();
-   }
+    this.obtenerInfoPersona();
+  }
 
   displayedColumns = [
-    {def:  'NumeroContrato', header: 'N° CONTRATO'},
-    {def:  'VigenciaContrato', header: 'VIGENCIA'},
-    {def:  'Rp', header: 'RP'},
-    {def:  'VigenciaRP', header: 'VIGENCIA RP'},
-    {def:  'FechaCreacion', header: 'FECHA CREACION'},
-    {def:  'NombreProveedor', header: 'PROVEEDOR'},
-    {def:  'Dependencia', header: 'DEPENDENCIA'},
-    {def: 'acciones', header: 'ACCIONES', isAction: true}
+    { def: 'NumeroContrato', header: 'N° CONTRATO' },
+    { def: 'VigenciaContrato', header: 'VIGENCIA' },
+    { def: 'Rp', header: 'RP' },
+    { def: 'VigenciaRP', header: 'VIGENCIA RP' },
+    { def: 'FechaCreacion', header: 'FECHA CREACION' },
+    { def: 'NombreProveedor', header: 'PROVEEDOR' },
+    { def: 'Dependencia', header: 'DEPENDENCIA' },
+    { def: 'acciones', header: 'ACCIONES', isAction: true },
   ];
 
   async cargarTablaCumplidos() {
     this.dataSource = [];
     this.popUpManager.showLoadingAlert(
       'Cargando',
-      'Espera mientras se cargan las solicitudes pendientes'
+      'Por favor, espera mientras se cargan las solicitudes pendientes.'
     );
     this.cumplidos_provedore_mid_service
       .get('/contratacion/solicitudes-pago/')
       .subscribe({
         next: (res: any) => {
           Swal.close();
-          if (res.Data != null && res.Data.length > 0){
-            this.dataSource = res.Data.map(
-              (solicitud: any) => {
-                return {
-                  ...solicitud,
-                  acciones: [
-                    {icon: 'visibility', actionName: 'visibility', isActive: true},
-                    {icon: 'check', actionName: 'check', isActive: true},
-                    {icon: 'close', actionName: 'close', isActive: true}
-                  ]
-                }
-              }
-            )
+          if (res.Data != null && res.Data.length > 0) {
+            this.dataSource = res.Data.map((solicitud: any) => {
+              return {
+                ...solicitud,
+                acciones: [
+                  {
+                    icon: 'visibility',
+                    actionName: 'visibility',
+                    isActive: true,
+                  },
+                  { icon: 'check', actionName: 'check', isActive: true },
+                  { icon: 'close', actionName: 'close', isActive: true },
+                ],
+              };
+            });
             this.loading = false;
           } else {
-            this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revisión por parte de contratación');
+            this.popUpManager.showAlert(
+              'Sin cumplidos pendientes',
+              'No hay cumplidos pendientes para revisar en el área de contratación.'
+            );
             this.dataSource = [];
             this.loading = false;
           }
@@ -99,11 +101,13 @@ export class RevisionCumplidosContratacionComponent {
         error: (error: any) => {
           Swal.close();
           this.loading = false;
-          this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte de contratación');
+          this.popUpManager.showAlert(
+            'Sin cumplidos pendientes',
+            'No hay cumplidos pendientes para revisar en el área de contratación.'
+          );
           console.error(error);
-        }
-      })
-
+        },
+      });
   }
 
   async obtenerInfoPersona() {
@@ -127,7 +131,7 @@ export class RevisionCumplidosContratacionComponent {
     console.log(idCumplido);
     this.popUpManager.showLoadingAlert(
       'Cargando',
-      'Espera mientras se listan los documentos'
+      'Por favor, espera mientras se están listando los documentos.'
     );
     this.cumplidos_provedore_mid_service
       .get('/solicitud-pago/soportes/' + idCumplido)
@@ -143,36 +147,37 @@ export class RevisionCumplidosContratacionComponent {
               maxWidth: '100vw',
               height: '80vh',
               width: '80vw',
-              data:{
-                CumplidoProveedorId:idCumplido,
+              data: {
+                CumplidoProveedorId: idCumplido,
                 Buttons: [
                   {
                     Color: 'white',
                     FontIcon: 'visibility',
                     Function: (file: any) => {
-                    const visualizarSoporetes=   this.dialog.open(ModalVisualizarSoporteComponent, {
-                        disableClose: true,
-                        height: '70vh',
-                        width: '50vw',
-                        maxWidth: '60vw',
-                        maxHeight: '80vh',
-                        panelClass: 'custom-dialog-container',
-                        data: {
-                          url: file.Archivo.File,
-
-                        },
-                      });
+                      const visualizarSoporetes = this.dialog.open(
+                        ModalVisualizarSoporteComponent,
+                        {
+                          disableClose: true,
+                          height: '70vh',
+                          width: '50vw',
+                          maxWidth: '60vw',
+                          maxHeight: '80vh',
+                          panelClass: 'custom-dialog-container',
+                          data: {
+                            url: file.Archivo.File,
+                          },
+                        }
+                      );
                     },
                     Classes: 'ver-documentos-button',
                     Text: 'Ver',
                   },
                 ],
-                Config:{
-                  mode:Mode.PRC,
-                  rolUsuario:RolUsuario.C,
-
-                }
-              } as ModalSoportesCumplidoData
+                Config: {
+                  mode: Mode.PRC,
+                  rolUsuario: RolUsuario.C,
+                },
+              } as ModalSoportesCumplidoData,
             });
           }
         },
@@ -180,7 +185,7 @@ export class RevisionCumplidosContratacionComponent {
           Swal.close();
           this.popUpManager.showAlert(
             'Cumplido sin soportes',
-            'No se encontraron soportes para este cumplido'
+            'No se encontraron documentos de soporte para este cumplido.'
           );
           console.log('error', error);
         }
@@ -190,25 +195,29 @@ export class RevisionCumplidosContratacionComponent {
   async aprobarSoportes(cumplido: any) {
     console.log(cumplido);
     let confirm = await this.popUpManager.showConfirmAlert(
-      '¿Está seguro de aprobar los soportes?'
+      '¿Está seguro de que desea aprobar los soportes?'
     );
-
     if (confirm.isConfirmed) {
-
       try {
         await this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'AC');
         this.popUpManager.showSuccessAlert(
-          '!Se han aprobado los soportes del cumplido!'
+          '¡Se han aprobado los soportes del cumplido!'
         );
-        this.notificacionesService.publicarNotificaciones("AC","/informacion_ordenador_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
+        this.notificacionesService.publicarNotificaciones(
+          'AC',
+          '/informacion_ordenador_contrato/' +
+            cumplido.NumeroContrato +
+            '/' +
+            cumplido.VigenciaContrato
+        );
         setTimeout(async () => {
           await this.cargarTablaCumplidos();
-          this.dataSource = [...this.dataSource]
-        }, 1000)
-
-
+          this.dataSource = [...this.dataSource];
+        }, 1000);
       } catch (error) {
-        this.popUpManager.showErrorAlert('Error al aprobar los soportes');
+        this.popUpManager.showErrorAlert(
+          'Error al intentar aprobar los soportes.'
+        );
         console.error(error);
       }
     }
@@ -217,21 +226,29 @@ export class RevisionCumplidosContratacionComponent {
   async rechazarSoportes(cumplido: any) {
     console.log('Objeto', cumplido);
     let confirm = await this.popUpManager.showConfirmAlert(
-      '¿Está seguro de rechazar los soportes?'
+      '¿Está seguro de que desea rechazar los soportes?'
     );
     if (confirm.isConfirmed) {
       try {
         await this.cambioEstadoService.cambiarEstado(cumplido.CumplidoId, 'RC');
         this.popUpManager.showSuccessAlert(
-          '!Se han rechazado los soportes!'
+          '¡Se han rechazado los soportes!'
         );
-        this.notificacionesService.publicarNotificaciones("RC","/informacion_supervisor_contrato/"+cumplido.NumeroContrato+"/"+cumplido.VigenciaContrato)
+        this.notificacionesService.publicarNotificaciones(
+          'RC',
+          '/informacion_supervisor_contrato/' +
+            cumplido.NumeroContrato +
+            '/' +
+            cumplido.VigenciaContrato
+        );
         setTimeout(async () => {
           await this.cargarTablaCumplidos();
-          this.dataSource = [...this.dataSource]
-        }, 1000)
+          this.dataSource = [...this.dataSource];
+        }, 1000);
       } catch (error) {
-        this.popUpManager.showErrorAlert('Error al rechazar los soportes del cumplido');
+        this.popUpManager.showErrorAlert(
+          'Error al intentar rechazar los soportes del cumplido.'
+        );
         console.error(error);
       }
     }
@@ -248,7 +265,9 @@ export class RevisionCumplidosContratacionComponent {
           return null;
         }),
         catchError((error) => {
-          this.popUpManager.showErrorAlert('Error al obtener el estado del cumplido');
+          this.popUpManager.showErrorAlert(
+            'Error al intentar obtener el estado del cumplido.'
+          );
           return of(null);
         })
       );
@@ -267,19 +286,21 @@ export class RevisionCumplidosContratacionComponent {
           return null;
         }),
         catchError((error) => {
-          this.popUpManager.showErrorAlert('Error al obtener los tipos de documentos del cumplido');
+          this.popUpManager.showErrorAlert(
+            'Error al intentar obtener los tipos de documentos del cumplido.'
+          );
           return of(null);
         })
       );
   }
 
-  handleActionClick(event: {action: any, element: any}) {
+  handleActionClick(event: { action: any; element: any }) {
     if (event.action.actionName === 'visibility') {
       this.obtenerSoportes(event.element.CumplidoId);
-    } else if (event.action.actionName === 'check'){
-      this.aprobarSoportes(event.element)
-    } else if (event.action.actionName === 'close'){
-      this.rechazarSoportes(event.element)
+    } else if (event.action.actionName === 'check') {
+      this.aprobarSoportes(event.element);
+    } else if (event.action.actionName === 'close') {
+      this.rechazarSoportes(event.element);
     }
   }
 }

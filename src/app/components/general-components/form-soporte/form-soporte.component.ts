@@ -55,7 +55,9 @@ export class FormSoporteComponent {
         console.log("Tipo documentos:", this.opciones)
       },
       error: (error: any) => {
-        this.popUpManager.showErrorAlert('No fue posible obtener los documentos posibles a subir en el cumplido')
+        this.popUpManager.showErrorAlert(
+          'No fue posible obtener los documentos que se pueden subir en el cumplido.'
+        );
       }
     })
   }
@@ -77,7 +79,9 @@ export class FormSoporteComponent {
         };
         reader.readAsDataURL(file);
       } else {
-        this.popUpManager.showErrorAlert('Solo se permiten archivos PDF');
+        this.popUpManager.showErrorAlert(
+          'Solo se permiten archivos en formato PDF.'
+        );
         this.removeFile();
       }
     }
@@ -108,14 +112,20 @@ export class FormSoporteComponent {
         .subscribe({
           next: (res: any) => {
             this.recargarSoportes.emit(res)
-            this.popUpManager.showSuccessAlert('Archivo cargado exitosamente');
+            this.popUpManager.showSuccessAlert(
+              'El archivo se ha cargado exitosamente.'
+            );
           },
           error: (error: any) => {
-            this.popUpManager.showErrorAlert('Error al cargar el archivo');
+            this.popUpManager.showErrorAlert(
+              'Error al intentar cargar el archivo.'
+            );
           }
         });
     } else {
-      this.popUpManager.showErrorAlert('No se ha seleccionado ningún archivo');
+      this.popUpManager.showErrorAlert(
+        'No se ha seleccionado ningún archivo.'
+      );
     }
   }
 

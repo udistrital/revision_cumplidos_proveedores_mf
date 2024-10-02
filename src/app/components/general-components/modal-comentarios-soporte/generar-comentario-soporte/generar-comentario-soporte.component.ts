@@ -59,7 +59,9 @@ export class GenerarComentarioSoporteComponent {
 
     this.cumplidos_provedore_crud_service.post('/comentario_soporte', newComentario).subscribe({
       next: (response) => {
-        this.popUpManager.showSuccessAlert('El comentario se ha registrado correctamente');
+        this.popUpManager.showSuccessAlert(
+          'El comentario se ha registrado correctamente.'
+        );
         this.nuevoComentarioCreado.emit();
         this.comentarioForm.reset({
           comentario: ''
@@ -67,7 +69,9 @@ export class GenerarComentarioSoporteComponent {
         this.comentarioForm.get('comentario')?.setValue('');
       },
       error: (error: any) => {
-        this.popUpManager.showErrorAlert('Error al registrar el comentario');
+        this.popUpManager.showErrorAlert(
+          'Error al intentar registrar el comentario.'
+        );
       }
     });
 
