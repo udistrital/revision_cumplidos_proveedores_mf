@@ -52,7 +52,7 @@ export class PopUpManager {
     });
   }
 
-  showLoadingAlert(title: string, message: string): Promise<any> {
+  showLoadingAlert(title?: string, message?: string): Promise<any> {
     return Swal.fire({
       title: title,
       text: message,

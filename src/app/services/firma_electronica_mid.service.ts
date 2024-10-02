@@ -30,6 +30,7 @@ const httpOptions = {
 export class FirmaElectronicaService {
   decode_token!: DecodedToken;
   cargarCumplidos:boolean=false;
+  recargarTaba!:Function
 
   constructor(
     private requestManager: RequestManager,
@@ -49,7 +50,12 @@ export class FirmaElectronicaService {
     return this.requestManager.post(endpoint, element);
   }
 
-  async firmarDocumento(solicituDeFirma: SolicituDeFirma, idCumplido: number,tipoDocumneto:number,cargarCumplidos:boolean) {
+  async firmarDocumento(solicituDeFirma: SolicituDeFirma, idCumplido: number,tipoDocumneto:number,cargarCumplidos:boolean,funcion?: () => void) {
+    console.log("id cumplido",idCumplido)
+    
+    if(funcion!=undefined){
+      this.recargarTaba=funcion;
+    }
     this.cargarCumplidos=cargarCumplidos;
     const confirm = await this.popUpManager.showConfirmAlert(
       '¿Estás seguro de firmar el documento?',
@@ -123,6 +129,10 @@ export class FirmaElectronicaService {
           this.dialog.closeAll();
         }
         Swal.close();
+        if(this.recargarTaba!=undefined){
+          console.log("siiiiiiiii")
+     this.recargarTaba();
+        }
         this.openVerSoporte(idCumplido,  documentoFiltrado.Archivo.File);
       }
     } catch (error) {
@@ -140,6 +150,7 @@ export class FirmaElectronicaService {
       DocumentoId: respuesta.Id,
       CumplidoProveedorId: { id: idCumplido },
     };
+    console.log("id",idCumplido);
     this.cumplidos_provedore_crud_service
       .post('/soporte_cumplido', documento)
       .subscribe(

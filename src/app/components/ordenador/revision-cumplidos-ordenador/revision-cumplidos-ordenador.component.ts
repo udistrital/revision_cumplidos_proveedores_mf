@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, lastValueFrom, map, Observable, of } from 'rxjs';
 import { SolicituDeFirma } from 'src/app/models/certificado-pago.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
@@ -73,42 +73,54 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
 
   CargarTablaCumplidos() {
     this.dataSource = [];
-    this.popUpManager.showLoadingAlert("Cargando", "Espera mientras se cargan las solicitudes pendientes")
-    this.cumplidos_provedore_mid_service.get('/ordenador/solicitudes-pago/'+ this.documentoResponsable).subscribe({
-      next: (res: any) => {
-        Swal.close();
-        if (res.Data != null && res.Data.length > 0){
-          this.dataSource = res.Data.map(
-            (solicitud: any) => {
+    this.popUpManager.showLoadingAlert(
+      'Cargando',
+      'Espera mientras se cargan las solicitudes pendientes'
+    );
+    this.cumplidos_provedore_mid_service
+      .get('/ordenador/solicitudes-pago/' + this.documentoResponsable)
+      .subscribe({
+        next: (res: any) => {
+          Swal.close();
+          if (res.Data != null && res.Data.length > 0) {
+            this.dataSource = res.Data.map((solicitud: any) => {
               return {
                 ...solicitud,
                 acciones: [
-                  {icon: 'visibility', actionName: 'visibility', isActive: true},
-                  {icon: 'check', actionName: 'check', isActive: true},
-                  {icon: 'close', actionName: 'close', isActive: true}
-                ]
-              }
-            }
-          )
+                  {
+                    icon: 'visibility',
+                    actionName: 'visibility',
+                    isActive: true,
+                  },
+                  { icon: 'check', actionName: 'check', isActive: true },
+                  { icon: 'close', actionName: 'close', isActive: true },
+                ],
+              };
+            });
+            this.loading = false;
+          } else {
+            this.popUpManager.showAlert(
+              'Sin cumplidos pendientes',
+              'No hay cumplidos pendientes para revision por parte del ordenador'
+            );
+            this.dataSource = [];
+            this.loading = false;
+          }
+        },
+        error: (error: any) => {
+          Swal.close();
           this.loading = false;
-        } else {
-          this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte del ordenador');
-          this.dataSource = [];
-          this.loading = false;
-        }
-      },
-      error: (error: any) => {
-        Swal.close();
-        this.loading = false;
-        this.popUpManager.showAlert('Sin cumplidos pendientes', 'No hay cumplidos pendientes para revision por parte del ordenador');
-        console.error(error);
-      }
-    });
+          this.popUpManager.showAlert(
+            'Sin cumplidos pendientes',
+            'No hay cumplidos pendientes para revision por parte del ordenador'
+          );
+          console.error(error);
+        },
+      });
   }
 
-  ListarSoportes(idCumplido: any) {
-    console.log(idCumplido);
 
+  ListarSoportes(idCumplido: any) {
     const dialog = this.dialog.open(ModalSoportesCumplidoComponent, {
       disableClose: true,
       maxHeight: '80vw',
@@ -166,13 +178,22 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     });
   }
 
-  async verAutorizacionDePago(Cumplido: any) {
-    console.log('Si esta Ejecutando');
-    const autorizacionPago = await this.GenerarAutotizacionDePago(
-      Cumplido.CumplidoId
-    ).toPromise();
-    if (autorizacionPago != null) {
-      this.modalVerSoporte(Cumplido);
+  async verAutorizacionDePago(cumplido: any) {
+    this.popUpManager.showLoadingAlert(
+      'Cargando',
+      'Esperar mientras se genera el documento'
+    );
+    try {
+      const autorizacionPago = await lastValueFrom(
+        this.GenerarAutotizacionDePago(cumplido.CumplidoId)
+      );
+
+      if (autorizacionPago != null) {
+        Swal.close();
+        this.modalVerSoporte(cumplido);
+      }
+    } catch (error) {
+      this.popUpManager.showErrorAlert('Error al generar autoriacion de pago');
     }
   }
 
@@ -182,13 +203,11 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     );
     if (x.isConfirmed) {
       await this.cambiarEstado(Cumplido.CumplidoId, 'RO');
-      this.popUpManager.showSuccessAlert(
-        '!Se han rechazado los soprtes!'
-      );
+      this.popUpManager.showSuccessAlert('!Se han rechazado los soprtes!');
       setTimeout(async () => {
         await this.CargarTablaCumplidos();
-        this.dataSource = [...this.dataSource]
-      }, 1000)
+        this.dataSource = [...this.dataSource];
+      }, 1000);
     }
   }
 
@@ -217,7 +236,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
           return null;
         }),
         catchError((error) => {
-          console.error('Error', error);
+          this.popUpManager.showErrorAlert('Error al ');
           return of(null);
         })
       );
@@ -226,15 +245,11 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   GenerarAutotizacionDePago(
     cumplidoId: number
   ): Observable<SolicituDeFirma | null> {
-
-    //console.log('Entro al segundo metodo');
     return this.cumplidos_provedore_mid_service
       .get('/ordenador/autorizacion-giro/' + cumplidoId)
       .pipe(
         map((response: any) => {
           if (response.Data != null) {
-            console.log(response);
-
             this.solicituDeFirma = {
               NombreArchivo: response.Data.NombreArchivo,
               NombreResponsable: this.nombreOrdenador,
@@ -243,18 +258,17 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
               Archivo: response.Data.Archivo,
             };
             this.pdfBase64 = response.Data.Archivo;
+            return this.solicituDeFirma;
           }
-
-          console.log();
           return null;
         }),
         catchError((error) => {
-          console.error('Error', error);
+          this.popUpManager.showErrorAlert(
+            'Error al generar la autorización de pago.'
+          );
           return of(null);
         })
       );
-
-    return of(this.solicituDeFirma);
   }
 
   cargarAutotizacionDePago(autorizacionPago: SolicituDeFirma) {
@@ -283,34 +297,37 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
         cargoResponsable: 'Ordenador',
         ModalButtonsFunc: [
           {
-            Color: 'red',
-            Function: () => {
-              this.firmaElectronica
-                .firmarDocumento(this.solicituDeFirma, cumplido, 168, false)
-                .then(() => {
-                  this.cambioEstadoService
-                    .cambiarEstado(cumplido, 'AO')
-                    .then(() => {
-                      this.notificacionesService.publicarNotificaciones(
-                        'RC',
-                        '/informacion_supervisor_contrato/' +
-                          cumplido.NumeroContrato +
-                          '/' +
-                          cumplido.VigenciaContrato
-                      );
-                    });
-                });
+            Color: '#8c1a19',
+            Function: async () => {
+              try {
+                await this.firmaElectronica.firmarDocumento(
+                  this.solicituDeFirma,
+                  cumplido.CumplidoId,
+                  168,
+                  false
+                  ,() => {
+                    this.CargarTablaCumplidos();}
+                );
+                await this.cambioEstadoService.cambiarEstado(
+                  cumplido.CumplidoId,
+                  'AO'
+                );
+            
+              } catch (error) {
+                this.popUpManager.showErrorAlert('Error al Firmar Documento');
+              }
             },
             Clases: '',
             Text: 'Firmar',
+            TextColor: '#ffffff',
           },
         ],
       },
     });
   }
 
-  cambiarEstado(idCumplido: any, estado: string) {
-    this.cambioEstadoService.cambiarEstado(idCumplido, estado);
+  async cambiarEstado(idCumplido: any, estado: string) {
+    await this.cambioEstadoService.cambiarEstado(idCumplido, estado);
   }
 
   handleActionClick(event: { action: any; element: any }) {
