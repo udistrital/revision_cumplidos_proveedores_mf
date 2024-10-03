@@ -22,7 +22,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { ModoService } from 'src/app/services/modo_service.service';
-import { ModalComentariosSoporteComponent } from '../../general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
+import { JbpmService } from 'src/app/services/jbpm_service.service';
 
 @Component({
   selector: 'app-modal-listar-cumplidos',
@@ -30,8 +30,6 @@ import { ModalComentariosSoporteComponent } from '../../general-components/modal
   styleUrls: ['./modal-listar-cumplidos.component.scss'],
 })
 export class ModalListarCumplidosComponent {
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort!: MatSort;
   documento_supervisor!: string;
   numeroContrato!: string;
   vigencia!: string;
@@ -40,6 +38,7 @@ export class ModalListarCumplidosComponent {
   newCumplidoProveedor!: CrearSolicitudCumplido;
   newCambioEstado!: BodyCambioEstado;
   loading: boolean = true;
+  cargoSupervisor!: string;
 
 
   constructor(
@@ -52,6 +51,7 @@ export class ModalListarCumplidosComponent {
     private cambioEstadoService: CambioEstadoService,
     private administrativaAmazonService: AdministrativaAmazonService,
     private modeService:ModoService,
+    private jbpmService: JbpmService,
   ) {
     this.documento_supervisor = user.getPayload().documento;
   }
@@ -64,33 +64,28 @@ export class ModalListarCumplidosComponent {
         this.vigencia = contrato.vigencia;
 
         this.getSolicitudesContrato(this.numeroContrato, this.vigencia);
-        this.newCumplidoProveedor = {
-          NumeroContrato: this.numeroContrato,
-          VigenciaContrato: Number(this.vigencia),
-          CargoResponsable: contrato.Contrato.NombreDependencia,
-          DocumentoResponsable: Number(this.documento_supervisor),
-        };
-
-        this.administrativaAmazonService
-          .get(
-            '/contrato_general/?query=ContratoSuscrito.NumeroContratoSuscrito:' +
-              this.numeroContrato +
-              ',VigenciaContrato:' +
-              this.vigencia
-          )
-          .subscribe({
-            next: (res: any) => {
-              console.log(res);
-              this.newCumplidoProveedor.CargoResponsable =
-                res[0].Supervisor.Cargo;
-            },
-            error: (error: any) => {
-              this.popUpManager.showErrorAlert(
-                'Error al intentar obtener los datos del supervisor.'
-              );
-            },
-          });
       }
+    });
+  }
+
+  obtenerSupervisorContrato() {
+    this.jbpmService.get(`/informacion_supervisor_contrato/${this.numeroContrato}/${this.vigencia}`).subscribe({
+      next: (res: any) => {
+        console.log("Respuesta:", res)
+        if (res && res.contratos && res.contratos.supervisor && res.contratos.supervisor.length > 0) {
+          console.log("DocumentoSupervisor:",res.contratos.supervisor[0].cargo )
+          this.cargoSupervisor = res.contratos.supervisor[0].cargo;
+        } else {
+          this.popUpManager.showErrorAlert(
+            'No se encontró la información del supervisor.'
+          );
+        }
+      },
+      error: (error: any) => {
+        this.popUpManager.showErrorAlert(
+          'Error al intentar obtener los datos del supervisor.'
+        );
+      },
     });
   }
 
@@ -166,6 +161,14 @@ export class ModalListarCumplidosComponent {
 
 
   async crearCumplidoProveedor() {
+    await this.obtenerSupervisorContrato();
+    this.newCumplidoProveedor = {
+      NumeroContrato: this.numeroContrato,
+      VigenciaContrato: Number(this.vigencia),
+      CargoResponsable: this.cargoSupervisor,
+      DocumentoResponsable: Number(this.documento_supervisor),
+    };
+    console.log("Supervisor:", this.newCumplidoProveedor)
     await this.cumplidosCrudService
       .post('/crear_solicitud_cumplido', this.newCumplidoProveedor)
       .subscribe({
@@ -198,74 +201,18 @@ export class ModalListarCumplidosComponent {
           {
             Color: 'white',
             FontIcon: 'clear',
-            Function: async (soporte: any) => {
-              const confirm = await this.popUpManager.showConfirmAlert("¿Deseas Eliminar el soporte?");
-              if(confirm.isConfirmed){
-
-                console.log(soporte)
-                try{
-                  this.cumplidosCrudService.delete(`/soporte_cumplido`, soporte.SoporteCumplidoId)
-                .subscribe({
-                  next: (res: any) => {
-                    this.popUpManager.showSuccessAlert('Soporte eliminado correctamente');
-                  },
-                  error: (error: any) => {
-                    this.popUpManager.showErrorAlert('No fue posible eliminar el soporte');
-                  }
-                });
-                }catch(error){
-                    this.popUpManager.showErrorAlert("Error al eliminar el soporte")
-                }
-
-              }
-            },
             Classes: 'eliminar-documento-button',
             Text: 'Eliminar',
-            Condicional: true
           },
           {
             Color: 'white',
             FontIcon: 'chat',
-            Function: (config: ConfigSoportes, soporte_id: number, cambio_estado_cumplido_id: number, tipo_soporte: string) => {
-              this.dialog.open(ModalComentariosSoporteComponent, {
-                disableClose: true,
-                maxHeight: '80vh',
-                maxWidth: '60vw',
-                minHeight: '30vh',
-                minWidth: '30vw',
-                height: 'auto',
-                width: 'auto',
-                data:{
-                  SoporteId: soporte_id,
-                  CambioEstadoCumplidoId: cambio_estado_cumplido_id,
-                  TipoSoporte: tipo_soporte,
-                  Config:{
-                    mode:config.mode,
-                    rolUsuario: config.rolUsuario
-                  }
-                } as ModalComentariosSoporteData
-              });
-            },
             Classes: 'comentarios-documento-button',
             Text: 'Comentarios',
-            Condicional: true
           },
           {
             Color: 'white',
             FontIcon: 'visibility',
-            Function: (file: any) => {
-            const visualizarSoporetes=   this.dialog.open(ModalVisualizarSoporteComponent, {
-                disableClose: true,
-                height: 'auto',
-                width: 'auto',
-                maxWidth: '60vw',
-                maxHeight: '80vh',
-                panelClass: 'custom-dialog-container',
-                data: {
-                  url: file.Archivo.File,
-                },
-              });
-            },
             Classes: 'ver-documentos-button',
             Text: 'Ver',
           }

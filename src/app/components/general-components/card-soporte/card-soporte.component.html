@@ -55,8 +55,8 @@
         </button>
       </div> -->
       <div *ngIf="buttons && buttons.length > 0" class="btn-box">
-        <div *ngFor="let button of buttons" style="margin-left:5%; margin-right:5%;">
-          <button mat-button [ngClass]="button.Classes" *ngIf="evaluarCondicional(button)" (click)="button.Function(soporte)">
+        <div *ngFor="let button of buttons" [class.dos-botones]="!(config.mode == mode.CD || config.mode == mode.RC || config.mode == mode.RO) || !(config.rolUsuario == rolUsuario.S)" [class.tres-botones]="(config.mode == mode.CD || config.mode == mode.RC || config.mode == mode.RO) && (config.rolUsuario == rolUsuario.S)">
+          <button mat-button [ngClass]="button.Classes" *ngIf="evaluarCondicional(button)" (click)="handleActionClick(button, soporte, cambioEstadoCumplido)">
             <mat-icon [color]="button.Color">{{ button.FontIcon }}</mat-icon>
             {{ button.Text }}
           </button>

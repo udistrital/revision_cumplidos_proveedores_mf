@@ -11,6 +11,8 @@ import {
   Mode,
   RolUsuario,
   ModalSoportesCumplidoData,
+  ConfigSoportes,
+  ModalComentariosSoporteData,
 } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -19,6 +21,7 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TablaRevisionCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/tabla_revision_cumplido';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 import { NotificacionesService } from './../../../services/notificaciones.service';
+import { ModalComentariosSoporteComponent } from '../../general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
 
 @Component({
   selector: 'app-revision-cumplidos-contratacion',
@@ -36,7 +39,7 @@ export class RevisionCumplidosContratacionComponent {
 
   constructor(
     public dialog: MatDialog,
-    private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
+    private cumplidosCrudService: CumplidosProveedoresCrudService,
     private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
     private cambioEstadoService: CambioEstadoService,
     private userService: UserService,
@@ -152,26 +155,16 @@ export class RevisionCumplidosContratacionComponent {
                 Buttons: [
                   {
                     Color: 'white',
+                    FontIcon: 'chat',
+                    Classes: 'comentarios-documento-button',
+                    Text: 'Comentarios',
+                  },
+                  {
+                    Color: 'white',
                     FontIcon: 'visibility',
-                    Function: (file: any) => {
-                      const visualizarSoporetes = this.dialog.open(
-                        ModalVisualizarSoporteComponent,
-                        {
-                          disableClose: true,
-                          height: '70vh',
-                          width: '50vw',
-                          maxWidth: '60vw',
-                          maxHeight: '80vh',
-                          panelClass: 'custom-dialog-container',
-                          data: {
-                            url: file.Archivo.File,
-                          },
-                        }
-                      );
-                    },
                     Classes: 'ver-documentos-button',
                     Text: 'Ver',
-                  },
+                  }
                 ],
                 Config: {
                   mode: Mode.PRC,
@@ -274,7 +267,7 @@ export class RevisionCumplidosContratacionComponent {
   }
 
   obternerIdTipoDocumento(codigoAbreviacion: string) {
-    return this.cumplidos_provedore_crud_service
+    return this.cumplidosCrudService
       .get(
         `tipo_documento/?query=DominioTipoDocumento.CodigoAbreviacion:CUMP_PROV,CodigoAbreviacion:${codigoAbreviacion}`
       )

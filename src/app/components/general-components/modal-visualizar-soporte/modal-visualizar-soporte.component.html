@@ -2,7 +2,7 @@
     <ng-container *ngIf="bunttonClose; else cerrarDialog">
       <button
         mat-icon-button
-        (click)="bunttonClose.Function()"
+        (click)="bunttonClose?.Function()"
         aria-label="Cerrar"
         class="btn-close"
       >
@@ -34,7 +34,7 @@
       <button
         mat-button
         [ngClass]="button.Classes"
-        (click)="button.Function()"
+        (click)="button?.Function()"
         [style.background-color]="button.Color"
         [style.color]="button.TextColor">
    {{ button.Text }}

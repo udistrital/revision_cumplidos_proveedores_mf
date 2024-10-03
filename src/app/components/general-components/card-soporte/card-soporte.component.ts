@@ -15,6 +15,7 @@ import { ConfigSoportes, ModalComentariosSoporteData, Mode,RolUsuario } from 'sr
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalComentariosSoporteComponent } from '../modal-comentarios-soporte/modal-comentarios-soporte.component';
+import { ModalVisualizarSoporteComponent } from '../modal-visualizar-soporte/modal-visualizar-soporte.component';
 
 
 @Component({
@@ -49,7 +50,7 @@ export class CardSoporteComponent {
 
   }
 
-  async eliminarSoporte(){
+  async eliminarSoporte(soporteId: number){
 
     const confirm = await this.popUpManager.showConfirmAlert(
       "¿Deseas eliminar el soporte?"
@@ -58,7 +59,7 @@ export class CardSoporteComponent {
 
         console.log(this.soporte)
         try{
-          this.cumplidos_provedore_crud_service.delete(`/soporte_cumplido`, this.soporte.SoporteCumplidoId)
+          this.cumplidos_provedore_crud_service.delete(`/soporte_cumplido`, soporteId)
         .subscribe({
           next: (res: any) => {
             console.log("Buttons:", this.buttons)
@@ -130,11 +131,37 @@ export class CardSoporteComponent {
     });
     }
 
+    visualizarSoporte(soporte: any){
+      this.dialog.open(ModalVisualizarSoporteComponent, {
+        disableClose: true,
+        height: 'auto',
+        width: 'auto',
+        maxWidth: '60vw',
+        maxHeight: '80vh',
+        panelClass: 'custom-dialog-container',
+        data: {
+          url: soporte.Archivo.File,
+        },
+      });
+    }
+
     evaluarCondicional(button: any): boolean{
-      if (!button.Condicional){
+      if (button.Text == 'Comentarios'){
+        return !(this.config.mode == this.mode.CD && this.config.rolUsuario == this.rolUsuario.S);
+      } else if (button.Text == 'Eliminar'){
+        return ((this.config.mode == this.mode.CD || this.config.mode == this.mode.RC || this.config.mode == this.mode.RO) && this.config.rolUsuario == this.rolUsuario.S);
+      } else {
         return true;
       }
+    }
 
-      return ((this.config.mode == this.mode.CD || this.config.mode == this.mode.RC || this.config.mode == this.mode.RO) && this.config.rolUsuario == this.rolUsuario.S);
+    handleActionClick(button: any, soporte: any, cambioEstadoCumplido: any){
+      if (button.Text == 'Comentarios'){
+        this.openDialog(soporte.SoporteCumplidoId, cambioEstadoCumplido.Id, soporte.TipoSoporte);
+      } else if (button.Text == 'Eliminar'){
+        this.eliminarSoporte(soporte.SoporteCumplidoId);
+      } else {
+        this.visualizarSoporte(soporte);
+      }
     }
 }

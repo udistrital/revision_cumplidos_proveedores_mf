@@ -13,6 +13,8 @@ import {
   Mode,
   RolUsuario,
   ModalSoportesCumplidoData,
+  ModalComentariosSoporteData,
+  ConfigSoportes,
 } from 'src/app/models/modal-soporte-cumplido-data.model';
 import { ModalVisualizarSoporteComponent } from 'src/app/components/general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { MatPaginator } from '@angular/material/paginator';
@@ -24,6 +26,7 @@ import { BodyCambioEstado } from 'src/app/models/revision_cumplidos_proveedores_
 import { TablaRevisionCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/tabla_revision_cumplido';
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 import { NotificacionesService } from 'src/app/services/notificaciones.service';
+import { ModalComentariosSoporteComponent } from '../../general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
 
 @Component({
   selector: 'app-revision-cumplidos-ordenador',
@@ -44,7 +47,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   nombreOrdenador: string = '';
   constructor(
     public dialog: MatDialog,
-    private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
+    private cumplidosCrudService: CumplidosProveedoresCrudService,
     private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
     private cambioEstadoService: CambioEstadoService,
     private userService: UserService,
@@ -132,26 +135,16 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
         Buttons: [
           {
             Color: 'white',
+            FontIcon: 'chat',
+            Classes: 'comentarios-documento-button',
+            Text: 'Comentarios',
+          },
+          {
+            Color: 'white',
             FontIcon: 'visibility',
-            Function: (file: any) => {
-              const visualizarSoporetes = this.dialog.open(
-                ModalVisualizarSoporteComponent,
-                {
-                  disableClose: true,
-                  height: '70vh',
-                  width: '50vw',
-                  maxWidth: '60vw',
-                  maxHeight: '80vh',
-                  panelClass: 'custom-dialog-container',
-                  data: {
-                    url: file.Archivo.File,
-                  },
-                }
-              );
-            },
             Classes: 'ver-documentos-button',
             Text: 'Ver',
-          },
+          }
         ],
         Config: {
           mode: this.modeService.obtenerModo('RC'),
@@ -230,7 +223,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   }
 
   ObtenerEstadoId(codigoAbreviacion: string): Observable<number | null> {
-    return this.cumplidos_provedore_crud_service
+    return this.cumplidosCrudService
       .get(`/estado_cumplido?query=CodigoAbreviación:${codigoAbreviacion}`)
       .pipe(
         map((response: any) => {
@@ -318,7 +311,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
                   cumplido.CumplidoId,
                   'AO'
                 );
-            
+
               } catch (error) {
                 this.popUpManager.showErrorAlert(
                   'Error al intentar firmar el documento.'
