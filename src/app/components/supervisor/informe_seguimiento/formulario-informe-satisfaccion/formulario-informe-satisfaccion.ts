@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { MatDialog  } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { SolicituDeFirma } from 'src/app/models/certificado-pago.model';
 import { ActivatedRoute } from '@angular/router';
 import { CoreApiService } from '../../../../services/core_api.service';
@@ -54,6 +54,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   banco!: any;
   numeroDeCuenta!: string;
   botonCambiarInfomacionActivo = false;
+  mostrarAlerta:boolean=true;
 
   constructor(
     private fg: FormBuilder,
@@ -70,11 +71,11 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     this.formularioInformeSeguimiento = this.fg.group(
       {
         tipo_pago: [null, Validators.required],
-        fecha_inicio: ['',Validators.required],
-        fecha_fin: ['',Validators.required],
+        fecha_inicio: ['', Validators.required],
+        fecha_fin: ['', Validators.required],
         tipo_cobro: [null, Validators.required],
 
-        numero_factura: ['',Validators.required],
+        numero_factura: ['', Validators.required],
         valor_cumplido: ['', Validators.required],
       },
       { validator: this.validarFecha() }
@@ -209,13 +210,15 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async guardarIformacionPago() {
-    let confirm = await this.popUpManager.showConfirmAlert('Información pago guardada');
+    let confirm = await this.popUpManager.showConfirmAlert(
+      'Información pago guardada'
+    );
     console.log('antes de guardar ', this.nuevoFormuario);
     if (confirm.isConfirmed) {
       const body = this.obtenerInformacionPago();
       console.log('Despues de guardar ', this.nuevoFormuario);
       this.guardatinformacionPagoSolictud(body);
-    } 
+    }
   }
 
   async generarSoporte() {
@@ -259,9 +262,12 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
                 'Error al intentar crear el informe de seguimiento.'
               );
             },
-            complete: () => {
+            complete: async () => {
+              const body = this.obtenerInformacionPago();
+              this.mostrarAlerta=false
+              await this.guardatinformacionPagoSolictud(body);
               this.modalVerSoporte();
-              Swal.close();
+          
             },
           });
       } else {
@@ -288,6 +294,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   modalVerSoporte() {
+
     const visualizarSoportes = this.dialog.open(
       ModalVisualizarSoporteComponent,
       {
@@ -408,10 +415,12 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   obtenerInformacionPago() {
     console.log(
       'Formulario',
-      this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()?.Id
+      this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()
     );
-
+      
     return {
+      Banco:
+        this.informacionBancariaForm.get('banco')?.getRawValue()?.NombreBanco ?? "",
       BancoId:
         this.informacionBancariaForm.get('banco')?.getRawValue()?.Id ?? 0,
       NumeroContratoSuscrito: Number(this.numeroContrato) ?? 0,
@@ -430,16 +439,27 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
             ?.Id ?? 0
         ),
       },
+      TipoPago:
+      this.formularioInformeSeguimiento.get('tipo_pago')?.getRawValue()?.Nombre ?? ""
+     
+      ,
       CumplidoProveedorId: { id: this.cumplidoId },
       TipoDocumentoCobroId: Number(
         this.formularioInformeSeguimiento.get('tipo_cobro')?.getRawValue()
           ?.Id ?? 0
       ),
+      TipoFactura:this.formularioInformeSeguimiento.get('tipo_cobro')?.getRawValue().Nombre??"",
       ValorCumplido: Number(
         this.formularioInformeSeguimiento
           .get('valor_cumplido')
           ?.getRawValue() ?? 0
       ),
+      ValorPagar: Number(
+        this.formularioInformeSeguimiento
+          .get('valor_cumplido')
+          ?.getRawValue() ?? 0
+      ),
+      TipoCuenta:  this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()?.Nombre?? "",
       VigenciaContrato: this.vigencia ?? '',
       FechaInicial:
         this.formularioInformeSeguimiento.get('fecha_inicio')?.getRawValue() ??
@@ -447,6 +467,13 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       FechaFinal:
         this.formularioInformeSeguimiento.get('fecha_fin')?.getRawValue() ??
         null,
+        PeriodoInicio:
+        this.formularioInformeSeguimiento.get('fecha_inicio')?.getRawValue() ??
+        null,
+        PeriodoFin:
+        this.formularioInformeSeguimiento.get('fecha_fin')?.getRawValue() ??
+        null,
+        
     };
   }
 
@@ -467,33 +494,35 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     };
   }
 
-  private guardatinformacionPagoSolictud(body: any) {
-    if(this.validacionGuardar()){
+  private async guardatinformacionPagoSolictud(body: any) {
+    if (this.validacionGuardar()) {
+      this.popUpManager.showLoadingAlert(
+        'Guardando',
+        'Por favor, espera mientras se guarda la información.'
+      );
       if (this.nuevoFormuario) {
         try {
-          this.popUpManager.showLoadingAlert(
-            'Guardando',
-            'Por favor, espera mientras se guarda la información.'
-          );
           this.cumplidosCrudServices.post('/informacion_pago/', body).subscribe(
             (response: any) => {
               this.nuevoFormuario = false;
               this.informacionPagoId = response.Data.Id;
+              Swal.close();
+              if(this.mostrarAlerta){
               this.popUpManager.showSuccessAlert(
                 'Se guardó el informe correctamente.'
               );
-              this.popUpManager.showLoadingAlert(
-                'Cargando',
-                'Por favor, espera mientras se carga la información.'
-              );
+            }
+            this.mostrarAlerta=true;
             },
             (error) => {
+              Swal.close();
               this.popUpManager.showErrorAlert(
                 'Error al intentar guardar la información de pago.'
               );
             }
           );
         } catch (error) {
+          Swal.close();
           this.popUpManager.showErrorAlert(
             'Error al intentar guardar la información de pago.'
           );
@@ -504,21 +533,24 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
             .put(`/informacion_pago/${this.informacionPagoId}`, body)
             .subscribe(
               (response) => {
-                this.popUpManager.showSuccessAlert(
-                  'Se guardó el informe correctamente.'
-                );
-                this.popUpManager.showLoadingAlert(
-                  'Cargando',
-                  'Por favor, espera mientras se carga la información.'
-                );
+                Swal.close();
+                if(this.mostrarAlerta){
+                  console.log("valor",this.mostrarAlerta)
+                  this.popUpManager.showSuccessAlert(
+                    'Se guardó el informe correctamente.'
+                  );
+                }
+                this.mostrarAlerta=true;
               },
               (error) => {
+                Swal.close();
                 this.popUpManager.showErrorAlert(
                   'Error al intentar guardar la información de pago.'
                 );
               }
             );
         } catch (error) {
+          Swal.close();
           this.popUpManager.showErrorAlert(
             'Error al intentar guardar la información de pago.'
           );
@@ -582,44 +614,44 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     }
   }
 
-
-  validacionGuardar():boolean {
-    let isValid=true;
-    const numeroCuentaControl = this.formularioInformeSeguimiento.get('tipo_pago');
-    const fechaInicioControl = this.formularioInformeSeguimiento.get('fecha_inicio');
+  validacionGuardar(): boolean {
+    let isValid = true;
+    const numeroCuentaControl =
+      this.formularioInformeSeguimiento.get('tipo_pago');
+    const fechaInicioControl =
+      this.formularioInformeSeguimiento.get('fecha_inicio');
     const fechaFinControl = this.formularioInformeSeguimiento.get('fecha_fin');
-    const TipoCobroControl = this.formularioInformeSeguimiento.get('tipo_cobro');
+    const TipoCobroControl =
+      this.formularioInformeSeguimiento.get('tipo_cobro');
     const TipoCuentaControl = this.informacionBancariaForm.get('tipo_cuenta');
     const BancoControl = this.informacionBancariaForm.get('banco');
     if (numeroCuentaControl?.invalid) {
       numeroCuentaControl.markAsTouched();
-      isValid=false
+      isValid = false;
     }
 
     if (fechaInicioControl?.invalid) {
       fechaInicioControl.markAsTouched();
-      isValid=false
+      isValid = false;
     }
     if (fechaFinControl?.invalid) {
       fechaFinControl.markAsTouched();
-      isValid=false
+      isValid = false;
     }
     if (TipoCuentaControl?.invalid) {
       TipoCuentaControl.markAsTouched();
-      isValid=false
+      isValid = false;
     }
     if (BancoControl?.invalid) {
       BancoControl.markAsTouched();
-      isValid=false
+      isValid = false;
     }
-
-
 
     if (TipoCobroControl?.invalid) {
       TipoCobroControl.markAsTouched();
-      isValid=false
+      isValid = false;
     }
 
-    return isValid
+    return isValid;
   }
 }
