@@ -8,22 +8,27 @@ import { getSingleSpaExtraProviders } from 'single-spa-angular';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { RevisionCumplidosContratacionComponent } from './components/contratacion/revision-cumplidos-contratacion/revision-cumplidos-contratacion.component';
 import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revision-cumplidos-ordenador/revision-cumplidos-ordenador.component';
+import { AuthGuard } from 'src/_guards/auth.guard';
 
 export const routes: Routes = [
   {
     path:'supervisor/subir-soportes',
+    canActivate: [AuthGuard],
     component: ListarContratosComponent,
   },
   {
     path: 'informe-seguimiento/:cumplidoId',
+    canActivate: [AuthGuard],
     component: InformeSatisfaccionComponent,
   },
   {
     path: 'contratacion/aprobacion-pago',
+    canActivate: [AuthGuard],
     component: RevisionCumplidosContratacionComponent,
   },
   {
     path: 'ordenador/aprobacion-pago',
+    canActivate: [AuthGuard],
     component: RevisionCumplidosOrdenadorComponent,
   }
 ];

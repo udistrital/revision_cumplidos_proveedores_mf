@@ -70,6 +70,7 @@ export class ModalListarCumplidosComponent {
     });
   }
 
+
   obtenerSupervisorContrato() {
     this.jbpmService.get(`/informacion_supervisor_contrato/${this.numeroContrato}/${this.vigencia}`).subscribe({
       next: (res: any) => {
@@ -132,7 +133,7 @@ export class ModalListarCumplidosComponent {
                   this.loading = false;
                 }
               );
-              
+
               this.loading = false;
             },
             error: (error: any) => {
