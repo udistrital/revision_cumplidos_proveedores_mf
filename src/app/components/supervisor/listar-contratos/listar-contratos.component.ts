@@ -46,10 +46,7 @@ export class ListarContratosComponent {
   }
 
   cargarContratos() {
-    this.popUpManager.showLoadingAlert(
-      'Cargando',
-      'Por favor, espera mientras se cargan los contratos disponibles.'
-    );
+  
     this.cumplidosMidServices
       .get('/supervisor/contratos-supervisor/' + this.documento_supervisor)
       .subscribe({
@@ -100,7 +97,7 @@ export class ListarContratosComponent {
           );
           
 
-        },
+        }
       });
   }
 
@@ -109,10 +106,10 @@ export class ListarContratosComponent {
     this.cumplidosMidServices.getContrato(contrato);
     this.dialog.open(ModalListarCumplidosComponent, {
       disableClose: true,
-      maxHeight: '80vw',
-      maxWidth: '100vw',
-      height: '80vh',
-      width: '80%',
+      height: 'auto',
+      width: 'auto',
+      maxWidth: '60vw',
+      maxHeight: '80vh',
     });
   }
 
@@ -150,10 +147,10 @@ export class ListarContratosComponent {
   openTest() {
     this.dialog.open(ModalSoportesCumplidoComponent, {
       disableClose: true,
-      maxHeight: '80vw',
-      maxWidth: '100vw',
-      height: '80vh',
-      width: '80vw',
+      height: 'auto',
+      width: 'auto',
+      maxWidth: '60vw',
+      maxHeight: '80vh',
       data:{
         CumplidoProveedorId:12,
         Config:{

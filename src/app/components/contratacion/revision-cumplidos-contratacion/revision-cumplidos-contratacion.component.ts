@@ -162,6 +162,22 @@ export class RevisionCumplidosContratacionComponent {
                   {
                     Color: 'white',
                     FontIcon: 'visibility',
+                    Function: (file: any) => {
+                      const visualizarSoporetes = this.dialog.open(
+                        ModalVisualizarSoporteComponent,
+                        {
+                          disableClose: true,
+                          height: 'auto',
+                          width: 'auto',
+                          maxWidth: '60vw',
+                          maxHeight: '80vh',
+                          panelClass: 'custom-dialog-container',
+                          data: {
+                            url: file.Archivo.File,
+                          },
+                        }
+                      );
+                    },
                     Classes: 'ver-documentos-button',
                     Text: 'Ver',
                   }

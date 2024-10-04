@@ -22,6 +22,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { ModoService } from 'src/app/services/modo_service.service';
+import { ModalComentariosSoporteComponent } from '../../general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
+import Swal from 'sweetalert2';
 import { JbpmService } from 'src/app/services/jbpm_service.service';
 
 @Component({
@@ -90,6 +92,10 @@ export class ModalListarCumplidosComponent {
   }
 
   async getSolicitudesContrato(numero_contrato: string, vigencia_contrato: string) {
+    this.popUpManager.showLoadingAlert(
+      'Cargando',
+      'Por favor, espera mientras se cargan la solicitudes disponibles.'
+    );
       this.cumplidosMidServices.contrato$.subscribe((contrato) => {
       if (contrato) {
         this.cumplidosMidServices
@@ -126,14 +132,18 @@ export class ModalListarCumplidosComponent {
                   this.loading = false;
                 }
               );
+              
               this.loading = false;
             },
             error: (error: any) => {
+              Swal.close
               this.loading = false;
               this.popUpManager.showErrorAlert(
                 'El proveedor no tiene ninguna solicitud reciente.'
               );
-            },
+            },complete:()=>{
+              Swal.close()
+            }
           });
       }
     });
@@ -191,10 +201,10 @@ export class ModalListarCumplidosComponent {
     console.log('cumplido', cumplido);
     const dialog = this.dialog.open(ModalSoportesCumplidoComponent, {
       disableClose: true,
-      maxHeight: '80vw',
-      maxWidth: '100vw',
-      height: '80vh',
-      width: '80vw',
+      height: 'auto',
+      width: 'auto',
+      maxWidth: '60vw',
+      maxHeight: '80vh',
       data: {
         CumplidoProveedorId: cumplido.cumplidoProveedor.Id,
         Buttons: [

@@ -195,10 +195,10 @@ export class FirmaElectronicaService {
 
     const dialog = this.dialog.open(ModalVisualizarSoporteComponent, {
       disableClose: true,
-      maxHeight: '80vw',
-      maxWidth: '100vw',
-      height: '80vh',
-      width: '80%',
+      height: 'auto',
+      width: 'auto',
+      maxWidth: '60vw',
+      maxHeight: '80vh',
       panelClass: 'custom-dialog-container',
       data: {
         aprobarSoportes: false,
@@ -210,8 +210,7 @@ export class FirmaElectronicaService {
       },
     });
       dialog.afterClosed().subscribe();
-  }
-}
-
+    }
+    }
 
 

@@ -126,10 +126,10 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   ListarSoportes(idCumplido: any) {
     const dialog = this.dialog.open(ModalSoportesCumplidoComponent, {
       disableClose: true,
-      maxHeight: '80vw',
+      height: 'auto',
+      width: 'auto',
       maxWidth: '60vw',
-      height: '80vh',
-      width: '80vw',
+      maxHeight: '80vh',
       data: {
         CumplidoProveedorId: idCumplido,
         Buttons: [
@@ -142,6 +142,22 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
           {
             Color: 'white',
             FontIcon: 'visibility',
+            Function: (file: any) => {
+              const visualizarSoporetes = this.dialog.open(
+                ModalVisualizarSoporteComponent,
+                {
+                  disableClose: true,
+                  height: 'auto',
+                  width: 'auto',
+                  maxWidth: '60vw',
+                  maxHeight: '80vh',
+                  panelClass: 'custom-dialog-container',
+                  data: {
+                    url: file.Archivo.File,
+                  },
+                }
+              );
+            },
             Classes: 'ver-documentos-button',
             Text: 'Ver',
           }
@@ -286,8 +302,8 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   modalVerSoporte(cumplido: any) {
     this.dialog.open(ModalVisualizarSoporteComponent, {
       disableClose: true,
-      height: '70vh',
-      width: '40vw',
+      height: 'auto',
+      width: 'auto',
       maxWidth: '60vw',
       maxHeight: '80vh',
       panelClass: 'custom-dialog-container',

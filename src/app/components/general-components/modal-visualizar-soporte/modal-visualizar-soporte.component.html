@@ -28,8 +28,8 @@
 <div class="nofile" *ngIf="!documentLoad">
   Error al cargar el documento.
 </div>
-<mat-dialog-actions align="center">
-  <div *ngIf="modalButtonsFunc && modalButtonsFunc.length > 0">
+<mat-dialog-actions align="center" *ngIf="modalButtonsFunc && modalButtonsFunc.length > 0" >
+  <div >
     <div *ngFor="let button of modalButtonsFunc">
       <button
         mat-button
