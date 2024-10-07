@@ -4,7 +4,6 @@ export const environment = {
   CUMPLIDOS_PROVEEDORES_MID_SERVICE: //'http://localhost:8090/v1',
   'https://autenticacion.portaloas.udistrital.edu.co/apioas/revision_cumplido_proveedores_mid/v1',
   CUMPLIDOS_PROVEEDORES_CRUD_SERVICE:'https://autenticacion.portaloas.udistrital.edu.co/apioas/revision_cumplido_proveedores_crud/v1',
-  DOCUMENTOS_CRUD: 'http://pruebasapi.intranetoas.udistrital.edu.co:8094/v1/',
   CORE_AMAZON_CRUD:
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/core_amazon_crud/v1',
   FIRMA_ELECTRONICA_MID:
