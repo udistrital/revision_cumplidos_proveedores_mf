@@ -7,15 +7,14 @@ export const environment = {
   //'http://api.intranetoas.udistrital.edu.co:8104/v1'
   CUMPLIDOS_PROVEEDORES_CRUD_SERVICE:
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/revision_cumplido_proveedores_crud/v1',
-  DOCUMENTOS_CRUD: 'http://pruebasapi.intranetoas.udistrital.edu.co:8094/v1/',
   CORE_AMAZON_CRUD:
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/core_amazon_crud/v1',
   FIRMA_ELECTRONICA_MID:
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/firma_electronica_mid/v1',
-  JBPM: 'http://busservicios.intranetoas.udistrital.edu.co:8282/wso2eiserver/services/administrativa_pruebas',
+  JBPM: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_jbpm/v2',
   // Notificaciones
-  NOTIFICACIONES_CRUD: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8561',
+  NOTIFICACIONES_CRUD: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/notificaciones_crud/v1',
   NOTIFICACION_MID_WS:
     'ws://autenticacion.portaloas.udistrital.edu.co/apioas/notificacion_mid/v1/ws',
-  ADMINISTRATIVA_AMAZON_API: 'http://api.intranetoas.udistrital.edu.co:8104/v1',
+  ADMINISTRATIVA_AMAZON_API: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_amazon_api/v1',
 };
