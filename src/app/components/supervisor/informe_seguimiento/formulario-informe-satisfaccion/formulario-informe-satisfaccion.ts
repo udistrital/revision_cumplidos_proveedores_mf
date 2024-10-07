@@ -215,14 +215,14 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     );
     console.log('antes de guardar ', this.nuevoFormuario);
     if (confirm.isConfirmed) {
-      const body = this.obtenerInformacionPago();
+      const body = this.obtenerInformacionPagoGuardar();
       console.log('Despues de guardar ', this.nuevoFormuario);
       this.guardatinformacionPagoSolictud(body);
     }
   }
 
   async generarSoporte() {
-    const body = this.obtenerInformacionPago();
+    const body = this.obtenerInformacionPagoGenerarDocumento();
 
     let confirm = await this.popUpManager.showConfirmAlert(
       '¿Deseas generar el soporte?'
@@ -263,7 +263,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
               );
             },
             complete: async () => {
-              const body = this.obtenerInformacionPago();
+              const body = this.obtenerInformacionPagoGuardar();
               this.mostrarAlerta=false
               await this.guardatinformacionPagoSolictud(body);
               this.modalVerSoporte();
@@ -412,7 +412,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     });
   }
 
-  obtenerInformacionPago() {
+  obtenerInformacionPagoGenerarDocumento() {
     console.log(
       'Formulario',
       this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()
@@ -421,6 +421,51 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     return {
       Banco:
         this.informacionBancariaForm.get('banco')?.getRawValue()?.NombreBanco ?? "",
+      NumeroContratoSuscrito: Number(this.numeroContrato) ?? 0,
+      NumeroCuenta:
+        this.informacionBancariaForm.getRawValue().numero_cuenta ?? '',
+        NumeroCuentaFactura:
+        this.formularioInformeSeguimiento
+          .get('numero_factura')
+          ?.getRawValue() ?? '',
+
+          PeriodoInicio:
+          this.formularioInformeSeguimiento.get('fecha_inicio')?.getRawValue() ??
+          null,
+          PeriodoFin:
+          this.formularioInformeSeguimiento.get('fecha_fin')?.getRawValue() ??
+          null,
+          TipoCuenta:  this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()?.Nombre?? "",
+          TipoPago:
+          this.formularioInformeSeguimiento.get('tipo_pago')?.getRawValue()?.Nombre ?? ""
+         
+          ,
+
+      TipoCuentaBancariaId: Number(
+        this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()?.Id ?? 0
+      ),
+      TipoPagoId: {
+        id: Number(
+          this.formularioInformeSeguimiento.get('tipo_pago')?.getRawValue()
+            ?.Id ?? 0
+        ),
+      },
+      TipoFactura:this.formularioInformeSeguimiento.get('tipo_cobro')?.getRawValue().Nombre??"",
+
+      ValorPagar: Number(
+        this.formularioInformeSeguimiento
+          .get('valor_cumplido')
+          ?.getRawValue() ?? 0
+      ),
+
+      VigenciaContrato: this.vigencia ?? '',
+        
+    };
+  }
+
+
+  obtenerInformacionPagoGuardar() {
+    return {
       BancoId:
         this.informacionBancariaForm.get('banco')?.getRawValue()?.Id ?? 0,
       NumeroContratoSuscrito: Number(this.numeroContrato) ?? 0,
@@ -439,27 +484,16 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
             ?.Id ?? 0
         ),
       },
-      TipoPago:
-      this.formularioInformeSeguimiento.get('tipo_pago')?.getRawValue()?.Nombre ?? ""
-     
-      ,
       CumplidoProveedorId: { id: this.cumplidoId },
       TipoDocumentoCobroId: Number(
         this.formularioInformeSeguimiento.get('tipo_cobro')?.getRawValue()
           ?.Id ?? 0
       ),
-      TipoFactura:this.formularioInformeSeguimiento.get('tipo_cobro')?.getRawValue().Nombre??"",
       ValorCumplido: Number(
         this.formularioInformeSeguimiento
           .get('valor_cumplido')
           ?.getRawValue() ?? 0
       ),
-      ValorPagar: Number(
-        this.formularioInformeSeguimiento
-          .get('valor_cumplido')
-          ?.getRawValue() ?? 0
-      ),
-      TipoCuenta:  this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()?.Nombre?? "",
       VigenciaContrato: this.vigencia ?? '',
       FechaInicial:
         this.formularioInformeSeguimiento.get('fecha_inicio')?.getRawValue() ??
@@ -467,13 +501,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       FechaFinal:
         this.formularioInformeSeguimiento.get('fecha_fin')?.getRawValue() ??
         null,
-        PeriodoInicio:
-        this.formularioInformeSeguimiento.get('fecha_inicio')?.getRawValue() ??
-        null,
-        PeriodoFin:
-        this.formularioInformeSeguimiento.get('fecha_fin')?.getRawValue() ??
-        null,
-        
     };
   }
 
