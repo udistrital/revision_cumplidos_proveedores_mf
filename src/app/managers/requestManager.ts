@@ -67,10 +67,14 @@ export class RequestManager {
      * @param element data to send as JSON
      * @returns Observable<any>
      */
-    post(endpoint: any, element: any) {
-        return this.http.post<any>(`${this.path}${endpoint}`, element, this.httpOptions).pipe(
-            catchError(this.errManager.handleError),
-        );
+    post(endpoint: any, element: any){
+      const postOptions = {
+        ...this.httpOptions,
+        headers: this.httpOptions.headers.set('Content-Type', 'application/json')
+      }
+      return this.http.post<any>(`${this.path}${endpoint}`, element, postOptions).pipe(
+        catchError(this.errManager.handleError),
+      );
     }
 
     /**
@@ -96,8 +100,12 @@ export class RequestManager {
      * @returns Observable<any>
      */
     put(endpoint: any, element: { Id: any; }) {
+      const putOptions = {
+        ...this.httpOptions,
+        headers: this.httpOptions.headers.set('Content-Type', 'application/json')
+      }
         const path = (element.Id) ? `${this.path}${endpoint}/${element.Id}` : `${this.path}${endpoint}`;
-        return this.http.put<any>(path, element, this.httpOptions).pipe(
+        return this.http.put<any>(path, element, putOptions).pipe(
             catchError(this.errManager.handleError),
         );
     }

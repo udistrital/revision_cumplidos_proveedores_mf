@@ -79,15 +79,11 @@ export class ModalListarCumplidosComponent {
           console.log("DocumentoSupervisor:",res.contratos.supervisor[0].cargo )
           this.cargoSupervisor = res.contratos.supervisor[0].cargo;
         } else {
-          this.popUpManager.showErrorAlert(
-            'No se encontró la información del supervisor.'
-          );
+          this.cargoSupervisor = 'Supervisor';
         }
       },
       error: (error: any) => {
-        this.popUpManager.showErrorAlert(
-          'Error al intentar obtener los datos del supervisor.'
-        );
+        this.cargoSupervisor = 'Supervisor';
       },
     });
   }
@@ -179,7 +175,6 @@ export class ModalListarCumplidosComponent {
       CargoResponsable: this.cargoSupervisor,
       DocumentoResponsable: Number(this.documento_supervisor),
     };
-    console.log("Supervisor:", this.newCumplidoProveedor)
     await this.cumplidosCrudService
       .post('/crear_solicitud_cumplido', this.newCumplidoProveedor)
       .subscribe({
