@@ -1,0 +1,42 @@
+<div class="modal-header">
+  <button mat-icon-button (click)="close()">
+    <mat-icon color="warn">close</mat-icon>
+  </button>
+</div>
+
+<div mat-dialog-content>
+  <mat-card class="card-visualizar-comentarios">
+    <mat-card-header class="comentarios-tittle">
+      <mat-card-title>Comentarios {{data.TipoSoporte}} </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+
+      <!-- Mostrar el componente para generar comentario si las condiciones se cumplen -->
+      <mat-card class="card-generar-comentario" *ngIf="(data.Config.mode==mode.PRC || data.Config.mode==mode.PRO) && (data.Config.rolUsuario==rolUsuario.C ||data.Config.rolUsuario==rolUsuario.O)">
+        <app-generar-comentario-soporte [cambioEstadoId]="data.CambioEstadoCumplidoId" [soporteCumplidoId]="data.SoporteId" (nuevoComentarioCreado)="obtenerComentariosSoporte()" />
+      </mat-card>
+
+      <!-- Mostrar spinner cuando se está cargando -->
+      <div *ngIf="isLoading" class="sppiner">
+        <mat-spinner></mat-spinner>
+      </div>
+
+      <!-- Cuando no se esté cargando, mostramos el contenido -->
+      <div *ngIf="!isLoading">
+        <section *ngIf="informacionComentarioIndividual.length != 0; then conComentarios else sinComentarios"></section>
+
+        <ng-template #conComentarios>
+          <!-- Listar los comentarios si hay datos -->
+          <div *ngFor="let comentario of informacionComentarioIndividual">
+            <app-comentario-individual-soporte [comentario]="comentario"></app-comentario-individual-soporte>
+          </div>
+        </ng-template>
+
+        <ng-template #sinComentarios>
+
+          <p>No se encontraron comentarios.</p>
+        </ng-template>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

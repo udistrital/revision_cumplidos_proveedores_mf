@@ -74,20 +74,20 @@ $md-accent: (
 );
 
 $md-warning: (
-  50: #fff8e1,
-  100: #ffecb3,
-  200: #ffe082,
-  300: #ffd54f,
-  400: #ffca28,
-  500: #ffc107,
-  600: #ffb300,
-  700: #ffa000,
-  800: #ff8f00,
-  900: #ff6f00,
-  A100: #ffe57f,
-  A200: #ffd740,
-  A400: #ffc400,
-  A700: #ffab00,
+  50: #8c1a19,
+  100: #8c1a19,
+  200: #8c1a19,
+  300: #8c1a19,
+  400: #8c1a19,
+  500: #8c1a19,
+  600: #8c1a19,
+  700: #8c1a19,
+  800: #8c1a19,
+  900: #8c1a19,
+  A100: #ab1f1e,
+  A200: #ab1f1e,
+  A400: #ab1f1e,
+  A700: #ab1f1e,
   contrast: (
     50: #000000,
     100: #000000,
@@ -123,4 +123,14 @@ $light-theme: mat.define-light-theme(
 @include mat.all-component-themes($light-theme);
 
 
+.swal2-confirm {
+  background-color: #358227 !important; 
+  color: white !important;              
 
+}
+
+/* Estilo global para el botón de cancelación en SweetAlert2 */
+.swal2-cancel {
+  background-color: #731b14 !important; 
+  color: white !important;
+}

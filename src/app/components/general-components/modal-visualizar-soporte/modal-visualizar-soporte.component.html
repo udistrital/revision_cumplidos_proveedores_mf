@@ -1,20 +1,45 @@
-<div class="modal-header">
-    <button mat-icon-button (click)="close()" >
-      <mat-icon color="warn">close</mat-icon>
-    </button>
+ <div class="button-close">
+    <ng-container *ngIf="bunttonClose; else cerrarDialog">
+      <button
+        mat-icon-button
+        (click)="bunttonClose?.Function()"
+        aria-label="Cerrar"
+        class="btn-close"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </ng-container>
+
+    <ng-template #cerrarDialog>
+      <button
+        mat-icon-button
+        mat-dialog-close
+        aria-label="Cerrar"
+        class="btn-close"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </ng-template>
   </div>
-  <div mat-dialog-content>
+
+  <div style="height:100vh; width: 60vw; overflow:initial" mat-dialog-content>
     <object [data]="documentData|safeUrl" type="application/pdf" *ngIf="documentLoad"></object>
 </div>
 <div class="nofile" *ngIf="!documentLoad">
-  Error al cargar el documento
+  Error al cargar el documento.
 </div>
-<mat-dialog-actions align="center">
-  <button
-    mat-flat-button
-    mat-dialog-close
-    color="warn"
-  >
-    Cerrar
-  </button>
+<mat-dialog-actions align="center" *ngIf="modalButtonsFunc && modalButtonsFunc.length > 0" >
+  <div >
+    <div *ngFor="let button of modalButtonsFunc">
+      <button
+        mat-button
+        [ngClass]="button.Classes"
+        (click)="button?.Function()"
+        [style.background-color]="button.Color"
+        [style.color]="button.TextColor">
+   {{ button.Text }}
+      </button>
+    </div>
+  </div>
 </mat-dialog-actions>
+

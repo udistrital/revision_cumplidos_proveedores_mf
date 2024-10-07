@@ -1,0 +1,17 @@
+<mat-card class="comentario-individual box-text-area">
+  <mat-card-content *ngIf="comentario">
+    <mat-grid-list cols="6" rowHeight="34px">
+      <mat-grid-tile colspan="2" rowspan="1" class="tile">
+        <strong class="texto-grid" >{{ comentario.Rol }}</strong>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="4" rowspan="2" class="tile-comentario">
+        <span class="text-comentario">{{ comentario.Comentario }}</span>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="2" rowspan="1" class="tile">
+        <strong class="texto-grid">({{ comentario.Fecha | date: 'dd/MM/yyyy - HH:mm' }})</strong>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-card-content>
+</mat-card>

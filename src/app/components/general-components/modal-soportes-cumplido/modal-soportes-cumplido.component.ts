@@ -1,35 +1,42 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { CambioEstadoCumplido } from 'src/app/models/basics/cambio-estado-cumplio.model';
-import { ModalSoportesCumplidoData,Mode } from 'src/app/models/modal-soporte-cumplido-data.model';
-import { SoporteCumplido } from 'src/app/models/soporte_cumplido.model';
+import { Button } from 'src/app/models/button.model';
+import { ModalSoportesCumplidoData,Mode, RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
+import { CambioEstadoCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/cambio-estado-cumplio.model';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { SoportesService } from 'src/app/services/soportes.service';
+import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+
 
 @Component({
   selector: 'app-modal-soportes-cumplido',
   templateUrl: './modal-soportes-cumplido.component.html',
-  styleUrls: ['./modal-soportes-cumplido.component.css'],
+  styleUrls: ['./modal-soportes-cumplido.component.scss'],
 })
 export class ModalSoportesCumplidoComponent {
-  soportes!: SoporteCumplido[];
+  soportes!: InformacionSoporteCumplido[];
   cumplidoProveedorId!:number;
   cambioEstadoCumplido!:CambioEstadoCumplido;
-  mode=Mode
+  loading: boolean = true;
+  mode=Mode;
+  rolUsuario=RolUsuario;
+  buttons!:Button[];
+  modalButtonsFunc!:Button[];
+
 
   constructor(
     public dialogRef: MatDialogRef<ModalSoportesCumplidoComponent>,
     private cumplidos_provedore_crud_service:CumplidosProveedoresCrudService,
     private soporteService: SoportesService,
-    private popUpManager: PopUpManager,
+    public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ModalSoportesCumplidoData
   ) {}
 
   ngOnInit() {
-    
+    this.buttons=this.data.Buttons
+    this.modalButtonsFunc=this.data.ModalButtonsFunc
     this.cumplidoProveedorId=this.data.CumplidoProveedorId
-    console.log(this.soportes)
     this.cargarSoportes()
     this.ObtenerUltimoCambioEstado()
   }
@@ -37,16 +44,16 @@ export class ModalSoportesCumplidoComponent {
   cargarSoportes() {
     console.log(this.data)
     this.soporteService.getDocumentosCumplidos(this.cumplidoProveedorId).subscribe({
-      next: (soportes: SoporteCumplido[]) => {
+      next: (soportes: InformacionSoporteCumplido[]) => {
         this.soportes = soportes;
         console.log(this.soportes);
       },
       error: (error: any) => {
         console.log(error)
         this.soportes=[]
-        // this.popUpManager.showErrorAlert(
-        //   'Por el momento no hay soportes subidos para esta solicitud de pago'
-        // );
+       // this.popUpManager.showErrorAlert(
+     //     'Por el momento, no hay soportes subidos para esta solicitud de pago.'
+      //  );
       },
     });
   }
@@ -59,6 +66,7 @@ export class ModalSoportesCumplidoComponent {
           console.log(this.cambioEstadoCumplido)
         }
         this.cambioEstadoCumplido=response.Data[0]
+        this.loading=false
         console.log(response)
       },
       error: err=>{
@@ -70,4 +78,6 @@ export class ModalSoportesCumplidoComponent {
   close(): void {
     this.dialogRef.close();
   }
+
+
 }

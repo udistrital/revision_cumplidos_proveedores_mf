@@ -1,5 +1,16 @@
+import { Button } from "./button.model";
+
 export interface ModalSoportesCumplidoData {
   CumplidoProveedorId: number;
+  Config: ConfigSoportes;
+  Buttons:Button[]
+  ModalButtonsFunc:Button[]
+}
+
+export interface ModalComentariosSoporteData{
+  SoporteId: number;
+  CambioEstadoCumplidoId: number;
+  TipoSoporte: string;
   Config: ConfigSoportes;
 }
 
@@ -10,8 +21,11 @@ export interface ConfigSoportes {
 
 export enum Mode {
   CD = 'CargandoDocumentos',
-  RC = 'RevisionContratacion',
-  RO = 'RevisionOrdenador',
+  RC = 'RechazadoContratacion',
+  PRC = 'PendienteRevisionContratacion',
+  PRO = 'PendienteRevisionOrdenador',
+  AO = 'AprobadoOrdenador',
+  RO = 'RechazadoOrdenador',
 }
 
 export enum RolUsuario {
@@ -19,3 +33,4 @@ export enum RolUsuario {
   C = 'Contratacion',
   O = 'Ordenador',
 }
+

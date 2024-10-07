@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'proveedores1',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   title = 'revision_cumplidos_proveedores_mf';

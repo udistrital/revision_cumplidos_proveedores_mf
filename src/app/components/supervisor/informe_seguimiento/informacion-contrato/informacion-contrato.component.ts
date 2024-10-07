@@ -8,7 +8,7 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 @Component({
   selector: 'app-informacion-contrato',
   templateUrl: './informacion-contrato.component.html',
-  styleUrls: ['./informacion-contrato.component.css']
+  styleUrls: ['./informacion-contrato.component.scss']
 })
 export class InformacionContratoComponent {
 
@@ -47,7 +47,9 @@ export class InformacionContratoComponent {
         this.contrato.tipoContrato = contrato.Contrato.TipoContrato;
         this.vigencia = contrato.Contrato.Vigencia;
       }else{
-        this.popUpManager.showErrorAlert('No se registra informacion del contrato');
+        this.popUpManager.showErrorAlert(
+          'No se registra información del contrato.'
+        );
       }
     })
 
@@ -65,7 +67,10 @@ export class InformacionContratoComponent {
         this.contrato.total_contrato = res.Data.total_contrato
       },
       error: (error: any) => {
-        this.popUpManager.showErrorAlert('No se ha podido obtener el balance financiero')
+        this.popUpManager.showErrorAlert(
+          'No se ha podido obtener el balance financiero.'
+        );
+        
       }
     })
   }

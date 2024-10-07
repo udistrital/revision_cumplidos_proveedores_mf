@@ -1,30 +1,35 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, provideRouter } from '@angular/router';
 import { EmptyRouteComponent } from './components/empty-route/empty-route.component';
-import { TablaCargaSoportesComponent } from './components/supervisor/tabla-carga-soportes/tabla-carga-soportes.component';
+import { ListarContratosComponent } from './components/supervisor/listar-contratos/listar-contratos.component';
 import { InformeSatisfaccionComponent } from './components/supervisor/informe_seguimiento/informe-satisfaccion.component';
 import { APP_BASE_HREF } from '@angular/common';
 import { getSingleSpaExtraProviders } from 'single-spa-angular';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { TablaAprobacionPagoComponent } from './components/contratacion/tabla-aprobacion-pago/tabla-aprobacion-pago.component';
-import { TablaAprobacionPagoOrdenadorComponent } from './components/ordenador/tabla-aprobacion-pago/tabla-aprobacion-pago-ordenador.component';
+import { RevisionCumplidosContratacionComponent } from './components/contratacion/revision-cumplidos-contratacion/revision-cumplidos-contratacion.component';
+import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revision-cumplidos-ordenador/revision-cumplidos-ordenador.component';
+import { AuthGuard } from 'src/_guards/auth.guard';
 
 export const routes: Routes = [
   {
     path:'supervisor/subir-soportes',
-    component: TablaCargaSoportesComponent,
+    canActivate: [AuthGuard],
+    component: ListarContratosComponent,
   },
   {
     path: 'informe-seguimiento/:cumplidoId',
+    canActivate: [AuthGuard],
     component: InformeSatisfaccionComponent,
   },
   {
     path: 'contratacion/aprobacion-pago',
-    component: TablaAprobacionPagoComponent,
+    canActivate: [AuthGuard],
+    component: RevisionCumplidosContratacionComponent,
   },
   {
     path: 'ordenador/aprobacion-pago',
-    component: TablaAprobacionPagoOrdenadorComponent,
+    canActivate: [AuthGuard],
+    component: RevisionCumplidosOrdenadorComponent,
   }
 ];
 

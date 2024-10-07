@@ -1,0 +1,157 @@
+.title {
+  display: flex;
+  background-color: #8c1a19;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close:hover{
+color: #8c1a19;
+ font-size: 5px;
+}
+
+title,
+h5 {
+  color: white;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-weight: normal;
+  border-bottom: #e8dada 1px solid;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.btn-create {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  box-sizing: border-box;
+  align-items: center;
+  padding: 10px;
+}
+
+
+
+.inline-elements {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.main-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+mat-select {
+  min-width: 120px;
+}
+.button-enviar {
+  background-color: #d3e6d1;
+  color: black;
+  border-radius: 4px;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 10;
+}
+
+.button-close {
+  text-align: right;
+}
+.custom-column-width {
+  width: auto;
+}
+
+.small-icon-button {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+}
+
+.center {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+.mat-mdc-header-row {
+  box-shadow: none;
+  height: 35px !important;
+  background-color: #e8dada;
+}
+
+.mat-mdc-row {
+  height: 10px !important;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column {
+  width: 100px;
+  max-width: 150px;
+  word-wrap: break-word;
+}
+
+::ng-deep .mat-sort-header-container{
+  display: flex !important;
+  cursor: pointer !important;
+  align-items: center !important;
+  letter-spacing: normal !important;
+  outline: 0 !important;
+  justify-content: center !important;
+}
+
+::ng-deep table thead tr th:nth-child(n + 2) {
+  border-left: 0px solid var(--color200) !important;
+}
+
+.mat-mdc-header-row{
+  background: #FFEAE6;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.mat-sort-header{
+  text-align: center;
+  vertical-align: middle;
+}
+
+.responsive-table {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.pt10 {
+  padding-top: 10px;
+}
+
+.prl15 {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.mb5 {
+  margin-bottom: 5px;
+}
+
+.text-center {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.header{
+  color: black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.btn-box{
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: 8px;
+}
+

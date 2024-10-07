@@ -14,52 +14,69 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatGridListModule} from '@angular/material/grid-list';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { InformeSatisfaccionComponent } from './components/supervisor/informe_seguimiento/informe-satisfaccion.component';
 import { InformacionContratoComponent } from './components/supervisor/informe_seguimiento/informacion-contrato/informacion-contrato.component';
 import { FormularioInformeSatisfaccionComponent } from './components/supervisor/informe_seguimiento/formulario-informe-satisfaccion/formulario-informe-satisfaccion';
-import {MatTableModule} from '@angular/material/table'
-import { TablaCargaSoportesComponent } from './components/supervisor/tabla-carga-soportes/tabla-carga-soportes.component';
+import { MatTableModule } from '@angular/material/table';
+import { ListarContratosComponent } from './components/supervisor/listar-contratos/listar-contratos.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { ModalCargaSoprotesComponent } from './components/supervisor/modal-carga-soprotes/modal-carga-soprotes.component';
-import { TablaAprobacionPagoOrdenadorComponent } from './components/ordenador/tabla-aprobacion-pago/tabla-aprobacion-pago-ordenador.component';
-import { TablaAprobacionPagoComponent } from './components/contratacion/tabla-aprobacion-pago/tabla-aprobacion-pago.component';
+import { ModalListarCumplidosComponent } from './components/supervisor/modal-listar-cumplidos/modal-listar-cumplidos.component';
+import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revision-cumplidos-ordenador/revision-cumplidos-ordenador.component';
+import { RevisionCumplidosContratacionComponent } from './components/contratacion/revision-cumplidos-contratacion/revision-cumplidos-contratacion.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+  TranslateStore,
+} from '@ngx-translate/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SafeUrlPipe } from './pipes/safeurl.pipe';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DatePipe } from '@angular/common';
 import { CardSoporteComponent } from './components/general-components/card-soporte/card-soporte.component';
 import { ModalSoportesCumplidoComponent } from './components/general-components/modal-soportes-cumplido/modal-soportes-cumplido.component';
 import { FormSoporteComponent } from './components/general-components/form-soporte/form-soporte.component';
 import { ModalVisualizarSoporteComponent } from './components/general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
-
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { TablaComponent } from './components/general-components/tabla/tabla.component';
+import { ModalComentariosSoporteComponent } from './components/general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
+import { ComentarioIndividualSoporteComponent } from './components/general-components/modal-comentarios-soporte/comentario-individual-soporte/comentario-individual-soporte.component';
+import { GenerarComentarioSoporteComponent } from './components/general-components/modal-comentarios-soporte/generar-comentario-soporte/generar-comentario-soporte.component'
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
+  return new TranslateHttpLoader(
+    http,
+    environment.apiUrl + 'assets/i18n/',
+    '.json'
+  );
 }
-
 
 @NgModule({
   declarations: [
     AppComponent,
     InformeSatisfaccionComponent,
     InformacionContratoComponent,
-    FormularioInformeSatisfaccionComponent ,
-    TablaCargaSoportesComponent,
-    ModalCargaSoprotesComponent,
-    TablaAprobacionPagoComponent,
-    TablaAprobacionPagoOrdenadorComponent,
+    FormularioInformeSatisfaccionComponent,
+    ListarContratosComponent,
+    ModalListarCumplidosComponent,
+    RevisionCumplidosContratacionComponent,
+    RevisionCumplidosOrdenadorComponent,
     SafeUrlPipe,
     CardSoporteComponent,
     ModalSoportesCumplidoComponent,
     FormSoporteComponent,
     ModalVisualizarSoporteComponent,
+    TablaComponent,
+    ModalComentariosSoporteComponent,
+    ComentarioIndividualSoporteComponent,
+    GenerarComentarioSoporteComponent,
   ],
   imports: [
     HttpClientModule,
@@ -86,15 +103,17 @@ export function createTranslateLoader(http: HttpClient) {
     HttpClientModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatPaginatorModule,
+    MatSortModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
     }),
   ],
   providers: [DatePipe],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
