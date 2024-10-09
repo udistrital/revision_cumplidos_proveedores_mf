@@ -48,7 +48,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { TablaComponent } from './components/general-components/tabla/tabla.component';
 import { ModalComentariosSoporteComponent } from './components/general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
 import { ComentarioIndividualSoporteComponent } from './components/general-components/modal-comentarios-soporte/comentario-individual-soporte/comentario-individual-soporte.component';
-import { GenerarComentarioSoporteComponent } from './components/general-components/modal-comentarios-soporte/generar-comentario-soporte/generar-comentario-soporte.component'
+import { GenerarComentarioSoporteComponent } from './components/general-components/modal-comentarios-soporte/generar-comentario-soporte/generar-comentario-soporte.component';
+import { ListarCumplidosReversiblesComponent } from './components/ordenador/listar-cumplidos-reversibles/listar-cumplidos-reversibles.component'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -77,6 +78,7 @@ export function createTranslateLoader(http: HttpClient) {
     ModalComentariosSoporteComponent,
     ComentarioIndividualSoporteComponent,
     GenerarComentarioSoporteComponent,
+    ListarCumplidosReversiblesComponent,
   ],
   imports: [
     HttpClientModule,

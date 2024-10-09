@@ -29,6 +29,7 @@ export class ModalComentariosSoporteComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerComentariosSoporte();
+    console.log("Data: ", this.data.Config)
   }
 
   obtenerComentariosSoporte() {
