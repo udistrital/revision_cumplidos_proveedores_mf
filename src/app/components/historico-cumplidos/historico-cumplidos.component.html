@@ -1,0 +1,17 @@
+<mat-card>
+  <mat-card-content>
+    <app-formulario-consulta
+      [anios]="anios"
+      [meses]="meses"
+      [dependencias]="dependencias"
+      [estados]="estados"
+    ></app-formulario-consulta>
+
+    <app-listado-historicos
+    [displayedColumns]="displayedColumns"
+    [dataSource]="listaHistoricos"
+    >
+  
+    </app-listado-historicos>
+  </mat-card-content>
+</mat-card>
