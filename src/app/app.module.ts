@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MatCardModule } from '@angular/material/card';
+import { MatCardModule, MatCardTitle } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -49,6 +49,10 @@ import { TablaComponent } from './components/general-components/tabla/tabla.comp
 import { ModalComentariosSoporteComponent } from './components/general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
 import { ComentarioIndividualSoporteComponent } from './components/general-components/modal-comentarios-soporte/comentario-individual-soporte/comentario-individual-soporte.component';
 import { GenerarComentarioSoporteComponent } from './components/general-components/modal-comentarios-soporte/generar-comentario-soporte/generar-comentario-soporte.component'
+import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
+import { ListadoHistoricosComponent } from './components/historico-cumplidos/listado-historicos/listado-historicos.component';
+import { FormularioConsultaComponent } from './components/historico-cumplidos/formulario-consulta/formulario-consulta.component';
+import { ModalHistoricoComponent } from './components/historico-cumplidos/modal-historico/modal-historico.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -77,6 +81,12 @@ export function createTranslateLoader(http: HttpClient) {
     ModalComentariosSoporteComponent,
     ComentarioIndividualSoporteComponent,
     GenerarComentarioSoporteComponent,
+    HistoricoCumplidosComponent,
+    FormularioConsultaComponent,
+    FormSoporteComponent,
+    ListadoHistoricosComponent,
+    ModalHistoricoComponent
+    
   ],
   imports: [
     HttpClientModule,
