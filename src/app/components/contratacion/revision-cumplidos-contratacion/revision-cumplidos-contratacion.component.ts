@@ -204,7 +204,7 @@ export class RevisionCumplidosContratacionComponent {
   async aprobarSoportes(cumplido: any) {
     console.log(cumplido);
     let confirm = await this.popUpManager.showConfirmAlert(
-      '¿Está seguro de que desea aprobar los soportes?'
+      '¿Estás seguro de enviar a revisión este cumplido?'
     );
     if (confirm.isConfirmed) {
       try {

@@ -25,6 +25,8 @@ import { ModoService } from 'src/app/services/modo_service.service';
 import { ModalComentariosSoporteComponent } from '../../general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
 import Swal from 'sweetalert2';
 import { JbpmService } from 'src/app/services/jbpm_service.service';
+import { SoportesService } from 'src/app/services/soportes.service';
+import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 
 @Component({
   selector: 'app-modal-listar-cumplidos',
@@ -41,7 +43,8 @@ export class ModalListarCumplidosComponent {
   newCambioEstado!: BodyCambioEstado;
   loading: boolean = true;
   cargoSupervisor!: string;
-
+  soportes!: InformacionSoporteCumplido[];
+  informeDeSatisfacion: boolean = false;
 
   constructor(
     private cumplidosMidServices: CumplidosProveedoresMidService,
@@ -52,8 +55,9 @@ export class ModalListarCumplidosComponent {
     public dialog: MatDialog,
     private cambioEstadoService: CambioEstadoService,
     private administrativaAmazonService: AdministrativaAmazonService,
-    private modeService:ModoService,
+    private modeService: ModoService,
     private jbpmService: JbpmService,
+    private soporteService: SoportesService
   ) {
     this.documento_supervisor = user.getPayload().documento;
   }
@@ -70,30 +74,44 @@ export class ModalListarCumplidosComponent {
     });
   }
 
-
   obtenerSupervisorContrato() {
-    this.jbpmService.get(`/informacion_supervisor_contrato/${this.numeroContrato}/${this.vigencia}`).subscribe({
-      next: (res: any) => {
-        console.log("Respuesta:", res)
-        if (res && res.contratos && res.contratos.supervisor && res.contratos.supervisor.length > 0) {
-          console.log("DocumentoSupervisor:",res.contratos.supervisor[0].cargo )
-          this.cargoSupervisor = res.contratos.supervisor[0].cargo;
-        } else {
+    this.jbpmService
+      .get(
+        `/informacion_supervisor_contrato/${this.numeroContrato}/${this.vigencia}`
+      )
+      .subscribe({
+        next: (res: any) => {
+          console.log('Respuesta:', res);
+          if (
+            res &&
+            res.contratos &&
+            res.contratos.supervisor &&
+            res.contratos.supervisor.length > 0
+          ) {
+            console.log(
+              'DocumentoSupervisor:',
+              res.contratos.supervisor[0].cargo
+            );
+            this.cargoSupervisor = res.contratos.supervisor[0].cargo;
+          } else {
+            this.cargoSupervisor = 'Supervisor';
+          }
+        },
+        error: (error: any) => {
           this.cargoSupervisor = 'Supervisor';
-        }
-      },
-      error: (error: any) => {
-        this.cargoSupervisor = 'Supervisor';
-      },
-    });
+        },
+      });
   }
 
-  async getSolicitudesContrato(numero_contrato: string, vigencia_contrato: string) {
+  async getSolicitudesContrato(
+    numero_contrato: string,
+    vigencia_contrato: string
+  ) {
     this.popUpManager.showLoadingAlert(
       'Cargando',
       'Por favor, espera mientras se cargan la solicitudes disponibles.'
     );
-      this.cumplidosMidServices.contrato$.subscribe((contrato) => {
+    this.cumplidosMidServices.contrato$.subscribe((contrato) => {
       if (contrato) {
         this.cumplidosMidServices
           .get(
@@ -108,21 +126,29 @@ export class ModalListarCumplidosComponent {
               this.solicitudes_contrato = res.Data;
               this.dataSource = this.solicitudes_contrato.map(
                 (solicitud: any) => {
-                  console.log(res.Data, '..Dataparalafecha');
                   return {
                     noSolicitud: solicitud.ConsecutivoCumplido,
-                    numeroContrato: solicitud.CumplidoProveedorId.NumeroContrato,
+                    numeroContrato:
+                      solicitud.CumplidoProveedorId.NumeroContrato,
                     fechaCreacion: new Date(solicitud.FechaCreacion),
                     periodo: solicitud.Periodo,
                     estadoSoliciatud: solicitud.EstadoCumplido,
-                    CodigoAbreviacionEstadoCumplido: solicitud.CodigoAbreviacionEstadoCumplido,
+                    CodigoAbreviacionEstadoCumplido:
+                      solicitud.CodigoAbreviacionEstadoCumplido,
                     cumplidoProveedor: solicitud.CumplidoProveedorId,
                     acciones: [
-                      { icon: 'folder_open', actionName: 'folder_open', isActive: true },
+                      {
+                        icon: 'folder_open',
+                        actionName: 'folder_open',
+                        isActive: true,
+                      },
                       {
                         icon: 'send',
                         actionName: 'send',
-                        isActive: solicitud.CodigoAbreviacionEstadoCumplido === 'CD' || solicitud.CodigoAbreviacionEstadoCumplido === 'RO' || solicitud.CodigoAbreviacionEstadoCumplido === 'RC'
+                        isActive:
+                          solicitud.CodigoAbreviacionEstadoCumplido === 'CD' ||
+                          solicitud.CodigoAbreviacionEstadoCumplido === 'RO' ||
+                          solicitud.CodigoAbreviacionEstadoCumplido === 'RC',
                       },
                     ],
                   };
@@ -133,39 +159,38 @@ export class ModalListarCumplidosComponent {
               this.loading = false;
             },
             error: (error: any) => {
-              Swal.close
+              Swal.close;
               this.loading = false;
               this.popUpManager.showErrorAlert(
                 'El proveedor no tiene ninguna solicitud reciente.'
               );
-            },complete:()=>{
-              Swal.close()
-            }
+            },
+            complete: () => {
+              Swal.close();
+            },
           });
       }
     });
   }
 
-
   displayedColumns: any[] = [
-    {def: 'noSolicitud', header: 'N° SOLICITUD' },
-    {def: 'numeroContrato', header: 'N° CONTRATO' },
-    {def: 'fechaCreacion', header: 'FECHA CREACION' },
-    {def: 'periodo', header: 'PERIODO' },
-    {def: 'estadoSoliciatud', header: 'ESTADO SOLICITUD' },
+    { def: 'noSolicitud', header: 'N° SOLICITUD' },
+    { def: 'numeroContrato', header: 'N° CONTRATO' },
+    { def: 'fechaCreacion', header: 'FECHA CREACION' },
+    { def: 'periodo', header: 'PERIODO' },
+    { def: 'estadoSoliciatud', header: 'ESTADO SOLICITUD' },
     {
       def: 'acciones',
       header: 'ACCIONES',
       isAction: true,
-    }
+    },
   ];
 
   async obtenerCodigoAbreviacionCumplido(idCumplido: number): Promise<string> {
     return new Promise((resolve, reject) => {
-      console.log(idCumplido)
+      console.log(idCumplido);
     });
   }
-
 
   async crearCumplidoProveedor() {
     await this.obtenerSupervisorContrato();
@@ -221,46 +246,73 @@ export class ModalListarCumplidosComponent {
             FontIcon: 'visibility',
             Classes: 'ver-documentos-button',
             Text: 'Ver',
-          }
+          },
         ],
         Config: {
-          mode: this.modeService.obtenerModo(cumplido.CodigoAbreviacionEstadoCumplido),
+          mode: this.modeService.obtenerModo(
+            cumplido.CodigoAbreviacionEstadoCumplido
+          ),
           rolUsuario: RolUsuario.S,
         },
       } as ModalSoportesCumplidoData,
     });
   }
 
+  async cargarSoportes(cumplido: number): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.soporteService.getDocumentosCumplidos(cumplido).subscribe({
+        next: (soportes: InformacionSoporteCumplido[]) => {
+          this.soportes = soportes;
+          console.log(this.soportes);
+          this.informeDeSatisfacion = this.soportes.some(
+            (doc) => doc.Documento.CodigoAbreviacionTipoDocumento === 'IS'
+          );
 
+          resolve(this.informeDeSatisfacion);
+        },
+        error: (error: any) => {
+          console.log(error);
+          this.soportes = [];
+          resolve(false);
+        },
+      });
+    });
+  }
 
   async cambiarEstado(cumplido: any) {
     let confirm = await this.popUpManager.showConfirmAlert(
-      '¿Está seguro de que desea aprobar los soportes?'
+      '¿Estás seguro de enviar a revisión este cumplido?'
     );
-    console.log(cumplido);
+    await this.cargarSoportes(cumplido.cumplidoProveedor.Id);
+
+    console.log(this.informeDeSatisfacion);
     if (confirm.isConfirmed) {
-      await this.cambioEstadoService.cambiarEstado(
-        cumplido.cumplidoProveedor.Id,
-        'PRC'
-      );
-      this.popUpManager.showSuccessAlert(
-        'Los soportes se han aprobado correctamente.'
-      );
-      setTimeout(async () => {
-        await this.getSolicitudesContrato(
-            cumplido.cumplidoProveedor.NumeroContrato,
-            cumplido.cumplidoProveedor.VigenciaContrato
+      if (this.informeDeSatisfacion) {
+        this.cambioEstadoService
+          .cambiarEstado(cumplido.cumplidoProveedor.Id, 'PRC')
+          .then(() => {
+            this.popUpManager
+              .showSuccessAlert('Los soportes se han aprobado correctamente.')
+              .then(() => {
+                this.getSolicitudesContrato(
+                  cumplido.cumplidoProveedor.NumeroContrato,
+                  cumplido.cumplidoProveedor.VigenciaContrato
+                );
+              });
+          });
+      } else {
+        this.popUpManager.showErrorAlert(
+          'No se puede enviar porque no hay informe de satisfacción'
         );
-        this.dataSource = [...this.dataSource];
-    }, 1000);
+      }
     }
   }
 
-  handleActionClick(event: {action: any, element: any}) {
+  handleActionClick(event: { action: any; element: any }) {
     if (event.action.actionName === 'folder_open') {
       this.openDialog(event.element);
-    } else if (event.action.actionName === 'send'){
-      this.cambiarEstado(event.element)
+    } else if (event.action.actionName === 'send') {
+      this.cambiarEstado(event.element);
     }
   }
 }
