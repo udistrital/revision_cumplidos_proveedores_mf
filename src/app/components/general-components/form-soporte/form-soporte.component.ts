@@ -146,11 +146,11 @@ export class FormSoporteComponent {
   crearDocumento() {
     console.log(this.soporteForm.value.opcionSeleccionada)
     this.dialog.closeAll();
-    this.router.navigate(['/informe-seguimiento',this.cumplidoProveedorId]);
+    this.router.navigate(['/cumplido-satisfaccion',this.cumplidoProveedorId]);
   }
 
   cambioTipoDocumento(tipoDocumento: string){
-    if (tipoDocumento === "IS"){
+    if (tipoDocumento === "CS"){
       this.cumplidoSatisfaccionSeleccionado = true
     } else {
       this.cumplidoSatisfaccionSeleccionado = false

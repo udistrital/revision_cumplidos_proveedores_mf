@@ -27,7 +27,7 @@ export class CardSoporteComponent {
 
   @Input({required:true}) soporte!:InformacionSoporteCumplido
   @Input({required:true}) config!:ConfigSoportes
-  @Input({required:true}) cambioEstadoCumplido!:CambioEstadoCumplido
+  @Input({required:true}) cumplidoProveedorId!: number
   @Input() buttons!: Button[];
   @Output() recargarSoportes = new EventEmitter<any>();
   comentarioForm: FormGroup;
@@ -109,7 +109,7 @@ export class CardSoporteComponent {
   //   });
   //  }
 
-   openDialog(soporte_id: number, cambio_estado_cumplido_id: number, tipo_soporte: string) {
+   openDialog(soporte_id: number, tipo_soporte: string, cumplido_proveedor_id: number) {
     console.log("Soportes: ", this.soporte)
     this.dialog.open(ModalComentariosSoporteComponent, {
       disableClose: true,
@@ -121,7 +121,7 @@ export class CardSoporteComponent {
       width: 'auto',
       data:{
         SoporteId: soporte_id,
-        CambioEstadoCumplidoId: cambio_estado_cumplido_id,
+        CumplidoProveedorId: cumplido_proveedor_id,
         TipoSoporte: tipo_soporte,
         Config:{
           mode:this.config.mode,
@@ -155,9 +155,9 @@ export class CardSoporteComponent {
       }
     }
 
-    handleActionClick(button: any, soporte: any, cambioEstadoCumplido: any){
+    handleActionClick(button: any, soporte: any, cumplido_proveedor_id: number){
       if (button.Text == 'Comentarios'){
-        this.openDialog(soporte.SoporteCumplidoId, cambioEstadoCumplido.Id, soporte.TipoSoporte);
+        this.openDialog(soporte.SoporteCumplidoId, soporte.TipoSoporte, cumplido_proveedor_id);
       } else if (button.Text == 'Eliminar'){
         this.eliminarSoporte(soporte.SoporteCumplidoId);
       } else {

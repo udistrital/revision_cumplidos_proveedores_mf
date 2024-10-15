@@ -70,6 +70,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   displayedColumns = [
     { def: 'NumeroContrato', header: 'N° CONTRATO' },
     { def: 'VigenciaContrato', header: 'VIGENCIA' },
+    {def: 'TipoContrato', header: 'TIPO CONTRATO'},
     { def: 'Rp', header: 'RP' },
     { def: 'VigenciaRP', header: 'VIGENCIA RP' },
     { def: 'FechaCreacion', header: 'FECHA CREACION' },
