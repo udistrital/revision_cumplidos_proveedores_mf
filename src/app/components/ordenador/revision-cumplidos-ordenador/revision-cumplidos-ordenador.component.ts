@@ -27,6 +27,7 @@ import { TablaRevisionCumplido } from 'src/app/models/revision_cumplidos_proveed
 import { InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 import { NotificacionesService } from 'src/app/services/notificaciones.service';
 import { ModalComentariosSoporteComponent } from '../../general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-revision-cumplidos-ordenador',
@@ -54,13 +55,16 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     private popUpManager: PopUpManager,
     private modeService: ModoService,
     private firmaElectronica: FirmaElectronicaService,
-    private notificacionesService: NotificacionesService
+    private notificacionesService: NotificacionesService,
+    private utilService:UtilsService
+    
   ) {}
   ngOnInit(): void {
     this.documentoResponsable = this.userService.getPayload().documento;
     this.CargarTablaCumplidos();
     this.nombreResponsable = this.userService.getPayload().sub;
     this.obtenerInfoPersona();
+    
   }
 
   displayedColumns = [
@@ -74,7 +78,8 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
     { def: 'acciones', header: 'ACCIONES', isAction: true },
   ];
 
-  CargarTablaCumplidos() {
+  CargarTablaCumplidos(mostrarAlerta?:boolean) {
+    Swal.close()
     this.dataSource = [];
     this.popUpManager.showLoadingAlert(
       'Cargando',
@@ -113,10 +118,14 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
         error: (error: any) => {
           Swal.close();
           this.loading = false;
-          this.popUpManager.showAlert(
-            'Sin cumplidos pendientes',
-            'No hay cumplidos pendientes para revisión por parte del ordenador.'
-          );
+          if(!mostrarAlerta || mostrarAlerta!=undefined){
+            this.popUpManager.showAlert(
+              'Sin cumplidos pendientes',
+              'No hay cumplidos pendientes para revisión por parte del ordenador.'
+            );
+          }
+          
+          
           console.error(error);
         },
       });
@@ -300,47 +309,65 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   }
 
   modalVerSoporte(cumplido: any) {
-    this.dialog.open(ModalVisualizarSoporteComponent, {
-      disableClose: true,
-      height: 'auto',
-      width: 'auto',
-      maxWidth: '60vw',
-      maxHeight: '80vh',
-      panelClass: 'custom-dialog-container',
-      data: {
-        url: this.pdfBase64,
-        cargoResponsable: 'Ordenador',
-        ModalButtonsFunc: [
-          {
-            Color: '#8c1a19',
-            Function: async () => {
-              try {
-                await this.firmaElectronica.firmarDocumento(
-                  this.solicituDeFirma,
-                  cumplido.CumplidoId,
-                  168,
-                  false
-                  ,() => {
-                    this.CargarTablaCumplidos();}
-                );
-                await this.cambioEstadoService.cambiarEstado(
-                  cumplido.CumplidoId,
-                  'AO'
-                );
-
-              } catch (error) {
-                this.popUpManager.showErrorAlert(
-                  'Error al intentar firmar el documento.'
-                );
-              }
+    this.utilService.obtenerIdDocumento("AP").then((idDocumento=>{
+      this.dialog.open(ModalVisualizarSoporteComponent, {
+        disableClose: true,
+        height: 'auto',
+        width: 'auto',
+        maxWidth: '60vw',
+        maxHeight: '80vh',
+        panelClass: 'custom-dialog-container',
+        data: {
+          url: this.pdfBase64,
+          cargoResponsable: 'Ordenador',
+          ModalButtonsFunc: [
+            {
+              Color: '#8c1a19',
+              Function: async () => {
+                if(idDocumento !== null){
+                  
+                try {
+                  await this.firmaElectronica.firmarDocumento(
+                    this.solicituDeFirma,
+                    cumplido.CumplidoId,
+                    idDocumento,
+                    false
+                    ,() => {
+                      this.CargarTablaCumplidos(true);}
+                  );
+                  await this.cambioEstadoService.cambiarEstado(
+                    cumplido.CumplidoId,
+                    'AO'
+                  ).then(()=>{
+                    this.notificacionesService.publicarNotificaciones(
+                      'AO',
+                      '/informacion_ordenador_contrato/' +
+                        cumplido.NumeroContrato +
+                        '/' +
+                        cumplido.VigenciaContrato
+                    );
+                  });
+  
+                } catch (error) {
+                  this.popUpManager.showErrorAlert(
+                    'Error al intentar firmar el documento.'
+                  );
+                }
+              
+                }else{
+                  this.popUpManager.showErrorAlert('El ID del documento es null, no se puede firmar');
+                }
+              },
+              Clases: '',
+              Text: 'Firmar',
+              TextColor: '#ffffff',
             },
-            Clases: '',
-            Text: 'Firmar',
-            TextColor: '#ffffff',
-          },
-        ],
-      },
-    });
+          ],
+        },
+      });
+
+    }))
+    
   }
 
   async cambiarEstado(idCumplido: any, estado: string) {

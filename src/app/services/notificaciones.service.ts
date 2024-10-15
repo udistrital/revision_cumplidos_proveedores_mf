@@ -36,6 +36,7 @@ export class NotificacionesService {
   }
 
   async publicarNotificaciones(estado:string,enopint:string) {
+    
     console.log("Entro a notificaar",enopint )
     await this.obteneMensaje(estado,enopint);
    const notificacion= this.crearNotificacion();
