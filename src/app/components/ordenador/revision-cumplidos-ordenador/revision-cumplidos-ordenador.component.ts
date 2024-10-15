@@ -163,7 +163,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
           }
         ],
         Config: {
-          mode: this.modeService.obtenerModo('RC'),
+          mode: this.modeService.obtenerModo('PRO'),
           rolUsuario: RolUsuario.O,
         },
       } as ModalSoportesCumplidoData,
