@@ -110,7 +110,7 @@ export class FormSoporteComponent {
         Archivo: this.base64Output
       };
       if(payload.observaciones==""){
-        payload.observaciones="Sin observacións en el documento"
+        payload.observaciones="Sin observaciónes en el documento"
       }
       this.popUpManager.showLoadingAlert("Cargando documento, por favor espera")
       this.cumplidosMidServices.post('/solicitud-pago/soportes', payload)
