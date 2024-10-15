@@ -302,7 +302,7 @@ export class ModalListarCumplidosComponent {
           });
       } else {
         this.popUpManager.showErrorAlert(
-          'No se puede enviar porque no hay informe de satisfacción'
+          'No se puede enviar porque no hay Cumplido a satisfacción'
         );
       }
     }

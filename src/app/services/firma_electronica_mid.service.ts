@@ -79,7 +79,7 @@ export class FirmaElectronicaService {
             IdTipoDocumento: tipoDocumneto,
             nombre: solicituDeFirma.NombreArchivo,
             metadatos: {
-              observaciones: `Informe de Satisfaccion ${solicituDeFirma.NombreArchivo}`,
+              observaciones: `Cumplido a Satisfaccion ${solicituDeFirma.NombreArchivo}`,
             },
             firmantes: [
               {
@@ -168,7 +168,7 @@ export class FirmaElectronicaService {
 
           if (informe) {
             const confirm = await this.popUpManager.showConfirmAlert(
-              '¿Ya hay un informe de satisfacción?',
+              'Ya hay un cumplido a satisfacción',
               '¿Deseas reemplazarlo?'
             );
 
