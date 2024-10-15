@@ -17,17 +17,17 @@ export const routes: Routes = [
     component: ListarContratosComponent,
   },
   {
-    path: 'informe-seguimiento/:cumplidoId',
+    path: 'cumplido-satisfaccion/:cumplidoId',
     canActivate: [AuthGuard],
     component: InformeSatisfaccionComponent,
   },
   {
-    path: 'contratacion/aprobacion-pago',
+    path: 'contratacion/revision-cumplidos',
     canActivate: [AuthGuard],
     component: RevisionCumplidosContratacionComponent,
   },
   {
-    path: 'ordenador/aprobacion-pago',
+    path: 'ordenador/revision-cumplidos',
     canActivate: [AuthGuard],
     component: RevisionCumplidosOrdenadorComponent,
   }
