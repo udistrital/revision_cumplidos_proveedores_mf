@@ -296,8 +296,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
    modalVerSoporte() {
-this.utilService.obtenerIdDocumento("IS").then(idDocumento=>{
-  console.log("documento id ",idDocumento)
+this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
   const visualizarSoportes = this.dialog.open(
     ModalVisualizarSoporteComponent,
     {

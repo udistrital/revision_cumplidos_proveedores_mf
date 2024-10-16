@@ -265,7 +265,7 @@ export class ModalListarCumplidosComponent {
           this.soportes = soportes;
           console.log(this.soportes);
           this.informeDeSatisfacion = this.soportes.some(
-            (doc) => doc.Documento.CodigoAbreviacionTipoDocumento === 'IS'
+            (doc) => doc.Documento.CodigoAbreviacionTipoDocumento === 'CS'
           );
 
           resolve(this.informeDeSatisfacion);
