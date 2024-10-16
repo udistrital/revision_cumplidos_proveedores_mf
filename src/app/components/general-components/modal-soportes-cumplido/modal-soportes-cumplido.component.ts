@@ -38,7 +38,6 @@ export class ModalSoportesCumplidoComponent {
     this.modalButtonsFunc=this.data.ModalButtonsFunc
     this.cumplidoProveedorId=this.data.CumplidoProveedorId
     this.cargarSoportes()
-    this.ObtenerUltimoCambioEstado()
   }
 
   cargarSoportes() {
@@ -56,23 +55,6 @@ export class ModalSoportesCumplidoComponent {
       //  );
       },
     });
-  }
-
-  ObtenerUltimoCambioEstado(){
-    console.log(this.cambioEstadoCumplido)
-    this.cumplidos_provedore_crud_service.get(`/cambio_estado_cumplido/?query=Activo:true,CumplidoProveedorId.Id:${this.cumplidoProveedorId}&sortby=FechaCreacion&order=desc`).subscribe({
-      next:(response)=>{
-        if(!response.Success || response.Data.length==0){
-          console.log(this.cambioEstadoCumplido)
-        }
-        this.cambioEstadoCumplido=response.Data[0]
-        this.loading=false
-        console.log(response)
-      },
-      error: err=>{
-        console.log(err)
-      },
-    })
   }
 
   close(): void {

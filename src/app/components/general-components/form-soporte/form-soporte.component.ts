@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-soporte',
@@ -108,17 +109,25 @@ export class FormSoporteComponent {
         NombreArchivo: this.fileName,
         Archivo: this.base64Output
       };
+      if(payload.observaciones==""){
+        payload.observaciones="Sin observaciónes en el documento"
+      }
+      this.popUpManager.showLoadingAlert("Cargando documento, por favor espera")
       this.cumplidosMidServices.post('/solicitud-pago/soportes', payload)
         .subscribe({
           next: (res: any) => {
             this.recargarSoportes.emit(res)
-            this.popUpManager.showSuccessAlert(
-              'El archivo se ha cargado exitosamente.'
-            );
+          
           },
           error: (error: any) => {
             this.popUpManager.showErrorAlert(
               'Error al intentar cargar el archivo.'
+            );
+          },complete:()=>{
+            this.removeFile();
+            Swal.close()
+            this.popUpManager.showSuccessAlert(
+              'El archivo se ha cargado exitosamente.'
             );
           }
         });
@@ -137,11 +146,11 @@ export class FormSoporteComponent {
   crearDocumento() {
     console.log(this.soporteForm.value.opcionSeleccionada)
     this.dialog.closeAll();
-    this.router.navigate(['/informe-seguimiento',this.cumplidoProveedorId]);
+    this.router.navigate(['/cumplido-satisfaccion',this.cumplidoProveedorId]);
   }
 
   cambioTipoDocumento(tipoDocumento: string){
-    if (tipoDocumento === "IS"){
+    if (tipoDocumento === "CS"){
       this.cumplidoSatisfaccionSeleccionado = true
     } else {
       this.cumplidoSatisfaccionSeleccionado = false
