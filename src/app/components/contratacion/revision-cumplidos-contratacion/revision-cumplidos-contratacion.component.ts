@@ -57,6 +57,7 @@ export class RevisionCumplidosContratacionComponent {
   displayedColumns = [
     { def: 'NumeroContrato', header: 'N° CONTRATO' },
     { def: 'VigenciaContrato', header: 'VIGENCIA' },
+    { def: 'TipoContrato', header: 'TIPO CONTRATO' },
     { def: 'Rp', header: 'RP' },
     { def: 'VigenciaRP', header: 'VIGENCIA RP' },
     { def: 'FechaCreacion', header: 'FECHA CREACION' },
@@ -204,7 +205,7 @@ export class RevisionCumplidosContratacionComponent {
   async aprobarSoportes(cumplido: any) {
     console.log(cumplido);
     let confirm = await this.popUpManager.showConfirmAlert(
-      '¿Está seguro de que desea aprobar los soportes?'
+      '¿Estás seguro de enviar a revisión este cumplido?'
     );
     if (confirm.isConfirmed) {
       try {

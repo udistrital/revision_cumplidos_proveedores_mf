@@ -23,6 +23,7 @@ import Swal from 'sweetalert2';
 import { ModalVisualizarSoporteComponent } from '../../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
 import { UserService } from './../../../../services/user.services';
 import { FirmaElectronicaService } from 'src/app/services/firma_electronica_mid.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-formulario-informe-satisfaccion',
@@ -66,7 +67,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     private coreApiService: CoreApiService,
     private cumplidoService: CumplidosProveedoresMidService,
     private userService: UserService,
-    private firmaElectronica: FirmaElectronicaService
+    private firmaElectronica: FirmaElectronicaService,
+    private utilService:UtilsService
   ) {
     this.formularioInformeSeguimiento = this.fg.group(
       {
@@ -293,41 +295,48 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     });
   }
 
-  modalVerSoporte() {
-
-    const visualizarSoportes = this.dialog.open(
-      ModalVisualizarSoporteComponent,
-      {
-        disableClose: true,
-        height: 'auto',
-        width: 'auto',
-        maxWidth: '60vw',
-        maxHeight: '80vh',
-        panelClass: 'custom-dialog-container',
-        data: {
-          aprobarSoportes: true,
-          url: this.pdfBase64,
-          cargoResponsable: 'Supervisor',
-          regresarACargaDocumentos: false,
-          ModalButtonsFunc: [
-            {
-              Color: '#731b14',
-              TextColor: '#ffffff',
-              Function: () => {
+   modalVerSoporte() {
+this.utilService.obtenerIdDocumento("IS").then(idDocumento=>{
+  console.log("documento id ",idDocumento)
+  const visualizarSoportes = this.dialog.open(
+    ModalVisualizarSoporteComponent,
+    {
+      disableClose: true,
+      height: 'auto',
+      width: 'auto',
+      maxWidth: '60vw',
+      maxHeight: '80vh',
+      panelClass: 'custom-dialog-container',
+      data: {
+        aprobarSoportes: true,
+        url: this.pdfBase64,
+        cargoResponsable: 'Supervisor',
+        regresarACargaDocumentos: false,
+        ModalButtonsFunc: [
+          {
+            Color: '#731b14',
+            TextColor: '#ffffff',
+            Function: () => {
+              if (idDocumento !== null) {
                 this.firmaElectronica.firmarDocumento(
                   this.solicituDeFirma,
                   this.cumplidoId,
-                  157,
+                  idDocumento,
                   true
                 );
-              },
-              Clases: '',
-              Text: 'Firmar',
+              } else {
+                this.popUpManager.showErrorAlert('El ID del documento es null, no se puede firmar');
+              }
             },
-          ],
-        },
-      }
-    );
+            Clases: '',
+            Text: 'Firmar',
+          },
+        ],
+      },
+    }
+  );
+})
+   
   }
 
   async buscarInformacionPago() {

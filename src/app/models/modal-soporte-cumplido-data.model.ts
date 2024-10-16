@@ -9,8 +9,8 @@ export interface ModalSoportesCumplidoData {
 
 export interface ModalComentariosSoporteData{
   SoporteId: number;
-  CambioEstadoCumplidoId: number;
   TipoSoporte: string;
+  CumplidoProveedorId:number;
   Config: ConfigSoportes;
 }
 

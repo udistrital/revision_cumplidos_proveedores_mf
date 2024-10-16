@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class InformeSatisfaccionComponent {
 
-  title = 'INFORME DE SATISFACCIÓN'
+  title = 'CUMPLIDO A SATISFACCIÓN'
 
   constructor() { }
 

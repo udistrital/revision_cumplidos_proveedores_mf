@@ -71,7 +71,6 @@ export class CambioEstadoService {
       if (this.mensaje != '') {
         try {
           console.log('Entro');
-          //this.notificacionService.publicarNotificaciones(notificacion);
         } catch (error) {
           this.popUpManager.showErrorAlert(
             'Se generó un error al enviar la notificación.'

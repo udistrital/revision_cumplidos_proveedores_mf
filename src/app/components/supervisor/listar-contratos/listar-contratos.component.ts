@@ -46,7 +46,7 @@ export class ListarContratosComponent {
   }
 
   cargarContratos() {
-  
+
     this.cumplidosMidServices
       .get('/supervisor/contratos-supervisor/' + this.documento_supervisor)
       .subscribe({
@@ -62,7 +62,7 @@ export class ListarContratosComponent {
               "Sin contratos",
               "No se encontraron contratos asociados a la(s) dependencia(s)."
             );
-            
+
             this.loading = false;
           } else {
             this.dataSource = this.contratos_supervisor.contratos;
@@ -72,6 +72,7 @@ export class ListarContratosComponent {
                   Contrato: contrato,
                   numeroContrato: contrato.NumeroContratoSuscrito,
                   vigencia: contrato.Vigencia,
+                  tipoContrato: contrato.TipoContrato,
                   rp: contrato.NumeroRp,
                   vigenciaRp: contrato.VigenciaRp,
                   nombreProveedor: contrato.NombreProveedor,
@@ -95,7 +96,7 @@ export class ListarContratosComponent {
               'Error al intentar cargar los contratos del supervisor.'
             )
           );
-          
+
 
         }
       });
@@ -116,6 +117,7 @@ export class ListarContratosComponent {
   displayedColumns: any[] = [
     {def: 'numeroContrato', header: 'NUMERO CONTRATO' },
     {def: 'vigencia', header: 'VIGENCIA' },
+    {def: 'tipoContrato', header: 'TIPO CONTRATO' },
     {def: 'rp', header: 'RP' },
     {def: 'vigenciaRp', header: 'VIGENCIA RP' },
     {def: 'nombreProveedor', header: 'NOMBRE PROVEEDOR' },
