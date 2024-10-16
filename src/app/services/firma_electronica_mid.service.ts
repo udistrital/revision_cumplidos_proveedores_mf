@@ -162,7 +162,7 @@ export class FirmaElectronicaService {
           console.log(this.soportes);
 
           const informe = this.soportes.find(
-            (doc) => doc.Documento.CodigoAbreviacionTipoDocumento === 'IS'
+            (doc) => doc.Documento.CodigoAbreviacionTipoDocumento === 'CS'
           );
           console.log(informe);
 

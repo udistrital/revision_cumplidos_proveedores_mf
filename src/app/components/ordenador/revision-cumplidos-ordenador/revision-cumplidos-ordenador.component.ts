@@ -310,7 +310,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
   }
 
   modalVerSoporte(cumplido: any) {
-    this.utilService.obtenerIdDocumento("AP").then((idDocumento=>{
+    this.utilService.obtenerIdDocumento("AG").then((idDocumento=>{
       this.dialog.open(ModalVisualizarSoporteComponent, {
         disableClose: true,
         height: 'auto',
