@@ -2,13 +2,13 @@
   <mat-card>
     <section>
       <div>
-        <h3 class="title">Gestion Evaluadores</h3>
+        <h3 class="title text-center">Gestion Evaluadores</h3>
       </div>
     </section>
 
     <mat-card class="details-card">
       <section>
-        <div class="box-info">
+        <article class="box-info">
           <div>
             <div class="details-color"><p>Proveedor</p></div>
             <div class="text-info">
@@ -27,10 +27,12 @@
               <p>{{ vigenciaContrato }}</p>
             </div>
           </div>
-        </div>
+        </article>
       </section>
     </mat-card>
 
-   
+    <mat-card class="details-card">
+        <app-items-a-evaluar></app-items-a-evaluar>
+    </mat-card>
   </mat-card>
 </main>

@@ -14,5 +14,6 @@ export class GestionEvaluadoresComponent implements OnInit {
     this.nombreProveedor = 'nombre Proveedor  tempotal';
     this.numeroContrato = 'numero de contrato tempotal';
     this.vigenciaContrato = 'vigenciaContrato tempotal';
+    
   }
 }

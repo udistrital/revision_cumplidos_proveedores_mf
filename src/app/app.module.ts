@@ -53,6 +53,7 @@ import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/g
 import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
 import { PuntajeComponent } from './components/evaluacion-proveedor/gestion-evaluadores/puntaje/puntaje.component';
 import { ItemsAEvaluarComponent } from './components/evaluacion-proveedor/gestion-evaluadores/items-a-evaluar/items-a-evaluar.component'
+import {MatExpansionModule} from '@angular/material/expansion';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -85,6 +86,7 @@ export function createTranslateLoader(http: HttpClient) {
     EvaluadoresComponent,
     PuntajeComponent,
     ItemsAEvaluarComponent,
+    
   ],
   imports: [
     HttpClientModule,
@@ -112,7 +114,9 @@ export function createTranslateLoader(http: HttpClient) {
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
+    MatExpansionModule,
     MatSortModule,
+    
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

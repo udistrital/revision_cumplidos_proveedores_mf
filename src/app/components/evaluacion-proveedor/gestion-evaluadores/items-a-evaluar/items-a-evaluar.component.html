@@ -1,1 +1,55 @@
-<p>items-a-evaluar works!</p>
+<section>
+  <mat-accordion>
+    <mat-expansion-panel
+      [expanded]="true"
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <div>
+            <h3 class="title text-color-principal text-center">
+              Item a evaluar
+            </h3>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <article>
+        <div class="box-form">
+          <div class="tex-size-17 text-color-principal margin-10px">
+            Descripcion item
+          </div>
+          <div class="box-text-area margin-10px">
+            <form
+              class="form"
+              (ngSubmit)="imprimir()"
+              [formGroup]="formAddIntems"
+            >
+              <mat-form-field class="width-text-area">
+                <mat-label class="center-label"
+                  >Agrega Descripcion del item</mat-label
+                >
+
+                <textarea
+                  class="text-area"
+                  matInput
+                  placeholder=""
+                  formControlName="detalles_item"
+                ></textarea>
+              </mat-form-field>
+              <div class="margin-10px">
+                <div class="text-center">
+                  <button type="submit" class="btn-add" mat-fab extended>
+                    <mat-icon>add</mat-icon>
+                    Agregar
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </article>
+    </mat-expansion-panel>
+  </mat-accordion>
+</section>

@@ -1,0 +1,50 @@
+.title {
+  margin: 10px;
+  font-weight: normal;
+  font-size: 2rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-color-principal {
+  color: #8c1a19;
+}
+
+.box-form {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  justify-items: center !important;
+  align-items: center  !important;
+}
+
+.tex-size-17 {
+  font-size: 20px;
+}
+
+.form {
+  width: 100%;
+}
+
+.width-text-area {
+  width: 80% !important;
+}
+
+.box-text-area {
+  width: 100%;
+  text-align: center;
+}
+
+.margin-10px{
+    margin: 10px;
+}
+
+.btn-add{
+    background-color: #008736;
+}
+
+.btn-add:hover {
+    transform: scale(1.1);
+    background-color: #8c1a19;
+}
