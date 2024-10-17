@@ -16,7 +16,7 @@ export class FormSoporteComponent {
   opciones!:any;
   observaciones = "";
   base64Output: string | ArrayBuffer | null = '';
-  fileName: string = '';
+  fileName: string = 'Seleccione un archivo';
   idTipoDocumento!: number;
   cumplidoSatisfaccionSeleccionado: boolean = false;
   soporteForm!: FormGroup;
@@ -43,7 +43,7 @@ export class FormSoporteComponent {
 
 
   ngOnInit(){
-    console.log(this.soporteForm.value.opcionSeleccionada)
+    //console.log(this.soporteForm.value.opcionSeleccionada)
     this.getTipoDocumentosCumplido()
 
   }
@@ -53,7 +53,7 @@ export class FormSoporteComponent {
     .subscribe({
       next: (res: any) => {
         this.opciones = res.Data;
-        console.log("Tipo documentos:", this.opciones)
+        //console.log("Tipo documentos:", this.opciones)
       },
       error: (error: any) => {
         this.popUpManager.showErrorAlert(
@@ -64,7 +64,7 @@ export class FormSoporteComponent {
   }
 
   onFileSelected(event: Event) {
-    console.log(this.soporteForm.value.opcionSeleccionada)
+    //console.log(this.soporteForm.value.opcionSeleccionada)
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
@@ -89,12 +89,13 @@ export class FormSoporteComponent {
   }
 
   triggerFileInput() {
+    //console.log("click")
     this.fileInput.nativeElement.click();
   }
 
   removeFile() {
     this.fileInput.nativeElement.value = '';
-    this.fileName = '';
+    this.fileName = 'Seleccione un archivo';
     this.soporteForm.patchValue({ fileName: ''})
     this.base64Output = '';
   }
@@ -117,7 +118,7 @@ export class FormSoporteComponent {
         .subscribe({
           next: (res: any) => {
             this.recargarSoportes.emit(res)
-          
+            this.soporteForm.reset()
           },
           error: (error: any) => {
             this.popUpManager.showErrorAlert(
@@ -140,11 +141,11 @@ export class FormSoporteComponent {
 
   asignarItemId(item: number){
     this.itemId = item
-    console.log("Itemid:", this.itemId)
+    //console.log("Itemid:", this.itemId)
   }
 
   crearDocumento() {
-    console.log(this.soporteForm.value.opcionSeleccionada)
+    //console.log(this.soporteForm.value.opcionSeleccionada)
     this.dialog.closeAll();
     this.router.navigate(['/cumplido-satisfaccion',this.cumplidoProveedorId]);
   }

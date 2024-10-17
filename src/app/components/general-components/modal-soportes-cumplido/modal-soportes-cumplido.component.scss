@@ -11,6 +11,7 @@ mat-icon {
     justify-content: center;
     color: white;
     background-color: #98483c;
+    border-radius: 10px;
     padding: 10px;
   }
   
@@ -21,10 +22,8 @@ mat-icon {
   }
   
   .spaced-paragraph {
-    margin-top: 10%;
     color: black;
     text-align: center;
-    margin-bottom: 5%;
   }
   
   app-soporte-cumplido{

@@ -63,7 +63,7 @@ export class FirmaElectronicaService {
     funcion?: () => void
   ) {
     const fimar = await this.remplazarInformeDeSatisfacion(idCumplido, tipoDocumneto==157);
-    console.log(fimar);
+    //console.log(fimar);
     if (fimar) {
       if (funcion != undefined) {
         this.recargarTaba = funcion;
@@ -129,8 +129,8 @@ export class FirmaElectronicaService {
       const response: any = await this.cumplidos_provedore_mid_service
         .get(`/solicitud-pago/soportes/${idCumplido}`)
         .toPromise();
-      console.log('Respuesta completa:', response);
-      console.log(this.registarSoportePagoFirmado);
+      //console.log('Respuesta completa:', response);
+      //console.log(this.registarSoportePagoFirmado);
 
       const documentoFiltrado = response.Data.find(
         (item: any) => item.Documento.Id === idDocumento
@@ -142,13 +142,13 @@ export class FirmaElectronicaService {
         }
         Swal.close();
         if (this.recargarTaba != undefined) {
-          console.log('siiiiiiiii');
+          //console.log('siiiiiiiii');
           this.recargarTaba();
         }
         this.openVerSoporte(idCumplido, documentoFiltrado.Archivo.File);
       }
     } catch (error) {
-      console.error('Error al obtener los documentos', error);
+      //console.error('Error al obtener los documentos', error);
     }
   }
 
@@ -159,12 +159,12 @@ export class FirmaElectronicaService {
       this.soporteService.getDocumentosCumplidos(cumplido).subscribe({
         next: async (soportes: InformacionSoporteCumplido[]) => {
           this.soportes = soportes;
-          console.log(this.soportes);
+          //console.log(this.soportes);
 
           const informe = this.soportes.find(
-            (doc) => doc.Documento.CodigoAbreviacionTipoDocumento === 'IS'
+            (doc) => doc.Documento.CodigoAbreviacionTipoDocumento === 'CS'
           );
-          console.log(informe);
+          //console.log(informe);
 
           if (informe) {
             const confirm = await this.popUpManager.showConfirmAlert(
@@ -182,22 +182,22 @@ export class FirmaElectronicaService {
                   )
                   .subscribe({
                     next: (response: any) => {
-                      console.log(response);
+                      //console.log(response);
                     },
                     error: (error) => {
-                      console.log(error);
+                      //console.log(error);
                     },
                     complete: () => {
-                      console.log('Siiii');
+                      //console.log('Siiii');
                     },
                   });
                 resolve(true);
               } catch (error) {
-                console.error(error);
+                //console.error(error);
                 reject(false);
               }
             } else {
-              console.log('false');
+              //console.log('false');
               resolve(false);
             }
           } else {
@@ -222,7 +222,7 @@ export class FirmaElectronicaService {
       DocumentoId: respuesta.Id,
       CumplidoProveedorId: { id: idCumplido },
     };
-    console.log('id', idCumplido);
+    //console.log('id', idCumplido);
     this.cumplidos_provedore_crud_service
       .post('/soporte_cumplido', documento)
       .subscribe(
@@ -230,7 +230,7 @@ export class FirmaElectronicaService {
           this.buscarSoporteFirmado(respuesta.Id, idCumplido);
         },
         (error) => {
-          console.error('Error al registrar soporte de pago:', error);
+          //console.error('Error al registrar soporte de pago:', error);
           Swal.close();
           this.popUpManager.showConfirmAlert('Error al registrar el soporte.');
         }

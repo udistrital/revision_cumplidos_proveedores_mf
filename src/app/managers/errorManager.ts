@@ -11,17 +11,17 @@ export class HttpErrorManager {
 
   public handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
-      console.error('Error del lado del cliente:', error.error.message);
+      //console.error('Error del lado del cliente:', error.error.message);
       this.snack.open('Error del cliente. Por favor, verifique su conexión a la red.', 'Cerrar', {
         duration: 5000,
         panelClass: ['error-snackbar']
       });
     } else {
       // Maneja errores del servidor
-      console.error(
-        `Código de estado ${error.status}, ` +
-        `cuerpo del error: ${JSON.stringify(error.error)}`
-      );
+      // console.error(
+      //   `Código de estado ${error.status}, ` +
+      //   `cuerpo del error: ${JSON.stringify(error.error)}`
+      // );
       this.snack.open(this.getErrorMessage(error), 'Cerrar', {
         duration: 5000,
         panelClass: ['error-snackbar']

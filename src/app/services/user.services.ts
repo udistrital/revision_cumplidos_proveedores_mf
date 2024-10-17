@@ -26,7 +26,7 @@ export class UserService {
       const response: any = await this.jbmpServie.get(endpoint).toPromise();
       return response.documento as string;
     } catch (error) {
-      console.error('Error al obtener el documento:', error);
+      //console.error('Error al obtener el documento:', error);
       throw new Error('Error al obtener el documento');
     }
   }

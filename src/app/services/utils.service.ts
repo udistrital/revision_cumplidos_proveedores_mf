@@ -56,7 +56,7 @@ export class UtilsService {
   }
 
   async obtenerIdDocumento(abreviacion: string): Promise<number | null> {
-    console.log(abreviacion);
+    //console.log(abreviacion);
   
     return new Promise((resolve, reject) => {
       this.cumplidosMidServices
@@ -67,7 +67,7 @@ export class UtilsService {
   
             const documento = this.documentos.find(doc => doc.CodigoAbreviacionTipoDocumento === abreviacion);
             if (!documento) {
-              console.warn('No se encontró un documento con la abreviación:', abreviacion);
+              //console.warn('No se encontró un documento con la abreviación:', abreviacion);
               return resolve(null);
             }
   

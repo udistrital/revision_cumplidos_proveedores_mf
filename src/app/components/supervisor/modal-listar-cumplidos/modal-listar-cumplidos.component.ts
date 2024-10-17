@@ -64,7 +64,7 @@ export class ModalListarCumplidosComponent {
 
   async ngOnInit() {
     this.cumplidosMidServices.contrato$.subscribe((contrato) => {
-      console.log(contrato);
+      //console.log(contrato);
       if (contrato) {
         this.numeroContrato = contrato.numeroContrato;
         this.vigencia = contrato.vigencia;
@@ -81,17 +81,17 @@ export class ModalListarCumplidosComponent {
       )
       .subscribe({
         next: (res: any) => {
-          console.log('Respuesta:', res);
+          //console.log('Respuesta:', res);
           if (
             res &&
             res.contratos &&
             res.contratos.supervisor &&
             res.contratos.supervisor.length > 0
           ) {
-            console.log(
-              'DocumentoSupervisor:',
-              res.contratos.supervisor[0].cargo
-            );
+            // //console.log(
+            //   'DocumentoSupervisor:',
+            //   res.contratos.supervisor[0].cargo
+            // );
             this.cargoSupervisor = res.contratos.supervisor[0].cargo;
           } else {
             this.cargoSupervisor = 'Supervisor';
@@ -101,7 +101,7 @@ export class ModalListarCumplidosComponent {
           this.cargoSupervisor = 'Supervisor';
         },
       });
-  }
+  };
 
   async getSolicitudesContrato(
     numero_contrato: string,
@@ -188,7 +188,7 @@ export class ModalListarCumplidosComponent {
 
   async obtenerCodigoAbreviacionCumplido(idCumplido: number): Promise<string> {
     return new Promise((resolve, reject) => {
-      console.log(idCumplido);
+      //console.log(idCumplido);
     });
   }
 
@@ -204,7 +204,7 @@ export class ModalListarCumplidosComponent {
       .post('/crear_solicitud_cumplido', this.newCumplidoProveedor)
       .subscribe({
         next: (res: any) => {
-          console.log(res);
+          //console.log(res);
           this.popUpManager.showSuccessAlert(
             'El cumplido se ha creado correctamente.'
           );
@@ -219,7 +219,7 @@ export class ModalListarCumplidosComponent {
   }
 
   openDialog(cumplido: any) {
-    console.log('cumplido', cumplido);
+    //console.log('cumplido', cumplido);
     const dialog = this.dialog.open(ModalSoportesCumplidoComponent, {
       disableClose: true,
       height: 'auto',
@@ -263,15 +263,15 @@ export class ModalListarCumplidosComponent {
       this.soporteService.getDocumentosCumplidos(cumplido).subscribe({
         next: (soportes: InformacionSoporteCumplido[]) => {
           this.soportes = soportes;
-          console.log(this.soportes);
+          //console.log(this.soportes);
           this.informeDeSatisfacion = this.soportes.some(
-            (doc) => doc.Documento.CodigoAbreviacionTipoDocumento === 'IS'
+            (doc) => doc.Documento.CodigoAbreviacionTipoDocumento === 'CS'
           );
 
           resolve(this.informeDeSatisfacion);
         },
         error: (error: any) => {
-          console.log(error);
+          //console.log(error);
           this.soportes = [];
           resolve(false);
         },
@@ -285,7 +285,7 @@ export class ModalListarCumplidosComponent {
     );
     await this.cargarSoportes(cumplido.cumplidoProveedor.Id);
 
-    console.log(this.informeDeSatisfacion);
+    //console.log(this.informeDeSatisfacion);
     if (confirm.isConfirmed) {
       if (this.informeDeSatisfacion) {
         this.cambioEstadoService
