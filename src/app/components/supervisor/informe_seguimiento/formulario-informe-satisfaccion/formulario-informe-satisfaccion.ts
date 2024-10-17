@@ -7,6 +7,9 @@ import {
   ValidatorFn,
   AbstractControl,
 } from '@angular/forms';
+import {
+  CurrencyPipe
+} from '@angular/common'
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MatDialog } from '@angular/material/dialog';
@@ -31,8 +34,8 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./formulario-informe-satisfaccion.component.scss'],
 })
 export class FormularioInformeSatisfaccionComponent implements OnInit {
-  formularioInformeSeguimiento: FormGroup;
-  informacionBancariaForm: FormGroup;
+  formularioInformeSeguimiento!: FormGroup;
+  informacionBancariaForm!: FormGroup;
   habilitarInformacionBancaria = true;
   numeroContrato: string = '';
   vigencia: string = '';
@@ -68,7 +71,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     private cumplidoService: CumplidosProveedoresMidService,
     private userService: UserService,
     private firmaElectronica: FirmaElectronicaService,
-    private utilService:UtilsService
+    private utilService:UtilsService,
+    private currencyPipe:CurrencyPipe
   ) {
     this.formularioInformeSeguimiento = this.fg.group(
       {
@@ -96,9 +100,19 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
         [Validators.required, Validators.pattern('^[0-9]*$')],
       ],
     });
+
   }
 
   async ngOnInit() {
+    
+    this.formularioInformeSeguimiento.valueChanges.subscribe((form) => {
+      if (form.valor_cumplido){
+        console.log(form.valor_cumplido)
+        this.formularioInformeSeguimiento.patchValue({
+          valor_cumplido: this.currencyPipe.transform(form.valor_cumplido.replace(/\D/g, '').replace(/^0+/,''),'USD','symbol','1.0-0')
+        },{emitEvent:false})
+      }
+    })
     this.cumplidoService.cumplido$.subscribe((cumplido) => {
       this.cumplido = cumplido;
     });
@@ -215,7 +229,6 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     let confirm = await this.popUpManager.showConfirmAlert(
       'Información pago guardada'
     );
-    console.log('antes de guardar ', this.nuevoFormuario);
     if (confirm.isConfirmed) {
       const body = this.obtenerInformacionPagoGuardar();
       console.log('Despues de guardar ', this.nuevoFormuario);
@@ -423,9 +436,11 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
   obtenerInformacionPagoGenerarDocumento() {
     console.log(
       'Formulario',
-      this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()
+      this.formularioInformeSeguimiento
+      .get('valor_cumplido')
+      ?.getRawValue().replace('$','').replace(',','')
     );
-      
+    
     return {
       Banco:
         this.informacionBancariaForm.get('banco')?.getRawValue()?.NombreBanco ?? "",
@@ -459,11 +474,11 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
         ),
       },
       TipoFactura:this.formularioInformeSeguimiento.get('tipo_cobro')?.getRawValue().Nombre??"",
-
+      
       ValorPagar: Number(
         this.formularioInformeSeguimiento
           .get('valor_cumplido')
-          ?.getRawValue() ?? 0
+          ?.getRawValue().replace('$','').replace(',','') ?? 0
       ),
 
       VigenciaContrato: this.vigencia ?? '',
@@ -473,6 +488,9 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
 
 
   obtenerInformacionPagoGuardar() {
+    console.log(this.formularioInformeSeguimiento
+      .get('valor_cumplido')
+      ?.getRawValue().replace('$','').replace(',',''))
     return {
       BancoId:
         this.informacionBancariaForm.get('banco')?.getRawValue()?.Id ?? 0,
@@ -500,7 +518,7 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
       ValorCumplido: Number(
         this.formularioInformeSeguimiento
           .get('valor_cumplido')
-          ?.getRawValue() ?? 0
+          ?.getRawValue().replace('$','').replace(',','') ?? 0
       ),
       VigenciaContrato: this.vigencia ?? '',
       FechaInicial:
