@@ -1,11 +1,21 @@
 .component-principal-header{
-    display: flex;
+    display: grid;
     justify-content: center;
 }
 
 .card-oas{
     width: 100%;
     height: 100%;
+}
+
+.button-regresar{
+  align-self: end;
+  justify-self: end;
+  position: absolute;
+  color: white !important;
+  background-color: #98483c;
+  border-bottom: 1px solid #98483c;
+  margin-right: 10px;
 }
 
 .title-component-principal{

@@ -1,9 +1,15 @@
 <mat-card class="card-oas">
-    <mat-card-header class="component-principal-header">
-        <mat-card-title class="title-component-principal"> {{ title }} </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <app-informacion-contrato></app-informacion-contrato>
-      <app-formulario-informe-satisfaccion></app-formulario-informe-satisfaccion>
-    </mat-card-content>
+  <mat-card-header class="component-principal-header">
+    <mat-card-title class="title-component-principal">
+      {{ title }}
+    </mat-card-title>
+    <button class="button-regresar" mat-button (click)="regresar_supervisor()" >
+      <mat-icon>keyboard_arrow_left</mat-icon>
+      regresar
+    </button>
+  </mat-card-header>
+  <mat-card-content>
+    <app-informacion-contrato></app-informacion-contrato>
+    <app-formulario-informe-satisfaccion></app-formulario-informe-satisfaccion>
+  </mat-card-content>
 </mat-card>
