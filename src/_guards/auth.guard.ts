@@ -1,24 +1,34 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
 import { PopUpManager } from 'src/app/managers/popUpManager';
+import { DecodedToken } from 'src/app/models/decode_token';
+import { UserService } from 'src/app/services/user.services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-
+  user!:DecodedToken;
+  pathForRol:any={
+    'pages/cumplido-satisfaccion/:cumplidoId':['SUPERVISOR']
+  }
   constructor(
     private popUpManager: PopUpManager,
-  ) {}
+    private userService: UserService
+  ) {
+    this.user=userService.getPayload()
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    console.log("route",route)
     const menuInfo = localStorage.getItem('menu');
+    console.log(this.user)
     const menuPermisos = menuInfo ? JSON.parse(atob(menuInfo)) : null;
     console.log("Menu",menuPermisos)
     const fullUrl = window.location.href;
     const url = new URL(fullUrl);
-    const path = url.pathname.startsWith('/') ? url.pathname.substring(1) : url.pathname;
-
+    //const path = url.pathname.startsWith('/') ? url.pathname.substring(1) : url.pathname;
+    const path= 'pages/'+route.routeConfig?.path
 
     // Obtener parámetros de la ruta
     const params = route.params;
@@ -27,9 +37,14 @@ export class AuthGuard implements CanActivate {
 
 
     if (menuPermisos != null) {
+      
       // Pasar tanto la URL como los parámetros a la función de verificación
-      if (checkUrlExists(menuPermisos, path, params)) {
+      if (checkUrlExists(menuPermisos, path?path:'', params)) {
         return true;
+      }else{
+        if(this.pathForRol[path]!=undefined && this.pathForRol[path].some((item:string) => this.user.role.includes(item))){
+          return true
+        }
       }
     }
 
