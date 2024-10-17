@@ -18,10 +18,10 @@ export class HttpErrorManager {
       });
     } else {
       // Maneja errores del servidor
-      //console.error(
-        `Código de estado ${error.status}, ` +
-        `cuerpo del error: ${JSON.stringify(error.error)}`
-      );
+      // console.error(
+      //   `Código de estado ${error.status}, ` +
+      //   `cuerpo del error: ${JSON.stringify(error.error)}`
+      // );
       this.snack.open(this.getErrorMessage(error), 'Cerrar', {
         duration: 5000,
         panelClass: ['error-snackbar']

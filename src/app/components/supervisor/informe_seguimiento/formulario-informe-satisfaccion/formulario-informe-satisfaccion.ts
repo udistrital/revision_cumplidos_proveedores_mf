@@ -434,12 +434,12 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
   }
 
   obtenerInformacionPagoGenerarDocumento() {
-    //console.log(
-      'Formulario',
-      this.formularioInformeSeguimiento
-      .get('valor_cumplido')
-      ?.getRawValue().replace('$','').replace(',','')
-    );
+    // console.log(
+    //   'Formulario',
+    //   this.formularioInformeSeguimiento
+    //   .get('valor_cumplido')
+    //   ?.getRawValue().replace('$','').replace(',','')
+    // );
     
     return {
       Banco:
@@ -488,9 +488,9 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
 
 
   obtenerInformacionPagoGuardar() {
-    //console.log(this.formularioInformeSeguimiento
-      .get('valor_cumplido')
-      ?.getRawValue().replace('$','').replace(',',''))
+    // console.log(this.formularioInformeSeguimiento
+    //   .get('valor_cumplido')
+    //   ?.getRawValue().replace('$','').replace(',',''))
     return {
       BancoId:
         this.informacionBancariaForm.get('banco')?.getRawValue()?.Id ?? 0,

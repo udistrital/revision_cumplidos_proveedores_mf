@@ -88,10 +88,10 @@ export class ModalListarCumplidosComponent {
             res.contratos.supervisor &&
             res.contratos.supervisor.length > 0
           ) {
-            //console.log(
-              'DocumentoSupervisor:',
-              res.contratos.supervisor[0].cargo
-            );
+            // //console.log(
+            //   'DocumentoSupervisor:',
+            //   res.contratos.supervisor[0].cargo
+            // );
             this.cargoSupervisor = res.contratos.supervisor[0].cargo;
           } else {
             this.cargoSupervisor = 'Supervisor';
@@ -101,7 +101,7 @@ export class ModalListarCumplidosComponent {
           this.cargoSupervisor = 'Supervisor';
         },
       });
-  }
+  };
 
   async getSolicitudesContrato(
     numero_contrato: string,
