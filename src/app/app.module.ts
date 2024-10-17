@@ -48,7 +48,11 @@ import { MatSortModule } from '@angular/material/sort';
 import { TablaComponent } from './components/general-components/tabla/tabla.component';
 import { ModalComentariosSoporteComponent } from './components/general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
 import { ComentarioIndividualSoporteComponent } from './components/general-components/modal-comentarios-soporte/comentario-individual-soporte/comentario-individual-soporte.component';
-import { GenerarComentarioSoporteComponent } from './components/general-components/modal-comentarios-soporte/generar-comentario-soporte/generar-comentario-soporte.component'
+import { GenerarComentarioSoporteComponent } from './components/general-components/modal-comentarios-soporte/generar-comentario-soporte/generar-comentario-soporte.component';
+import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/gestion-evaluadores.component';
+import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
+import { PuntajeComponent } from './components/evaluacion-proveedor/gestion-evaluadores/puntaje/puntaje.component';
+import { ItemsAEvaluarComponent } from './components/evaluacion-proveedor/gestion-evaluadores/items-a-evaluar/items-a-evaluar.component'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -77,6 +81,10 @@ export function createTranslateLoader(http: HttpClient) {
     ModalComentariosSoporteComponent,
     ComentarioIndividualSoporteComponent,
     GenerarComentarioSoporteComponent,
+    GestionEvaluadoresComponent,
+    EvaluadoresComponent,
+    PuntajeComponent,
+    ItemsAEvaluarComponent,
   ],
   imports: [
     HttpClientModule,
