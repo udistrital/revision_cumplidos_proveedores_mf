@@ -10,7 +10,7 @@
 
 form {
   display: grid;
-  grid-template-columns: 1fr 1fr 0.7fr;
+  grid-template-columns: (3,1fr);
   gap: 2rem;
   box-sizing: border-box;
 }
