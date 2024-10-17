@@ -16,7 +16,7 @@ export class FormSoporteComponent {
   opciones!:any;
   observaciones = "";
   base64Output: string | ArrayBuffer | null = '';
-  fileName: string = '';
+  fileName: string = 'Seleccione un archivo';
   idTipoDocumento!: number;
   cumplidoSatisfaccionSeleccionado: boolean = false;
   soporteForm!: FormGroup;
@@ -89,12 +89,13 @@ export class FormSoporteComponent {
   }
 
   triggerFileInput() {
+    console.log("click")
     this.fileInput.nativeElement.click();
   }
 
   removeFile() {
     this.fileInput.nativeElement.value = '';
-    this.fileName = '';
+    this.fileName = 'Seleccione un archivo';
     this.soporteForm.patchValue({ fileName: ''})
     this.base64Output = '';
   }
@@ -117,7 +118,7 @@ export class FormSoporteComponent {
         .subscribe({
           next: (res: any) => {
             this.recargarSoportes.emit(res)
-          
+            this.soporteForm.reset()
           },
           error: (error: any) => {
             this.popUpManager.showErrorAlert(
