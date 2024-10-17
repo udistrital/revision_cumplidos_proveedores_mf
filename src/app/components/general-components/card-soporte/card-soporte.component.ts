@@ -57,12 +57,12 @@ export class CardSoporteComponent {
     );
        if(confirm.isConfirmed){
 
-        console.log(this.soporte)
+        //console.log(this.soporte)
         try{
           this.cumplidos_provedore_crud_service.delete(`/soporte_cumplido`, soporteId)
         .subscribe({
           next: (res: any) => {
-            console.log("Buttons:", this.buttons)
+            //console.log("Buttons:", this.buttons)
             this.recargarSoportes.emit(res)
             this.popUpManager.showSuccessAlert(
               'El soporte se ha eliminado correctamente.'
@@ -110,7 +110,7 @@ export class CardSoporteComponent {
   //  }
 
    openDialog(soporte_id: number, tipo_soporte: string, cumplido_proveedor_id: number) {
-    console.log("Soportes: ", this.soporte)
+    //console.log("Soportes: ", this.soporte)
     this.dialog.open(ModalComentariosSoporteComponent, {
       disableClose: true,
       maxHeight: '80vh',

@@ -127,7 +127,7 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
           }
           
           
-          console.error(error);
+          //console.error(error);
         },
       });
   }
@@ -239,11 +239,11 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
       .post('/solicitud-pago/cambio-estado', cambioEstado)
       .subscribe(
         (response) => {
-          console.log(cambioEstado);
-          console.log(response);
+          //console.log(cambioEstado);
+          //console.log(response);
         },
         (error) => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }
@@ -301,10 +301,10 @@ export class RevisionCumplidosOrdenadorComponent implements OnInit {
       .post(`solicitud-pago/soportes`, autorizacionPago)
       .subscribe(
         (response) => {
-          console.log(response);
+          //console.log(response);
         },
         (error) => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }

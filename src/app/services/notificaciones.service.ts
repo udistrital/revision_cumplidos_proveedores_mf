@@ -37,16 +37,16 @@ export class NotificacionesService {
 
   async publicarNotificaciones(estado:string,enopint:string) {
     
-    console.log("Entro a notificaar",enopint )
+    //console.log("Entro a notificaar",enopint )
     await this.obteneMensaje(estado,enopint);
    const notificacion= this.crearNotificacion();
     const notificaciones: any = await new Promise((resolve, reject) => {
       this.post('/notificacion', notificacion).subscribe(
         response=>{
-          console.log("Envio de notifiacion",response)
+          //console.log("Envio de notifiacion",response)
         },
         error=>{
-          console.log(error)
+          //console.log(error)
         }
       );
     });
@@ -72,13 +72,13 @@ export class NotificacionesService {
       metadatos:{} ,
       activo:true ,
     }
-    console.log("Notificacion", notificacion)
+    //console.log("Notificacion", notificacion)
      return notificacion;
   }
 
 
   private async obteneMensaje(estado: string,endpoint:string) {
-    console.log('obtenerAsunto', estado);
+    //console.log('obtenerAsunto', estado);
     switch (estado) {
       case 'PRO':
         this.mensaje = 'Contratación te asignó una de cumplido proveedor';
@@ -125,7 +125,7 @@ export class NotificacionesService {
   }
 
   private async obtenerDestinatario(endPoint:string){
-    console.log("Si esta buscando")
+    //console.log("Si esta buscando")
     this.documentoResponsable = await this.userService.obtenerResponsable(endPoint);
    }
  

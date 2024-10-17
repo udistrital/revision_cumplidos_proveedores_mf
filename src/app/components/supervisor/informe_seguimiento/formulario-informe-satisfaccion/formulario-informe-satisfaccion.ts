@@ -107,7 +107,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     
     this.formularioInformeSeguimiento.valueChanges.subscribe((form) => {
       if (form.valor_cumplido){
-        console.log(form.valor_cumplido)
+        //console.log(form.valor_cumplido)
         this.formularioInformeSeguimiento.patchValue({
           valor_cumplido: this.currencyPipe.transform(form.valor_cumplido.replace(/\D/g, '').replace(/^0+/,''),'USD','symbol','1.0-0')
         },{emitEvent:false})
@@ -121,7 +121,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       this.contrato = contrato;
     });
 
-    console.log('cumplido', this.contrato);
+    //console.log('cumplido', this.contrato);
     this.route.paramMap.subscribe((params) => {
       const idParam = params.get('cumplidoId');
       this.cumplidoId = idParam ? +idParam : 0;
@@ -179,7 +179,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       );
 
       this.listaDocumentoCobro = response;
-      console.log(this.listaDocumentoCobro);
+      //console.log(this.listaDocumentoCobro);
     } catch (error) {
       this.popUpManager.showErrorAlert(
         'Se produjo un error al consultar los tipos de cobro.'
@@ -189,8 +189,8 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async obtenerTipoCuentaBancaria(bancoId: number) {
-    console.log('Buscando tipos de cuenta ');
-    console.log(bancoId);
+    //console.log('Buscando tipos de cuenta ');
+    //console.log(bancoId);
     try {
       const response = await lastValueFrom(
         this.coreApiService.get(
@@ -199,7 +199,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
       );
       if (response) {
         this.listaTiposCuentaBancaria = response;
-        console.log('response', response);
+        //console.log('response', response);
       }
     } catch (error) {
       this.popUpManager.showErrorAlert(
@@ -231,7 +231,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     );
     if (confirm.isConfirmed) {
       const body = this.obtenerInformacionPagoGuardar();
-      console.log('Despues de guardar ', this.nuevoFormuario);
+      //console.log('Despues de guardar ', this.nuevoFormuario);
       this.guardatinformacionPagoSolictud(body);
     }
   }
@@ -257,7 +257,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
           .post('/supervisor/cumplido-satisfaccion', body)
           .subscribe({
             next: (res: any) => {
-              console.log('response', res.Data.Data);
+              //console.log('response', res.Data.Data);
               this.solicituDeFirma = {
                 NombreArchivo: res.Data.NombreArchivo,
                 NombreResponsable: res.Data.NombreResponsable,
@@ -265,11 +265,11 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
                 DescripcionDocumento: res.Data.DescripcionDocumento,
                 Archivo: res.Data.Archivo,
               };
-              console.log('Archivo', this.solicituDeFirma);
+              //console.log('Archivo', this.solicituDeFirma);
               this.nameFile = this.solicituDeFirma.NombreArchivo;
               this.pdfBase64 = res.Data.Archivo;
-              console.log('test de archvio : ', res.Data.Archivo);
-              console.log('test de asignacion: ', res.Data.Archivo);
+              //console.log('test de archvio : ', res.Data.Archivo);
+              //console.log('test de asignacion: ', res.Data.Archivo);
             },
 
             error: (error: any) => {
@@ -301,9 +301,9 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
     Object.keys(controls).forEach((controlName) => {
       const control = controls[controlName];
       if (control.invalid) {
-        console.log(`Control: ${controlName}`);
-        console.log('Valor:', control.value);
-        console.log('Errores:', control.errors);
+        //console.log(`Control: ${controlName}`);
+        //console.log('Valor:', control.value);
+        //console.log('Errores:', control.errors);
       }
     });
   }
@@ -401,11 +401,11 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
 
   async cargarIfnformacionBancaria() {
     this.banco = this.listaBancos.find((banco) => banco.Id == this.bancoId);
-    console.log(this.tipoCuentaBancaria);
+    //console.log(this.tipoCuentaBancaria);
     await this.obtenerTipoCuentaBancaria(this.banco?.Id ?? 0);
 
     if (typeof this.tipoCuentaBancaria === 'string') {
-      console.log('tipos cuenta', this.listaTiposCuentaBancaria);
+      //console.log('tipos cuenta', this.listaTiposCuentaBancaria);
       this.tipoCuentaBancaria = this.listaTiposCuentaBancaria.find(
         (tipocuenta) => {
           return tipocuenta.Nombre.toLowerCase().includes(
@@ -425,7 +425,7 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
   }
 
   async cargarFormularioIfnformacionBancaria() {
-    console.log('Test nuevooooo', this.tipoCuentaBancaria);
+    //console.log('Test nuevooooo', this.tipoCuentaBancaria);
     this.informacionBancariaForm.patchValue({
       banco: this.banco,
       tipo_cuenta: this.tipoCuentaBancaria,
@@ -434,7 +434,7 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
   }
 
   obtenerInformacionPagoGenerarDocumento() {
-    console.log(
+    //console.log(
       'Formulario',
       this.formularioInformeSeguimiento
       .get('valor_cumplido')
@@ -488,7 +488,7 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
 
 
   obtenerInformacionPagoGuardar() {
-    console.log(this.formularioInformeSeguimiento
+    //console.log(this.formularioInformeSeguimiento
       .get('valor_cumplido')
       ?.getRawValue().replace('$','').replace(',',''))
     return {
@@ -588,7 +588,7 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
               (response) => {
                 Swal.close();
                 if(this.mostrarAlerta){
-                  console.log("valor",this.mostrarAlerta)
+                  //console.log("valor",this.mostrarAlerta)
                   this.popUpManager.showSuccessAlert(
                     'Se guardó el informe correctamente.'
                   );
@@ -651,16 +651,16 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
       const infoProveedor = await lastValueFrom(
         this.userService.obtenerInformacioProveedor(this.idProveedor)
       );
-      console.log('info proveedor', infoProveedor);
+      //console.log('info proveedor', infoProveedor);
       this.numeroDeCuenta = infoProveedor[0].NumCuentaBancaria;
       this.tipoCuentaBancaria = infoProveedor[0].TipoCuentaBancaria;
       this.banco = infoProveedor[0].IdEntidadBancaria;
       await this.cargarIfnformacionBancaria();
       await this.cargarFormularioIfnformacionBancaria();
-      console.log('Desde el formulario nuevo', this.tipoCuentaBancaria);
+      //console.log('Desde el formulario nuevo', this.tipoCuentaBancaria);
       Swal.close();
     } catch (error) {
-      console.error('Error al consultar informacion del contrato');
+      //console.error('Error al consultar informacion del contrato');
       this.popUpManager.showErrorAlert(
         'Error al intentar consultar la información del contrato.'
       );

@@ -34,7 +34,7 @@ export class CambioEstadoService {
           return null;
         }),
         catchError((error) => {
-          console.error('Error', error);
+          //console.error('Error', error);
           return of(null);
         })
       );
@@ -45,11 +45,11 @@ export class CambioEstadoService {
       .post('/solicitud-pago/cambio-estado', cambioEstado)
       .subscribe(
         (response) => {
-          console.log(cambioEstado);
-          console.log(response);
+          //console.log(cambioEstado);
+          //console.log(response);
         },
         (error) => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }
@@ -70,7 +70,7 @@ export class CambioEstadoService {
 
       if (this.mensaje != '') {
         try {
-          console.log('Entro');
+          //console.log('Entro');
         } catch (error) {
           this.popUpManager.showErrorAlert(
             'Se generó un error al enviar la notificación.'
