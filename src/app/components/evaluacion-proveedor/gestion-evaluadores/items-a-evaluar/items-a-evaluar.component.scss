@@ -1,3 +1,8 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+  }
 .title {
   margin: 10px;
   font-weight: normal;
@@ -16,7 +21,7 @@
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   justify-items: center !important;
-  align-items: center  !important;
+  align-items: center !important;
 }
 
 .tex-size-17 {
@@ -36,15 +41,118 @@
   text-align: center;
 }
 
-.margin-10px{
-    margin: 10px;
+.margin-10px {
+  margin: 10px;
 }
 
-.btn-add{
-    background-color: #008736;
+.margin-5px {
+    margin: 5px;
+  }
+
+.btn-add {
+  background-color: #008736;
 }
 
 .btn-add:hover {
-    transform: scale(1.1);
-    background-color: #8c1a19;
+  transform: scale(1.1);
+  background-color: #8c1a19;
 }
+
+.text-area {
+  pointer-events: none;
+  resize: none;
+  width: 90%;
+  height: 60px;
+}
+
+.box-items {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-items: center !important;
+  align-items: start !important;
+  gap: 10px;
+}
+
+.box-item {
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr 2fr;
+  justify-items: center !important;
+  align-items: center !important;
+  width: 100%;
+  text-align: center;
+}
+
+.btn-delete {
+  border: none;
+  background: none;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  border: none;
+  background: none;
+  cursor: pointer; 
+}
+
+.btn-delete :hover {
+  transform: scale(1.1);
+}
+
+.text-btn-delete {
+  font-size: 32px;
+  color: #8c1a19;
+}
+.item-id {
+  border: solid black 1px;
+  padding: 5px;
+}
+
+.item-descripcion {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+
+.card-item{
+    width: 100%;
+    border: solid #4042412f 1px;
+}
+
+@media screen and (max-width: 886px) {
+    
+    .text-area {
+        pointer-events: none;
+        resize: none;
+        width: 90%;
+        height: 80px;
+      }
+      
+
+  }
+.card-item{
+    width: 100%;
+}
+
+  @media screen and (max-width: 640px) {
+    
+    .text-area {
+        pointer-events: none;
+        resize: none;
+        width: 90%;
+        height: 80px;
+      }
+      
+
+      .box-items {
+        grid-template-columns: repeat(1, 1fr);
+      
+      }
+      
+      .box-item {
+        grid-template-columns: 0.5fr 0.5fr 80%;
+      
+      }
+
+  }

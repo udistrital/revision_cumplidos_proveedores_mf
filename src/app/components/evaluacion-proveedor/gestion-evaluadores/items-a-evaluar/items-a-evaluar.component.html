@@ -49,6 +49,22 @@
             </form>
           </div>
         </div>
+
+        <div class="box-items">
+
+        
+             <mat-card class="card-item" *ngFor="let item of listaItems">
+                <div class="box-item margin-5px " >
+                    <div><button type="button" class="btn-delete" (click)="eliminarItem(item.id)"><span class="material-symbols-outlined text-btn-delete">
+                        delete
+                        </span></button></div>
+                    <div><a class="item-id">{{item.id}}</a></div>
+                    <div class="item-descripcion"><textarea class="text-area text-center">{{item.descripcion}}</textarea></div>
+                  </div>
+           
+             </mat-card>
+            
+        </div>
       </article>
     </mat-expansion-panel>
   </mat-accordion>
