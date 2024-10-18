@@ -1,20 +1,34 @@
-import { Component, ElementRef, ViewChild, Output, EventEmitter, Input, numberAttribute } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  Output,
+  EventEmitter,
+  Input,
+  numberAttribute,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-soporte',
   templateUrl: './form-soporte.component.html',
-  styleUrls: ['./form-soporte.component.scss']
+  styleUrls: ['./form-soporte.component.scss'],
 })
 export class FormSoporteComponent {
-
-  opciones!:any;
-  observaciones = "";
+  opciones!: any;
+  observaciones = '';
   base64Output: string | ArrayBuffer | null = '';
   fileName: string = 'Seleccione un archivo';
   idTipoDocumento!: number;
@@ -22,7 +36,8 @@ export class FormSoporteComponent {
   soporteForm!: FormGroup;
   itemId!: number;
 
-  @Input({required:true,transform:numberAttribute})cumplidoProveedorId!:number
+  @Input({ required: true, transform: numberAttribute })
+  cumplidoProveedorId!: number;
   @Output() recargarSoportes = new EventEmitter<any>();
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -32,35 +47,34 @@ export class FormSoporteComponent {
     private router: Router,
     private dialog: MatDialog,
     private fb: FormBuilder
-  ){
-
+  ) {
     this.soporteForm = this.fb.group({
       opcionSeleccionada: ['', [Validators.required]],
       observaciones: ['', [Validators.minLength(10)]],
-      fileName: [{ value: '', disabled: true }, [Validators.required]]
+      fileName: [{ value: '', disabled: true }, [Validators.required]],
     });
   }
 
-
-  ngOnInit(){
+  ngOnInit() {
     //console.log(this.soporteForm.value.opcionSeleccionada)
-    this.getTipoDocumentosCumplido()
-
+    this.getTipoDocumentosCumplido();
   }
 
-  getTipoDocumentosCumplido(){
-    this.cumplidosMidServices.get('/supervisor/tipos-documentos-cumplido')
-    .subscribe({
-      next: (res: any) => {
-        this.opciones = res.Data;
-        //console.log("Tipo documentos:", this.opciones)
-      },
-      error: (error: any) => {
-        this.popUpManager.showErrorAlert(
-          'No fue posible obtener los documentos que se pueden subir en el cumplido.'
-        );
-      }
-    })
+  getTipoDocumentosCumplido() {
+    this.cumplidosMidServices
+      .get('/supervisor/tipos-documentos-cumplido')
+      .subscribe({
+        next: (res: any) => {
+          //res.Data.find((element:any) => element.CodigoAbreviacionTipoDocumento=='AG');
+          this.opciones = res.Data;
+          //console.log("Tipo documentos:", this.opciones)
+        },
+        error: (error: any) => {
+          this.popUpManager.showErrorAlert(
+            'No fue posible obtener los documentos que se pueden subir en el cumplido.'
+          );
+        },
+      });
   }
 
   onFileSelected(event: Event) {
@@ -70,13 +84,15 @@ export class FormSoporteComponent {
       const file = input.files[0];
       if (file.type === 'application/pdf') {
         this.fileName = file.name;
-        this.soporteForm.patchValue({ fileName: this.fileName })
+        this.soporteForm.patchValue({ fileName: this.fileName });
         const reader = new FileReader();
         reader.onload = () => {
           const base64Result = reader.result as string;
           // Remove the prefix 'data:application/pdf;base64,'
           const base64Prefix = 'data:application/pdf;base64,';
-          this.base64Output = base64Result.startsWith(base64Prefix) ? base64Result.slice(base64Prefix.length) : base64Result;
+          this.base64Output = base64Result.startsWith(base64Prefix)
+            ? base64Result.slice(base64Prefix.length)
+            : base64Result;
         };
         reader.readAsDataURL(file);
       } else {
@@ -96,65 +112,71 @@ export class FormSoporteComponent {
   removeFile() {
     this.fileInput.nativeElement.value = '';
     this.fileName = 'Seleccione un archivo';
-    this.soporteForm.patchValue({ fileName: ''})
+    this.soporteForm.patchValue({ fileName: '' });
     this.base64Output = '';
   }
 
   uploadFile() {
     if (this.base64Output) {
-      const payload = {
+      let payload = {
         SolicitudPagoID: this.cumplidoProveedorId,
-        TipoDocumento: "application/pdf",
+        TipoDocumento: 'application/pdf',
         observaciones: this.soporteForm.value.observaciones.trim(),
         ItemID: this.itemId,
         NombreArchivo: this.fileName,
-        Archivo: this.base64Output
+        Archivo: this.base64Output,
       };
-      if(payload.observaciones==""){
-        payload.observaciones="Sin observaciónes en el documento"
+      if (payload.observaciones == '') {
+        payload.observaciones = 'Sin observaciónes en el documento';
       }
-      this.popUpManager.showLoadingAlert("Cargando documento, por favor espera")
-      this.cumplidosMidServices.post('/solicitud-pago/soportes', payload)
+      this.popUpManager.showLoadingAlert(
+        'Cargando documento, por favor espera'
+      );
+      this.cumplidosMidServices
+        .post('/solicitud-pago/soportes', payload)
         .subscribe({
           next: (res: any) => {
-            this.recargarSoportes.emit(res)
-            this.soporteForm.reset()
+            this.recargarSoportes.emit(res);
           },
           error: (error: any) => {
             this.popUpManager.showErrorAlert(
               'Error al intentar cargar el archivo.'
             );
-          },complete:()=>{
+          },
+          complete: () => {
             this.removeFile();
-            Swal.close()
+            this.soporteForm.reset({
+              opcionSeleccionada: '',
+              observaciones: '',
+              fileName: '',
+            });
+            Swal.close();
             this.popUpManager.showSuccessAlert(
               'El archivo se ha cargado exitosamente.'
             );
-          }
+          },
         });
     } else {
-      this.popUpManager.showErrorAlert(
-        'No se ha seleccionado ningún archivo.'
-      );
+      this.popUpManager.showErrorAlert('No se ha seleccionado ningún archivo.');
     }
   }
 
-  asignarItemId(item: number){
-    this.itemId = item
+  asignarItemId(item: number) {
+    this.itemId = item;
     //console.log("Itemid:", this.itemId)
   }
 
   crearDocumento() {
     //console.log(this.soporteForm.value.opcionSeleccionada)
     this.dialog.closeAll();
-    this.router.navigate(['/cumplido-satisfaccion',this.cumplidoProveedorId]);
+    this.router.navigate(['/cumplido-satisfaccion', this.cumplidoProveedorId]);
   }
 
-  cambioTipoDocumento(tipoDocumento: string){
-    if (tipoDocumento === "CS"){
-      this.cumplidoSatisfaccionSeleccionado = true
+  cambioTipoDocumento(tipoDocumento: string) {
+    if (tipoDocumento === 'CS') {
+      this.cumplidoSatisfaccionSeleccionado = true;
     } else {
-      this.cumplidoSatisfaccionSeleccionado = false
+      this.cumplidoSatisfaccionSeleccionado = false;
     }
   }
 }
