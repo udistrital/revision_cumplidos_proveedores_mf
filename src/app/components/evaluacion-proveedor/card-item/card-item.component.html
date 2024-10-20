@@ -1,0 +1,24 @@
+<div class="box-items">
+  <mat-card class="card-item" *ngFor="let item of listaItems">
+    <div class="box-item margin-5px">
+      <div>
+        <textarea class="item-id text-area-id text-center">{{ item.id }}</textarea>
+      </div>
+      <div>
+        <textarea class="item-nombre text-area-id text-center">{{ item.nombre }}</textarea>
+      </div>
+      <div class="item-descripcion">
+        <textarea class=" text-area text-center">{{
+        item.descripcion
+      }}</textarea>
+      </div>
+      <div>
+        <button type="button" class="btn-delete" (click)="eliminarItem(item.id)">
+          <span class="material-symbols-outlined text-btn-delete">
+            delete
+          </span>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>
