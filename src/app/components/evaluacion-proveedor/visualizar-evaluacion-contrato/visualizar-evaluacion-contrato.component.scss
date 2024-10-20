@@ -1,0 +1,82 @@
+.card-container{
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-tittle{
+  display: flex;
+  color: #98483C;
+  width: 50%;
+  height: 20%;
+  margin: 1.5% 2%;
+}
+
+
+.button {
+  background-color: #98483C;
+  color: white;
+  border-radius: 5px;
+  border: 1px solid #b85450;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.3s;
+  display: flex;
+  align-items: center;
+  margin-top: -2.5%;
+  height: 70%;
+  width: auto;
+}
+
+.button:hover {
+  background-color: #e8a3a1;
+  transform: scale(1.05);
+}
+
+.container-botones{
+  display: flex;
+  flex-wrap: wrap;
+  width: 30%;
+  height: 20%;
+  justify-content: space-between;
+  margin-top: 2%;
+}
+
+.card-container{
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+  margin: 1%;
+}
+
+.container-puntaje-evaluacion{
+  display: flex;
+  width: 100%;
+  margin: 1%;
+}
+
+.container-inputs{
+  display: flex;
+  width: 100%;
+  margin-top: 1%;
+  margin-left: 2%;
+  gap:5%;
+}
+
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container-botones {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .button {
+    width: 100%;
+    margin: 1%;
+    font-size: 14px;
+  }
+}

@@ -25,6 +25,10 @@ import { ModalListarCumplidosComponent } from './components/supervisor/modal-lis
 import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revision-cumplidos-ordenador/revision-cumplidos-ordenador.component';
 import { RevisionCumplidosContratacionComponent } from './components/contratacion/revision-cumplidos-contratacion/revision-cumplidos-contratacion.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { MatListModule } from '@angular/material/list';
+
+
 import {
   TranslateLoader,
   TranslateModule,
@@ -49,7 +53,11 @@ import { TablaComponent } from './components/general-components/tabla/tabla.comp
 import { ModalComentariosSoporteComponent } from './components/general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
 import { ComentarioIndividualSoporteComponent } from './components/general-components/modal-comentarios-soporte/comentario-individual-soporte/comentario-individual-soporte.component';
 import { GenerarComentarioSoporteComponent } from './components/general-components/modal-comentarios-soporte/generar-comentario-soporte/generar-comentario-soporte.component';
-import { ListarContratosEvaluarComponent } from './components/evaluacion-proveedor/listar-contratos-evaluar/listar-contratos-evaluar.component'
+import { ListarContratosEvaluarComponent } from './components/evaluacion-proveedor/listar-contratos-evaluar/listar-contratos-evaluar.component';
+import { VisualizarEvaluacionContratoComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-evaluacion-contrato.component';
+import { InformacionGeneralComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/informacion-general/informacion-general.component';
+import { ListarElementosComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/listar-elementos/listar-elementos.component';
+import { EvaluadoresComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/evaluadores/evaluadores.component'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -79,6 +87,10 @@ export function createTranslateLoader(http: HttpClient) {
     ComentarioIndividualSoporteComponent,
     GenerarComentarioSoporteComponent,
     ListarContratosEvaluarComponent,
+    VisualizarEvaluacionContratoComponent,
+    InformacionGeneralComponent,
+    ListarElementosComponent,
+    EvaluadoresComponent,
   ],
   imports: [
     HttpClientModule,
@@ -107,6 +119,8 @@ export function createTranslateLoader(http: HttpClient) {
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatSortModule,
+    MatListModule,
+    MatExpansionModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

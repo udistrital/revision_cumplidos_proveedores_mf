@@ -1,0 +1,42 @@
+.card-oas{
+  border-radius: 10px !important;
+  margin-bottom: 1% !important;
+  margin: 1%;
+  padding: 0 1%;
+}
+
+.card-tittle{
+  display: flex;
+  color: #98483C;
+  width: 50%;
+  height: 20%;
+  margin: 1.5% 0.8%;
+}
+
+.grid-container{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  flex-wrap: wrap;
+  grid-gap: 1%;
+  margin: 1%;
+}
+
+.label{
+  color: grey !important;
+  margin: 2% 0;
+}
+
+.textos{
+  height: 100%;
+	display: flex;
+	flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.grid-objeto-contrato{
+  display: grid;
+  grid-column: 2/4;
+  margin: 0%;
+  padding: 0%;
+}

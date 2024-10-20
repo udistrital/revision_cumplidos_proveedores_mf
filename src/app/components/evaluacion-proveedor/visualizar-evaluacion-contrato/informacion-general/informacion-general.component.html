@@ -1,0 +1,61 @@
+<mat-accordion style="border-radius: 10px;">
+  <mat-expansion-panel class="card-oas" (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)" [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="card-tittle"> <h1> {{tittle}} </h1> </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="grid-container">
+      <div>
+        <div class="textos">
+          <p class="label">Puntaje Total de la evaluación</p>
+          <p class="value"> {{informacionGeneral.puntajeTotalEvaluacion}} </p>
+        </div>
+      </div>
+      <div>
+        <div class="textos">
+          <p class="label">Calificación</p>
+          <p class="value"> {{informacionGeneral.calificacion}} </p>
+        </div>
+      </div>
+      <div>
+        <div class="textos">
+          <p class="label">Dependencia que evalúa</p>
+          <p class="value"> {{informacionGeneral.dependenciaEvaluadora | uppercase}} </p>
+        </div>
+      </div>
+      <div>
+        <div class="textos">
+          <p class="label">Fecha de la evaluación</p>
+          <p class="value"> {{informacionGeneral.fechaEvaluacion | date: 'dd/MM/yyyy'}} </p>
+        </div>
+      </div>
+      <div>
+        <div class="textos">
+          <p class="label">Nombre del supervisor encargado de la evaluación</p>
+          <p class="value"> {{informacionGeneral.nombreEvaluador | uppercase}} </p>
+        </div>
+      </div>
+      <div>
+        <div class="textos">
+          <p class="label">Cargo</p>
+          <p class="value"> {{informacionGeneral.cargo | uppercase}} </p>
+        </div>
+      </div>
+      <div>
+        <div class="textos">
+          <p class="label">Empresa o Proveedor</p>
+          <p class="value"> {{informacionGeneral.proveedor | uppercase}} </p>
+        </div>
+      </div>
+      <div class="grid-objeto-contrato">
+        <div class="textos">
+          <p style="margin: 1% 0" class="label">Objeto del contrato</p>
+          <p class="value"> {{informacionGeneral.objetoContrato | uppercase}} </p>
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+
+
+
+
