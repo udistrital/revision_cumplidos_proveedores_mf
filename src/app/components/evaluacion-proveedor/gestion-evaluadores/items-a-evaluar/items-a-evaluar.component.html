@@ -1,71 +1,78 @@
 <section>
   <mat-accordion>
-    <mat-expansion-panel
-      [expanded]="true"
-      (opened)="panelOpenState = true"
-      (closed)="panelOpenState = false"
-    >
-      <mat-expansion-panel-header>
-        <mat-panel-title>
+    <mat-expansion-panel [expanded]="true" (opened)="panelOpenStateEvaluadores = true"
+      (closed)="panelOpenStateEvaluadores = false">
+      <mat-expansion-panel-header class="bg-panel-title">
+        <mat-panel-title class="expansion-panel-title-box">
           <div>
-            <h3 class="title text-color-principal text-center">
-              Item a evaluar
-            </h3>
+            <h3 class="title color-white text-center">Item a evaluar</h3>
           </div>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
       <article>
         <div class="box-form">
-          <div class="tex-size-17 text-color-principal margin-10px">
-            Descripcion item
-          </div>
-          <div class="box-text-area margin-10px">
-            <form
-              class="form"
-              (ngSubmit)="imprimir()"
-              [formGroup]="formAddIntems"
-            >
-              <mat-form-field class="width-text-area">
-                <mat-label class="center-label"
-                  >Agrega Descripcion del item</mat-label
-                >
-
-                <textarea
-                  class="text-area"
-                  matInput
-                  placeholder=""
-                  formControlName="detalles_item"
-                ></textarea>
-              </mat-form-field>
-              <div class="margin-10px">
-                <div class="text-center">
-                  <button type="submit" class="btn-add" mat-fab extended>
-                    <mat-icon>add</mat-icon>
-                    Agregar
-                  </button>
+          <form class="form" (ngSubmit)="agregarItem()" [formGroup]="formAddIntems">
+            <div class="box-text-area">
+              <div>
+                <div class="tex-size-17 text-color-principal margin-10px">
+                  Id
                 </div>
+                <mat-form-field class="id-input">
+                  <mat-label class="center-label">Id</mat-label>
+                  <input matInput placeholder="Id" formControlName="id_item" />
+                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('id_item')?.invalid" class="label-error">
+                    Ingresa el Id
+                  </mat-error>
+                </mat-form-field>
               </div>
-            </form>
-          </div>
+              <div>
+                <div class="tex-size-17 text-color-principal margin-10px">
+                  Nombre
+                </div>
+                <mat-form-field class="">
+                  <mat-label>Nombre</mat-label>
+                  <input matInput placeholder="Nombre" formControlName="nombre_item" />
+                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('nombre_item')?.invalid" class="label-error">
+                    Ingresa el nombre del item
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div>
+                <div class="tex-size-17 text-color-principal margin-10px">
+                  Descripcion item
+                </div>
+                <mat-form-field class="width-text-area">
+                  <mat-label>Agrega Descripcion del item</mat-label>
+                  <textarea class="text-area" matInput placeholder="" formControlName="detalles_item"></textarea>
+                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('detalles_item')?.invalid" class="label-error">
+                    Ingresa la descripción
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="margin-10px">
+              <div class="text-center">
+                <button type="submit" class="btn-add" mat-button>
+                  <mat-icon>add</mat-icon>
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
 
-        <div class="box-items">
 
-        
-             <mat-card class="card-item" *ngFor="let item of listaItems">
-                <div class="box-item margin-5px " >
-                    <div><button type="button" class="btn-delete" (click)="eliminarItem(item.id)"><span class="material-symbols-outlined text-btn-delete">
-                        delete
-                        </span></button></div>
-                    <div><a class="item-id">{{item.id}}</a></div>
-                    <div class="item-descripcion"><textarea class="text-area text-center">{{item.descripcion}}</textarea></div>
-                  </div>
-           
-             </mat-card>
-            
-        </div>
+        <app-card-item [listaItems]="listaItems" [eliminarItem]="eliminarItem.bind(this)"></app-card-item>
+
       </article>
     </mat-expansion-panel>
   </mat-accordion>
+
+
+
+
+
+
 </section>

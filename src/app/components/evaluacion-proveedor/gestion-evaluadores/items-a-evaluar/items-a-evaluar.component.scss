@@ -9,14 +9,20 @@
   font-size: 2rem;
 }
 
-.text-center {
-  text-align: center;
+.text-center { 
+  text-align: center !important; 
 }
 
+.color-white{
+  color: white !important;
+}
 .text-color-principal {
   color: #8c1a19;
 }
-
+.mat-expansion-panel-header {
+  background-color: #8c1a19 !important; 
+  color: white !important; 
+}
 .box-form {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -29,16 +35,16 @@
 }
 
 .form {
-  width: 100%;
+  width: 80%;
 }
 
 .width-text-area {
-  width: 80% !important;
+  width: 100% !important;
 }
 
-.box-text-area {
-  width: 100%;
-  text-align: center;
+.height-text-area {
+  width: 100% !important;
+  height: auto;
 }
 
 .margin-10px {
@@ -51,18 +57,28 @@
 
 .btn-add {
   background-color: #008736;
+  color: white !important;
 }
 
 .btn-add:hover {
-  transform: scale(1.1);
+  transform: scale(1.2);
   background-color: #8c1a19;
 }
 
-.text-area {
+.text-area { border: solid rgba(0, 0, 0, 0.164) 1px;
   pointer-events: none;
   resize: none;
-  width: 90%;
+  width: 100%;
   height: 60px;
+  border-radius: 5px;
+}
+
+.text-area-id {
+  pointer-events: none;
+  resize: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
 }
 
 .box-items {
@@ -75,13 +91,27 @@
 
 .box-item {
   display: grid;
-  grid-template-columns: 0.5fr 0.5fr 2fr;
+  grid-template-columns: 1fr  1fr 2fr 0.5fr ;
   justify-items: center !important;
   align-items: center !important;
   width: 100%;
+  gap: 2px;
   text-align: center;
 }
+.id-input {
+  width: 150px !important;
+}
 
+.box-text-area{
+  display: grid;
+  grid-template-columns: 0.1fr 0.1fr 1fr ;
+  justify-items: stretch !important;
+  align-items: center !important;
+  text-align: center;
+  gap: 10px;
+  width: 100%;
+  text-align: center;
+}
 .btn-delete {
   border: none;
   background: none;
@@ -102,8 +132,17 @@
   color: #8c1a19;
 }
 .item-id {
-  border: solid black 1px;
+  border: solid rgba(0, 0, 0, 0.164) 1px;
   padding: 5px;
+  min-width: 80px;
+  max-width: 80px;
+}
+
+
+.item-nombre {
+  border: solid rgba(0, 0, 0, 0.164) 1px;
+  padding: 5px;
+  min-width: 120px;
 }
 
 .item-descripcion {
@@ -120,6 +159,21 @@
     border: solid #4042412f 1px;
 }
 
+.bg-panel-title{
+  background-color: #8c1a19;
+  color: white;
+}
+
+.expansion-panel-title-box{
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  height: 100%;
+}
+:host ::ng-deep .mat-expansion-indicator::after {
+  color: white;
+}
+
 @media screen and (max-width: 886px) {
     
     .text-area {
@@ -128,7 +182,14 @@
         width: 90%;
         height: 80px;
       }
+      .box-text-area{
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+      }
       
+      .box-text-area > div:nth-child(3) {
+        grid-column: 1 / -1;
+      }
 
   }
 .card-item{
@@ -138,21 +199,18 @@
   @media screen and (max-width: 640px) {
     
     .text-area {
+      
         pointer-events: none;
         resize: none;
         width: 90%;
-        height: 80px;
+        height: 690px;
       }
       
 
-      .box-items {
-        grid-template-columns: repeat(1, 1fr);
-      
-      }
-      
-      .box-item {
-        grid-template-columns: 0.5fr 0.5fr 80%;
-      
+      .box-text-area{
+        grid-template-columns: 1fr;
+        align-items: center;
       }
 
+  
   }

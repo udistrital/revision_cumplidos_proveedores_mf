@@ -10,50 +10,79 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 })
 export class ItemsAEvaluarComponent {
   formAddIntems: FormGroup;
-  numberId:number=0;
+  formularioEnviado: boolean = false;
 
   constructor(private fb: FormBuilder, private popUpManager: PopUpManager) {
     this.formAddIntems = this.fb.group({
       detalles_item: [null, Validators.required],
+      id_item: [null, Validators.required],
+      nombre_item: [null, Validators.required],
     });
   }
-  panelOpenState = false;
+  panelOpenStateItems = false;
+  panelOpenStateEvaluadores = false;
 
   listaItems: ItemAEvaluar[] = [];
 
-  async imprimir() {
-    if (this.obtenerInfoFormulario().item != '') {
+  async agregarItem() {
+    const existe = this.listaItems.some(
+      (item) => item.id === this.obtenerInfoFormulario().id
+    );
+
+    if (existe) {
+      this.popUpManager.showErrorAlert('El id ya existe');
+    } else {
       let confirm = await this.popUpManager.showConfirmAlert(
         '¿Estás seguro de agregar el ítem?'
       );
       if (confirm.isConfirmed) {
-        this.listaItems.push({
-          id: this.numberId+ 1,
-          descripcion: this.obtenerInfoFormulario().item,
-        });
-        this.numberId= this.numberId+ 1
-        this.formAddIntems.reset({
-          detalles_item: '',
-        });
+        if (this.validarFromulario()) {
+          this.formularioEnviado = false;
+          const nuevoItem = {
+            id: this.obtenerInfoFormulario().id,
+            nombre: this.obtenerInfoFormulario().nombre,
+            descripcion: this.obtenerInfoFormulario().detalles,
+          };
+          this.listaItems = [...this.listaItems, nuevoItem];
+          this.formAddIntems.reset({
+            detalles_item: '',
+          });
+        } else {
+          this.popUpManager.showErrorAlert('Verifica los campos');
+        }
       }
-    }else{
-      this.popUpManager.showErrorAlert("La descripción no puede estar vacía");
     }
   }
 
   obtenerInfoFormulario() {
     return {
-      item: this.formAddIntems.get('detalles_item')?.getRawValue() ?? '',
+      id: this.formAddIntems.get('id_item')?.getRawValue() ?? '',
+      nombre: this.formAddIntems.get('nombre_item')?.getRawValue() ?? '',
+      detalles: this.formAddIntems.get('detalles_item')?.getRawValue() ?? '',
     };
   }
 
-  async eliminarItem(id:number) {
+  async eliminarItem(id: number) {
     let confirm = await this.popUpManager.showConfirmAlert(
-      '¿Estás seguro de agregar el ítem?'
+      '¿Estás seguro de eliminar el ítem?'
     );
-    if(confirm){
-      this.listaItems = this.listaItems.filter(item=>item.id!==id)
+    if (confirm.isConfirmed) {
+      this.listaItems = this.listaItems.filter((item) => item.id !== id);
     }
-   
+  }
+
+  validarFromulario(): boolean {
+    let isValid = true;
+
+    const controls = this.formAddIntems.controls;
+    for (const control in controls) {
+      if (controls[control].invalid) {
+        controls[control].markAsTouched();
+        isValid = false;
+        this.formularioEnviado = true;
+      }
+    }
+
+    return isValid;
   }
 }
