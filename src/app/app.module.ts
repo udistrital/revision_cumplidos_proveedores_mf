@@ -51,9 +51,9 @@ import { ComentarioIndividualSoporteComponent } from './components/general-compo
 import { GenerarComentarioSoporteComponent } from './components/general-components/modal-comentarios-soporte/generar-comentario-soporte/generar-comentario-soporte.component';
 import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/gestion-evaluadores.component';
 import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
-import { PuntajeComponent } from './components/evaluacion-proveedor/gestion-evaluadores/puntaje/puntaje.component';
 import { ItemsAEvaluarComponent } from './components/evaluacion-proveedor/gestion-evaluadores/items-a-evaluar/items-a-evaluar.component'
 import {MatExpansionModule} from '@angular/material/expansion';
+import { CardItemComponent } from './components/evaluacion-proveedor/card-item/card-item.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -84,8 +84,8 @@ export function createTranslateLoader(http: HttpClient) {
     GenerarComentarioSoporteComponent,
     GestionEvaluadoresComponent,
     EvaluadoresComponent,
-    PuntajeComponent,
     ItemsAEvaluarComponent,
+    CardItemComponent,
     
   ],
   imports: [

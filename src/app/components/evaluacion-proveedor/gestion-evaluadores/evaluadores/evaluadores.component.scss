@@ -1,0 +1,112 @@
+.box-btn-add {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+}
+.btn-add:hover {
+  transform: scale(1.2);
+  background-color: #8c1a19;
+}
+
+.btn-add {
+  background-color: #008736;
+  color: white !important;
+  margin: 10px;
+  width: 100px;
+}
+
+.bg-panel-title {
+  background-color: #8c1a19;
+  color: white;
+}
+
+.title {
+  margin: 10px;
+  font-weight: normal;
+  font-size: 2rem;
+}
+.color-white {
+  color: white !important;
+}
+.title {
+  margin: 10px;
+  font-weight: normal;
+  font-size: 2rem;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.expansion-panel-title-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.mat-expansion-panel-header {
+  background-color: #8c1a19 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .mat-expansion-indicator::after {
+  color: white;
+}
+
+.box-form {
+  margin: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.labels {
+  color: black !important;
+  font-size: 16px;
+}
+
+.btn-delete {
+  border: none;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.text-btn-delete {
+  font-size: 32px;
+  color: #8c1a19;
+}
+.btn-delete :hover {
+  transform: scale(1.1);
+}
+
+.box-btn-delete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+@media screen and (max-width: 1024px) {
+  .box-form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .box-form > div:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+}
+
+
+@media screen and (max-width: 640px) {
+    .box-form {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+  
