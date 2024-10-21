@@ -10,6 +10,7 @@ import { RevisionCumplidosContratacionComponent } from './components/contratacio
 import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revision-cumplidos-ordenador/revision-cumplidos-ordenador.component';
 import { AuthGuard } from 'src/_guards/auth.guard';
 import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/gestion-evaluadores.component';
+import { FormEvaluacionContratoComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/form-evaluacion-contrato.component';
 
 export const routes: Routes = [
   {
@@ -35,8 +36,13 @@ export const routes: Routes = [
   {
     path: 'gestion-evaluadores',
     component: GestionEvaluadoresComponent,
+  },
+  {
+    path: 'evaluacion-contrato',
+    component: FormEvaluacionContratoComponent,
   }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
