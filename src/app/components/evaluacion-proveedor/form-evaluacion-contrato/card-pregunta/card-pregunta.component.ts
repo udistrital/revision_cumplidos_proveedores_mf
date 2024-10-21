@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-card-pregunta',
@@ -6,7 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./card-pregunta.component.scss'],
 })
 export class CardPreguntaComponent {
-  porcentage:number=0;
+  evaluacion: FormGroup;
+  porcentage: number = 0;
+  preguntaIndex:number=0
   listaPreguntas = [
     {
       elemento: 'Cumplimiento',
@@ -83,17 +86,58 @@ export class CardPreguntaComponent {
     },
   ];
 
+  constructor(private fb: FormBuilder) {
+    const controls = this.listaPreguntas.flatMap(item => 
+      item.preguntas.map(() => this.fb.control(''))
+    );
 
-  
-   sumarPorcentajes() {
-
-    this.listaPreguntas.forEach(item => {
-        item.preguntas.forEach(pregunta => {
-            this.porcentage += pregunta.porcentaje;
-        });
+    this.evaluacion = this.fb.group({
+      respuestas: this.fb.array(controls),
+      observaciones: ['', [Validators.required]],
     });
+    console.log(this.evaluacion.value);
 
+    const respuestas = this.evaluacion.get('respuestas') as FormArray;
+    respuestas.valueChanges.subscribe(() => {
+      this.porcentage = this.sumarPorcentajes();
+    });
+  
+  }
+
+
+
+  sumarPorcentajes() {
+    let total = 0;
+    const respuestas = this.evaluacion.get('respuestas') as FormArray;
+    console.log(respuestas)
+  
+    respuestas.controls.forEach((control: any, index: number) => {
+      if (control.value === 'si') {
+        const pregunta = this.getPreguntaPorIndex(index);
+        if (pregunta) {
+          total += pregunta.porcentaje;
+        }
+      }
+    });
+  
+    return total;
+  }
+
+  getPreguntaPorIndex(index: number) {
+    let acumulado = 0;
+    for (const grupo of this.listaPreguntas) {
+      for (const pregunta of grupo.preguntas) {
+        if (acumulado === index) {
+          return pregunta;
+        }
+        acumulado++;
+      }
+    }
+    return null;
+  }
+
+
+  enviarEvaluacion() {
+ 
+  }
 }
-}
-
-

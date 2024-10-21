@@ -1,25 +1,27 @@
-<div *ngFor="let item of listaPreguntas">
-  <mat-card class="item-evaluar margin-10px border-card">
-    <div>
-      <div class="box-header-evaluacion">
-        <div>
-          <h3 class="color-principal">{{item.elemento}}</h3>
-        </div>
-        <div class="color-principal text-center">Valor Asignado</div>
-      </div>
-
-      <div *ngFor="let pregunta of item.preguntas">
-        <div class="box-pregunta">
+<form [formGroup]="evaluacion" (ngSubmit)="enviarEvaluacion()">
+  <div *ngFor="let item of listaPreguntas">
+    <mat-card class="item-evaluar margin-10px border-card">
+      <div>
+        <div class="box-header-evaluacion">
           <div>
-            <form action="">
+            <h3 class="color-principal">{{ item.elemento }}</h3>
+          </div>
+          <div class="color-principal text-center">Valor Asignado</div>
+        </div>
+
+        <div *ngFor="let pregunta of item.preguntas; let i = index">
+          <div class="box-pregunta">
+            <div>
               <div>
                 <div class="box-caracteristica">
-                  <div class="color-principal text-center">{{pregunta.caracteristica}}</div>
-                  <div class="text-center">{{pregunta.pregunta}}</div>
-                  <div style="text-align: center;">
+                  <div class="color-principal text-center">
+                    {{ pregunta.caracteristica }}
+                  </div>
+                  <div class="text-center">{{ pregunta.pregunta }}</div>
+                  <div style="text-align: center">
                     <p>Seleccione una opción</p>
-                    <mat-form-field class="mat-form-field ">
-                      
+
+                    <mat-form-field class="mat-form-field">
                       <mat-select>
                         <mat-option value="si">Si</mat-option>
                         <mat-option value="no">No</mat-option>
@@ -28,44 +30,58 @@
                   </div>
                 </div>
               </div>
-            </form>
+            </div>
+
+            <div class="text-center">
+              <p class="line-text">{{ pregunta.porcentaje }}</p>
+            </div>
           </div>
-  
-          <div class="text-center  "><p class="line-text">{{pregunta.porcentaje}}</p></div>
+        </div>
+
+        <div class="box-total">
+          <div class="text-center p">
+            <p class="principal-color" style="font-size: 1rem">
+              Puntaje total:
+            </p>
+          </div>
+          <div>
+            <p style="font-size: 1rem">{{ porcentage }}</p>
+          </div>
         </div>
       </div>
+    </mat-card>
+  </div>
 
-
-    </div>
-  </mat-card>
-
- 
-</div>
-
-<mat-card class="item-evaluar margin-10px border-card">
-  <div class="box-observaciones margin-10px ">
-    <div class="color-principal"><h3>Observaciones</h3></div>
-    <div class="text-center">
-      <mat-form-field class="">
-        <mat-label>Observaciones</mat-label>
-        <textarea class="" matInput placeholder="" formControlName="observaciones"></textarea>
-        <!-- <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('detalles_item')?.invalid" class="label-error">
+  <mat-card class="item-evaluar margin-10px border-card">
+    <div class="box-observaciones margin-10px">
+      <div class="color-principal">
+        <h3>Observaciones</h3>
+      </div>
+      <div class="text-center">
+        <mat-form-field class="">
+          <mat-label>Observaciones</mat-label>
+          <textarea class="" matInput placeholder="" formControlName="observaciones"></textarea>
+          <!-- <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('detalles_item')?.invalid" class="label-error">
           Ingresa la descripción
         </mat-error> -->
-      </mat-form-field>
+        </mat-form-field>
+      </div>
     </div>
-    <div class="text-end">
-      <button class="btn-enviar"  mat-button>Enviar Evaluacion</button>
+  </mat-card>
+  <mat-card class="item-evaluar margin-10px border-card">
+    <div class="box-suma-total">
+      <div class="title-card color-principal">
+        <p>Puntje Total de evaluacion</p>
+      </div>
+      <div>
+        <p class="line-text">Total</p>
+      </div>
+      <div>
+        <p class="line-text">Calificacion</p>
+      </div>
+      <div class="text-end">
+        <button class="btn-enviar" mat-button>Enviar Evaluacion</button>
+      </div>
     </div>
-  </div>
- 
-</mat-card>
-
-<div class="box-total">
-  <div class="text-center p">
-    <p class="principal-color" style="font-size: 1.5rem;">Puntaje total:</p>
-  </div>
-  <div>
-    <p style="font-size: 1.5rem;">Total</p>
-  </div>
-</div>
+  </mat-card>
+</form>
