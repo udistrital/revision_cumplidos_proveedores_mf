@@ -25,7 +25,10 @@
     justify-content: center;
     align-items: center;
   }
-
+  .mat-expansion-panel-header {
+    background-color: #8c1a19 !important; 
+    color: white !important; 
+  }
 .color-principal{
   color:#8c1a19;
 }
@@ -67,7 +70,10 @@
 mat-form-field {
   width: 80%;
 }
-
+.bg-panel-title{
+  background-color: #8c1a19;
+  color: white;
+}
 textarea {
   min-height: 50px;
   resize: vertical;
@@ -75,7 +81,7 @@ textarea {
   box-sizing: border-box;
 }
 .btn-enviar {
-  background-color: #008736;
+  background-color: #8c1a19;
   color: white !important;
   width: auto;
   max-width: 150px;
@@ -98,4 +104,24 @@ textarea {
   grid-template-columns: repeat(4,1fr);
   margin: 10px;
   text-align: center;
+}  .mat-expansion-panel-header {
+  background-color: #8c1a19 !important; 
+  color: white !important; 
+}
+
+.expansion-panel-title-box{
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  height: 100%;
+}
+.title {
+  margin: 10px;
+  font-weight: normal;
+  font-size: 2rem;
+} .color-white{
+  color: white !important;
+}
+.title-expansion{
+  font-size: 1rem;
 }
