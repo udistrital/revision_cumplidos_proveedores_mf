@@ -104,7 +104,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
   }
 
   async ngOnInit() {
-    
+
     this.formularioInformeSeguimiento.valueChanges.subscribe((form) => {
       if (form.valor_cumplido){
         //console.log(form.valor_cumplido)
@@ -282,7 +282,7 @@ export class FormularioInformeSatisfaccionComponent implements OnInit {
               this.mostrarAlerta=false
               await this.guardatinformacionPagoSolictud(body);
               this.modalVerSoporte();
-          
+
             },
           });
       } else {
@@ -348,7 +348,7 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
     }
   );
 })
-   
+
   }
 
   async buscarInformacionPago() {
@@ -440,7 +440,7 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
     //   .get('valor_cumplido')
     //   ?.getRawValue().replace('$','').replace(',','')
     // );
-    
+
     return {
       Banco:
         this.informacionBancariaForm.get('banco')?.getRawValue()?.NombreBanco ?? "",
@@ -461,7 +461,7 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
           TipoCuenta:  this.informacionBancariaForm.get('tipo_cuenta')?.getRawValue()?.Nombre?? "",
           TipoPago:
           this.formularioInformeSeguimiento.get('tipo_pago')?.getRawValue()?.Nombre ?? ""
-         
+
           ,
 
       TipoCuentaBancariaId: Number(
@@ -474,15 +474,10 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
         ),
       },
       TipoFactura:this.formularioInformeSeguimiento.get('tipo_cobro')?.getRawValue().Nombre??"",
-      
-      ValorPagar: Number(
-        this.formularioInformeSeguimiento
-          .get('valor_cumplido')
-          ?.getRawValue().replace('$','').replace(',','') ?? 0
-      ),
 
+      ValorPagar: Number((this.formularioInformeSeguimiento.get('valor_cumplido')?.value ?? '0').replace(/[^\d]/g, '')),
       VigenciaContrato: this.vigencia ?? '',
-        
+
     };
   }
 
