@@ -2,15 +2,25 @@
   border-radius: 10px !important;
   margin-bottom: 1% !important;
   margin: 1%;
-  padding: 0 1%;
+  //padding: 0 1%;
 }
 
-.card-tittle{
+
+.expansion-panel-title-box {
   display: flex;
-  color: #98483C;
-  width: 50%;
-  height: 20%;
-  margin: 1.5% 0.8%;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  color: white !important;
+}
+.mat-expansion-panel-header {
+  background-color: #8c1a19 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .mat-expansion-indicator::after {
+  color: white;
 }
 
 .grid-container{

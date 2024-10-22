@@ -1,16 +1,18 @@
-.card-container{
-  display: flex;
-  justify-content: space-between;
-}
+
 
 .card-tittle{
   display: flex;
   color: #98483C;
-  width: 50%;
+  width: 100%;
   height: 20%;
-  margin: 1.5% 2%;
+  justify-content: center;
+  margin: 1.0% 2%;
 }
 
+.card-oas {
+  border-radius: 10px;
+  margin: 1%;
+}
 
 .button {
   background-color: #98483C;
@@ -44,9 +46,9 @@
 
 .card-container{
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   border-radius: 10px;
-  margin: 1%;
+  margin: 0 1%;
 }
 
 .container-puntaje-evaluacion{
