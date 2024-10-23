@@ -96,14 +96,14 @@ margin-top: 20px;
     }
 
 
-    .mat-mdc-header-row {
-      text-align: center;
-      vertical-align: middle;
-      box-shadow: none !important;
-      height: 30px !important;
-      background-color: #E8DADA;
-      font-weight: bold;
-  }
+.mat-mdc-header-row {
+    text-align: center;
+    vertical-align: middle;
+    box-shadow: none !important;
+    height: 30px !important;
+    background-color: #E8DADA;
+    font-weight: bold;
+}
 
     @media screen and (max-width: 720px) {
       .title-color {
