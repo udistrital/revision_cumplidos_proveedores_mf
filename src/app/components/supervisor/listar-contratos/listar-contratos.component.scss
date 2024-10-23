@@ -97,17 +97,13 @@ margin-top: 20px;
 
 
     .mat-mdc-header-row {
+      text-align: center;
+      vertical-align: middle;
       box-shadow: none !important;
       height: 30px !important;
-      background-color:#E8DADA;
-
-
-    }
-    .mat-mdc-row {
-      height:10px !important;
-
+      background-color: #E8DADA;
+      font-weight: bold;
   }
-
 
     @media screen and (max-width: 720px) {
       .title-color {
@@ -150,11 +146,7 @@ margin-top: 20px;
       border-left: 0px solid var(--color200) !important;
     }
 
-    .mat-mdc-header-row{
-      background: #FFEAE6;
-      text-align: center;
-      vertical-align: middle;
-    }
+ 
 
     .mat-sort-header{
       text-align: center;

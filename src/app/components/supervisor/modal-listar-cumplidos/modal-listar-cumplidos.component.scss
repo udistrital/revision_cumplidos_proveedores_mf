@@ -74,11 +74,7 @@ mat-select {
   display: flex;
   gap: 10px;
 }
-.mat-mdc-header-row {
-  box-shadow: none;
-  height: 35px !important;
-  background-color: #e8dada;
-}
+
 
 .mat-mdc-row {
   height: 10px !important;
@@ -107,10 +103,12 @@ table {
   border-left: 0px solid var(--color200) !important;
 }
 
-.mat-mdc-header-row{
+.mat-mdc-header-row {
   background: #FFEAE6;
   text-align: center;
   vertical-align: middle;
+  box-shadow: none;
+  height: 35px !important;
 }
 
 .mat-sort-header{

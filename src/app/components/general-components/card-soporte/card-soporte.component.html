@@ -14,46 +14,13 @@
       <div class="box-text-area">
         <p matInput>{{ soporte.Documento.Descripcion }}</p>
       </div>
-      <!-- <div>
-        <h2> Comentarios: </h2>
-        <ul>
-          <ng-template *ngFor="let comentario of soporte.Comentarios">
-            <li *ngIf="comentario.Comentario !=''">
-              <p >{{comentario.CambioEstadoCumplidoId.CargoResponsable}} : {{ comentario.Comentario }} </p>
-            </li>
-          </ng-template>
-
-
-        </ul>
-      </div>
-      <div>
-        <textarea [(ngModel)]="comentario" name="" class="box-text-area" id="" *ngIf="(config.mode==mode.PRC || config.mode==mode.PRO) && (config.rolUsuario==rolUsuario.C ||config.rolUsuario==rolUsuario.O)"></textarea>
-      </div> -->
-      <!-- <div *ngIf="(config.mode == mode.PRC || config.mode == mode.PRO) && (config.rolUsuario == rolUsuario.C || config.rolUsuario == rolUsuario.O)" style="margin-top: 5px;">
-        <form [formGroup]="comentarioForm">
-          <textarea id="comentario" formControlName="comentario" placeholder="Escribe un comentario" class="box-text-area"></textarea>
-          <div *ngIf="comentarioForm.get('comentario')?.invalid && comentarioForm.get('comentario')?.touched">
-            <span *ngIf="comentarioForm.get('comentario')?.hasError('minlength')">El comentario debe tener al menos 10 caracteres</span>
-          </div>
-
-        </form>
-      </div> -->
-
 
     </mat-card-content>
   </div>
 
   <mat-card-footer>
     <div >
-      <!-- <div>
-        <button mat-button class="btn-eliminar" (click)="eliminarSoporte()"
-          *ngIf="(config.mode == mode.CD || config.mode == mode.RC || config.mode == mode.RO) && config.rolUsuario == rolUsuario.S">
-          Eliminar
-        </button>
-        <button mat-button type="submit" [disabled]="comentarioForm.invalid" class="btn-eliminar" (click)="openDialog(soporte.SoporteCumplidoId, cambioEstadoCumplido.Id, soporte.Documento.TipoDocumento)">
-          Comentarios
-        </button>
-      </div> -->
+    
       <div *ngIf="buttons && buttons.length > 0" class="btn-box">
         <div *ngFor="let button of buttons" [class.dos-botones]="!(config.mode == mode.CD || config.mode == mode.RC || config.mode == mode.RO) || !(config.rolUsuario == rolUsuario.S)" [class.tres-botones]="(config.mode == mode.CD || config.mode == mode.RC || config.mode == mode.RO) && (config.rolUsuario == rolUsuario.S)">
           <button mat-button [ngClass]="button.Classes" *ngIf="evaluarCondicional(button)" (click)="handleActionClick(button, soporte, cumplidoProveedorId)">
@@ -65,6 +32,3 @@
     </div>
   </mat-card-footer>
 </div>
-<!--  <button mat-button class="ver-documentos-button" (click)="openVerSoporte()">
-          Ver
-        </button>-->
