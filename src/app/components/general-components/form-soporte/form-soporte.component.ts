@@ -82,6 +82,16 @@ export class FormSoporteComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+
+      if(file.size>5000000){
+
+        this.popUpManager.showErrorAlert(
+          'El PDF no puede exceder los 5MB.'
+        );
+        this.removeFile();
+        return
+      }
+
       if (file.type === 'application/pdf') {
         this.fileName = file.name;
         this.soporteForm.patchValue({ fileName: this.fileName });
@@ -102,6 +112,7 @@ export class FormSoporteComponent {
         this.removeFile();
       }
     }
+    
   }
 
   triggerFileInput() {
