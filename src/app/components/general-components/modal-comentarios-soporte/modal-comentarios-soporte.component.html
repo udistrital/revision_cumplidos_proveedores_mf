@@ -12,7 +12,7 @@
     <mat-card-content>
 
       <!-- Mostrar el componente para generar comentario si las condiciones se cumplen -->
-      <mat-card class="card-generar-comentario" *ngIf="(data.Config.mode==mode.PRC || data.Config.mode==mode.PRO) && (data.Config.rolUsuario==rolUsuario.C ||data.Config.rolUsuario==rolUsuario.O)">
+      <mat-card class="card-generar-comentario" *ngIf="(data.Config.mode==mode.PRC || data.Config.mode==mode.PRO || data.Config.mode==mode.AO) && (data.Config.rolUsuario==rolUsuario.C ||data.Config.rolUsuario==rolUsuario.O)">
         <app-generar-comentario-soporte [cambioEstadoId]="cambioEstadoCumplido.Id" [soporteCumplidoId]="data.SoporteId" (nuevoComentarioCreado)="obtenerComentariosSoporte()" />
       </mat-card>
 

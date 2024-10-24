@@ -9,6 +9,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { RevisionCumplidosContratacionComponent } from './components/contratacion/revision-cumplidos-contratacion/revision-cumplidos-contratacion.component';
 import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revision-cumplidos-ordenador/revision-cumplidos-ordenador.component';
 import { AuthGuard } from 'src/_guards/auth.guard';
+import { ListarCumplidosReversiblesComponent } from './components/ordenador/listar-cumplidos-reversibles/listar-cumplidos-reversibles.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,11 @@ export const routes: Routes = [
     path: 'ordenador/revision-cumplidos',
     canActivate: [AuthGuard],
     component: RevisionCumplidosOrdenadorComponent,
+  },
+  {
+    path: 'ordenador/reversion-cumplidos',
+    canActivate: [AuthGuard],
+    component: ListarCumplidosReversiblesComponent,
   }
 ];
 
