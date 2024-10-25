@@ -10,6 +10,7 @@ import { RevisionCumplidosContratacionComponent } from './components/contratacio
 import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revision-cumplidos-ordenador/revision-cumplidos-ordenador.component';
 import { AuthGuard } from 'src/_guards/auth.guard';
 import { ListarCumplidosReversiblesComponent } from './components/ordenador/listar-cumplidos-reversibles/listar-cumplidos-reversibles.component';
+import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
 
 export const routes: Routes = [
   {
@@ -34,8 +35,11 @@ export const routes: Routes = [
   },
   {
     path: 'ordenador/reversion-cumplidos',
-    canActivate: [AuthGuard],
     component: ListarCumplidosReversiblesComponent,
+  },
+  {
+    path: 'historicos-cumplidos',
+    component: HistoricoCumplidosComponent
   }
 ];
 

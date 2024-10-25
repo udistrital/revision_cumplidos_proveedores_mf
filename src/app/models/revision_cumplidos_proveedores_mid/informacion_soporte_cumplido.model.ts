@@ -7,8 +7,8 @@ import { ComentarioSoporte } from "../revision_cumplidos_proveedores_crud/coment
     Documento: Documento
     Archivo: Archivo
     Comentarios: ComentarioSoporte[]
-    CodigoAbreviacionTipoDocumento?:string
   }
+  
   
   export interface Documento {
     IdTipoDocumento?:number
@@ -18,7 +18,7 @@ import { ComentarioSoporte } from "../revision_cumplidos_proveedores_crud/coment
     Descripcion: string
     Observaciones: string
     FechaCreacion: string
-    CodigoAbreviacionTipoDocumento:string
+    CodigoAbreviacionTipoDocumento?:string
   }
   
   export interface Archivo {
