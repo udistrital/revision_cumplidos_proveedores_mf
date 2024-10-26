@@ -5,11 +5,12 @@
       [meses]="meses"
       [dependencias]="dependencias"
       [estados]="estados"
+      (listaCumplidos)="listarCumplidos($event)"
     ></app-formulario-consulta>
 
     <app-listado-historicos
     [displayedColumns]="displayedColumns"
-    [dataSource]="listaHistoricos"
+    [dataSource]="listaCumplidos"
     >
   
     </app-listado-historicos>
