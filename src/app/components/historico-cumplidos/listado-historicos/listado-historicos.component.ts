@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { ModalHistoricoComponent } from '../modal-historico/modal-historico.component';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { HistoricoCumplido } from 'src/app/models/historico-cumplido.model';
+import { Cumplido } from 'src/app/models/cumplido';
 
 @Component({
   selector: 'app-listado-historicos',
@@ -15,12 +16,12 @@ import { HistoricoCumplido } from 'src/app/models/historico-cumplido.model';
 })
 export class ListadoHistoricosComponent implements OnInit {
   @Input() displayedColumns: any[] = [];
-  @Input() dataSource: HistoricoCumplido[] = [];
+  @Input() dataSource: Cumplido[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private popUpManager: PopUpManager, private dialog: MatDialog) {}
 
-  dataSourcetest = new MatTableDataSource<HistoricoCumplido>();
+  dataSourcetest = new MatTableDataSource<Cumplido>();
 
   ngOnInit(): void {
     this.dataSourcetest.data = this.dataSource;
