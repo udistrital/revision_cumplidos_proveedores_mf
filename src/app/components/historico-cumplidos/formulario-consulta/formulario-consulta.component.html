@@ -51,8 +51,8 @@
                   <mat-form-field appearance="outline" >
                     <mat-label>Seleccione Estado</mat-label>
                     <mat-select class="label" placeholder="Estado" formControlName="estados" multiple>
-                    <mat-option *ngFor="let estado of estados" [value]="estado">
-                      {{estado}}
+                    <mat-option *ngFor="let estado of listaEstadosCumplido" [value]="estado.Id">
+                      {{estado.Nombre}}
                     </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -61,8 +61,8 @@
                   <mat-form-field appearance="outline" >
                     <mat-label class="label"> Seleccione Dependencia</mat-label>
                     <mat-select placeholder="Dependencia" formControlName="dependencias" multiple>
-                    <mat-option *ngFor="let dependencia of dependencias" [value]="dependencia">
-                      {{dependencia}}
+                    <mat-option *ngFor="let dependencia of listaDependencias" [value]="dependencia.Codigo">
+                      {{dependencia.Nombre}}
                     </mat-option>
                     </mat-select>
                   </mat-form-field>
