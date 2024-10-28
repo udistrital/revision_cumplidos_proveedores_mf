@@ -9,5 +9,6 @@ export interface Cumplido {
     Estado: string;
     TipoContrato: string;
     acciones?:[]
+    IdCumplido:number
   }
   

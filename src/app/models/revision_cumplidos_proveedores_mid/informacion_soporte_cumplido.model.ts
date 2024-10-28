@@ -6,7 +6,7 @@ import { ComentarioSoporte } from "../revision_cumplidos_proveedores_crud/coment
     SoporteCumplidoId: number
     Documento: Documento
     Archivo: Archivo
-    Comentarios: ComentarioSoporte[]
+    Comentarios?: ComentarioSoporte[]
   }
   
   

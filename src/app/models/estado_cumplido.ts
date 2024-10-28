@@ -1,4 +1,4 @@
-interface EstadoCumplido {
+export  interface EstadoCumplido {
     Id: number;
     Nombre: string;
     CodigoAbreviacion: string;
