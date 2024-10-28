@@ -23,4 +23,5 @@ import { ComentarioSoporte } from "../revision_cumplidos_proveedores_crud/coment
   
   export interface Archivo {
     File: string
+    Nombre?:string
   }

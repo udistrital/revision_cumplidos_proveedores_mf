@@ -11,12 +11,21 @@ import { Cumplido } from 'src/app/models/cumplido';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { map } from 'rxjs/operators';
 import { EstadoCumplido } from 'src/app/models/cambio_estado';
-import { Documento, InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
-import { DocumentoHistorico, SoporteEstados } from 'src/app/models/documento_historico';
+import {
+  Documento,
+  InformacionSoporteCumplido,
+} from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import {
+  DocumentoHistorico,
+  SoporteEstados,
+} from 'src/app/models/documento_historico';
 import { Archivo } from './../../../models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 import { SoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/soporte-cumplido.model';
 import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
-import { Mode, RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
+import {
+  Mode,
+  RolUsuario,
+} from 'src/app/models/modal-soporte-cumplido-data.model';
 
 @Component({
   selector: 'app-listado-historicos',
@@ -28,13 +37,14 @@ export class ListadoHistoricosComponent implements OnInit {
   @Input() dataSource: Cumplido[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   listaCambiosEstados: EstadoCumplido[] = [];
-  listaDocumentosCargados:InformacionSoporteCumplido[]=[]
+  listaDocumentosCargados: InformacionSoporteCumplido[] = [];
+  file!: Archivo;
 
   constructor(
     private popUpManager: PopUpManager,
     private dialog: MatDialog,
     private cumplidosMidService: CumplidosProveedoresMidService
-  ) {}
+  ) { }
 
   dataSourcetest = new MatTableDataSource<Cumplido>();
 
@@ -45,31 +55,65 @@ export class ListadoHistoricosComponent implements OnInit {
     this.dataSourcetest.paginator = this.paginator;
   }
 
-  async descargarDocumentos() {
-    let comfirm = await this.popUpManager.showConfirmAlert(
-      '¿Estas seguro?',
-      'Vas a descargar lo documentos, pude tomar unos momentos'
+  async descargarComprimido(element: any): Promise<Archivo | any> {
+    const comfirm = await this.popUpManager.showConfirmAlert(
+      '¿Estás seguro?',
+      'Vas a descargar los documentos, puede tomar unos momentos'
     );
 
     if (comfirm.isConfirmed) {
-      await this.descargaTemp();
-      Swal.close();
-      this.popUpManager.showSuccessAlert('Se ha completado descarga');
-    } else {
-      this.popUpManager.showErrorAlert('No se realizo ninguna accion');
-    }
-  }
+      this.popUpManager.showLoadingAlert('Descargando');
 
-  descargaTemp(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.popUpManager.showLoadingAlert(
-        'Espera',
-        'La descarga se esta realizando'
-      );
-      setTimeout(() => {
-        resolve();
-      }, 2000);
-    });
+      return new Promise((resolve, reject) => {
+        this.cumplidosMidService
+          .get(`/solicitud-pago/soportes-comprimido/${element.IdCumplido}`)
+          .subscribe({
+            next: (response: any) => {
+              if (response.Data != null) {
+                this.file = {
+                  Nombre: response.Data.nombre,
+                  File:response.Data.file
+                 }
+                   
+                const byteCharacters = atob(this.file.File);
+                const byteNumbers = new Uint8Array(byteCharacters.length);
+
+                for (let i = 0; i < byteCharacters.length; i++) {
+                  byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+
+                const blob = new Blob([byteNumbers], {
+                  type: 'application/zip',
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = this.file.Nombre + '.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                resolve(blob);
+
+                resolve(this.file);
+              } else {
+                this.popUpManager.showErrorAlert(
+                  'No hay archivos para descargar'
+                );
+                resolve(null);
+              }
+              Swal.close();
+            },
+            error: (error: any) => {
+              this.popUpManager.showErrorAlert('Error al descargar');
+              reject(error);
+              Swal.close();
+            },
+          });
+      });
+    } else {
+      return null;
+    }
   }
 
   async modalHistorico(element: any) {
@@ -84,40 +128,41 @@ export class ListadoHistoricosComponent implements OnInit {
       panelClass: 'container-historico',
       data: {
         listaEstadosCumplidos: this.listaCambiosEstados,
-        listaDocumentosCargados:this.listaDocumentosCargados,
+        listaDocumentosCargados: this.listaDocumentosCargados,
         Buttons: [
-        {
-          Color: 'white',
-          FontIcon: 'visibility',
-          Function: (file: any) => {
-            const visualizarSoporetes = this.dialog.open(
-              ModalVisualizarSoporteComponent,
-              {
-                disableClose: true,
-                height: 'auto',
-                width: 'auto',
-                maxWidth: '60vw',
-                maxHeight: '80vh',
-                panelClass: 'custom-dialog-container',
-                data: {
-                  url: file.Archivo.File,
-                },
-              }
-            );
+          {
+            Color: 'white',
+            FontIcon: 'visibility',
+            Function: (file: any) => {
+              const visualizarSoporetes = this.dialog.open(
+                ModalVisualizarSoporteComponent,
+                {
+                  disableClose: true,
+                  height: 'auto',
+                  width: 'auto',
+                  maxWidth: '60vw',
+                  maxHeight: '80vh',
+                  panelClass: 'custom-dialog-container',
+                  data: {
+                    url: file.Archivo.File,
+                  },
+                }
+              );
+            },
+            Classes: 'ver-documentos-button',
+            Text: 'Ver',
           },
-          Classes: 'ver-documentos-button',
-          Text: 'Ver',
-        }
-      ], Config: {
-        mode: Mode.AO,
-        rolUsuario: RolUsuario.C,
-      },
+        ],
+        Config: {
+          mode: Mode.AO,
+          rolUsuario: RolUsuario.C,
+        },
       },
     });
   }
 
   async cargarCambiosDeEstado(idCumplido: number): Promise<EstadoCumplido[]> {
-    this.popUpManager.showLoadingAlert("Cargando")
+    this.popUpManager.showLoadingAlert('Cargando');
     return new Promise((resolve, reject) => {
       this.cumplidosMidService
         .get('/historico-cumplidos/cambio-estado/' + idCumplido)
@@ -133,7 +178,7 @@ export class ListadoHistoricosComponent implements OnInit {
                 })
               );
               resolve(this.listaCambiosEstados);
-              Swal.close()
+              Swal.close();
             } else {
               resolve([]);
             }
@@ -152,7 +197,7 @@ export class ListadoHistoricosComponent implements OnInit {
     idCumplido: number
   ): Promise<InformacionSoporteCumplido[]> {
     return new Promise((resolve, reject) => {
-      this.popUpManager.showLoadingAlert("Cargando")
+      this.popUpManager.showLoadingAlert('Cargando');
       this.cumplidosMidService
         .get('/solicitud-pago/soportes/' + idCumplido)
         .subscribe({
@@ -161,31 +206,29 @@ export class ListadoHistoricosComponent implements OnInit {
               this.listaDocumentosCargados = response.Data.map(
                 (documento: InformacionSoporteCumplido) => ({
                   SoporteCumplidoId: documento.SoporteCumplidoId,
-                  Documento:{
-                    IdTipoDocumento:documento.Documento.IdTipoDocumento,
+                  Documento: {
+                    IdTipoDocumento: documento.Documento.IdTipoDocumento,
                     Id: documento.Documento.Id,
                     Nombre: documento.Documento.Nombre,
                     TipoDocumento: documento.Documento.TipoDocumento,
                     Descripcion: documento.Documento.Descripcion,
                     Observaciones: documento.Documento.Observaciones,
                     FechaCreacion: documento.Documento.FechaCreacion,
-                    CodigoAbreviacionTipoDocumento:documento.Documento.CodigoAbreviacionTipoDocumento,
+                    CodigoAbreviacionTipoDocumento:
+                      documento.Documento.CodigoAbreviacionTipoDocumento,
                   },
                   Archivo: {
                     File: documento.Archivo.File,
                   },
-                  Comentarios:{
-
-                  }
+                  Comentarios: {},
                 })
               );
               resolve(this.listaDocumentosCargados);
-              Swal.close()
+              Swal.close();
             } else {
               Swal.close;
               resolve([]);
             }
-          
           },
           error: (err: any) => {
             this.popUpManager.showErrorAlert(
@@ -201,7 +244,7 @@ export class ListadoHistoricosComponent implements OnInit {
     if (event.action.actionName === 'visibility') {
       this.modalHistorico(event.element);
     } else if (event.action.actionName === 'archive') {
-      this.descargaTemp();
+      this.descargarComprimido(event.element);
     }
   }
 }
