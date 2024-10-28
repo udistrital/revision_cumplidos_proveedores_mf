@@ -109,3 +109,10 @@
   background-color: #FDEAE6 !important;
   height: 40px !important;
 }
+
+
+mat-form-field {
+  display: inline-block;
+  min-width: 50px;
+  max-width: 130px;
+}
