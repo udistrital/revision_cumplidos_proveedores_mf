@@ -55,14 +55,14 @@ export class RevisionCumplidosContratacionComponent {
   }
 
   displayedColumns = [
-    { def: 'NumeroContrato', header: 'N° CONTRATO' },
-    { def: 'VigenciaContrato', header: 'VIGENCIA' },
-    { def: 'TipoContrato', header: 'TIPO CONTRATO' },
-    { def: 'Rp', header: 'RP' },
-    { def: 'VigenciaRP', header: 'VIGENCIA RP' },
-    { def: 'FechaCreacion', header: 'FECHA CREACION' },
-    { def: 'NombreProveedor', header: 'PROVEEDOR' },
-    { def: 'Dependencia', header: 'DEPENDENCIA' },
+    { def: 'NumeroContrato', header: 'N° CONTRATO', filter: true },
+    { def: 'VigenciaContrato', header: 'VIGENCIA', filter: true },
+    { def: 'TipoContrato', header: 'TIPO CONTRATO', filter: true },
+    { def: 'Rp', header: 'RP', filter: true },
+    { def: 'VigenciaRP', header: 'VIGENCIA RP', filter: true },
+    { def: 'FechaCreacion', header: 'FECHA CREACION', filter: true },
+    { def: 'NombreProveedor', header: 'PROVEEDOR', filter: true },
+    { def: 'Dependencia', header: 'DEPENDENCIA', filter: true },
     { def: 'acciones', header: 'ACCIONES', isAction: true },
   ];
 

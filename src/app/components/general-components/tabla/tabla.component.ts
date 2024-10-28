@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,10 +25,29 @@ export class TablaComponent {
   dataSource = new MatTableDataSource<any>([]);
   columnKeys!: string[];
 
+  // FormControl para los filtros
+  filterControls: { [key: string]: FormControl } = {};
+  filteredValues: { [key: string]: string } = {};
+
   // Se inicializan los datos de la tabla, la paginacion y la ordenacion
   ngOnInit(): void {
     // Claves de las columnas para el mat-table
     this.columnKeys = this.displayedColumns.map(c => c.def);
+
+    // Inicializar filtros y FormControls para cada columna
+    this.displayedColumns.forEach(column => {
+      if (!column.isAction) {
+        this.filterControls[column.def] = new FormControl('');
+        this.filteredValues[column.def] = '';
+        this.filterControls[column.def].valueChanges.subscribe((filterValue) => {
+          this.filteredValues[column.def] = filterValue;
+          this.dataSource.filter = JSON.stringify(this.filteredValues);
+        });
+      }
+    });
+
+    // Definir el custom filterPredicate
+    this.dataSource.filterPredicate = this.customFilterPredicate();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -48,6 +68,22 @@ export class TablaComponent {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  // Custom filterPredicate para aplicar múltiples filtros
+  customFilterPredicate() {
+    return (data: any, filter: string): boolean => {
+      const searchString = JSON.parse(filter);
+      let isMatch = true;
+
+      for (let key in searchString) {
+        if (searchString[key] && data[key].toString().toLowerCase().indexOf(searchString[key].toLowerCase()) === -1) {
+          isMatch = false;
+          break;
+        }
+      }
+      return isMatch;
+    };
   }
 
   // Método para manejar los cliks en las acciones
