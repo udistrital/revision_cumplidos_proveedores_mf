@@ -13,10 +13,10 @@
    
       <div class="card-history"></div>
       <div class="estado-list">
-        <div *ngFor="let estado of Estados; let last=last" class="item-container card-arrow">
+        <div *ngFor="let estado of listaEstadosCumplidos; let last=last" class="item-container card-arrow">
           <div class="border-card">
            <div>
-            <div><p>{{estado.nombre}}</p></div>
+            <div><p>{{estado.nombreResponsable}}</p></div>
             <div><p>{{estado.cargo}}</p></div>
             <div><p>{{estado.estado}}</p></div>
             <div><p>{{estado.fecha}}</p></div>
@@ -29,18 +29,19 @@
       </div>
     </mat-card>
   </div>
-  <div class="">
+  <div class="margin-section">
     <mat-card-title class="title">
       <h4>VER SORPORTES</h4>
      </mat-card-title>
      <mat-card
      class="soporte-cumplido-card"
-     *ngFor="let soporte of listaSoporteCumplido"
+     *ngFor="let soporte of listaDocumentosCargados"
    >
-   <app-card-soporte
+   <app-card-soporte class="margin-10px"
    [soporte]="soporte"
    [config]="this.data.Config"
    [cambioEstadoCumplido]="cambioEstadoCumplido"
+   [buttons]="Buttons"
  ></app-card-soporte>
    </mat-card>
   </div>

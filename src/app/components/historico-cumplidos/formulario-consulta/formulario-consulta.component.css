@@ -58,8 +58,8 @@ form {
   }
 
   .btn-success{
-    background-color: #55993D !important;;
-    font-size: 1.1rem !important;
+    background-color: #883534 !important;;
+    font-size: 1.1rem !important;  
     padding: 1rem 3rem !important;
     color: white !important;
     border-radius: 5px !important;;
@@ -69,7 +69,7 @@ form {
 
 
   .btn-success:hover{
-    background-color: #568a2c !important;;
+    background-color: #8835349a !important;;
     font-size: 1.2rem !important;
     padding:1.1rem 3.1rem !important;
     cursor: pointer;

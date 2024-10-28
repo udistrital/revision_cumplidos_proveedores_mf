@@ -8,6 +8,15 @@ import { ModalHistoricoComponent } from '../modal-historico/modal-historico.comp
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { HistoricoCumplido } from 'src/app/models/historico-cumplido.model';
 import { Cumplido } from 'src/app/models/cumplido';
+import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
+import { map } from 'rxjs/operators';
+import { EstadoCumplido } from 'src/app/models/cambio_estado';
+import { Documento, InformacionSoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import { DocumentoHistorico, SoporteEstados } from 'src/app/models/documento_historico';
+import { Archivo } from './../../../models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import { SoporteCumplido } from 'src/app/models/revision_cumplidos_proveedores_crud/soporte-cumplido.model';
+import { ModalVisualizarSoporteComponent } from '../../general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
+import { Mode, RolUsuario } from 'src/app/models/modal-soporte-cumplido-data.model';
 
 @Component({
   selector: 'app-listado-historicos',
@@ -18,8 +27,14 @@ export class ListadoHistoricosComponent implements OnInit {
   @Input() displayedColumns: any[] = [];
   @Input() dataSource: Cumplido[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  listaCambiosEstados: EstadoCumplido[] = [];
+  listaDocumentosCargados:InformacionSoporteCumplido[]=[]
 
-  constructor(private popUpManager: PopUpManager, private dialog: MatDialog) {}
+  constructor(
+    private popUpManager: PopUpManager,
+    private dialog: MatDialog,
+    private cumplidosMidService: CumplidosProveedoresMidService
+  ) {}
 
   dataSourcetest = new MatTableDataSource<Cumplido>();
 
@@ -57,8 +72,9 @@ export class ListadoHistoricosComponent implements OnInit {
     });
   }
 
-  modalDocumentosCargados() {
-    console.log('Entro');
+  async modalHistorico(element: any) {
+    await this.cargarCambiosDeEstado(element.IdCumplido);
+    await this.cargarDocumentosCargados(element.IdCumplido);
     this.dialog.open(ModalHistoricoComponent, {
       disableClose: true,
       height: '70vh',
@@ -66,16 +82,126 @@ export class ListadoHistoricosComponent implements OnInit {
       maxWidth: '60vw',
       maxHeight: '80vh',
       panelClass: 'container-historico',
-      data: {},
+      data: {
+        listaEstadosCumplidos: this.listaCambiosEstados,
+        listaDocumentosCargados:this.listaDocumentosCargados,
+        Buttons: [
+        {
+          Color: 'white',
+          FontIcon: 'visibility',
+          Function: (file: any) => {
+            const visualizarSoporetes = this.dialog.open(
+              ModalVisualizarSoporteComponent,
+              {
+                disableClose: true,
+                height: 'auto',
+                width: 'auto',
+                maxWidth: '60vw',
+                maxHeight: '80vh',
+                panelClass: 'custom-dialog-container',
+                data: {
+                  url: file.Archivo.File,
+                },
+              }
+            );
+          },
+          Classes: 'ver-documentos-button',
+          Text: 'Ver',
+        }
+      ], Config: {
+        mode: Mode.AO,
+        rolUsuario: RolUsuario.C,
+      },
+      },
     });
   }
 
+  async cargarCambiosDeEstado(idCumplido: number): Promise<EstadoCumplido[]> {
+    this.popUpManager.showLoadingAlert("Cargando")
+    return new Promise((resolve, reject) => {
+      this.cumplidosMidService
+        .get('/historico-cumplidos/cambio-estado/' + idCumplido)
+        .subscribe({
+          next: (response: any) => {
+            if (response.Data) {
+              this.listaCambiosEstados = response.Data.map(
+                (estado: EstadoCumplido) => ({
+                  nombreResponsable: estado.nombreResponsable,
+                  estado: estado.estado,
+                  fecha: estado.fecha,
+                  cargo: estado.cargo,
+                })
+              );
+              resolve(this.listaCambiosEstados);
+              Swal.close()
+            } else {
+              resolve([]);
+            }
+          },
+          error: (err: any) => {
+            this.popUpManager.showErrorAlert(
+              'Error al consultar, el histórico de estados'
+            );
+            reject(err);
+          },
+        });
+    });
+  }
+
+  async cargarDocumentosCargados(
+    idCumplido: number
+  ): Promise<InformacionSoporteCumplido[]> {
+    return new Promise((resolve, reject) => {
+      this.popUpManager.showLoadingAlert("Cargando")
+      this.cumplidosMidService
+        .get('/solicitud-pago/soportes/' + idCumplido)
+        .subscribe({
+          next: (response: any) => {
+            if (response.Data) {
+              this.listaDocumentosCargados = response.Data.map(
+                (documento: InformacionSoporteCumplido) => ({
+                  SoporteCumplidoId: documento.SoporteCumplidoId,
+                  Documento:{
+                    IdTipoDocumento:documento.Documento.IdTipoDocumento,
+                    Id: documento.Documento.Id,
+                    Nombre: documento.Documento.Nombre,
+                    TipoDocumento: documento.Documento.TipoDocumento,
+                    Descripcion: documento.Documento.Descripcion,
+                    Observaciones: documento.Documento.Observaciones,
+                    FechaCreacion: documento.Documento.FechaCreacion,
+                    CodigoAbreviacionTipoDocumento:documento.Documento.CodigoAbreviacionTipoDocumento,
+                  },
+                  Archivo: {
+                    File: documento.Archivo.File,
+                  },
+                  Comentarios:{
+
+                  }
+                })
+              );
+              resolve(this.listaDocumentosCargados);
+              Swal.close()
+            } else {
+              Swal.close;
+              resolve([]);
+            }
+          
+          },
+          error: (err: any) => {
+            this.popUpManager.showErrorAlert(
+              'Error al consultar, el histórico de estados'
+            );
+            reject(err);
+          },
+        });
+    });
+  }
 
   handleActionClick(event: { action: any; element: any }) {
     if (event.action.actionName === 'visibility') {
-      this.modalDocumentosCargados();
+      this.modalHistorico(event.element);
     } else if (event.action.actionName === 'archive') {
       this.descargaTemp();
-    } 
+    }
   }
 }

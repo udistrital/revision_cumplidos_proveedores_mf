@@ -2,12 +2,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Month } from 'src/app/models/month.model';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
 import { Cumplido } from 'src/app/models/cumplido';
 import { map } from 'rxjs';
 import { JbpmService } from 'src/app/services/jbpm_service.service';
 import { Dependencia } from 'src/app/models/dependencia';
+import { Contrato } from 'src/app/models/contrato';
 import { UserService } from 'src/app/services/user.services';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { EstadoCumplido } from './../../../models/revision_cumplidos_proveedores_crud/estado-cumplido.model';
@@ -26,6 +27,8 @@ export class FormularioConsultaComponent implements OnInit {
   ListaCumplidos: Cumplido[] = [];
   listaEstadosCumplido: EstadoCumplido[] = []
   listaDependencias!: Dependencia[] ;
+  listaContratos:Contrato[]=[]
+  @Input() dependencias: any[] = [];
 
   constructor(
     private popUpManager: PopUpManager,
@@ -41,7 +44,7 @@ export class FormularioConsultaComponent implements OnInit {
       vigencias: [[]],
       nombres_proveedor: [[]],
       estados: [[]],
-      dependencias: [[]],
+      dependencias: [[],Validators.required ],
       numeros_contrato: [[]],
     });
   }
@@ -50,6 +53,7 @@ export class FormularioConsultaComponent implements OnInit {
     this.consultarDependenciasSupervisor()
     this.consultarDependenciasOrdenador()
     this.obetnerEstadosCumplido()
+    this.consultarContratos()
   }
 
   async consultar() {
@@ -61,48 +65,63 @@ export class FormularioConsultaComponent implements OnInit {
         this.formularioFiltroHistorico.get('nombres_proveedor')?.value,
       Estados: this.formularioFiltroHistorico.get('estados')?.value,
       Dependencias: this.formularioFiltroHistorico.get('dependencias')?.value,
-      Contratos: this.formularioFiltroHistorico.get('numeros_contrato')?.value,
+      Contratos:this.convertirStringALista(this.formularioFiltroHistorico.get('numeros_contrato')?.value) ,
     };
 
     this.obtenerListadoHistoricos(peticion);
   }
 
   async obtenerListadoHistoricos(peticion: any) {
+   let dataNull=false;
     this.popUpManager.showLoadingAlert('Buscando');
     this.cumplidosMidService
       .post('/historico-cumplidos/filtro-cumplidos', peticion)
       .subscribe({
         next: (response: any) => {
-          this.ListaCumplidos = response.Data.map((cumplido: Cumplido) => {
-            return {
-              NumeroContrato: cumplido.NumeroContrato,
+       
+      if(response.Data!=null){
+        this.ListaCumplidos = response.Data.map((cumplido: Cumplido) => {
+          return {
+            NumeroContrato: cumplido.NumeroContrato,
 
-              Vigencia: cumplido.Vigencia,
-              Rp: cumplido.Rp,
-              Mes: cumplido.Mes,
-              FechaCambioEstado: cumplido.FechaCambioEstado,
-              NombreProveedor: cumplido.NombreProveedor,
-              Dependencia: cumplido.Dependencia,
-              Estado: cumplido.Estado,
-              TipoContrato: cumplido.TipoContrato,
-              acciones: [
-                { icon: 'archive', actionName: 'archive', isActive: true },
-                {
-                  icon: 'visibility',
-                  actionName: 'visibility',
-                  isActive: true,
-                },
-              ],
-            };
-          });
+            Vigencia: cumplido.Vigencia,
+            Rp: cumplido.Rp,
+            Mes: cumplido.Mes,
+            FechaCambioEstado: cumplido.FechaCambioEstado,
+            NombreProveedor: cumplido.NombreProveedor,
+            Dependencia: cumplido.Dependencia,
+            Estado: cumplido.Estado,
+            TipoContrato: cumplido.TipoContrato,
+            IdCumplido:cumplido.IdCumplido,
+            acciones: [
+              { icon: 'archive', actionName: 'archive', isActive: true },
+              {
+                icon: 'visibility',
+                actionName: 'visibility',
+                isActive: true,
+              },
+            ],
+          };
+        });
+      }else{
+        dataNull=true
+      }
+          
         },
         error: (error: any) => {
-          console.error('Error');
-          Swal.close();
+          Swal.close()
+          this.popUpManager.showErrorAlert("Error al consultar, Intenta de nuevo")
         },
         complete: () => {
+          
+            if(dataNull){
+              Swal.close()
+              this.popUpManager.showErrorAlert("No hay resultados")
+              return
+            }
+            Swal.close()
           this.listaCumplidos.emit(this.ListaCumplidos);
-          Swal.close();
+        
         },
       });
   }
@@ -156,7 +175,7 @@ export class FormularioConsultaComponent implements OnInit {
 
     this.crudService.get("/estado_cumplido").subscribe({
       next: (response: any) => {
-        this.listaEstadosCumplido = response.Data.map((estado: any) => {
+        this.listaEstadosCumplido = response.Data.map((estado: any) => { 
           return {
             Id: estado.id,
             Nombre: estado.Nombre,
@@ -171,6 +190,65 @@ export class FormularioConsultaComponent implements OnInit {
 
     console.log( this.listaEstadosCumplido)
   }
+
+  validacionTextos(event:any){
+
+  
+    const numeroContrato =this.formularioFiltroHistorico.get('numeros_contrato') ;
+    numeroContrato?.setErrors(null)
+    if(String(event.target.value).endsWith(",")){
+      console.log("Dede",event.target.value)
+      numeroContrato?.setErrors({ endComma: true });
+      numeroContrato?.markAsTouched();
+
+    }
+
+    if(String(event.target.value).startsWith(",")){
+      numeroContrato?.setErrors({ startComma: true });
+      numeroContrato?.markAsTouched();
+    }
+     
+      
+    
+  }
+
+
+
+ async consultarContratos(){
+    this.
+    cumplidosMidService.get('/supervisor/contratos-supervisor/' + this.userService.getPayload().documento)
+    .subscribe({
+      next:(resposne:any)=>{
+         this.listaContratos = resposne.Data.contratos.map((contrato:Contrato)=>{
+   
+            return {
+              TipoContrato: contrato.TipoContrato,
+              NumeroContratoSuscrito: contrato.NumeroContratoSuscrito,
+              Vigencia: contrato.Vigencia,
+              NumeroRp: contrato.NumeroRp,
+              VigenciaRp: contrato.VigenciaRp,
+              RPFechaRegistro: contrato.RPFechaRegistro,
+              NombreProveedor: contrato.NombreProveedor,
+              NombreDependencia: contrato.NombreDependencia,
+              NumeroCdp: contrato.NumeroCdp,
+              VigenciaCdp: contrato.VigenciaCdp,
+              CDPFechaExpedicion: contrato.CDPFechaExpedicion,
+              Rubro: contrato.Rubro
+      }});
+      }
+    })
+  }
+
+
+  convertirStringALista(input: string): string[] {
+    if (input=="") {
+      console.log()
+      return [];
+    }
+    
+    return input.split(',').map(item => item.trim()).filter(item => item.length > 0);
+  }
+ 
 
 }
 

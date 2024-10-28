@@ -34,7 +34,6 @@ export class HistoricoCumplidosComponent implements OnInit {
   ngOnInit(): void {
     this.anios = this.utilsService.obternerAnios();
     this.meses = this.utilsService.obtenerMeses();
-    this.estados=["aprobado", "rechazado"]
     this.dependencias=["DEP626", "Test"]
     console.log(this.listaCumplidos)
   }

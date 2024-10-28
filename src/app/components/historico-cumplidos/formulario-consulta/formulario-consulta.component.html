@@ -44,14 +44,18 @@
                 <div class="">
                   <mat-form-field appearance="outline" >
                     <mat-label class="label">Nombre proveedor</mat-label>
-                    <input matInput placeholder="Nombre Proveedor" formControlName="nombres_proveedor">
+                    <mat-select formControlName="nombres_proveedor" multiple>
+                      <mat-option *ngFor="let contrato of listaContratos" [value]="contrato.NombreProveedor">
+                        {{ contrato.NombreProveedor }}
+                      </mat-option>
+                    </mat-select>
                   </mat-form-field>
                 </div>
                 <div  class="">
                   <mat-form-field appearance="outline" >
                     <mat-label>Seleccione Estado</mat-label>
                     <mat-select class="label" placeholder="Estado" formControlName="estados" multiple>
-                    <mat-option *ngFor="let estado of listaEstadosCumplido" [value]="estado.Id">
+                    <mat-option *ngFor="let estado of listaEstadosCumplido" [value]="estado.CodigoAbreviacion">
                       {{estado.Nombre}}
                     </mat-option>
                     </mat-select>
@@ -61,16 +65,25 @@
                   <mat-form-field appearance="outline" >
                     <mat-label class="label"> Seleccione Dependencia</mat-label>
                     <mat-select placeholder="Dependencia" formControlName="dependencias" multiple>
-                    <mat-option *ngFor="let dependencia of listaDependencias" [value]="dependencia.Codigo">
-                      {{dependencia.Nombre}}
+                    <mat-option *ngFor="let dependencia of dependencias" [value]="dependencia">
+                      {{dependencia}}
                     </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="formularioFiltroHistorico.get('dependencias')?.invalid" class="label-error">
+                      Selecciona una dependencia.
+                    </mat-error>
                   </mat-form-field>
                 </div>
                 <div class="">
                   <mat-form-field appearance="outline">
                     <mat-label class="label">Numero de contracto</mat-label>
-                    <input matInput placeholder="Numero de contracto">
+                    <input matInput placeholder="Numero de contracto" formControlName="numeros_contrato" (input)="validacionTextos($event)">
+                    <mat-error *ngIf="formularioFiltroHistorico.get('numeros_contrato')?.hasError('endComma')" class="label-error">
+                      No debe terminar con una coma.
+                    </mat-error>
+                    <mat-error *ngIf="formularioFiltroHistorico.get('numeros_contrato')?.hasError('startComma')" class="label-error">
+                      No debe comenzar con una coma.
+                    </mat-error>
                   </mat-form-field>
                 </div>
                 <div  class="btn-container">
