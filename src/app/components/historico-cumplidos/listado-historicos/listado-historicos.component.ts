@@ -56,12 +56,11 @@ export class ListadoHistoricosComponent implements OnInit {
   }
 
   async descargarComprimido(element: any): Promise<Archivo | any> {
-    const comfirm = await this.popUpManager.showConfirmAlert(
-      '¿Estás seguro?',
-      'Vas a descargar los documentos, puede tomar unos momentos'
-    );
+    const confirm = await this.popUpManager.showConfirmAlert(
+      'Vas a descargar los documentos, puede tomar unos momentos', '¿Estás seguro?'
+  );
 
-    if (comfirm.isConfirmed) {
+    if (confirm.isConfirmed) {
       this.popUpManager.showLoadingAlert('Descargando');
 
       return new Promise((resolve, reject) => {
