@@ -48,7 +48,7 @@ export class CardSoporteComponent {
   }
 
   ngOnInit() {
-
+  console.log(this.buttons)
   }
 
   async eliminarSoporte(soporteId: number){
