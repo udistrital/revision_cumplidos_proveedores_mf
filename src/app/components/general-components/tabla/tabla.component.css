@@ -3,7 +3,7 @@
   width: 100%;
 }
 
-::ng-deep .mat-sort-header-container{
+:host ::ng-deep .mat-sort-header-container{
   display: flex !important;
   cursor: pointer !important;
   align-items: center !important;
@@ -12,8 +12,12 @@
   justify-content: center !important;
 }
 
-::ng-deep table thead tr th:nth-child(n + 2) {
+:host ::ng-deep table thead tr th:nth-child(n + 2) {
   border-left: 0px solid var(--color200) !important;
+}
+
+:host ::ng-deep .mat-sort-header-content{
+  flex-direction: column !important;
 }
 
 .mat-mdc-row{
@@ -38,7 +42,9 @@
 .header{
   color: black;
   text-align: center;
-  vertical-align: middle;
+  vertical-align: baseline;
+  background-color: #FDEAE6;
+  padding-top: 1%;
 }
 
 .btn-box{
@@ -81,4 +87,36 @@
 
 .mat-mdc-row .mat-icon {
   margin: 0;
+}
+
+.mat-form-field {
+  font-size: 10px;
+  width: 50%;
+  height: 10%;
+}
+
+.header-table{
+  display: flex;
+  justify-content: center;
+}
+
+:host ::ng-deep mat-form-field {
+  font-size: 12px !important;
+  width: 100% !important;
+}
+
+:host ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled){
+  background-color: #FDEAE6 !important;
+  height: 40px !important;
+}
+
+
+:host mat-form-field {
+  display: inline-block;
+  min-width: 50px;
+  max-width: 130px;
+}
+
+:host mat-form-field input::placeholder {
+  text-align: center;
 }
