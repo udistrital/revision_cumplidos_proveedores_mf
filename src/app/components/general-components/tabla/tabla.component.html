@@ -12,7 +12,7 @@
             <ng-container *ngIf="!column.isAction && column.filter">
               <div>
                 <mat-form-field>
-                  <input matInput style="display: flex; justify-content: center;" [formControl]="filterControls[column.def]" placeholder="Filtrar {{column.header}}">
+                  <input matInput style="display: flex; justify-content: center;" [formControl]="filterControls[column.def]" placeholder="Filtrar {{column.header}}" (keydown)="preventSpaceKey($event)">
                 </mat-form-field>
               </div>
             </ng-container>

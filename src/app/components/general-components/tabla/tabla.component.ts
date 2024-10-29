@@ -77,18 +77,45 @@ export class TablaComponent {
       let isMatch = true;
 
       for (let key in searchString) {
-        if (searchString[key] && data[key].toString().toLowerCase().indexOf(searchString[key].toLowerCase()) === -1) {
-          isMatch = false;
-          break;
+        const filterValue = searchString[key];
+        const dataValue = data[key];
+
+        if (filterValue) {
+          if (key.toLowerCase().includes('fecha') && dataValue) {
+            const formattedDate = new Date(dataValue).toLocaleDateString('es-ES', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            });
+
+            if (!formattedDate.includes(filterValue)) {
+              isMatch = false;
+              break;
+            }
+          } else {
+            // Comparación para otros tipos de datos
+            if (dataValue.toString().toLowerCase().indexOf(filterValue.toLowerCase()) === -1) {
+              isMatch = false;
+              break;
+            }
+          }
         }
       }
       return isMatch;
     };
   }
 
+
   // Método para manejar los cliks en las acciones
   actionClick(action: any, element: any): void {
     this.actionClicked.emit({action, element});
+  }
+
+  // Evitar que se cambia la ordenacion cuando se oprime la barra espaciadora
+  preventSpaceKey(event: KeyboardEvent): void {
+    if (event.key === ' ') {
+      event.stopPropagation();
+    }
   }
 
 }
