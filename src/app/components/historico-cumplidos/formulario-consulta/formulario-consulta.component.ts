@@ -29,6 +29,7 @@ export class FormularioConsultaComponent implements OnInit {
   listaDependencias!: Dependencia[] ;
   listaContratos:Contrato[]=[]
   @Input() dependencias: any[] = [];
+  loading: boolean = true;
 
   constructor(
     private popUpManager: PopUpManager,
@@ -72,56 +73,57 @@ export class FormularioConsultaComponent implements OnInit {
   }
 
   async obtenerListadoHistoricos(peticion: any) {
-   let dataNull=false;
+    let dataNull = false;
     this.popUpManager.showLoadingAlert('Buscando');
     this.cumplidosMidService
       .post('/historico-cumplidos/filtro-cumplidos', peticion)
       .subscribe({
         next: (response: any) => {
-       
-      if(response.Data!=null){
-        this.ListaCumplidos = response.Data.map((cumplido: Cumplido) => {
-          return {
-            NumeroContrato: cumplido.NumeroContrato,
-
-            Vigencia: cumplido.Vigencia,
-            Rp: cumplido.Rp,
-            Mes: cumplido.Mes,
-            FechaCambioEstado: cumplido.FechaCambioEstado,
-            NombreProveedor: cumplido.NombreProveedor,
-            Dependencia: cumplido.Dependencia,
-            Estado: cumplido.Estado,
-            TipoContrato: cumplido.TipoContrato,
-            IdCumplido:cumplido.IdCumplido,
-            acciones: [
-              { icon: 'archive', actionName: 'archive', isActive: true },
-              {
-                icon: 'visibility',
-                actionName: 'visibility',
-                isActive: true,
-              },
-            ],
-          };
-        });
-      }else{
-        dataNull=true
-      }
-          
+          if (response.Data != null) {
+            this.ListaCumplidos = response.Data.map((cumplido: Cumplido) => {
+              return {
+                NumeroContrato: cumplido.NumeroContrato,
+                Vigencia: cumplido.Vigencia,
+                Rp: cumplido.Rp,
+                Mes: cumplido.Mes,
+                FechaCambioEstado: cumplido.FechaCambioEstado,
+                NombreProveedor: cumplido.NombreProveedor,
+                Dependencia: cumplido.Dependencia,
+                Estado: cumplido.Estado,
+                TipoContrato: cumplido.TipoContrato,
+                IdCumplido:cumplido.IdCumplido,
+                acciones: [
+                  { icon: 'archive',
+                    actionName: 'archive',
+                    isActive: true
+                  },
+                  {
+                    icon: 'visibility',
+                    actionName: 'visibility',
+                    isActive: true,
+                  },
+                ],
+              };
+            });
+            dataNull = false;
+          } else {
+            dataNull = true;
+          }
+          this.loading = false;
         },
         error: (error: any) => {
-          Swal.close()
-          this.popUpManager.showErrorAlert("Error al consultar, Intenta de nuevo")
+          Swal.close();
+          this.popUpManager.showErrorAlert("Error al consultar, Intenta de nuevo");
+          this.loading = false;
         },
         complete: () => {
-          
-            if(dataNull){
-              Swal.close()
-              this.popUpManager.showErrorAlert("No hay resultados")
-              return
-            }
-            Swal.close()
-          this.listaCumplidos.emit(this.ListaCumplidos);
-        
+          Swal.close();
+          if (dataNull) {
+            this.popUpManager.showErrorAlert("No hay resultados");
+          } else if (!dataNull && !this.loading) {
+            // Emitimos solo cuando loading es false y hay datos en ListaCumplidos
+            this.listaCumplidos.emit(this.ListaCumplidos);
+          }
         },
       });
   }
@@ -175,7 +177,7 @@ export class FormularioConsultaComponent implements OnInit {
 
     this.crudService.get("/estado_cumplido").subscribe({
       next: (response: any) => {
-        this.listaEstadosCumplido = response.Data.map((estado: any) => { 
+        this.listaEstadosCumplido = response.Data.map((estado: any) => {
           return {
             Id: estado.id,
             Nombre: estado.Nombre,
@@ -193,7 +195,7 @@ export class FormularioConsultaComponent implements OnInit {
 
   validacionTextos(event:any){
 
-  
+
     const numeroContrato =this.formularioFiltroHistorico.get('numeros_contrato') ;
     numeroContrato?.setErrors(null)
     if(String(event.target.value).endsWith(",")){
@@ -207,9 +209,9 @@ export class FormularioConsultaComponent implements OnInit {
       numeroContrato?.setErrors({ startComma: true });
       numeroContrato?.markAsTouched();
     }
-     
-      
-    
+
+
+
   }
 
 
@@ -220,7 +222,7 @@ export class FormularioConsultaComponent implements OnInit {
     .subscribe({
       next:(resposne:any)=>{
          this.listaContratos = resposne.Data.contratos.map((contrato:Contrato)=>{
-   
+
             return {
               TipoContrato: contrato.TipoContrato,
               NumeroContratoSuscrito: contrato.NumeroContratoSuscrito,
@@ -245,10 +247,10 @@ export class FormularioConsultaComponent implements OnInit {
       console.log()
       return [];
     }
-    
+
     return input.split(',').map(item => item.trim()).filter(item => item.length > 0);
   }
- 
+
 
 }
 

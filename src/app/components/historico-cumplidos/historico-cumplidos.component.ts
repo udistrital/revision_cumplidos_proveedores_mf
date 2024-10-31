@@ -1,3 +1,4 @@
+import { Acciones } from './../../models/acciones.model';
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { Month } from 'src/app/models/month.model';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -15,6 +16,7 @@ export class HistoricoCumplidosComponent implements OnInit {
   dependencias: any[] = [];
   estados: any[] = [];
   listaCumplidos:Cumplido[]=[]
+  cumplidosCargados: boolean = false;
 
   displayedColumns = [
     { def: 'NumeroContrato', header: 'N° CONTRATO' },
@@ -35,11 +37,12 @@ export class HistoricoCumplidosComponent implements OnInit {
     this.anios = this.utilsService.obternerAnios();
     this.meses = this.utilsService.obtenerMeses();
     this.dependencias=["DEP626", "Test"]
-    console.log(this.listaCumplidos)
+
   }
 
   listarCumplidos(cumplidos:Cumplido[]){
     this.listaCumplidos=cumplidos
+    this.cumplidosCargados = true
   }
- 
+
 }
