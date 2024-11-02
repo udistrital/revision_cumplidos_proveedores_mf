@@ -79,7 +79,6 @@ export class FormularioConsultaComponent implements OnInit {
 
   async obtenerListadoHistoricos(peticion: any) {
     let dataNull = false;
-    let dataNull = false;
     this.popUpManager.showLoadingAlert('Buscando');
     this.cumplidosMidService
       .post('/historico-cumplidos/filtro-cumplidos', peticion)
