@@ -30,6 +30,7 @@ export class FormularioConsultaComponent implements OnInit {
   listaDependencias!: Dependencia[];
   listaProveedores: Contrato[] = [];
   dependencias: any[] = [];
+  loading: boolean = true;
   desactivarContratos: boolean = false;
   listaVigencias: any[] = [];
   listaNumerosContratos: any[] = [];
@@ -78,6 +79,7 @@ export class FormularioConsultaComponent implements OnInit {
 
   async obtenerListadoHistoricos(peticion: any) {
     let dataNull = false;
+    let dataNull = false;
     this.popUpManager.showLoadingAlert('Buscando');
     this.cumplidosMidService
       .post('/historico-cumplidos/filtro-cumplidos', peticion)
@@ -111,10 +113,11 @@ export class FormularioConsultaComponent implements OnInit {
           }
         },
         error: (error: any) => {
-          Swal.close();
+          Swal.close();;
           this.popUpManager.showErrorAlert(
             'Error al consultar, Intenta de nuevo'
-          );
+          );;
+          this.loading = false;
         },
         complete: () => {
           if (dataNull) {

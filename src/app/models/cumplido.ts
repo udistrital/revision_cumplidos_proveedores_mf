@@ -1,3 +1,5 @@
+import { Acciones } from "./acciones.model";
+
 export interface Cumplido {
     NumeroContrato: string;
     Vigencia: string;
@@ -8,7 +10,6 @@ export interface Cumplido {
     Dependencia: string;
     Estado: string;
     TipoContrato: string;
-    acciones?:[]
-    IdCumplido:number
+    acciones?: Acciones[];
+    IdCumplido:number;
   }
-  

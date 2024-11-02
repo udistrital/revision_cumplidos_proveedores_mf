@@ -1,15 +1,12 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
 
 import { ModalHistoricoComponent } from '../modal-historico/modal-historico.component';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { HistoricoCumplido } from 'src/app/models/historico-cumplido.model';
 import { Cumplido } from 'src/app/models/cumplido';
 import { CumplidosProveedoresMidService } from 'src/app/services/cumplidos_proveedores_mid.service';
-import { map } from 'rxjs/operators';
 import { EstadoCumplido } from 'src/app/models/cambio_estado';
 import {
   Documento,
@@ -34,8 +31,7 @@ import {
 })
 export class ListadoHistoricosComponent implements OnInit {
   @Input() displayedColumns: any[] = [];
-  @Input() dataSource: Cumplido[] = [];
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @Input() dataSource!: Cumplido[];
   listaCambiosEstados: EstadoCumplido[] = [];
   listaDocumentosCargados: InformacionSoporteCumplido[] = [];
   file!: Archivo;
@@ -46,14 +42,11 @@ export class ListadoHistoricosComponent implements OnInit {
     private cumplidosMidService: CumplidosProveedoresMidService
   ) { }
 
-  dataSourcetest = new MatTableDataSource<Cumplido>();
 
   ngOnInit(): void {
-    this.dataSourcetest.data = this.dataSource;
+
   }
-  ngAfterViewInit() {
-    this.dataSourcetest.paginator = this.paginator;
-  }
+
 
   async descargarComprimido(element: any): Promise<Archivo | any> {
     const confirm = await this.popUpManager.showConfirmAlert(
@@ -73,7 +66,7 @@ export class ListadoHistoricosComponent implements OnInit {
                   Nombre: response.Data.nombre,
                   File:response.Data.file
                  }
-                   
+
                 const byteCharacters = atob(this.file.File);
                 const byteNumbers = new Uint8Array(byteCharacters.length);
 
