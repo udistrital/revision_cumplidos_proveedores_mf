@@ -1,99 +1,102 @@
 <main>
-    <article>
-      <mat-card class="historicoss-cumplido">
-        <section class="title">
-          <mat-card-header>
-            <mat-card-title
-              ><div class="title-border">{{ title }}</div></mat-card-title
-            >
-          </mat-card-header>
-        </section>
-  
-        <section  >
-          <mat-card-content>
-            <mat-card class="margin-form">
-              <form (ngSubmit)="consultar()" [formGroup]="formularioFiltroHistorico">
-                <div class="">
-                  <mat-form-field  appearance="outline">
-                    <mat-label class="label">Seleccione año</mat-label>
-                    <mat-select formControlName="anios" placeholder="Año" multiple>
-                      <mat-option *ngFor="let anio of anios" [value]="anio">
-                        {{ anio }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <div class="">
-                  <mat-form-field appearance="outline" >
-                    <mat-label class="label" >Seleccione mes</mat-label>
-                  <mat-select placeholder="Mes" formControlName="meses"  multiple>
-                    <mat-option *ngFor="let mes of meses" [value]="mes.mes">
-                      {{ mes.nombre }}
+  <article>
+    <mat-card class="historicoss-cumplido">
+      <section class="title">
+        <mat-card-header>
+          <mat-card-title>
+            <div class="title-border">{{ title }}</div>
+          </mat-card-title>
+        </mat-card-header>
+      </section>
+
+      <section>
+        <mat-card-content>
+          <mat-card class="margin-form">
+            <form (ngSubmit)="consultar()" [formGroup]="formularioFiltroHistorico">
+
+              <div class="">
+                <mat-form-field appearance="outline">
+                  <mat-label class="label"> Seleccione Dependencia</mat-label>
+                  <mat-select placeholder="Dependencia" formControlName="dependencias" multiple (selectionChange)="dependenciaChange($event.value)">
+                    <mat-option *ngFor="let dependencia of listaDependencias" [value]="dependencia.Codigo" oncla>
+                      {{dependencia.Nombre}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="formularioFiltroHistorico.get('dependencias')?.invalid" class="label-error">
+                    Selecciona una dependencia.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+             <div class="">
+                <mat-form-field appearance="outline">
+                  <mat-label class="label"> Seleccione un numero de contrato</mat-label>
+                  <mat-select placeholder="Numero de cotnrato" formControlName="numeros_contrato" multiple (selectionChange)="contratoChange($event.value)">
+                    <mat-option *ngFor="let contrato of listaNumerosContratos" [value]="contrato" oncla>
+                      {{contrato}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+
+
+              <div class=""><mat-form-field appearance="outline">
+                  <mat-label class="label">Seleccione vigencia</mat-label>
+                  <mat-select placeholder="Vigencia" formControlName="vigencias" multiple >
+                    <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
+                      {{ vigencia}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field></div>
-                <div class=""><mat-form-field appearance="outline">
-                  <mat-label class="label">Seleccione vigencia</mat-label>
-                  <mat-select placeholder="Vigencia"  formControlName="vigencias" multiple>
+              <div class="">
+                <mat-form-field appearance="outline">
+                  <mat-label class="label">Nombre proveedor</mat-label>
+                  <mat-select formControlName="nombres_proveedor" multiple >
+                    <mat-option *ngFor="let contrato of listaProveedores" [value]="contrato.ProveedorId">
+                      {{ contrato.NombreProveedor }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="">
+                <mat-form-field appearance="outline">
+                  <mat-label class="label">Seleccione año</mat-label>
+                  <mat-select formControlName="anios" placeholder="Año" multiple>
                     <mat-option *ngFor="let anio of anios" [value]="anio">
                       {{ anio }}
                     </mat-option>
                   </mat-select>
-                </mat-form-field></div>
-  
-                <div class="">
-                  <mat-form-field appearance="outline" >
-                    <mat-label class="label">Nombre proveedor</mat-label>
-                    <mat-select formControlName="nombres_proveedor" multiple>
-                      <mat-option *ngFor="let contrato of listaContratos" [value]="contrato.NombreProveedor">
-                        {{ contrato.NombreProveedor }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <div  class="">
-                  <mat-form-field appearance="outline" >
-                    <mat-label>Seleccione Estado</mat-label>
-                    <mat-select class="label" placeholder="Estado" formControlName="estados" multiple>
+                </mat-form-field>
+              </div>
+              <div class="">
+                <mat-form-field appearance="outline">
+                  <mat-label class="label">Seleccione mes</mat-label>
+                  <mat-select placeholder="Mes" formControlName="meses" multiple>
+                    <mat-option *ngFor="let mes of meses" [value]="mes.mes">
+                      {{ mes.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="">
+                <mat-form-field appearance="outline">
+                  <mat-label>Seleccione Estado</mat-label>
+                  <mat-select class="label" placeholder="Estado" formControlName="estados" multiple>
                     <mat-option *ngFor="let estado of listaEstadosCumplido" [value]="estado.CodigoAbreviacion">
                       {{estado.Nombre}}
                     </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <div  class="">
-                  <mat-form-field appearance="outline" >
-                    <mat-label class="label"> Seleccione Dependencia</mat-label>
-                    <mat-select placeholder="Dependencia" formControlName="dependencias" multiple>
-                    <mat-option *ngFor="let dependencia of dependencias" [value]="dependencia">
-                      {{dependencia}}
-                    </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="formularioFiltroHistorico.get('dependencias')?.invalid" class="label-error">
-                      Selecciona una dependencia.
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-                <div class="">
-                  <mat-form-field appearance="outline">
-                    <mat-label class="label">Numero de contracto</mat-label>
-                    <input matInput placeholder="Numero de contracto" formControlName="numeros_contrato" (input)="validacionTextos($event)">
-                    <mat-error *ngIf="formularioFiltroHistorico.get('numeros_contrato')?.hasError('endComma')" class="label-error">
-                      No debe terminar con una coma.
-                    </mat-error>
-                    <mat-error *ngIf="formularioFiltroHistorico.get('numeros_contrato')?.hasError('startComma')" class="label-error">
-                      No debe comenzar con una coma.
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-                <div  class="btn-container">
-                  <button mat-raised-button class="btn-success">Consultar</button>
-                </div>
-              </form>
-            </mat-card>
-          </mat-card-content>
-        </section>
-      </mat-card>
-    </article>
-  </main>
-  
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+
+              <div class="btn-container">
+                <button mat-raised-button class="btn-success">Consultar</button>
+              </div>
+            </form>
+          </mat-card>
+        </mat-card-content>
+      </section>
+    </mat-card>
+  </article>
+</main>

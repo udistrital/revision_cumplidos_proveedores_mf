@@ -11,4 +11,5 @@ export interface Contrato {
     VigenciaCdp: string;
     CDPFechaExpedicion: string;
     Rubro: string;
+    ProveedorId:string
 }

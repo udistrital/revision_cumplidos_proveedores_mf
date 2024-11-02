@@ -12,7 +12,6 @@ export class HistoricoCumplidosComponent implements OnInit {
   constructor(private utilsService: UtilsService) {}
   anios: number[] = [];
   meses: Month[] = [];
-  dependencias: any[] = [];
   estados: any[] = [];
   listaCumplidos:Cumplido[]=[]
 
@@ -20,8 +19,7 @@ export class HistoricoCumplidosComponent implements OnInit {
     { def: 'NumeroContrato', header: 'N° CONTRATO' },
     { def: 'Vigencia', header: 'VIGENCIA' },
     { def: 'Rp', header: 'RP' },
-    { def: 'Mes', header: 'Mes ' },
-    { def: 'FechaCambioEstado', header: 'FECHA APROBACION' },
+    { def: 'Periodo', header: 'PERIODO ' },
     { def: 'NombreProveedor', header: 'PROVEEDOR' },
     { def: 'Dependencia', header: 'DEPENDENCIA' },
     { def: 'Estado', header: 'ESTADO' },
@@ -34,12 +32,12 @@ export class HistoricoCumplidosComponent implements OnInit {
   ngOnInit(): void {
     this.anios = this.utilsService.obternerAnios();
     this.meses = this.utilsService.obtenerMeses();
-    this.dependencias=["DEP626", "Test"]
     console.log(this.listaCumplidos)
   }
 
   listarCumplidos(cumplidos:Cumplido[]){
     this.listaCumplidos=cumplidos
   }
+  
  
 }
