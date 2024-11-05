@@ -11,8 +11,6 @@ import { Cumplido } from './../../models/cumplido';
 })
 export class HistoricoCumplidosComponent implements OnInit {
   constructor(private utilsService: UtilsService) {}
-  anios: number[] = [];
-  meses: Month[] = [];
   estados: any[] = [];
   listaCumplidos:Cumplido[]=[]
   cumplidosCargados: boolean = false;
@@ -32,8 +30,6 @@ export class HistoricoCumplidosComponent implements OnInit {
 
   dataSource:any[]=[]
   ngOnInit(): void {
-    this.anios = this.utilsService.obternerAnios();
-    this.meses = this.utilsService.obtenerMeses();
     console.log(this.listaCumplidos)
   }
 

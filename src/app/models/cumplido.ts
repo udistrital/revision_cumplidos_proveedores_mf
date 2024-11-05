@@ -12,4 +12,5 @@ export interface Cumplido {
     TipoContrato: string;
     acciones?: Acciones[];
     IdCumplido:number;
+    InformacionPago?:string
   }

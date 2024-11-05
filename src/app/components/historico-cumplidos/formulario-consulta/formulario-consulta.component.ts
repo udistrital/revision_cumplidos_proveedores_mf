@@ -13,6 +13,7 @@ import { UserService } from 'src/app/services/user.services';
 import { CumplidosProveedoresCrudService } from 'src/app/services/cumplidos_proveedores_crud.service';
 import { EstadoCumplido } from './../../../models/revision_cumplidos_proveedores_crud/estado-cumplido.model';
 import { JbpmServicePost } from 'src/app/services/jbpm_post_service.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-formulario-consulta',
@@ -43,16 +44,17 @@ export class FormularioConsultaComponent implements OnInit {
     private jbpmService: JbpmService,
     private userService: UserService,
     private crudService: CumplidosProveedoresCrudService,
-    private jbpmPostService: JbpmServicePost
+    private jbpmPostService: JbpmServicePost,
+    private utilsService:UtilsService
   ) {
     this.formularioFiltroHistorico = this.fb.group({
       anios: [[]],
       meses: [[]],
-      vigencias: [[]],
+      vigencias: [{ value: [], disabled: true }],
       nombres_proveedor: [{ value: [], disabled: true }],
       estados: [[]],
       dependencias: [[], Validators.required],
-      numeros_contrato: [[]],
+      numeros_contrato: [{ value: [], disabled: true }],
     });
     this.listaDependencias = [];
   }
@@ -61,6 +63,8 @@ export class FormularioConsultaComponent implements OnInit {
     await this.consultarDependencias();
     await this.obetnerEstadosCumplido();
     console.log(this.listaDependencias);
+    this.anios = this.utilsService.obternerAnios();
+    this.meses = this.utilsService.obtenerMeses();
   }
 
   async consultar() {
@@ -91,7 +95,7 @@ export class FormularioConsultaComponent implements OnInit {
 
                 Vigencia: cumplido.Vigencia,
                 Rp: cumplido.Rp,
-                Periodo: cumplido.Mes,
+                Periodo: cumplido.InformacionPago,
                 NombreProveedor: cumplido.NombreProveedor,
                 Dependencia: cumplido.Dependencia,
                 Estado: cumplido.Estado,
@@ -237,6 +241,9 @@ export class FormularioConsultaComponent implements OnInit {
     console.log(envent);
     if (envent.length > 0) {
       this.formularioFiltroHistorico.get('nombres_proveedor')?.enable();
+      this.formularioFiltroHistorico.get('numeros_contrato')?.enable();
+      this.formularioFiltroHistorico.get('vigencias')?.enable();
+
       let body = {
         dependencias: envent.map((dependencia) => `'${dependencia}'`).join(','),
       };
@@ -248,6 +255,9 @@ export class FormularioConsultaComponent implements OnInit {
       this.listaContratos = [];
       this.listaVigencias = [];
       this.formularioFiltroHistorico.get('nombres_proveedor')?.disable();
+      this.formularioFiltroHistorico.get('numeros_contrato')?.disable();
+      this.formularioFiltroHistorico.get('vigencias')?.disable();
+
       this.listaProveedores = [];
     }
   }
