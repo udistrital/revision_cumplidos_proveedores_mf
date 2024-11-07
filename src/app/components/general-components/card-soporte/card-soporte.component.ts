@@ -25,9 +25,10 @@ import { ModalVisualizarSoporteComponent } from '../modal-visualizar-soporte/mod
 })
 export class CardSoporteComponent {
 
-  @Input({required:true}) soporte!:InformacionSoporteCumplido
+ @Input({required:true}) soporte!:InformacionSoporteCumplido
   @Input({required:true}) config!:ConfigSoportes
-  @Input({required:true}) cumplidoProveedorId!: number
+  @Input() cambioEstadoCumplido!:CambioEstadoCumplido
+  @Input() cumplidoProveedorId!: number
   @Input() buttons!: Button[];
   @Output() recargarSoportes = new EventEmitter<any>();
   comentarioForm: FormGroup;
@@ -47,7 +48,7 @@ export class CardSoporteComponent {
   }
 
   ngOnInit() {
-
+  console.log(this.buttons)
   }
 
   async eliminarSoporte(soporteId: number){

@@ -1,0 +1,17 @@
+<mat-card>
+  <mat-card-content>
+    <app-formulario-consulta
+      (listaCumplidos)="listarCumplidos($event)"
+    ></app-formulario-consulta>
+
+    <br>
+    <br>
+    <app-listado-historicos
+    *ngIf="cumplidosCargados"
+    [displayedColumns]="displayedColumns"
+    [dataSource]="listaCumplidos"
+    >
+
+    </app-listado-historicos>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,26 @@
+<main>
+  <article>
+    <mat-card>
+        <section class="title">
+          <mat-card-header>
+            <mat-card-title>
+              <div class="title-border">{{ title }}</div>
+            </mat-card-title>
+          </mat-card-header>
+        </section>
+
+        <section>
+          <mat-card-content>
+            <!-- <div *ngIf="dataVacio() && !loading; else elseBlock" class="containerButton">
+              <p class="nota"> No se encontraron cumplidos que cumplan las condiciones para revertir</p>
+              <button mat-button class="buttonInicio"> Inicio </button>
+            </div> -->
+            <div>
+              <app-tabla [displayedColumns]="displayedColumns" [data]="dataSource" (actionClicked)="handleActionClick($event)"/>
+            </div>
+
+          </mat-card-content>
+        </section>
+    </mat-card>
+  </article>
+</main>
