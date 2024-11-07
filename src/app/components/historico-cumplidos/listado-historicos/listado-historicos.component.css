@@ -1,0 +1,24 @@
+.mg-section{
+margin: 10px;
+}
+
+.mat-mdc-header-row{
+    background: #FFEAE6;
+}
+
+.btn-box{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    box-sizing: border-box;
+}
+
+
+  @media screen and (max-width: 1280px) {
+    .btn-box{
+        grid-template-columns: repeat(1, 1fr);
+    }
+  }
+  
+
+
+ 
