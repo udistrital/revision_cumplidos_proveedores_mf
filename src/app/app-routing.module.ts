@@ -35,10 +35,12 @@ export const routes: Routes = [
   },
   {
     path: 'ordenador/reversion-cumplidos',
+    canActivate: [AuthGuard],
     component: ListarCumplidosReversiblesComponent,
   },
   {
     path: 'historicos-cumplidos',
+    canActivate: [AuthGuard],
     component: HistoricoCumplidosComponent
   }
 ];

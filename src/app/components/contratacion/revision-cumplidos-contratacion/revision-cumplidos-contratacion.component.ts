@@ -132,7 +132,6 @@ export class RevisionCumplidosContratacionComponent {
   }
 
   obtenerSoportes(idCumplido: number) {
-    console.log(idCumplido);
     this.popUpManager.showLoadingAlert(
       'Cargando',
       'Por favor, espera mientras se están listando los documentos.'
@@ -144,7 +143,6 @@ export class RevisionCumplidosContratacionComponent {
           if (response.Data.length > 0) {
             Swal.close();
             this.soporte_cumplido = response.Data;
-            console.log(response.Data);
             this.dialog.open(ModalSoportesCumplidoComponent, {
               disableClose: true,
               maxHeight: '80vw',
@@ -197,13 +195,11 @@ export class RevisionCumplidosContratacionComponent {
             'Cumplido sin soportes',
             'No se encontraron documentos de soporte para este cumplido.'
           );
-          console.log('error', error);
         }
       );
   }
 
   async aprobarSoportes(cumplido: any) {
-    console.log(cumplido);
     let confirm = await this.popUpManager.showConfirmAlert(
       '¿Estás seguro de enviar a revisión este cumplido?'
     );
@@ -234,7 +230,6 @@ export class RevisionCumplidosContratacionComponent {
   }
 
   async rechazarSoportes(cumplido: any) {
-    console.log('Objeto', cumplido);
     let confirm = await this.popUpManager.showConfirmAlert(
       '¿Está seguro de que desea rechazar los soportes?'
     );
@@ -291,7 +286,6 @@ export class RevisionCumplidosContratacionComponent {
       .pipe(
         map((response: any) => {
           if (response.Data != null && response.Data.length > 0) {
-            console.log(response);
           }
           return null;
         }),

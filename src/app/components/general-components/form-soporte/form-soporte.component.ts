@@ -56,7 +56,6 @@ export class FormSoporteComponent {
   }
 
   ngOnInit() {
-    //console.log(this.soporteForm.value.opcionSeleccionada)
     this.getTipoDocumentosCumplido();
   }
 
@@ -67,7 +66,6 @@ export class FormSoporteComponent {
         next: (res: any) => {
           //res.Data.find((element:any) => element.CodigoAbreviacionTipoDocumento=='AG');
           this.opciones = res.Data;
-          //console.log("Tipo documentos:", this.opciones)
         },
         error: (error: any) => {
           this.popUpManager.showErrorAlert(
@@ -78,7 +76,6 @@ export class FormSoporteComponent {
   }
 
   onFileSelected(event: Event) {
-    //console.log(this.soporteForm.value.opcionSeleccionada)
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
@@ -116,7 +113,6 @@ export class FormSoporteComponent {
   }
 
   triggerFileInput() {
-    //console.log("click")
     this.fileInput.nativeElement.click();
   }
 
@@ -174,11 +170,9 @@ export class FormSoporteComponent {
 
   asignarItemId(item: number) {
     this.itemId = item;
-    //console.log("Itemid:", this.itemId)
   }
 
   crearDocumento() {
-    //console.log(this.soporteForm.value.opcionSeleccionada)
     this.dialog.closeAll();
     this.router.navigate(['/cumplido-satisfaccion', this.cumplidoProveedorId]);
   }

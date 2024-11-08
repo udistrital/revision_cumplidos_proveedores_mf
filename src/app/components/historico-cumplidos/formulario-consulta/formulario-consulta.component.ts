@@ -62,7 +62,6 @@ export class FormularioConsultaComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await this.consultarDependencias();
     await this.obetnerEstadosCumplido();
-    console.log(this.listaDependencias);
     this.anios = this.utilsService.obternerAnios();
     this.meses = this.utilsService.obtenerMeses();
   }
@@ -142,7 +141,7 @@ export class FormularioConsultaComponent implements OnInit {
         )
         .subscribe({
           next: (response: any) => {
-            console.log(response.dependencias.dependencia[0]);
+  
             let consulta = response.dependencias.dependencia.map(
               (dependencia: any) => {
                 return {
@@ -155,7 +154,6 @@ export class FormularioConsultaComponent implements OnInit {
               this.listaDependencias = this.listaDependencias.concat(consulta);
             }
             resolve();
-            console.log(this.listaDependencias);
           },
         });
     });
@@ -206,7 +204,6 @@ export class FormularioConsultaComponent implements OnInit {
         },
       });
 
-      console.log(this.listaEstadosCumplido);
     });
   }
 
@@ -227,7 +224,6 @@ export class FormularioConsultaComponent implements OnInit {
 
   convertirStringALista(input: string): string[] {
     if (input == '') {
-      console.log();
       return [];
     }
 
@@ -238,7 +234,6 @@ export class FormularioConsultaComponent implements OnInit {
   }
 
   async dependenciaChange(envent: string[]) {
-    console.log(envent);
     if (envent.length > 0) {
       this.formularioFiltroHistorico.get('nombres_proveedor')?.enable();
       this.formularioFiltroHistorico.get('numeros_contrato')?.enable();
@@ -268,7 +263,6 @@ export class FormularioConsultaComponent implements OnInit {
         next: (response: any) => {
           this.listaProveedores = response.dependencias.proveedor.map(
             (dependencia: any) => {
-              console.log(dependencia);
               return {
                 ProveedorId: dependencia.proveedor_id,
                 NombreProveedor: dependencia.nombre_proveedor,
@@ -281,7 +275,6 @@ export class FormularioConsultaComponent implements OnInit {
     });
   }
   async consultarVigenciasYContratos(body: any): Promise<void> {
-    console.log(this.listaProveedores);
     return new Promise((resolve, reject) => {
       this.jbpmPostService
         .post('/contratos_dependencias_total/', body)
@@ -300,8 +293,6 @@ export class FormularioConsultaComponent implements OnInit {
                 this.listaNumerosContratos.push(contrato.contrato);
               }
             });
-            console.log(this.listaVigencias);
-
             resolve();
           },
         });
@@ -315,9 +306,7 @@ export class FormularioConsultaComponent implements OnInit {
        
 
         if (vigencia.contrato === vigencia2) {
-          console.log("s")
           if (!this.listaVigencias.includes(vigencia.vigencia)) {
-            console.log(vigencia.contrato)
             this.listaVigencias.push(vigencia.vigencia);
           }
         }

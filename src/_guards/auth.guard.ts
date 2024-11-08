@@ -20,11 +20,9 @@ export class AuthGuard implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    console.log("route",route)
+
     const menuInfo = localStorage.getItem('menu');
-    console.log(this.user)
     const menuPermisos = menuInfo ? JSON.parse(atob(menuInfo)) : null;
-    console.log("Menu",menuPermisos)
     const fullUrl = window.location.href;
     const url = new URL(fullUrl);
     //const path = url.pathname.startsWith('/') ? url.pathname.substring(1) : url.pathname;
@@ -33,7 +31,6 @@ export class AuthGuard implements CanActivate {
     // Obtener parámetros de la ruta
     const params = route.params;
 
-    console.log("Path actual:", path);
 
 
     if (menuPermisos != null) {
@@ -60,8 +57,6 @@ export class AuthGuard implements CanActivate {
 // Recorrer el menú para verificar si la URL y los parámetros existen
 function checkUrlExists(menuItems: any, targetUrl: string, params: any) {
   return menuItems.some((item: any) => {
-    // Verificar la URL y los parámetros
-    console.log("Item:", item.Url)
     if (item.Url === targetUrl && checkParams(item.Params, params)) {
       return true;
     }
