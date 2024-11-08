@@ -65,21 +65,20 @@ export class FormularioConsultaComponent implements OnInit {
     this.anios = this.utilsService.obternerAnios();
     this.meses = this.utilsService.obtenerMeses();
   }
-
+  
   async consultar() {
     let peticion = {
-      Anios: this.formularioFiltroHistorico.get('anios')?.value,
-      Meses: this.formularioFiltroHistorico.get('meses')?.value,
-      Vigencias: this.formularioFiltroHistorico.get('vigencias')?.value,
-      Proveedores:
-        this.formularioFiltroHistorico.get('nombres_proveedor')?.value,
+      Anios: this.formularioFiltroHistorico.get('anios')?.value.map((val: string | number) => Number(val)) || [],
+      Meses: this.formularioFiltroHistorico.get('meses')?.value.map((val: string | number) => Number(val)) || [],
+      Vigencias: this.formularioFiltroHistorico.get('vigencias')?.value.map((val: string | number) => Number(val)) || [],
+      Proveedores: this.formularioFiltroHistorico.get('nombres_proveedor')?.value,
       Estados: this.formularioFiltroHistorico.get('estados')?.value,
       Dependencias: this.formularioFiltroHistorico.get('dependencias')?.value,
-      Contratos: this.formularioFiltroHistorico.get('numeros_contrato')?.value,
+      Contratos: this.formularioFiltroHistorico.get('numeros_contrato')?.value.map((val: string | number) => Number(val)) || [],
     };
+  
     this.obtenerListadoHistoricos(peticion);
   }
-
   async obtenerListadoHistoricos(peticion: any) {
     let dataNull = false;
     this.popUpManager.showLoadingAlert('Buscando');
