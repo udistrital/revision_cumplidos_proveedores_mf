@@ -57,8 +57,6 @@ export class UtilsService {
   }
 
   async obtenerIdDocumento(abreviacion: string): Promise<number | null> {
-    //console.log(abreviacion);
-  
     return new Promise((resolve, reject) => {
       this.cumplidosMidServices
         .get('/supervisor/tipos-documentos-cumplido')

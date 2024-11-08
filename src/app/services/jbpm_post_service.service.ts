@@ -19,7 +19,6 @@ export class JbpmServicePost {
   }
 
   get(endpoint: string) {
-    //console.log(endpoint)
     this.requestManager.setPath('JBPMPOST');
     return this.requestManager.get(endpoint);
   }
