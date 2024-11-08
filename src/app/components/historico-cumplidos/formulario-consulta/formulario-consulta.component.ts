@@ -68,11 +68,10 @@ export class FormularioConsultaComponent implements OnInit {
 
   async consultar() {
     let peticion = {
-      Anios: this.formularioFiltroHistorico.get('anios')?.value,
-      Meses: this.formularioFiltroHistorico.get('meses')?.value,
-      Vigencias: this.formularioFiltroHistorico.get('vigencias')?.value,
-      Proveedores:
-        this.formularioFiltroHistorico.get('nombres_proveedor')?.value,
+      Anios: (this.formularioFiltroHistorico.get('anios')?.value || []).map((anio: string | number) => Number(anio)),
+      Meses: (this.formularioFiltroHistorico.get('meses')?.value || []).map((mes: string | number) => Number(mes)),
+      Vigencias: (this.formularioFiltroHistorico.get('vigencias')?.value || []).map((vigencia: string | number) => Number(vigencia)),
+      Proveedores: (this.formularioFiltroHistorico.get('nombres_proveedor')?.value || []).map((proveedor: string | number) => Number(proveedor)),
       Estados: this.formularioFiltroHistorico.get('estados')?.value,
       Dependencias: this.formularioFiltroHistorico.get('dependencias')?.value,
       Contratos: this.formularioFiltroHistorico.get('numeros_contrato')?.value,
@@ -141,7 +140,7 @@ export class FormularioConsultaComponent implements OnInit {
         )
         .subscribe({
           next: (response: any) => {
-  
+
             let consulta = response.dependencias.dependencia.map(
               (dependencia: any) => {
                 return {
@@ -303,7 +302,7 @@ export class FormularioConsultaComponent implements OnInit {
 
     elemt.forEach((vigencia2:any)=>{
       this.listaContratos.forEach((vigencia) => {
-       
+
 
         if (vigencia.contrato === vigencia2) {
           if (!this.listaVigencias.includes(vigencia.vigencia)) {
@@ -313,6 +312,6 @@ export class FormularioConsultaComponent implements OnInit {
       });
 
     })
-   
+
   }
 }
