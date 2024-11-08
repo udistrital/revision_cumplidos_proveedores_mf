@@ -34,7 +34,6 @@ export class ModalComentariosSoporteComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerUltimoCambioEstado();
     this.obtenerComentariosSoporte();
-    console.log("Data: ", this.data.Config)
   }
 
   obtenerComentariosSoporte() {
@@ -99,7 +98,6 @@ export class ModalComentariosSoporteComponent implements OnInit {
 
   ObtenerUltimoCambioEstado() {
     this.isLoading = true;
-    //console.log(this.cambioEstadoCumplido);
     this.cumplidos_provedore_crud_service
       .get(
         `/cambio_estado_cumplido/?query=Activo:true,CumplidoProveedorId.Id:${this.data.CumplidoProveedorId}&sortby=FechaCreacion&order=desc`
@@ -108,13 +106,11 @@ export class ModalComentariosSoporteComponent implements OnInit {
         next: (response) => {
           this.isLoading = false;
           if (!response.Success || response.Data.length == 0) {
-            //console.log(this.cambioEstadoCumplido);
           }
           this.cambioEstadoCumplido = response.Data[0];
-          //console.log(response);
         },
         error: (err) => {
-          //console.log(err);
+
           this.isLoading = false;
         },
       });

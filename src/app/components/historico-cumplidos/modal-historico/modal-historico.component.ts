@@ -20,13 +20,9 @@ export class ModalHistoricoComponent {
 
   constructor(public dialogRef: MatDialogRef<ModalHistoricoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any){
-      console.log(data)
       this.listaEstadosCumplidos= this.data.listaEstadosCumplidos;
       this.listaDocumentosCargados=this.data.listaDocumentosCargados;
       this.Buttons=this.data.Buttons
-      console.log(this.listaDocumentosCargados)
-      console.log(this.listaDocumentosCargados)
-      console.log(this.listaDocumentosCargados)
     }
 
     cambioEstadoCumplido!:CambioEstadoCumplido;

@@ -30,7 +30,6 @@ export class HistoricoCumplidosComponent implements OnInit {
 
   dataSource:any[]=[]
   ngOnInit(): void {
-    console.log(this.listaCumplidos)
   }
 
   listarCumplidos(cumplidos:Cumplido[]){

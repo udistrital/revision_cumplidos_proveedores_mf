@@ -41,14 +41,13 @@ export class ModalSoportesCumplidoComponent {
   }
 
   cargarSoportes() {
-    //console.log(this.data)
+
     this.soporteService.getDocumentosCumplidos(this.cumplidoProveedorId).subscribe({
       next: (soportes: InformacionSoporteCumplido[]) => {
         this.soportes = soportes;
-        //console.log(this.soportes);
+ 
       },
       error: (error: any) => {
-        //console.log(error)
         this.soportes=[]
        // this.popUpManager.showErrorAlert(
      //     'Por el momento, no hay soportes subidos para esta solicitud de pago.'
