@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://pruebascumplidosprovmf.portaloas.udistrital.edu.co',
+  apiUrl: 'https://pruebasrevisoncumplidoprov.portaloas.udistrital.edu.co',
   //'http://10.20.21.240:8090/v1',
   CUMPLIDOS_PROVEEDORES_MID_SERVICE:
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/revision_cumplido_proveedores_mid/v1',
