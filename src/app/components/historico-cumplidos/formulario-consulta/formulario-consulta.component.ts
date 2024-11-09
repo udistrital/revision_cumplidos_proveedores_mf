@@ -141,7 +141,7 @@ export class FormularioConsultaComponent implements OnInit {
         )
         .subscribe({
           next: (response: any) => {
-  
+
             let consulta = response.dependencias.dependencia.map(
               (dependencia: any) => {
                 return {
@@ -314,7 +314,7 @@ export class FormularioConsultaComponent implements OnInit {
 
     elemt.forEach((vigencia2:any)=>{
       this.listaContratos.forEach((vigencia) => {
-       
+
 
         if (vigencia.contrato === vigencia2) {
           if (!this.listaVigencias.includes(vigencia.vigencia)) {
@@ -324,6 +324,6 @@ export class FormularioConsultaComponent implements OnInit {
       });
 
     })
-   
+
   }
 }
