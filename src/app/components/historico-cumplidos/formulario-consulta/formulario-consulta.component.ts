@@ -243,7 +243,6 @@ export class FormularioConsultaComponent implements OnInit {
       let body = {
         dependencias: envent.map((dependencia) => `'${dependencia}'`).join(','),
       };
-   console.log(body)
       await this.consultarProveedores(body);
 
       await this.consultarVigenciasYContratos(body);
