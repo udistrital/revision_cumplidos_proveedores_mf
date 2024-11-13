@@ -80,36 +80,45 @@ export class FormSoporteComponent {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
 
-      if(file.size>5000000){
-
-        this.popUpManager.showErrorAlert(
-          'El PDF no puede exceder los 5MB.'
-        );
+      // Verifica el tamaño del archivo
+      if (file.size > 5000000) {
+        this.popUpManager.showErrorAlert('El PDF no puede exceder los 5MB.');
         this.removeFile();
-        return
+        return;
       }
 
-      if (file.type === 'application/pdf') {
+      // Verifica que el archivo es un PDF real
+      const reader = new FileReader();
+      reader.onload = () => {
+        const fileResult = new Uint8Array(reader.result as ArrayBuffer);
+        const isValidPDF = this.isPDF(fileResult);
+
+        if (!isValidPDF) {
+          this.popUpManager.showErrorAlert('Solo se permiten archivos en formato PDF.');
+          this.removeFile();
+          return;
+        }
+
+        // Si es un PDF válido, procede a leer el archivo en base64
         this.fileName = file.name;
         this.soporteForm.patchValue({ fileName: this.fileName });
-        const reader = new FileReader();
-        reader.onload = () => {
-          const base64Result = reader.result as string;
-          // Remove the prefix 'data:application/pdf;base64,'
+        const base64Reader = new FileReader();
+        base64Reader.onload = () => {
+          const base64Result = base64Reader.result as string;
           const base64Prefix = 'data:application/pdf;base64,';
           this.base64Output = base64Result.startsWith(base64Prefix)
             ? base64Result.slice(base64Prefix.length)
             : base64Result;
         };
-        reader.readAsDataURL(file);
-      } else {
-        this.popUpManager.showErrorAlert(
-          'Solo se permiten archivos en formato PDF.'
-        );
-        this.removeFile();
-      }
+        base64Reader.readAsDataURL(file);
+      };
+      reader.readAsArrayBuffer(file);
     }
-    
+  }
+
+  isPDF(fileBytes: Uint8Array): boolean {
+    const pdfSignature = [0x25, 0x50, 0x44, 0x46]; // %PDF en ASCII
+    return pdfSignature.every((byte, index) => fileBytes[index] === byte);
   }
 
   triggerFileInput() {

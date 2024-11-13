@@ -57,11 +57,7 @@ import { HistoricoCumplidosComponent } from './components/historico-cumplidos/hi
 import { ListadoHistoricosComponent } from './components/historico-cumplidos/listado-historicos/listado-historicos.component';
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.apiUrl + 'assets/i18n/',
-    '.json'
-  );
+  return new TranslateHttpLoader(http, environment.apiUrl+'/assets/i18n/', '.json');
 }
 
 @NgModule({

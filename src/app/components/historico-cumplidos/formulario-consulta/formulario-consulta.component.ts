@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Month } from 'src/app/models/month.model';
 import { PopUpManager } from 'src/app/managers/popUpManager';
@@ -45,7 +45,8 @@ export class FormularioConsultaComponent implements OnInit {
     private userService: UserService,
     private crudService: CumplidosProveedoresCrudService,
     private jbpmPostService: JbpmServicePost,
-    private utilsService:UtilsService
+    private utilsService:UtilsService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.formularioFiltroHistorico = this.fb.group({
       anios: [[]],
@@ -68,18 +69,17 @@ export class FormularioConsultaComponent implements OnInit {
 
   async consultar() {
     let peticion = {
-      Anios: this.formularioFiltroHistorico.get('anios')?.value,
-      Meses: this.formularioFiltroHistorico.get('meses')?.value,
-      Vigencias: this.formularioFiltroHistorico.get('vigencias')?.value,
-      Proveedores:
-        this.formularioFiltroHistorico.get('nombres_proveedor')?.value,
+      Anios: this.formularioFiltroHistorico.get('anios')?.value.map((val: string | number) => Number(val)) || [],
+      Meses: this.formularioFiltroHistorico.get('meses')?.value.map((val: string | number) => Number(val)) || [],
+      Vigencias: this.formularioFiltroHistorico.get('vigencias')?.value.map((val: string | number) => Number(val)) || [],
+      Proveedores: this.formularioFiltroHistorico.get('nombres_proveedor')?.value,
       Estados: this.formularioFiltroHistorico.get('estados')?.value,
       Dependencias: this.formularioFiltroHistorico.get('dependencias')?.value,
       Contratos: this.formularioFiltroHistorico.get('numeros_contrato')?.value,
     };
+  
     this.obtenerListadoHistoricos(peticion);
   }
-
   async obtenerListadoHistoricos(peticion: any) {
     let dataNull = false;
     this.popUpManager.showLoadingAlert('Buscando');
@@ -141,7 +141,7 @@ export class FormularioConsultaComponent implements OnInit {
         )
         .subscribe({
           next: (response: any) => {
-  
+
             let consulta = response.dependencias.dependencia.map(
               (dependencia: any) => {
                 return {
@@ -234,6 +234,7 @@ export class FormularioConsultaComponent implements OnInit {
   }
 
   async dependenciaChange(envent: string[]) {
+    
     if (envent.length > 0) {
       this.formularioFiltroHistorico.get('nombres_proveedor')?.enable();
       this.formularioFiltroHistorico.get('numeros_contrato')?.enable();
@@ -242,7 +243,6 @@ export class FormularioConsultaComponent implements OnInit {
       let body = {
         dependencias: envent.map((dependencia) => `'${dependencia}'`).join(','),
       };
-
       await this.consultarProveedores(body);
 
       await this.consultarVigenciasYContratos(body);
@@ -261,25 +261,31 @@ export class FormularioConsultaComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.jbpmPostService.post('/proveedores_dependencias', body).subscribe({
         next: (response: any) => {
-          this.listaProveedores = response.dependencias.proveedor.map(
-            (dependencia: any) => {
-              return {
-                ProveedorId: dependencia.proveedor_id,
-                NombreProveedor: dependencia.nombre_proveedor,
-              };
-            }
-          );
-          resolve();
+          if(response.dependencias.proveedor && response.dependencias.proveedor.length>0){
+            this.listaProveedores = response.dependencias.proveedor.map(
+              (dependencia: any) => {
+                return {
+                  ProveedorId: dependencia.proveedor_id,
+                  NombreProveedor: dependencia.nombre_proveedor,
+                };
+              }
+            );
+            resolve();
+          }else{ this.listaNumerosContratos=[]
+            resolve();
+          }
         },
       });
     });
   }
   async consultarVigenciasYContratos(body: any): Promise<void> {
+    this.listaNumerosContratos=[]
     return new Promise((resolve, reject) => {
       this.jbpmPostService
         .post('/contratos_dependencias_total/', body)
         .subscribe({
           next: (response: any) => {
+           if(response.dependencias.contratos && response.dependencias.contratos.length>0){
             this.listaContratos = response.dependencias.contratos.map(
               (contratoItem: any) => {
                 return {
@@ -294,6 +300,10 @@ export class FormularioConsultaComponent implements OnInit {
               }
             });
             resolve();
+           }else{
+            this.listaNumerosContratos=[]
+            resolve();
+           }
           },
         });
     });
@@ -303,7 +313,7 @@ export class FormularioConsultaComponent implements OnInit {
 
     elemt.forEach((vigencia2:any)=>{
       this.listaContratos.forEach((vigencia) => {
-       
+
 
         if (vigencia.contrato === vigencia2) {
           if (!this.listaVigencias.includes(vigencia.vigencia)) {
@@ -313,6 +323,6 @@ export class FormularioConsultaComponent implements OnInit {
       });
 
     })
-   
+
   }
 }
