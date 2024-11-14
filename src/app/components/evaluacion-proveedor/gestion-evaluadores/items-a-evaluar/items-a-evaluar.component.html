@@ -14,14 +14,14 @@
         <div class="box-form">
           <form class="form" (ngSubmit)="agregarItem()" [formGroup]="formAddIntems">
             <div class="box-text-area">
-              <div>
+              <div >
                 <div class="tex-size-17 text-color-principal margin-10px">
                   Id
                 </div>
-                <mat-form-field class="id-input">
-                  <mat-label class="center-label">Id</mat-label>
+                <mat-form-field  class="id-input">
+                  <mat-label >Id</mat-label>
                   <input matInput placeholder="Id" formControlName="id_item" />
-                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('id_item')?.invalid" class="label-error">
+                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('id_item')?.invalid" class="label-error text-center">
                     Ingresa el Id
                   </mat-error>
                 </mat-form-field>
@@ -38,18 +38,88 @@
                   </mat-error>
                 </mat-form-field>
               </div>
+          
+              <div>
+                <div class="tex-size-17 text-color-principal margin-10px">
+                  Cantidad
+                </div>
+                <mat-form-field class="width-text-area  cantidad-input">
+                  <mat-label> Agrega Cantidad</mat-label>
+                  <input class="text-area" matInput placeholder="" formControlName="detalles_item"/>
+                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('cantidad_item')?.invalid" class="label-error">
+                    Ingresa la cantidad
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              
+              <div>
+                <div class="tex-size-17 text-color-principal margin-10px">
+                  Valor
+                </div>
+                <mat-form-field class="width-text-area valor-input">
+                  <mat-label>Agrega Valor</mat-label>
+                  <input class="text-area" matInput placeholder="" formControlName="detalles_item"/>
+                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('valor_item')?.invalid" class="label-error">
+                    Ingresa el valor
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div>
+                <div class="tex-size-17 text-color-principal margin-10px">
+                  Iva
+                </div>
+                <mat-form-field class="width-text-area iva-input">
+                  <mat-label class="text-center">Iva</mat-label>
+                  <input class="text-area" matInput placeholder="" formControlName="detalles_item"/>
+                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('iva_item')?.invalid" class="label-error">
+                    Ingresa el iva
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+
+              <div>
+                <div class="tex-size-17 text-color-principal margin-10px">
+                  Unidad
+                </div>
+                <mat-form-field class="width-text-area unidad-input">
+                  <mat-label>Unidad</mat-label>
+                  <mat-select value="">
+                      <mat-option>cm</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('iva_item')?.invalid" class="label-error">
+                    Agrega la Unidad
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+
+              <div>
+                <div class="tex-size-17 text-color-principal margin-10px">
+                  Tipo necesidad
+                </div>
+                <mat-form-field class="width-text-area">
+                  <mat-label>Agrega el Tipo necesidad</mat-label>
+                  <input class="text-area" matInput placeholder="" formControlName="detalles_item"/>
+                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('iva_item')?.invalid" class="label-error">
+                    Agrega el Tipo necesidad 
+                  </mat-error>
+                </mat-form-field>
+              </div>
               <div>
                 <div class="tex-size-17 text-color-principal margin-10px">
                   Descripcion item
                 </div>
-                <mat-form-field class="width-text-area">
-                  <mat-label>Agrega Descripcion del item</mat-label>
+                <mat-form-field class="item-descripcion">
+                  <mat-label>Agrega Descripcion</mat-label>
                   <textarea class="text-area" matInput placeholder="" formControlName="detalles_item"></textarea>
                   <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('detalles_item')?.invalid" class="label-error">
                     Ingresa la descripción
                   </mat-error>
                 </mat-form-field>
               </div>
+
             </div>
 
             <div class="margin-10px">
