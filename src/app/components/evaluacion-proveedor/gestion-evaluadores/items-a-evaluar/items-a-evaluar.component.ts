@@ -11,20 +11,40 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 export class ItemsAEvaluarComponent {
   formAddIntems: FormGroup;
   formularioEnviado: boolean = false;
+  panelOpenStateItems = false;
+  panelOpenStateEvaluadores = false;
+  listaItems: ItemAEvaluar[] = [];
+
 
   constructor(private fb: FormBuilder, private popUpManager: PopUpManager) {
     this.formAddIntems = this.fb.group({
-      detalles_item: [null, Validators.required],
+      
       id_item: [null, Validators.required],
       nombre_item: [null, Validators.required],
+      cantidad_item: [null],
+      valor_item: [null],
+      iva_item: [null],
+      unidad_item: [null, ],
+      tipo_necesidad_item: [null],
+      descripcion_item: [null, Validators.required],
+
     });
   }
-  panelOpenStateItems = false;
-  panelOpenStateEvaluadores = false;
+ 
 
-  listaItems: ItemAEvaluar[] = [];
+  displayedColumns = [
+    { def: 'id', header: 'Id' },
+    { def: 'nombre', header: 'Nombre' },
+    { def: 'descripcion', header: 'Descripcion' },
+    { def: 'cantidad', header: 'Cantidad' },
+    { def: 'valor', header: 'Valor' },
+    { def: 'iva', header: 'Iva' },
+    { def: 'tipoNecesidad', header: 'Tipo Necesidad' },
+    { def: 'acciones', header: 'ACCIONES', isAction: true },
+  ];
 
   async agregarItem() {
+    console.log(this.formAddIntems.value)
     const existe = this.listaItems.some(
       (item) => item.id === this.obtenerInfoFormulario().id
     );
@@ -38,14 +58,10 @@ export class ItemsAEvaluarComponent {
       if (confirm.isConfirmed) {
         if (this.validarFromulario()) {
           this.formularioEnviado = false;
-          const nuevoItem = {
-            id: this.obtenerInfoFormulario().id,
-            nombre: this.obtenerInfoFormulario().nombre,
-            descripcion: this.obtenerInfoFormulario().detalles,
-          };
-          this.listaItems = [...this.listaItems, nuevoItem];
+      
+          this.listaItems = [...this.listaItems, this.obtenerInfoFormulario()];
           this.formAddIntems.reset({
-            detalles_item: '',
+            descripcion_item: '',
           });
         } else {
           this.popUpManager.showErrorAlert('Verifica los campos');
@@ -53,13 +69,20 @@ export class ItemsAEvaluarComponent {
       }
     }
   }
-
   obtenerInfoFormulario() {
+    console.log("casxcadsas")
+    console.log(this.formAddIntems.get('cantidad_item')?.getRawValue() ?? '',)
     return {
       id: this.formAddIntems.get('id_item')?.getRawValue() ?? '',
       nombre: this.formAddIntems.get('nombre_item')?.getRawValue() ?? '',
-      detalles: this.formAddIntems.get('detalles_item')?.getRawValue() ?? '',
+      descripcion: this.formAddIntems.get('descripcion_item')?.getRawValue() ?? '',
+      cantidad: this.formAddIntems.get('cantidad_item')?.getRawValue() ?? '',
+      valor: this.formAddIntems.get('valor_item')?.getRawValue() ?? '',
+      iva: this.formAddIntems.get('iva_item')?.getRawValue() ?? '',
+      tipoNecesidad: this.formAddIntems.get('tipo_necesidad_item')?.getRawValue() ?? '',
+      acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
     };
+
   }
 
   async eliminarItem(id: number) {
@@ -85,4 +108,12 @@ export class ItemsAEvaluarComponent {
 
     return isValid;
   }
+
+  handleActionClick(event: { action: any; element: any }) {
+    console.log(event.element.id)
+    if (event.action.actionName === 'delete') {
+      this.eliminarItem(event.element.id);
+    }
+  }
+
 }

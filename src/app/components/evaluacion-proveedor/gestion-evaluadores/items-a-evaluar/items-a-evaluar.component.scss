@@ -12,6 +12,12 @@
 .text-center {
   text-align: center !important;
 }
+.text-left {
+  text-align: left !important;
+}
+.text-right {
+  text-align: right !important;
+}
 
 .color-white {
   color: white !important;
@@ -47,7 +53,7 @@
 }
 
 .btn-add {
-  background-color: #008736;
+  background-color: #8c1a19;
   color: white !important;
 }
 
@@ -73,6 +79,12 @@
   border-radius: 5px;
 }
 
+.box-buttons{
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  gap: 10px;
+  margin: 10px;
+}
 .box-items {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -214,38 +226,21 @@
 
 @media screen and (max-width: 680px) {
   .box-text-area {
-    display: grid;
     grid-template-columns: repeat(1, 1fr);
   }
 
-  .box-text-area > div:nth-child(1) {
-    grid-column: span 1;
-  }
-
-  .box-text-area > div:nth-child(2) {
-    grid-column: span 2;
-  }
-
-  .box-text-area > div:nth-child(3) {
-    grid-column: span 1;
-  }
-
-  .box-text-area > div:nth-child(4) {
-    grid-column: span 2;
-  }
-
-  .box-text-area > div:nth-child(5) {
-    grid-column: span 1;
-  }
-
-  .box-text-area > div:nth-child(6) {
-    grid-column: span 2;
-  }
-  .box-text-area > div:nth-child(7) {
-    grid-column: span 1;
-  }
-
+  .box-text-area > div:nth-child(1),
+  .box-text-area > div:nth-child(2),
+  .box-text-area > div:nth-child(3),
+  .box-text-area > div:nth-child(4),
+  .box-text-area > div:nth-child(5),
+  .box-text-area > div:nth-child(6),
+  .box-text-area > div:nth-child(7),
   .box-text-area > div:nth-child(8) {
-    grid-column: span 2;
+    grid-column: span 1;
+  }
+
+  .input-680 {
+    width: 100% !important;
   }
 }
