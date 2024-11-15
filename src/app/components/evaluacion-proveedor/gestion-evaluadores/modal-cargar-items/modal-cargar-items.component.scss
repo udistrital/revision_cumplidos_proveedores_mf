@@ -35,7 +35,16 @@
     justify-content: center;
     margin: 10px;
 }
-
+.button-remove {
+    border: none;
+    border-radius: 100%;
+    color: white;
+    background-color: #98483c;
+    margin-right: 10px;
+    :hover {
+      cursor: pointer;
+    }
+  }
 .container-subir-documento {
     display: flex;
     justify-content: center;

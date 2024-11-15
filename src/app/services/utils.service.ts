@@ -85,5 +85,36 @@ export class UtilsService {
         });
     });
   }
+  obtenerMeses=(): Month[] => [
+    { nombre: 'Enero', mes: 1 },
+    { nombre: 'Febrero', mes: 2 },
+    { nombre: 'Marzo', mes: 3 },
+    { nombre: 'Abril', mes: 4 },
+    { nombre: 'Mayo', mes: 5 },
+    { nombre: 'Junio', mes: 6 },
+    { nombre: 'Julio', mes: 7 },
+    { nombre: 'Agosto', mes: 8 },
+    { nombre: 'Septiembre', mes: 9 },
+    { nombre: 'Octubre', mes: 10 },
+    { nombre: 'Noviembre', mes: 11 },
+    { nombre: 'Diciembre', mes: 12 }
+  ];
+
+  async obtenerMedidas():Promise<UnidadMedida[]>{
+ 
+    return new Promise((resolve, reject) => {
+      this.administrativaAmazonService.get("/unidad").subscribe({
+        next:(response:any)=>{
+          const ListaUnidades:UnidadMedida[]=response;
+          resolve(ListaUnidades??null)
+        },error:(error)=>{
+          this.popUpManager.showErrorAlert(
+            'No fue posible obtener las medida de unidad.'
+          );
+        }
+      
+      })
+    })
   
+  }
 }

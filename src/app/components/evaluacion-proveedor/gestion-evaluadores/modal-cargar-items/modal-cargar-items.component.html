@@ -49,10 +49,24 @@
               formControlName="fileName"
               [value]="fileName"
             />
+            <button
+              *ngIf="base64Output != ''"
+              matSuffix
+              class="button-remove"
+              (click)="removeFile()"
+              type="button"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           </mat-form-field>
-          <button mat- class="button-browse" (click)="triggerFileInput()">
-            Adjuntar ..
-          </button>
+          <div class="input-file" (click)="triggerFileInput()">
+            <button mat-button class="button-browse">
+              <mat-icon>attach_file</mat-icon>
+              Cargar
+            </button>
+           
+          </div>
+        
         </div>
         <div
           *ngIf="
@@ -73,13 +87,9 @@
           >
             Cargar Soporte
           </button>
+          
         </div>
 
-        <div  class="container-remover-boton">
-            <button mat-button class="remover-button" (click)="removeFile()" [disabled]="archivoSeleccionado" [class.mat-button-disabled]="archivoSeleccionado">
-              Remover
-            </button>
-          </div>
       </div>
     </form>
   </mat-card-content>
