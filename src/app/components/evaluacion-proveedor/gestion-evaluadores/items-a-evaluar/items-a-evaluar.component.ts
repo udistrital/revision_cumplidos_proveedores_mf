@@ -1,22 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ItemAEvaluar } from './../../../../models/item_a_evaluar';
+import { ItemAEvaluar } from '../../../../models/item_a_evaluar';
 import { PopUpManager } from 'src/app/managers/popUpManager';
+import { ModalComentariosSoporteComponent } from 'src/app/components/general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ModalComentariosSoporteData } from 'src/app/models/modal-soporte-cumplido-data.model';
+import { ModalCargarItemsComponent } from '../modal-cargar-items/modal-cargar-items.component';
+import { UnidadMedida } from 'src/app/models/unidad-medida';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-items-a-evaluar',
   templateUrl: './items-a-evaluar.component.html',
   styleUrls: ['./items-a-evaluar.component.scss'],
 })
-export class ItemsAEvaluarComponent {
+
+export class ItemsAEvaluarComponent  implements OnInit{
   formAddIntems: FormGroup;
   formularioEnviado: boolean = false;
   panelOpenStateItems = false;
   panelOpenStateEvaluadores = false;
   listaItems: ItemAEvaluar[] = [];
-
-
-  constructor(private fb: FormBuilder, private popUpManager: PopUpManager) {
+  listaUnidades:UnidadMedida[]=[] 
+  @Output() listaItemsEmiter = new EventEmitter<any>();
+  async ngOnInit(){
+    this.listaUnidades= await this.utilsService.obtenerMedidas();
+    
+  }
+  constructor(private fb: FormBuilder, private popUpManager: PopUpManager,private dialog:MatDialog,private utilsService:UtilsService) {
     this.formAddIntems = this.fb.group({
       
       id_item: [null, Validators.required],
@@ -60,6 +71,7 @@ export class ItemsAEvaluarComponent {
           this.formularioEnviado = false;
       
           this.listaItems = [...this.listaItems, this.obtenerInfoFormulario()];
+          this.listaItemsEmiter.emit(this.listaItems)
           this.formAddIntems.reset({
             descripcion_item: '',
           });
@@ -70,8 +82,6 @@ export class ItemsAEvaluarComponent {
     }
   }
   obtenerInfoFormulario() {
-    console.log("casxcadsas")
-    console.log(this.formAddIntems.get('cantidad_item')?.getRawValue() ?? '',)
     return {
       id: this.formAddIntems.get('id_item')?.getRawValue() ?? '',
       nombre: this.formAddIntems.get('nombre_item')?.getRawValue() ?? '',
@@ -115,5 +125,20 @@ export class ItemsAEvaluarComponent {
       this.eliminarItem(event.element.id);
     }
   }
+
+  openDialogCargarExcel() {
+    this.dialog.open(ModalCargarItemsComponent, {
+      disableClose: true,
+      maxHeight: '80vh',
+      maxWidth: '60vw',
+      minHeight: '80v',
+      minWidth: '60vw',
+      height: 'auto',
+      width: 'auto',
+      data:{
+      } 
+    });
+    }
+
 
 }

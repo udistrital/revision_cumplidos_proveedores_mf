@@ -1,7 +1,10 @@
 <section>
   <mat-accordion>
-    <mat-expansion-panel [expanded]="true" (opened)="panelOpenStateEvaluadores = true"
-      (closed)="panelOpenStateEvaluadores = false">
+    <mat-expansion-panel
+      [expanded]="true"
+      (opened)="panelOpenStateEvaluadores = true"
+      (closed)="panelOpenStateEvaluadores = false"
+    >
       <mat-expansion-panel-header class="bg-panel-title">
         <mat-panel-title class="expansion-panel-title-box">
           <div>
@@ -12,7 +15,11 @@
 
       <article>
         <div class="box-form">
-          <form class="form" (ngSubmit)="agregarItem()" [formGroup]="formAddIntems">
+          <form
+            class="form"
+            (ngSubmit)="agregarItem()"
+            [formGroup]="formAddIntems"
+          >
             <div class="box-text-area">
               <div>
                 <div class="tex-size-17 text-color-principal margin-10px">
@@ -21,8 +28,12 @@
                 <mat-form-field class="id-input input-680">
                   <mat-label>Id</mat-label>
                   <input matInput placeholder="Id" formControlName="id_item" />
-                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('id_item')?.invalid"
-                    class="label-error text-center">
+                  <mat-error
+                    *ngIf="
+                      formularioEnviado && formAddIntems.get('id_item')?.invalid
+                    "
+                    class="label-error text-center"
+                  >
                     Ingresa el Id
                   </mat-error>
                 </mat-form-field>
@@ -33,9 +44,18 @@
                 </div>
                 <mat-form-field class="input-680">
                   <mat-label>Nombre</mat-label>
-                  <input matInput placeholder="Nombre" formControlName="nombre_item" />
-                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('nombre_item')?.invalid"
-                    class="label-error">
+                  <input
+                    matInput
+                    placeholder="Nombre"
+                    formControlName="nombre_item"
+                  />
+                  <mat-error
+                    *ngIf="
+                      formularioEnviado &&
+                      formAddIntems.get('nombre_item')?.invalid
+                    "
+                    class="label-error"
+                  >
                     Ingresa el nombre del item
                   </mat-error>
                 </mat-form-field>
@@ -45,11 +65,23 @@
                 <div class="tex-size-17 text-color-principal margin-10px">
                   Cantidad
                 </div>
-                <mat-form-field class="width-text-area  cantidad-input input-680">
+                <mat-form-field
+                  class="width-text-area cantidad-input input-680"
+                >
                   <mat-label> Agrega Cantidad</mat-label>
-                  <input class="text-area" matInput placeholder="" formControlName="cantidad_item" />
-                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('cantidad_item')?.invalid"
-                    class="label-error">
+                  <input
+                    class="text-area"
+                    matInput
+                    placeholder=""
+                    formControlName="cantidad_item"
+                  />
+                  <mat-error
+                    *ngIf="
+                      formularioEnviado &&
+                      formAddIntems.get('cantidad_item')?.invalid
+                    "
+                    class="label-error"
+                  >
                     Ingresa la cantidad
                   </mat-error>
                 </mat-form-field>
@@ -61,9 +93,19 @@
                 </div>
                 <mat-form-field class="width-text-area valor-input input-680">
                   <mat-label>Agrega Valor</mat-label>
-                  <input class="text-area" matInput placeholder="" formControlName="valor_item" />
-                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('valor_item')?.invalid"
-                    class="label-error">
+                  <input
+                    class="text-area"
+                    matInput
+                    placeholder=""
+                    formControlName="valor_item"
+                  />
+                  <mat-error
+                    *ngIf="
+                      formularioEnviado &&
+                      formAddIntems.get('valor_item')?.invalid
+                    "
+                    class="label-error"
+                  >
                     Ingresa el valor
                   </mat-error>
                 </mat-form-field>
@@ -75,13 +117,23 @@
                 </div>
                 <mat-form-field class="width-text-area iva-input input-680">
                   <mat-label class="text-center">Iva</mat-label>
-                  <input class="text-area" matInput placeholder="" formControlName="iva_item" />
-                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('iva_item')?.invalid" class="label-error">
+                  <input
+                    class="text-area"
+                    matInput
+                    placeholder=""
+                    formControlName="iva_item"
+                  />
+                  <mat-error
+                    *ngIf="
+                      formularioEnviado &&
+                      formAddIntems.get('iva_item')?.invalid
+                    "
+                    class="label-error"
+                  >
                     Ingresa el iva
                   </mat-error>
                 </mat-form-field>
               </div>
-
 
               <div>
                 <div class="tex-size-17 text-color-principal margin-10px">
@@ -90,15 +142,23 @@
                 <mat-form-field class="width-text-area unidad-input input-680">
                   <mat-label>Unidad</mat-label>
                   <mat-select formControlName="unidad_item">
-                    <mat-option value="cm">cm</mat-option>
+                    <mat-option
+                      *ngFor="let unidad of listaUnidades"
+                      [value]="unidad.Id"
+                      >{{ unidad.Unidad }}</mat-option
+                    >
                   </mat-select>
-                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('unidad_item')?.invalid"
-                    class="label-error">
+                  <mat-error
+                    *ngIf="
+                      formularioEnviado &&
+                      formAddIntems.get('unidad_item')?.invalid
+                    "
+                    class="label-error"
+                  >
                     Agrega la Unidad
                   </mat-error>
                 </mat-form-field>
               </div>
-
 
               <div>
                 <div class="tex-size-17 text-color-principal margin-10px">
@@ -106,9 +166,19 @@
                 </div>
                 <mat-form-field class="width-text-area input-680">
                   <mat-label>Agrega el Tipo necesidad</mat-label>
-                  <input class="text-area" matInput placeholder="" formControlName="tipo_necesidad_item" />
-                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('tipo_necesidad_item')?.invalid"
-                    class="label-error">
+                  <input
+                    class="text-area"
+                    matInput
+                    placeholder=""
+                    formControlName="tipo_necesidad_item"
+                  />
+                  <mat-error
+                    *ngIf="
+                      formularioEnviado &&
+                      formAddIntems.get('tipo_necesidad_item')?.invalid
+                    "
+                    class="label-error"
+                  >
                     Agrega el Tipo necesidad
                   </mat-error>
                 </mat-form-field>
@@ -119,29 +189,40 @@
                 </div>
                 <mat-form-field class="item-descripcion input-680">
                   <mat-label>Agrega Descripcion</mat-label>
-                  <textarea class="text-area" matInput placeholder="" formControlName="descripcion_item"></textarea>
-                  <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('descripcion_item')?.invalid"
-                    class="label-error">
+                  <textarea
+                    class="text-area"
+                    matInput
+                    placeholder=""
+                    formControlName="descripcion_item"
+                  ></textarea>
+                  <mat-error
+                    *ngIf="
+                      formularioEnviado &&
+                      formAddIntems.get('descripcion_item')?.invalid
+                    "
+                    class="label-error"
+                  >
                     Ingresa la descripción
                   </mat-error>
                 </mat-form-field>
               </div>
-
             </div>
 
             <div class="margin-10px box-buttons">
-              
               <div class="text-left">
                 <small class="margin-10px">Adjuntar Items</small>
-                <button  class="btn-add" mat-button>
+                <button
+                  type="button"
+                  (click)="openDialogCargarExcel()"
+                  class="btn-add"
+                  mat-button
+                >
                   <mat-icon>upload</mat-icon>
                   Adjuntar
                 </button>
-
               </div>
 
               <div class="text-right">
-               
                 <button type="submit" class="btn-add" mat-button>
                   <mat-icon>add</mat-icon>
                   Agregar
@@ -152,19 +233,14 @@
         </div>
 
         <div *ngIf="listaItems.length">
-          <app-tabla #tablaComponent [data]="listaItems" [displayedColumns]="displayedColumns"
-            (actionClicked)="handleActionClick($event)" />
+          <app-tabla
+            #tablaComponent
+            [data]="listaItems"
+            [displayedColumns]="displayedColumns"
+            (actionClicked)="handleActionClick($event)"
+          />
         </div>
-
-
-
       </article>
     </mat-expansion-panel>
   </mat-accordion>
-
-
-
-
-
-
 </section>
