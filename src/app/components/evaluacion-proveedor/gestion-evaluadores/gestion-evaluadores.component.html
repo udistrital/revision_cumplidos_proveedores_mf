@@ -38,10 +38,10 @@
     </mat-card>
 
     <mat-card class="details-card">
-      <app-items-a-evaluar></app-items-a-evaluar>
+      <app-items-a-evaluar (listaItemsEmiter)="obtenerListaItems($event)"></app-items-a-evaluar>
     </mat-card>
 
-    <mat-card class="details-card"> <app-evaluadores (porcentaje)="getPorcentaje($event)"></app-evaluadores></mat-card>
+    <mat-card class="details-card"> <app-evaluadores (porcentaje)="getPorcentaje($event)" [listaItems]="listaItems"></app-evaluadores></mat-card>
 
     <mat-card class="details-card"> 
       <div class="box-puntaje  ">

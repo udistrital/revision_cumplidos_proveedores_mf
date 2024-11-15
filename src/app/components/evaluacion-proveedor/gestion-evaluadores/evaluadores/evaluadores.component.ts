@@ -1,35 +1,39 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { Evaluador } from 'src/app/models/evaluador';
+import { UnidadMedida } from 'src/app/models/unidad-medida';
+import { UtilsService } from 'src/app/services/utils.service';
+import { ItemAEvaluar } from './../../../../models/item_a_evaluar';
 
 @Component({
   selector: 'app-evaluadores',
   templateUrl: './evaluadores.component.html',
   styleUrls: ['./evaluadores.component.scss'],
 })
-export class EvaluadoresComponent {
+export class EvaluadoresComponent  {
   panelOpenStateItems = true;
   listaEvaluadores: Evaluador[] = [];
   formAddEvaluadores: FormGroup;
   formularioEnviado: boolean = false;
+  @Input() listaItems:ItemAEvaluar[]=[]
   @Output() porcentaje = new EventEmitter<number>();
-  displayedColumns = [
-    { def: 'NumeroDocumento', header: 'N° Documento' },
-    { def: 'Cargo', header: 'Cargo' },
-    { def: 'ItemAEvaluar', header: 'Items a evaluar' },
-    { def: 'PorcentageDeEvaluacion', header: 'Porcentage de evaluacion' },
-    { def: 'acciones', header: 'ACCIONES', isAction: true },
-  ];
 
-  constructor(private fb: FormBuilder, private popUpManager: PopUpManager) {
+  constructor(private fb: FormBuilder, private popUpManager: PopUpManager,private utilsService:UtilsService,private cdr: ChangeDetectorRef) {
     this.formAddEvaluadores = this.fb.group({
       numero_documento: ['', [Validators.required]],
       cargo: ['', [Validators.required]],
-      item_a_evaluar: ['', [Validators.required]],
+      item_a_evaluar: [[], [Validators.required]],
       porcentaje: ['', [Validators.required]],
     });
   }
+  ngOnChanges(changes: SimpleChanges) {
+   
+    console.log(this.listaItems);
+  }
+
+
+
 
   handleActionClick(event: { action: any; element: any }) {
     if (event.action.actionName === 'delete') {
@@ -38,6 +42,7 @@ export class EvaluadoresComponent {
   }
 
   async agregarEvaluador() {
+    console.log(this.obtenerInfoFormulario())
     if (this.validarFromulario()) {
       const existe = this.listaEvaluadores.some(
         (item) =>
@@ -76,7 +81,7 @@ export class EvaluadoresComponent {
     }
   }
 
-  async eliminarEvaluador(numeroDocumento: string) {
+  async eliminarEvaluador(numeroDocumento: number) {
     let confirm = await this.popUpManager.showConfirmAlert(
       '¿Estás seguro de eliminar el Evaluador?'
     );
@@ -93,8 +98,7 @@ export class EvaluadoresComponent {
       NumeroDocumento:
         this.formAddEvaluadores.get('numero_documento')?.getRawValue() ?? '',
       Cargo: this.formAddEvaluadores.get('cargo')?.getRawValue() ?? '',
-      ItemAEvaluar:
-        this.formAddEvaluadores.get('item_a_evaluar')?.getRawValue() ?? '',
+      ItemAEvaluar: this.formAddEvaluadores.get('item_a_evaluar')?.getRawValue() ?? [],
       PorcentageDeEvaluacion:
         this.formAddEvaluadores.get('porcentaje')?.getRawValue() ?? '',
       acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
@@ -133,5 +137,16 @@ export class EvaluadoresComponent {
       suma += Number(evaluador.PorcentageDeEvaluacion);
     });
     return suma;
+  }
+
+  async eliminarItem(id: number) {
+
+    let confirm = await this.popUpManager.showConfirmAlert(
+      '¿Estás seguro de eliminar el Evaluador?'
+    );
+    if (confirm.isConfirmed) {
+      this.listaEvaluadores = this.listaEvaluadores.filter((evaluador) => evaluador.NumeroDocumento !== id);
+    }
+    this.porcentaje.emit(this.sumarPorcentaje());
   }
 }

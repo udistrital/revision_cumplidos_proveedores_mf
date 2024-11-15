@@ -53,9 +53,10 @@ import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/g
 import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
 import { ItemsAEvaluarComponent } from './components/evaluacion-proveedor/gestion-evaluadores/items-a-evaluar/items-a-evaluar.component'
 import {MatExpansionModule} from '@angular/material/expansion';
-import { CardItemComponent } from './components/evaluacion-proveedor/card-item/card-item.component';
 import { FormEvaluacionContratoComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/form-evaluacion-contrato.component';
 import { CardPreguntaComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/card-pregunta/card-pregunta.component';
+import { ModalCargarItemsComponent } from './components/evaluacion-proveedor/gestion-evaluadores/modal-cargar-items/modal-cargar-items.component';
+import { CardListaEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/card-lista-evaluadores/card-lista-evaluadores.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -87,9 +88,10 @@ export function createTranslateLoader(http: HttpClient) {
     GestionEvaluadoresComponent,
     EvaluadoresComponent,
     ItemsAEvaluarComponent,
-    CardItemComponent,
     FormEvaluacionContratoComponent,
     CardPreguntaComponent,
+    ModalCargarItemsComponent,
+    CardListaEvaluadoresComponent,
     
   ],
   imports: [

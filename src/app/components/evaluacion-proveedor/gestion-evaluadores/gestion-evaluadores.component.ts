@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Evaluador } from 'src/app/models/evaluador';
+import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
 
 
 @Component({
@@ -12,6 +13,7 @@ export class GestionEvaluadoresComponent implements OnInit {
   numeroContrato!: string;
   vigenciaContrato!: string;
   porcentaje:number=0
+  listaItems:ItemAEvaluar[]=[]
 
   ngOnInit(): void {
     this.nombreProveedor = 'nombre Proveedor  tempotal';
@@ -28,5 +30,11 @@ export class GestionEvaluadoresComponent implements OnInit {
   }
 
 
+  obtenerListaItems(event:any){
+    
+    if(event!=null){
+      this.listaItems=event;
+    }
+  }
  
 }

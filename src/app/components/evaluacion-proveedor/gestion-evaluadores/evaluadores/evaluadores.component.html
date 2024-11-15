@@ -50,7 +50,11 @@
               <p class="labels">item a evaluar</p>
               <mat-form-field>
                 <mat-label class="center-label">item a evaluar</mat-label>
-                <input matInput formControlName="item_a_evaluar" type="text" />
+                <mat-select multiple formControlName="item_a_evaluar">
+                  <mat-option *ngFor="let item of listaItems" [value]="item.id">
+                    {{item.nombre}}
+                  </mat-option>
+                </mat-select>
                 <mat-error *ngIf=" formularioEnviado  &&  formAddEvaluadores.get('item_a_evaluar')?.invalid" class="label-error">
                   Ingresa el  item a evaluar
                 </mat-error>
@@ -76,14 +80,12 @@
             </button>
           </div>
         </form>
-        
+
       </div>
 
-      <app-tabla #tablaComponent 
-        [data]="listaEvaluadores"
-        [displayedColumns]="displayedColumns"
-        (actionClicked)="handleActionClick($event)"
-      />
+     
+      <app-card-lista-evaluadores [listaEvaluadores]="listaEvaluadores" [eliminarItem]="eliminarItem.bind(this)"></app-card-lista-evaluadores>
+
     </article>
   </mat-expansion-panel>
 </mat-accordion>
