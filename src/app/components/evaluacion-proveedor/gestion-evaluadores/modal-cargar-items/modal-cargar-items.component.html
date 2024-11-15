@@ -24,18 +24,32 @@
         <div class="title-carga">
             <h2 class="text-center" >Carga los items desde un archivo Excel</h2>
         </div>
-
+  <div class="box-informacion">
+    <span>A continuación se dejará una plantilla de ejemplo para realizar el documento de carga de ítems. Una vez tenga el archivo, cárguelo al sistema y presione el botón de "Cargar ítems".</span>
+  </div>
         <div class="box-descargar-plantilla">
             <div class="text-right">
-                <span>Descarga la plantilla para la carga de ítems</span>
+              
+                <p>Documento Base</p>
             </div>
-            <div class="text-left">
+            <div>
                 <button mat-button class="descargar-plantilla-button" type="button">
                     Descargar Plantilla
                 </button>
             </div>
         </div>
+        <div class="text-center">
+          <small>Solo archivos excel</small>
+        </div>
         <div class="container-subir-documento">
+         
+          <div class="input-file" (click)="triggerFileInput()">
+            <button mat-button class="button-browse">
+              <mat-icon>attach_file</mat-icon>
+              Cargar
+            </button>
+           
+          </div>
           <input
             type="file"
             #fileInput
@@ -43,6 +57,7 @@
             style="display: none"
           />
           <mat-form-field appearance="outline" class="input-subir-documento">
+            
             <input
               matInput
               placeholder="Seleccione el archivo ..."
@@ -59,13 +74,7 @@
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
-          <div class="input-file" (click)="triggerFileInput()">
-            <button mat-button class="button-browse">
-              <mat-icon>attach_file</mat-icon>
-              Cargar
-            </button>
-           
-          </div>
+          
         
         </div>
         <div
