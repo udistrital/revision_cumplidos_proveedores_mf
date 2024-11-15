@@ -4,6 +4,7 @@ import { PopUpManager } from '../managers/popUpManager';
 import { Documento } from '../models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
 import { AdministrativaAmazonService } from './administrativa_amazon.service';
 import { UnidadMedida } from '../models/unidad-medida';
+import { Month } from '../models/month.model';
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +59,7 @@ export class UtilsService {
   }
 
   async obtenerIdDocumento(abreviacion: string): Promise<number | null> {
+    console.log(abreviacion);
   
     return new Promise((resolve, reject) => {
       this.cumplidosMidServices
@@ -68,7 +70,7 @@ export class UtilsService {
   
             const documento = this.documentos.find(doc => doc.CodigoAbreviacionTipoDocumento === abreviacion);
             if (!documento) {
-              console.warn('No se encontró un documento con la abreviación:', abreviacion);
+              //console.warn('No se encontró un documento con la abreviación:', abreviacion);
               return resolve(null);
             }
   
@@ -82,24 +84,6 @@ export class UtilsService {
           },
         });
     });
-  }
-
-  async obtenerMedidas():Promise<UnidadMedida[]>{
- 
-    return new Promise((resolve, reject) => {
-      this.administrativaAmazonService.get("/unidad").subscribe({
-        next:(response:any)=>{
-          const ListaUnidades:UnidadMedida[]=response;
-          resolve(ListaUnidades??null)
-        },error:(error)=>{
-          this.popUpManager.showErrorAlert(
-            'No fue posible obtener las medida de unidad.'
-          );
-        }
-      
-      })
-    })
-  
   }
   
 }
