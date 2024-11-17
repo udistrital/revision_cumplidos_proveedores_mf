@@ -47,7 +47,7 @@ export class UtilsService {
     return formattedDate;
   }
 
-  obternerAnios(): number[] {
+  obtenerAnios(): number[] {
     const anioInico = 2017;
     const anioActual = new Date().getFullYear();
     const anios: number[] = [];
@@ -70,7 +70,6 @@ export class UtilsService {
   
             const documento = this.documentos.find(doc => doc.CodigoAbreviacionTipoDocumento === abreviacion);
             if (!documento) {
-              //console.warn('No se encontró un documento con la abreviación:', abreviacion);
               return resolve(null);
             }
   
