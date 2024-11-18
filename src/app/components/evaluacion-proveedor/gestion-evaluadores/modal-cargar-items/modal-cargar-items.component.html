@@ -1,0 +1,101 @@
+<div class="modal-header">
+  <button mat-icon-button (click)="cerrarModalCargaExcel()">
+    <mat-icon color="warn">close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <mat-card>
+    <mat-card-title class="cargar-documentos-title"
+      >Carga de Items</mat-card-title
+    >
+  </mat-card>
+
+  <mat-card-content>
+    <form [formGroup]="soporteForm">
+      <div class="container-item">
+        <div>
+          <mat-grid-tile>
+            <div class="grid-item">
+              <p>Item</p>
+            </div>
+          </mat-grid-tile>
+        </div>
+  <div class="box-informacion">
+    <span>A continuación se dejará una plantilla de ejemplo para realizar el documento de carga de ítems. Una vez tenga el archivo, cárguelo al sistema y presione el botón de "Cargar ítems".</span>
+  </div>
+        <div class="box-descargar-plantilla">
+            <div class="text-right">
+              
+                <p>Documento Base</p>
+            </div>
+            <div>
+                <button mat-button class="descargar-plantilla-button" type="button">
+                    Descargar Plantilla
+                </button>
+            </div>
+        </div>
+        <div class="text-center">
+          <small>Solo archivos excel</small>
+        </div>
+        <div class="container-subir-documento">
+         
+          <div class="input-file" (click)="triggerFileInput()">
+            <button mat-button class="button-browse">
+              <mat-icon>attach_file</mat-icon>
+              Cargar
+            </button>
+           
+          </div>
+          <input
+            type="file"
+            #fileInput
+            (change)="onFileSelected($event)"
+            style="display: none"
+          />
+          <mat-form-field appearance="outline" class="input-subir-documento">
+            
+            <input
+              matInput
+              placeholder="Seleccione el archivo ..."
+              formControlName="fileName"
+              [value]="fileName"
+            />
+            <button
+              *ngIf="base64Output != ''"
+              matSuffix
+              class="button-remove"
+              (click)="removeFile()"
+              type="button"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          
+        
+        </div>
+        <div
+          *ngIf="
+            soporteForm.get('fileName')?.invalid &&
+            soporteForm.get('fileName')?.touched
+          "
+        >
+          <mat-error>Debe seleccionar un archivo Excel.</mat-error>
+        </div>
+        <div class="text-center">
+          <button
+            mat-button
+            [class.mat-button-disabled]="archivoSeleccionado"
+            class="cargar-button"
+            type="submit"
+            [disabled]="archivoSeleccionado"
+            (click)="uploadFile()"
+          >
+            Cargar Soporte
+          </button>
+          
+        </div>
+
+      </div>
+    </form>
+  </mat-card-content>
+</mat-dialog-content>

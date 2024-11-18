@@ -62,8 +62,8 @@ export class FormularioConsultaComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.consultarDependencias();
-    await this.obetnerEstadosCumplido();
-    this.anios = this.utilsService.obternerAnios();
+    await this.obtenerEstadosCumplido();
+    this.anios = this.utilsService.obtenerAnios();
     this.meses = this.utilsService.obtenerMeses();
   }
 
@@ -116,9 +116,7 @@ export class FormularioConsultaComponent implements OnInit {
         },
         error: (error: any) => {
           Swal.close();;
-          this.popUpManager.showErrorAlert(
-            'Error al consultar, Intenta de nuevo'
-          );;
+          this.popUpManager.showErrorAlert('Error al consultar, intenta de nuevo');
           this.loading = false;
         },
         complete: () => {
@@ -187,7 +185,7 @@ export class FormularioConsultaComponent implements OnInit {
     });
   }
 
-  async obetnerEstadosCumplido(): Promise<void> {
+  async obtenerEstadosCumplido(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.crudService.get('/estado_cumplido').subscribe({
         next: (response: any) => {
