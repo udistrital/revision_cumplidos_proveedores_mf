@@ -30,7 +30,7 @@ export class SoportesService {
         });
       }),
       catchError((error: any) => {
-        this.popUpManager.showErrorAlert('No fue posible obtener los documentos del cumplido');
+      //  this.popUpManager.showErrorAlert('No fue posible obtener los documentos del cumplido');
         throw error;
       })
     );
