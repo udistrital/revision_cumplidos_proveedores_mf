@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { CumplidosProveedoresMidService } from './cumplidos_proveedores_mid.service';
 import { PopUpManager } from '../managers/popUpManager';
 import { Documento } from '../models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import { AdministrativaAmazonService } from './administrativa_amazon.service';
+import { UnidadMedida } from '../models/unidad-medida';
 import { Month } from '../models/month.model';
 
 @Injectable({
@@ -9,7 +11,7 @@ import { Month } from '../models/month.model';
 })
 export class UtilsService {
   private documentos!:Documento[]
-  constructor(private cumplidosMidServices: CumplidosProveedoresMidService,private popUpManager:PopUpManager) {}
+  constructor(private cumplidosMidServices: CumplidosProveedoresMidService,private popUpManager:PopUpManager,private administrativaAmazonService:AdministrativaAmazonService) {}
 
   base64ToArrayBuffer(base64: string): ArrayBuffer {
     const binaryString = window.atob(base64);
@@ -45,7 +47,7 @@ export class UtilsService {
     return formattedDate;
   }
 
-  obternerAnios(): number[] {
+  obtenerAnios(): number[] {
     const anioInico = 2017;
     const anioActual = new Date().getFullYear();
     const anios: number[] = [];
@@ -57,6 +59,8 @@ export class UtilsService {
   }
 
   async obtenerIdDocumento(abreviacion: string): Promise<number | null> {
+    console.log(abreviacion);
+  
     return new Promise((resolve, reject) => {
       this.cumplidosMidServices
         .get('/supervisor/tipos-documentos-cumplido')
@@ -66,7 +70,6 @@ export class UtilsService {
   
             const documento = this.documentos.find(doc => doc.CodigoAbreviacionTipoDocumento === abreviacion);
             if (!documento) {
-              //console.warn('No se encontró un documento con la abreviación:', abreviacion);
               return resolve(null);
             }
   
@@ -95,4 +98,22 @@ export class UtilsService {
     { nombre: 'Noviembre', mes: 11 },
     { nombre: 'Diciembre', mes: 12 }
   ];
+
+  async obtenerMedidas():Promise<UnidadMedida[]>{
+ 
+    return new Promise((resolve, reject) => {
+      this.administrativaAmazonService.get("/unidad").subscribe({
+        next:(response:any)=>{
+          const ListaUnidades:UnidadMedida[]=response;
+          resolve(ListaUnidades??null)
+        },error:(error)=>{
+          this.popUpManager.showErrorAlert(
+            'No fue posible obtener las medida de unidad.'
+          );
+        }
+      
+      })
+    })
+  
+  }
 }

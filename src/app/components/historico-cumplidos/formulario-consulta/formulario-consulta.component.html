@@ -16,9 +16,9 @@
 
               <div class="">
                 <mat-form-field appearance="outline">
-                  <mat-label class="label"> Seleccione Dependencia</mat-label>
+                  <mat-label class="label">Seleccione Dependencia</mat-label>
                   <mat-select placeholder="Dependencia" formControlName="dependencias" multiple (selectionChange)="dependenciaChange($event.value)">
-                    <mat-option *ngFor="let dependencia of listaDependencias" [value]="dependencia.Codigo" oncla>
+                    <mat-option *ngFor="let dependencia of listaDependencias" [value]="dependencia.Codigo">
                       {{dependencia.Nombre}}
                     </mat-option>
                   </mat-select>
@@ -27,37 +27,40 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-             <div class="">
+
+              <div class="">
                 <mat-form-field appearance="outline">
-                  <mat-label class="label"> Seleccione un numero de contrato</mat-label>
-                  <mat-select placeholder="Numero de cotnrato" formControlName="numeros_contrato" multiple (selectionChange)="contratoChange($event.value)">
-                    <mat-option *ngFor="let contrato of listaNumerosContratos" [value]="contrato" oncla>
+                  <mat-label class="label">Seleccione un número de contrato</mat-label>
+                  <mat-select placeholder="Número de contrato" formControlName="numeros_contrato" multiple (selectionChange)="contratoChange($event.value)">
+                    <mat-option *ngFor="let contrato of listaNumerosContratos" [value]="contrato">
                       {{contrato}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
 
-
-
-              <div class=""><mat-form-field appearance="outline">
-                  <mat-label class="label">Seleccione vigencia</mat-label>
-                  <mat-select placeholder="Vigencia" formControlName="vigencias" multiple >
-                    <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
-                      {{ vigencia}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field></div>
               <div class="">
                 <mat-form-field appearance="outline">
-                  <mat-label class="label">Nombre proveedor</mat-label>
-                  <mat-select formControlName="nombres_proveedor" multiple >
-                    <mat-option *ngFor="let contrato of listaProveedores" [value]="contrato.ProveedorId">
-                      {{ contrato.NombreProveedor }}
+                  <mat-label class="label">Seleccione vigencia</mat-label>
+                  <mat-select placeholder="Vigencia" formControlName="vigencias" multiple>
+                    <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
+                      {{ vigencia }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
+
+              <div class="">
+                <mat-form-field appearance="outline">
+                  <mat-label class="label">Nombre del proveedor</mat-label>
+                  <mat-select formControlName="nombres_proveedor" multiple>
+                    <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.ProveedorId">
+                      {{ proveedor.NombreProveedor }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
               <div class="">
                 <mat-form-field appearance="outline">
                   <mat-label class="label">Seleccione año</mat-label>
@@ -68,6 +71,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+
               <div class="">
                 <mat-form-field appearance="outline">
                   <mat-label class="label">Seleccione mes</mat-label>
@@ -78,9 +82,10 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+
               <div class="">
                 <mat-form-field appearance="outline">
-                  <mat-label>Seleccione Estado</mat-label>
+                  <mat-label>Seleccione estado</mat-label>
                   <mat-select class="label" placeholder="Estado" formControlName="estados" multiple>
                     <mat-option *ngFor="let estado of listaEstadosCumplido" [value]="estado.CodigoAbreviacion">
                       {{estado.Nombre}}
@@ -88,7 +93,6 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-
 
               <div class="btn-container">
                 <button mat-raised-button class="btn-success">Consultar</button>

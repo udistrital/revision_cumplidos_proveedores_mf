@@ -42,19 +42,16 @@ export class ListadoHistoricosComponent implements OnInit {
     private cumplidosMidService: CumplidosProveedoresMidService
   ) { }
 
+  ngOnInit(): void { }
 
-  ngOnInit(): void {
-
-  }
-
-
-  async descargarComprimido(element: any): Promise<Archivo | any> {
+  async descargarArchivoComprimido(element: any): Promise<Archivo | any> {
     const confirm = await this.popUpManager.showConfirmAlert(
-      'Vas a descargar los documentos, puede tomar unos momentos', '¿Estás seguro?'
-  );
+      'Vas a descargar los documentos. Puede tomar unos momentos.',
+      '¿Estás seguro?'
+    );
 
     if (confirm.isConfirmed) {
-      this.popUpManager.showLoadingAlert('Descargando');
+      this.popUpManager.showLoadingAlert('Descargando...');
 
       return new Promise((resolve, reject) => {
         this.cumplidosMidService
@@ -64,8 +61,8 @@ export class ListadoHistoricosComponent implements OnInit {
               if (response.Data != null) {
                 this.file = {
                   Nombre: response.Data.nombre,
-                  File:response.Data.file
-                 }
+                  File: response.Data.file,
+                };
 
                 const byteCharacters = atob(this.file.File);
                 const byteNumbers = new Uint8Array(byteCharacters.length);
@@ -85,19 +82,15 @@ export class ListadoHistoricosComponent implements OnInit {
                 a.click();
                 document.body.removeChild(a);
 
-                resolve(blob);
-
                 resolve(this.file);
               } else {
-                this.popUpManager.showErrorAlert(
-                  'No hay archivos para descargar'
-                );
+                this.popUpManager.showErrorAlert('No hay archivos para descargar.');
                 resolve(null);
               }
               Swal.close();
             },
             error: (error: any) => {
-              this.popUpManager.showErrorAlert('Error al descargar');
+              this.popUpManager.showErrorAlert('Error al descargar.');
               reject(error);
               Swal.close();
             },
@@ -108,7 +101,7 @@ export class ListadoHistoricosComponent implements OnInit {
     }
   }
 
-  async modalHistorico(element: any) {
+  async abrirModalHistorico(element: any) {
     await this.cargarCambiosDeEstado(element.IdCumplido);
     await this.cargarDocumentosCargados(element.IdCumplido);
     this.dialog.open(ModalHistoricoComponent, {
@@ -154,7 +147,7 @@ export class ListadoHistoricosComponent implements OnInit {
   }
 
   async cargarCambiosDeEstado(idCumplido: number): Promise<EstadoCumplido[]> {
-    this.popUpManager.showLoadingAlert('Cargando');
+    this.popUpManager.showLoadingAlert('Cargando...');
     return new Promise((resolve, reject) => {
       this.cumplidosMidService
         .get('/historico-cumplidos/cambio-estado/' + idCumplido)
@@ -177,7 +170,7 @@ export class ListadoHistoricosComponent implements OnInit {
           },
           error: (err: any) => {
             this.popUpManager.showErrorAlert(
-              'Error al consultar, el histórico de estados'
+              'Error al consultar el histórico de estados.'
             );
             reject(err);
           },
@@ -189,7 +182,7 @@ export class ListadoHistoricosComponent implements OnInit {
     idCumplido: number
   ): Promise<InformacionSoporteCumplido[]> {
     return new Promise((resolve, reject) => {
-      this.popUpManager.showLoadingAlert('Cargando');
+      this.popUpManager.showLoadingAlert('Cargando...');
       this.cumplidosMidService
         .get('/solicitud-pago/soportes/' + idCumplido)
         .subscribe({
@@ -218,13 +211,13 @@ export class ListadoHistoricosComponent implements OnInit {
               resolve(this.listaDocumentosCargados);
               Swal.close();
             } else {
-              Swal.close;
+              Swal.close();
               resolve([]);
             }
           },
           error: (err: any) => {
             this.popUpManager.showErrorAlert(
-              'Error al consultar, el histórico de estados'
+              'Error al consultar el histórico de documentos.'
             );
             reject(err);
           },
@@ -234,9 +227,9 @@ export class ListadoHistoricosComponent implements OnInit {
 
   handleActionClick(event: { action: any; element: any }) {
     if (event.action.actionName === 'visibility') {
-      this.modalHistorico(event.element);
+      this.abrirModalHistorico(event.element);
     } else if (event.action.actionName === 'archive') {
-      this.descargarComprimido(event.element);
+      this.descargarArchivoComprimido(event.element);
     }
   }
 }

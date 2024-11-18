@@ -143,7 +143,7 @@ export class FormSoporteComponent {
         Archivo: this.base64Output,
       };
       if (payload.observaciones == '') {
-        payload.observaciones = 'Sin observaciónes en el documento';
+        payload.observaciones = 'Sin observaciones en el documento';
       }
       this.popUpManager.showLoadingAlert(
         'Cargando documento, por favor espera'

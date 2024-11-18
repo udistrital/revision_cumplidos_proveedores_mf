@@ -1,0 +1,78 @@
+.title{
+    margin:10px;
+    color:#8c1a19 ;
+    font-weight: normal;
+    font-size: 2rem;
+}
+
+.box-info{
+    margin: 5px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    text-align: center;
+}
+
+.details-color{
+    color:#8c1a19 ;
+}
+
+.details-card {
+    width: 90%; 
+    margin: 10px auto;
+}
+
+.details-color p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.text-info{
+    font-size: 16px;
+}
+
+.text-center{
+    text-align: center;
+}
+.box-puntaje{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    margin: 10px;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+.btn-add {
+    background-color: #008736;
+    color: white !important;
+    width: auto;
+    max-width: 100px;
+  }
+
+  .btn-enviar {
+    background-color: #8c1a19;
+    color: white !important;
+    width: auto;
+    max-width: 150px;
+  }
+  
+  .btn-enviar:hover {
+    transform: scale(1.1);
+    background-color: #8c1a19;
+  }
+
+  .btn-add:hover {
+    transform: scale(1.1);
+    background-color: #8c1a19;
+  }
+
+  .text-center{
+    text-align: center;
+  }
+
+  .text-start{
+    text-align: start;
+  }
+  .text-end{
+    text-align: end;
+    
+  }

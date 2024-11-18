@@ -11,6 +11,8 @@ import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revi
 import { AuthGuard } from 'src/_guards/auth.guard';
 import { ListarCumplidosReversiblesComponent } from './components/ordenador/listar-cumplidos-reversibles/listar-cumplidos-reversibles.component';
 import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
+import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/gestion-evaluadores.component';
+import { FormEvaluacionContratoComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/form-evaluacion-contrato.component';
 
 export const routes: Routes = [
   {
@@ -34,6 +36,14 @@ export const routes: Routes = [
     component: RevisionCumplidosOrdenadorComponent,
   },
   {
+    path: 'gestion-evaluadores',
+    component: GestionEvaluadoresComponent,
+  },
+  {
+    path: 'evaluacion-contrato',
+    component: FormEvaluacionContratoComponent,
+  },
+  {
     path: 'ordenador/reversion-cumplidos',
     canActivate: [AuthGuard],
     component: ListarCumplidosReversiblesComponent,
@@ -44,6 +54,7 @@ export const routes: Routes = [
     component: HistoricoCumplidosComponent
   }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

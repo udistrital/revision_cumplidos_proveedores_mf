@@ -1,0 +1,60 @@
+
+
+<section>
+  <mat-card>
+    <header>
+      <div>
+        <h3 class="box-title">Evaluacíon proveedor
+        </h3>
+      </div>
+    </header>
+<mat-card class="details-card">
+
+ 
+  <article>
+    
+    <div class="box-items">
+
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true" (opened)="panelEvaluacion = true" (closed)="panelEvaluacion = false">
+          <mat-expansion-panel-header class="bg-panel-title">
+            <mat-panel-title class="expansion-panel-title-box">
+              <div>
+                <h3 class="title color-white">Items a Evaluar</h3>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+            <div>
+              <div class="color-principal margim-10px">
+                Lista Items
+              </div>
+              <div class="line-text">
+                <div><p class="text-left">Item 1, Item 2, Item 3</p></div>
+            </div>
+            </div>
+            
+        </mat-expansion-panel>
+      </mat-accordion>
+  </div>
+  </article>
+</mat-card>
+    <mat-card class="details-card">
+      <article>
+        <mat-accordion>
+          <mat-expansion-panel [expanded]="true" (opened)="panelEvaluacion = true" (closed)="panelEvaluacion = false">
+            <mat-expansion-panel-header class="bg-panel-title">
+              <mat-panel-title class="expansion-panel-title-box">
+                <div>
+                  <h3 class="title color-white">Item a evaluar</h3>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-card-pregunta></app-card-pregunta>
+
+          </mat-expansion-panel>
+        </mat-accordion>
+      </article>
+    </mat-card>
+  </mat-card>
+</section>
