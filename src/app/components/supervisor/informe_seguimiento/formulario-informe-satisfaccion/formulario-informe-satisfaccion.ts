@@ -483,11 +483,7 @@ this.utilService.obtenerIdDocumento("CS").then(idDocumento=>{
         this.formularioInformeSeguimiento.get('tipo_cobro')?.getRawValue()
           ?.Id ?? 0
       ),
-      ValorCumplido: Number(
-        this.formularioInformeSeguimiento
-          .get('valor_cumplido')
-          ?.getRawValue().replace('$','').replace(',','') ?? 0
-      ),
+      ValorCumplido: Number((this.formularioInformeSeguimiento.get('valor_cumplido')?.value ?? '0').replace(/[^\d]/g, '')),
       VigenciaContrato: this.vigencia ?? '',
       FechaInicial:
         this.formularioInformeSeguimiento.get('fecha_inicio')?.getRawValue() ??

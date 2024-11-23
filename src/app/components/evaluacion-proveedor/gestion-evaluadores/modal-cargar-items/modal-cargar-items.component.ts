@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MatDialogRef } from '@angular/material/dialog';
-import * as XLSX from 'xlsx';
 import { UnidadMedida } from 'src/app/models/unidad-medida';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -25,8 +24,8 @@ export class ModalCargarItemsComponent {
       fileName: [{ value: '', disabled: true }, [Validators.required]]
     });
   }
- 
-  
+
+
 
   removeFile() {
     this.fileInput.nativeElement.value = '';
@@ -39,7 +38,7 @@ export class ModalCargarItemsComponent {
     this.fileInput.nativeElement.click();
   }
 
-  
+
   async onFileSelected(event: Event) {
     this.archivoSeleccionado = true;
     const input = event.target as HTMLInputElement;
@@ -57,7 +56,7 @@ export class ModalCargarItemsComponent {
           const base64Result = reader.result as string;
           this.base64Output = base64Result.split(',')[1];
         };
-        
+
         reader.readAsDataURL(file);
         this.archivoSeleccionado = false;
       } else {
@@ -75,6 +74,6 @@ export class ModalCargarItemsComponent {
     if(this.base64Output==""){
       this.popUpManager.showErrorAlert('No ha cargado ningún archivo');
     }
-   
+
   }
 }
