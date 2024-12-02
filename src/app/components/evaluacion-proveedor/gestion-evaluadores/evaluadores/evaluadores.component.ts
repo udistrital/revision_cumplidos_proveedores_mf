@@ -5,6 +5,8 @@ import { Evaluador } from 'src/app/models/evaluador';
 import { UnidadMedida } from 'src/app/models/unidad-medida';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItemAEvaluar } from './../../../../models/item_a_evaluar';
+import { JbpmService } from './../../../../services/jbpm_service.service';
+import { PersonaNatural } from 'src/app/models/persona-natural';
 
 @Component({
   selector: 'app-evaluadores',
@@ -16,10 +18,12 @@ export class EvaluadoresComponent  {
   listaEvaluadores: Evaluador[] = [];
   formAddEvaluadores: FormGroup;
   formularioEnviado: boolean = false;
+  evaluadres:PersonaNatural[]=[]
+
   @Input() listaItems:ItemAEvaluar[]=[]
   @Output() porcentaje = new EventEmitter<number>();
 
-  constructor(private fb: FormBuilder, private popUpManager: PopUpManager,private utilsService:UtilsService,private cdr: ChangeDetectorRef) {
+  constructor(private fb: FormBuilder, private popUpManager: PopUpManager,private utilsService:UtilsService,private cdr: ChangeDetectorRef,private jbpmService:JbpmService) {
     this.formAddEvaluadores = this.fb.group({
       numero_documento: ['', [Validators.required]],
       cargo: ['', [Validators.required]],
@@ -149,4 +153,24 @@ export class EvaluadoresComponent  {
     }
     this.porcentaje.emit(this.sumarPorcentaje());
   }
-}
+
+
+  obtenerEvaluador(event: any){
+      const numerodeDocumento = event.target.value;
+    this.validarNumero('numero_documento', numerodeDocumento);
+    console.log(numerodeDocumento);
+    if (numerodeDocumento.length > 3) {
+      this.validarNumero('numero_documento', numerodeDocumento);
+      return this.jbpmService.get(`/personas_documento/${numerodeDocumento}`).subscribe({
+        next: (data) => {
+          console.log("Sientrop")
+          console.log(data.Personas);
+          this.evaluadres=data.Personas;
+        }
+      });
+    }
+    return null;
+  }
+
+
+  }
