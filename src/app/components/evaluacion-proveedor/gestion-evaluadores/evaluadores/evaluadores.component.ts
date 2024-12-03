@@ -207,7 +207,10 @@ async guardarItemsEvaluador(asignacionEvaluadorId: number, ItemsAEvaluar: Item[]
               this.evaluacionCumplidoProvCrudService
               .delete("/asignacion_evaluador_item", res.Data[i].Id)
               .subscribe({
-                
+                error: (error: any) => {
+                  this.popUpManager.showErrorAlert(`No fue posible eliminar el item ${res.Data[i].Nombre}`)
+                  console.error(error);
+                }
               })
             }
           }
@@ -219,7 +222,10 @@ async guardarItemsEvaluador(asignacionEvaluadorId: number, ItemsAEvaluar: Item[]
             AsignacionEvaluadorId: { Id: asignacionEvaluadorId },
             ItemId: { Id: ItemsAEvaluar[i].Id }
           }).subscribe({
-            
+            error: (error: any) => {
+              this.popUpManager.showErrorAlert(`No fue posible asignar el item ${ItemsAEvaluar[i].Nombre} al evaluador.` )
+              console.error(error);
+            }
           })
 
         }
