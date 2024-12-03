@@ -9,9 +9,10 @@ export const environment = {
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/core_amazon_crud/v1',
   FIRMA_ELECTRONICA_MID:
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/firma_electronica_mid/v1',
+    EVALUACION_CUMPLIDOS_PROVEEDORES_MID:"http://localhost:8090/v1",
 
-  JBPM: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_jbpm/v2',
-  //'http://busservicios.intranetoas.udistrital.edu.co:8282/wso2eiserver/services/administrativa_pruebas',
+  JBPM://https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_jbpm/v2',
+  'http://busservicios.intranetoas.udistrital.edu.co:8282/wso2eiserver/services/administrativa_pruebas',
   // Notificaciones
   JBPMPOST:
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa/v1',

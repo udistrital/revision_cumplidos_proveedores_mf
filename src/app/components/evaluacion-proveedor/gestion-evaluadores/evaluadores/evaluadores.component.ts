@@ -159,7 +159,7 @@ export class EvaluadoresComponent  {
       const numerodeDocumento = event.target.value;
     this.validarNumero('numero_documento', numerodeDocumento);
     console.log(numerodeDocumento);
-    if (numerodeDocumento.length > 3) {
+    if (numerodeDocumento.length >= 3) {
       this.validarNumero('numero_documento', numerodeDocumento);
       return this.jbpmService.get(`/personas_documento/${numerodeDocumento}`).subscribe({
         next: (data) => {

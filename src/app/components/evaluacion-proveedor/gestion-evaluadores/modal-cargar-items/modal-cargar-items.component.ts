@@ -4,6 +4,7 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UnidadMedida } from 'src/app/models/unidad-medida';
 import { UtilsService } from 'src/app/services/utils.service';
+import { EvaluacionCumplidosProveedoresMidService } from 'src/app/services/evaluacion_cumplidos_provedores_mid.service';
 
 @Component({
   selector: 'app-modal-cargar-items',
@@ -16,9 +17,10 @@ export class ModalCargarItemsComponent {
   soporteForm!: FormGroup;
   base64Output: string | ArrayBuffer | null = '';
   archivoSeleccionado: boolean = true;
+  excel:File | null = null;
 
   @ViewChild('fileInput') fileInput!: ElementRef;
-  constructor(private fb:FormBuilder,private popUpManager:PopUpManager,private matDialogRef:MatDialogRef<ModalCargarItemsComponent>,private  utilsService:UtilsService){
+  constructor(private fb:FormBuilder,private popUpManager:PopUpManager,private matDialogRef:MatDialogRef<ModalCargarItemsComponent>,private  utilsService:UtilsService,private evaluacionCumplidosMidService:EvaluacionCumplidosProveedoresMidService) {
     this.soporteForm = this.fb.group({
       observaciones: ['', [Validators.minLength(10)]],
       fileName: [{ value: '', disabled: true }, [Validators.required]]
@@ -50,6 +52,7 @@ export class ModalCargarItemsComponent {
       if (fileType === 'application/vnd.ms-excel' || fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
         this.fileName = fileName;
         this.soporteForm.patchValue({ fileName: this.fileName });
+        this.excel = file;
 
         const reader = new FileReader();
         reader.onload = async () => {
@@ -70,10 +73,36 @@ export class ModalCargarItemsComponent {
     this.matDialogRef.close()
   }
   uploadFile(){
-      console.log(this.base64Output)
-    if(this.base64Output==""){
+   
+    this.enviarExcel()
+
+  }
+
+
+  enviarExcel(){
+    console.log(this.excel instanceof File); 
+    if(!this.excel){
       this.popUpManager.showErrorAlert('No ha cargado ningún archivo');
+      return;
     }
+    const formData = new FormData();
+    formData.append('file', this.excel, this.excel.name); 
+    
+    debugger
+    this.evaluacionCumplidosMidService.postCargaExcel("/carga-data-excel/upload",formData).subscribe(
+      {next: (res: any) => {
+        this.popUpManager.showSuccessAlert("Se ha cargado el archivo correctamente")
+        this.removeFile();
+        this.matDialogRef.close()
+      },
+    error:(errr:any)=>{
+      console.log(formData)
+      this.popUpManager.showErrorAlert("Error al cargar el  archivo")
+    }}
+
+    )
+
+
 
   }
 }
