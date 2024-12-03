@@ -4,6 +4,6 @@ export interface Evaluador {
     NumeroDocumento: number;
     Cargo: string;
     ItemAEvaluar: ItemAEvaluar[];
-    PorcentageDeEvaluacion: string;
+    PorcentajeDeEvaluacion: string;
     acciones:any [];
 }
