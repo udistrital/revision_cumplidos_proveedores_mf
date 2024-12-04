@@ -14,6 +14,8 @@ import { environment } from '../../environments/environment';
 @Injectable({
     providedIn: 'root',
 })
+
+
 export class RequestManager {
     private path!: string;
     public httpOptions: any;
@@ -77,21 +79,28 @@ export class RequestManager {
       );
     }
 
-    /**
-     * Perform a POST http request
-     * @param endpoint service's end-point
-     * @param element data to send as JSON
-     * @returns Observable<any>
-     */
-    post_file(endpoint: any, element: any) {
-        return this.http.post<any>(`${this.path}${endpoint}`, element, {
+    postFIle(endpoint: any, element: any) {
+         
+        const acces_token = window.localStorage.getItem('access_token');
+        if (acces_token != '') {
+          const postOptions = {
             headers: new HttpHeaders({
-                'Content-Type': 'multipart/form-data',
-            })
-        }).pipe(
-            catchError(this.errManager.handleError),
-        );
-    }
+              Authorization: `Bearer ${acces_token}`,
+            }),
+          };
+          console.log(`${this.path}${endpoint}`,element,postOptions);
+          return this.http
+            .post<any>(
+              `${this.path}${endpoint}`,element,postOptions)
+            .pipe(catchError(this.errManager.handleError));
+        }
+        return this.http
+          .post<any>(
+            `${this.path}${endpoint}`,
+            element
+          )
+          .pipe(catchError(this.errManager.handleError));
+      }
 
     /**
      * Perform a PUT http request
@@ -110,6 +119,8 @@ export class RequestManager {
         );
     }
 
+
+ 
     /**
      * Perform a DELETE http request
      * @param endpoint service's end-point

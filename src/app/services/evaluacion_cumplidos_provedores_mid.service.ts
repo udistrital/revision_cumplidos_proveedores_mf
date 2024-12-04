@@ -41,27 +41,7 @@ export class EvaluacionCumplidosProveedoresMidService {
   // }
 
   postCargaExcel(endpoint: any, element: any) {
-    if (this.acces_token != '') {
-      const postOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${this.acces_token}`,
-        }),
-      };
-
-      return this.http
-        .post<any>(
-          `${environment.EVALUACION_CUMPLIDOS_PROVEEDORES_MID}${endpoint}`,
-          element,
-          postOptions
-        )
-        .pipe(catchError(this.errManager.handleError));
-    }
-    return this.http
-      .post<any>(
-        `${environment.EVALUACION_CUMPLIDOS_PROVEEDORES_MID}${endpoint}`,
-        element
-      )
-      .pipe(catchError(this.errManager.handleError));
+    this.requestManager.setPath('EVALUACION_CUMPLIDOS_PROVEEDORES_MID');
+    return this.requestManager.postFIle(endpoint, element);
   }
 }
