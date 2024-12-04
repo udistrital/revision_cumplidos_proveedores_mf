@@ -130,7 +130,7 @@ export class ItemsAEvaluarComponent implements OnInit {
   }
 
   openDialogCargarExcel() {
-    this.dialog.open(ModalCargarItemsComponent, {
+    const dialogRef =  this.dialog.open(ModalCargarItemsComponent, {
       disableClose: true,
       maxHeight: '80vh',
       maxWidth: '60vw',
@@ -139,6 +139,10 @@ export class ItemsAEvaluarComponent implements OnInit {
       height: 'auto',
       width: 'auto',
       data: {},
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.listaItems = [...this.listaItems, ...result.listaitemsCargados];
     });
   }
 

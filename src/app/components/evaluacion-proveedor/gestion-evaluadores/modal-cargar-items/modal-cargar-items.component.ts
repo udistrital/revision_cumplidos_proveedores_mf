@@ -7,6 +7,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { EvaluacionCumplidosProveedoresMidService } from 'src/app/services/evaluacion_cumplidos_provedores_mid.service';
 import { ModalItemsNoAgregadosComponent } from '../modal-items-no-agregados/modal-items-no-agregados.component';
 import { map } from 'rxjs';
+import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
+import { EvaluacionCumplidosProveedoresCrudService } from 'src/app/services/evaluacion_cumplidos_provedores_crud.service';
 
 @Component({
   selector: 'app-modal-cargar-items',
@@ -19,10 +21,11 @@ export class ModalCargarItemsComponent {
   soporteForm!: FormGroup;
   base64Output: string | ArrayBuffer | null = '';
   archivoSeleccionado: boolean = true;
-  excel:File | null = null;
+  excel: File | null = null;
+  listaitemsCargados: ItemAEvaluar[] = []
 
   @ViewChild('fileInput') fileInput!: ElementRef;
-  constructor(private fb:FormBuilder,private popUpManager:PopUpManager,private matDialogRef:MatDialogRef<ModalCargarItemsComponent>,private  utilsService:UtilsService,private evaluacionCumplidosMidService:EvaluacionCumplidosProveedoresMidService, private dialog: MatDialog) {
+  constructor(private fb: FormBuilder, private popUpManager: PopUpManager, private matDialogRef: MatDialogRef<ModalCargarItemsComponent>, private utilsService: UtilsService, private evaluacionCumplidosMidService: EvaluacionCumplidosProveedoresMidService, private dialog: MatDialog, private evaluacionCumplidosCrudService: EvaluacionCumplidosProveedoresCrudService) {
     this.soporteForm = this.fb.group({
       observaciones: ['', [Validators.minLength(10)]],
       fileName: [{ value: '', disabled: true }, [Validators.required]]
@@ -34,7 +37,7 @@ export class ModalCargarItemsComponent {
   removeFile() {
     this.fileInput.nativeElement.value = '';
     this.fileName = '';
-    this.soporteForm.patchValue({ fileName: ''})
+    this.soporteForm.patchValue({ fileName: '' })
     this.base64Output = '';
     this.archivoSeleccionado = true;
   }
@@ -71,76 +74,110 @@ export class ModalCargarItemsComponent {
     }
   }
 
-  cerrarModalCargaExcel(){
-    this.matDialogRef.close()
+  cerrarModalCargaExcel() {
+    const datosAEnviar = { listaitemsCargados: this.listaitemsCargados };
+    this.matDialogRef.close(datosAEnviar)
   }
-  uploadFile(){
-   
+
+
+  uploadFile() {
+
     this.enviarExcel()
 
   }
 
 
-  enviarExcel(){
-    console.log(this.excel instanceof File); 
-    if(!this.excel){
+  async enviarExcel() {
+    if (!this.excel) {
       this.popUpManager.showErrorAlert('No ha cargado ningún archivo');
       return;
     }
     const formData = new FormData();
-    formData.append('file', this.excel, this.excel.name); 
-    
-    debugger
-    this.evaluacionCumplidosMidService.postCargaExcel("/carga-data-excel/upload",formData).subscribe(
-      {next: (res: any) => {
-       if(res.Data.itemsNoAgregados.length>0){
-       const itemsNoAgregaaados =  res.Data.itemsNoAgregados.map((item:any)=>{
-        return {
-          id: item.Id,
-          nombre: item.Nombre,
-          descripcion: item.FichaTecnica,
-          cantidad: item.Cantidad,
-          valor: item.ValorInitario,
-          iva: item.Iva,
-          tipoNecesidad: item.TipoNecessidad
-      
-      }
-       })
-           this.popUpManager.showSuccessAlert("Algunos elementos se cargaron correctamente, pero otros no se añadieron correctamente.");
-        this.removeFile();
-        this.matDialogRef.close()
-          this.dialog.open(ModalItemsNoAgregadosComponent, {
-            disableClose: true,
-            maxHeight: '80vh',
-            maxWidth: '60vw',
-            minHeight: '80v',
-            minWidth: '60vw',
-            height: 'auto',
-            width: 'auto',
-            data: {
-              listaItems: itemsNoAgregaaados
-            },
-          });
+    formData.append('file', this.excel, this.excel.name);
 
-       }else{
-        this.popUpManager.showSuccessAlert("Se cargaron todos los elementos correctamente");
-        this.removeFile();
-        this.matDialogRef.close()
-        console.log(res.Data.itemsNoAgregados.length>0)
-       }
-
-       
+    this.evaluacionCumplidosMidService.postCargaExcel("/carga-data-excel/upload", formData).subscribe(
+      {
+        next: async (res: any) => {
   
+          if (res.Data.itemsNoAgregados &&res.Data.itemsNoAgregados.length > 0) {
+            const itemsNoAgregaaados = res.Data.itemsNoAgregados.map((item: any) => {
+    
+              return {
+                id: item.Identificador,
+                nombre: item.Nombre,
+                descripcion: item.FichaTecnica,
+                cantidad: item.Cantidad,
+                valor: item.ValorInitario,
+                iva: item.Iva,
+                tipoNecesidad: item.TipoNecesidad
 
-      },
-    error:(errr:any)=>{
-      console.log(formData)
-      this.popUpManager.showErrorAlert("Error al cargar el  archivo")
-    }}
+              }
+            })
+            this.popUpManager.showSuccessAlert("Algunos elementos se cargaron correctamente, pero otros no se añadieron correctamente.");
+            this.removeFile();
+            await this.cargarItemCargados()
+           this.cerrarModalCargaExcel()
+            this.dialog.open(ModalItemsNoAgregadosComponent, {
+              disableClose: true,
+              maxHeight: '80vh',
+              maxWidth: '60vw',
+              minHeight: '80v',
+              minWidth: '60vw',
+              height: 'auto',
+              width: 'auto',
+              data: {
+                listaItems: itemsNoAgregaaados
+              },
+            });
+
+          } else {
+            await this.cargarItemCargados()
+            this.popUpManager.showSuccessAlert("Se cargaron todos los elementos correctamente");
+            this.removeFile();
+           this.cerrarModalCargaExcel()
+          }
+
+
+        },
+        error: (errr: any) => {
+          console.log(formData)
+          this.popUpManager.showErrorAlert("Error al cargar el  archivo")
+        }
+      }
 
     )
 
 
 
   }
+
+
+  async cargarItemCargados():Promise<void> {
+   return new Promise((resolve, reject) => {
+    this.evaluacionCumplidosCrudService.get('/item?query=EvaluacionId:1&limit=-1').subscribe({
+      next: (res: any) => {
+        this.listaitemsCargados = res.Data.map((item: any) => {
+          return {
+            id: item.Id,
+            nombre: item.Nombre,
+            descripcion: item.FichaTecnica,
+            cantidad: item.Cantidad,
+            valor: item.ValorUnitario,
+            iva: item.Iva,
+            tipoNecesidad: item.TipoNecesidad,
+            acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
+
+          }
+        })
+        console.log(this.listaitemsCargados)
+        resolve()
+      },
+      error: (err: any) => {
+        this.popUpManager.showErrorAlert("Error Consular los items")
+      },
+    })
+   })
+
+  }
+
 }
