@@ -12,7 +12,6 @@ export class ModalItemsNoAgregadosComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,private matDialogRef:MatDialogRef<ModalItemsNoAgregadosComponent>) { 
     this.listaItems = data.listaItems
-    console.log(this.listaItems)
   }
 
   displayedColumns = [

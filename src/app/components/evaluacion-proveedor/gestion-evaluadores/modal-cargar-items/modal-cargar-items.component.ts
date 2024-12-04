@@ -140,7 +140,6 @@ export class ModalCargarItemsComponent {
 
         },
         error: (errr: any) => {
-          console.log(formData)
           this.popUpManager.showErrorAlert("Error al cargar el  archivo")
         }
       }
@@ -158,7 +157,7 @@ export class ModalCargarItemsComponent {
       next: (res: any) => {
         this.listaitemsCargados = res.Data.map((item: any) => {
           return {
-            id: item.Id,
+            id: item.Identificador,
             nombre: item.Nombre,
             descripcion: item.FichaTecnica,
             cantidad: item.Cantidad,
@@ -169,7 +168,6 @@ export class ModalCargarItemsComponent {
 
           }
         })
-        console.log(this.listaitemsCargados)
         resolve()
       },
       error: (err: any) => {
