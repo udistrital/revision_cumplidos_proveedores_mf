@@ -8,7 +8,7 @@ export interface AsignacionEvaluadorBody {
   };
   Cargo: string;
   PorcentajeEvaluacion: number;
-  ItemsAEvaluar: Item[];
+  ItemsAEvaluar: number[];
 }
 
 

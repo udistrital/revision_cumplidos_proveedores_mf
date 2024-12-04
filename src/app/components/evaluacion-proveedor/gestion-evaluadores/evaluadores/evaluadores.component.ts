@@ -125,60 +125,17 @@ export class EvaluadoresComponent  {
     //   };
     // })
     const datosPrueba: AsignacionEvaluadorBody[] = [
-      { PersonaId: 12345678, 
-        EvaluacionId: { Id: 1 }, 
-        Cargo: 'Cargo', 
-        PorcentajeEvaluacion: 0.25, 
-        ItemsAEvaluar: [
-          {
-            Id: 1,
-            EvaluacionId: {
-                Id: 1
-            },
-            Identificador: "item1",
-            Nombre: "ELABORACIÓN DE LIBRETOS ",
-            ValorUnitario: 5000,
-            Iva: 12,
-            FichaTecnica: "ELABORACIÓN DE LIBRETOS DURANTE LA VIGENCIA DEL 2024.",
-            Unidad: 1,
-            Cantidad: 13,
-            TipoNecesidad: 2
-          },
-          {
-            Id: 2,
-            EvaluacionId: {
-                Id: 1
-            },
-            Identificador: "item1",
-            Nombre: "ELABORACIÓN DE LIBRETOS ",
-            ValorUnitario: 5000,
-            Iva: 12,
-            FichaTecnica: "ELABORACIÓN DE LIBRETOS DURANTE LA VIGENCIA DEL 2024.",
-            Unidad: 1,
-            Cantidad: 13,
-            TipoNecesidad: 2
-          },
-          {
-            Id: 3,
-            EvaluacionId: {
-                Id: 1
-            },
-            Identificador: "item1",
-            Nombre: "ELABORACIÓN DE LIBRETOS ",
-            ValorUnitario: 5000,
-            Iva: 12,
-            FichaTecnica: "ELABORACIÓN DE LIBRETOS DURANTE LA VIGENCIA DEL 2024.",
-            Unidad: 1,
-            Cantidad: 13,
-            TipoNecesidad: 2
-          },
-        ] 
+      { PersonaId: 12345678,
+        EvaluacionId: { Id: 1 },
+        Cargo: 'Cargo',
+        PorcentajeEvaluacion: 0.25,
+        ItemsAEvaluar: [3]
       },
     ];
 
     const resultados = await Promise.allSettled(
       datosPrueba.map(async (data) => {
-        
+
         await this.guardarEvaluadorIndividual(data);
         await this.guardarItemsEvaluador(this.evaluador.Id, data.ItemsAEvaluar);
       })
@@ -193,7 +150,7 @@ export class EvaluadoresComponent  {
     });
 };
 
-async guardarItemsEvaluador(asignacionEvaluadorId: number, ItemsAEvaluar: Item[]){
+async guardarItemsEvaluador(asignacionEvaluadorId: number, ItemsAEvaluar: number[]){
   let existe: boolean = false;
   if (ItemsAEvaluar.length > 0){
     this.evaluacionCumplidoProvCrudService
@@ -215,15 +172,15 @@ async guardarItemsEvaluador(asignacionEvaluadorId: number, ItemsAEvaluar: Item[]
             }
           }
         }
-  
+
         for(let i = 0; i < ItemsAEvaluar.length; i++){
           this.evaluacionCumplidoProvCrudService
           .post("/asignacion_evaluador_item", {
             AsignacionEvaluadorId: { Id: asignacionEvaluadorId },
-            ItemId: { Id: ItemsAEvaluar[i].Id }
+            ItemId: { Id: ItemsAEvaluar[i] }
           }).subscribe({
             error: (error: any) => {
-              this.popUpManager.showErrorAlert(`No fue posible asignar el item ${ItemsAEvaluar[i].Nombre} al evaluador.` )
+              this.popUpManager.showErrorAlert(`No fue posible asignar el item ${ItemsAEvaluar[i]} al evaluador.` )
               console.error(error);
             }
           })
@@ -239,9 +196,9 @@ async guardarItemsEvaluador(asignacionEvaluadorId: number, ItemsAEvaluar: Item[]
 }
 
 
-itemInLista(idItem: number, ItemsAEvaluar: Item[]): boolean{
+itemInLista(idItem: number, ItemsAEvaluar: number[]): boolean{
   for( let i = 0; i < ItemsAEvaluar.length; i++){
-    if(ItemsAEvaluar[i].Id == idItem){
+    if(ItemsAEvaluar[i] == idItem){
       return true;
     }
   }
