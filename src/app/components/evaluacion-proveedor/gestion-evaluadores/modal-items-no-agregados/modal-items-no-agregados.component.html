@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <button mat-icon-button (click)="cerrarModaItemsNoCargados()">
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content>
+    <mat-card>
+      <mat-card-title class="cargar-documentos-title"
+        >Items no cargados</mat-card-title
+      >
+    </mat-card>
+  
+    <mat-card-content>
+        <div *ngIf="listaItems.length">
+            <app-tabla
+              #tablaComponent
+              [data]="listaItems"
+              [displayedColumns]="displayedColumns"
+            />
+          </div>
+    </mat-card-content>
+  </mat-dialog-content>
+  

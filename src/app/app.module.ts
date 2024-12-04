@@ -63,6 +63,7 @@ import { FormularioConsultaComponent } from './components/historico-cumplidos/fo
 import { ModalHistoricoComponent } from './components/historico-cumplidos/modal-historico/modal-historico.component';
 import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
 import { ListadoHistoricosComponent } from './components/historico-cumplidos/listado-historicos/listado-historicos.component';
+import { ModalItemsNoAgregadosComponent } from './components/evaluacion-proveedor/gestion-evaluadores/modal-items-no-agregados/modal-items-no-agregados.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl+'/assets/i18n/', '.json');
@@ -99,7 +100,8 @@ export function createTranslateLoader(http: HttpClient) {
     FormularioConsultaComponent,
     ModalHistoricoComponent,
     HistoricoCumplidosComponent,
-    ListadoHistoricosComponent
+    ListadoHistoricosComponent,
+    ModalItemsNoAgregadosComponent
   ],
   imports: [
     HttpClientModule,

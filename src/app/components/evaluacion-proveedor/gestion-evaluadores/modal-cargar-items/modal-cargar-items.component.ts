@@ -1,10 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UnidadMedida } from 'src/app/models/unidad-medida';
 import { UtilsService } from 'src/app/services/utils.service';
 import { EvaluacionCumplidosProveedoresMidService } from 'src/app/services/evaluacion_cumplidos_provedores_mid.service';
+import { ModalItemsNoAgregadosComponent } from '../modal-items-no-agregados/modal-items-no-agregados.component';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-modal-cargar-items',
@@ -20,7 +22,7 @@ export class ModalCargarItemsComponent {
   excel:File | null = null;
 
   @ViewChild('fileInput') fileInput!: ElementRef;
-  constructor(private fb:FormBuilder,private popUpManager:PopUpManager,private matDialogRef:MatDialogRef<ModalCargarItemsComponent>,private  utilsService:UtilsService,private evaluacionCumplidosMidService:EvaluacionCumplidosProveedoresMidService) {
+  constructor(private fb:FormBuilder,private popUpManager:PopUpManager,private matDialogRef:MatDialogRef<ModalCargarItemsComponent>,private  utilsService:UtilsService,private evaluacionCumplidosMidService:EvaluacionCumplidosProveedoresMidService, private dialog: MatDialog) {
     this.soporteForm = this.fb.group({
       observaciones: ['', [Validators.minLength(10)]],
       fileName: [{ value: '', disabled: true }, [Validators.required]]
@@ -91,9 +93,45 @@ export class ModalCargarItemsComponent {
     debugger
     this.evaluacionCumplidosMidService.postCargaExcel("/carga-data-excel/upload",formData).subscribe(
       {next: (res: any) => {
-        this.popUpManager.showSuccessAlert("Se ha cargado el archivo correctamente")
+       if(res.Data.itemsNoAgregados.length>0){
+       const itemsNoAgregaaados =  res.Data.itemsNoAgregados.map((item:any)=>{
+        return {
+          id: item.Id,
+          nombre: item.Nombre,
+          descripcion: item.FichaTecnica,
+          cantidad: item.Cantidad,
+          valor: item.ValorInitario,
+          iva: item.Iva,
+          tipoNecesidad: item.TipoNecessidad
+      
+      }
+       })
+           this.popUpManager.showSuccessAlert("Algunos elementos se cargaron correctamente, pero otros no se añadieron correctamente.");
         this.removeFile();
         this.matDialogRef.close()
+          this.dialog.open(ModalItemsNoAgregadosComponent, {
+            disableClose: true,
+            maxHeight: '80vh',
+            maxWidth: '60vw',
+            minHeight: '80v',
+            minWidth: '60vw',
+            height: 'auto',
+            width: 'auto',
+            data: {
+              listaItems: itemsNoAgregaaados
+            },
+          });
+
+       }else{
+        this.popUpManager.showSuccessAlert("Se cargaron todos los elementos correctamente");
+        this.removeFile();
+        this.matDialogRef.close()
+        console.log(res.Data.itemsNoAgregados.length>0)
+       }
+
+       
+  
+
       },
     error:(errr:any)=>{
       console.log(formData)
