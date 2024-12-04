@@ -64,6 +64,7 @@ import { ModalHistoricoComponent } from './components/historico-cumplidos/modal-
 import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
 import { ListadoHistoricosComponent } from './components/historico-cumplidos/listado-historicos/listado-historicos.component';
 import { ModalItemsNoAgregadosComponent } from './components/evaluacion-proveedor/gestion-evaluadores/modal-items-no-agregados/modal-items-no-agregados.component';
+import { ListarContratosEvaluarComponent } from './components/evaluacion-proveedor/listar-contratos-evaluar/listar-contratos-evaluar.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl+'/assets/i18n/', '.json');
@@ -95,7 +96,7 @@ export function createTranslateLoader(http: HttpClient) {
     CardPreguntaComponent,
     ModalCargarItemsComponent,
     CardListaEvaluadoresComponent,
-    
+    ListarContratosEvaluarComponent,
     ListarCumplidosReversiblesComponent,
     FormularioConsultaComponent,
     ModalHistoricoComponent,
