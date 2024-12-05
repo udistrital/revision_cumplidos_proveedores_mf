@@ -23,7 +23,9 @@
   </div>
 
   <div style="height:100vh; width: 60vw; overflow:initial" mat-dialog-content>
-    <object [data]="documentData|safeUrl" type="application/pdf" *ngIf="documentLoad"></object>
+    <object [data]="documentData|safeUrl" type="application/pdf" *ngIf="documentLoad">
+      <p>Tu navegador no soporta la visualización de PDFs. Puedes descargar el documento <a [href]="documentData | safeUrl" download>aquí</a>.</p>
+    </object>
 </div>
 <div class="nofile" *ngIf="!documentLoad">
   Error al cargar el documento.

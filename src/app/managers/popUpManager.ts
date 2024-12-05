@@ -57,7 +57,7 @@ export class PopUpManager {
       title: title,
       text: message,
       didOpen: () => {
-        Swal.showLoading();
+        Swal.showLoading(null);
       },
       allowOutsideClick: false,
       width: '400px',

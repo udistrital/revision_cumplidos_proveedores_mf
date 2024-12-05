@@ -1,0 +1,85 @@
+.box-title{
+    color: #8c1a19;
+    font-weight: normal ;
+    font-size: 2rem;
+    text-align: center;
+    margin: 10px;
+}
+.details-card {
+    width: 90%; 
+    margin: 10px auto;
+}
+.bg-panel-title{
+    background-color: #8c1a19;
+    color: white;
+  }
+  .title {
+    margin: 10px;
+    font-weight: normal;
+    font-size: 2rem;
+  }
+  .color-white{
+    color: white !important;
+  }
+  .text-center { 
+    text-align: center !important; 
+  }
+
+  .mat-expansion-panel-header {
+    background-color: #8c1a19 !important; 
+    color: white !important; 
+  }
+  :host ::ng-deep .mat-expansion-indicator::after {
+    color: white;
+  }
+  .expansion-panel-title-box{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    height: 100%;
+  }
+  .item-evaluar {
+    width: 90%; 
+    margin: 10px auto;
+}
+
+.title-card{
+  color:#8c1a19;
+  font-weight: normal ;
+  font-size: 2rem;
+
+  margin: 10px;
+}
+.line-text {
+  display: grid;
+  grid-template-columns: auto;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #8c1a19;
+  width:90%;
+}
+
+.box-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: center; 
+  align-items: center; 
+}
+
+.line-text {
+  border-bottom: 1px solid #8c1a19; 
+  width: 90%;
+  margin: 10px auto; 
+}
+
+.text-left {
+  text-align: left !important;
+  margin: 0;
+}
+.color-principal{
+  color:#8c1a19;
+}
+
+.margim-10px{
+  margin: 10px;
+}

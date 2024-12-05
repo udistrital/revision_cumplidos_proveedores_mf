@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CurrencyPipe} from '@angular/common'
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -58,13 +59,23 @@ import { VisualizarEvaluacionContratoComponent } from './components/evaluacion-p
 import { InformacionGeneralComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/informacion-general/informacion-general.component';
 import { ListarElementosComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/listar-elementos/listar-elementos.component';
 import { EvaluadoresComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/evaluadores/evaluadores.component'
+import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/gestion-evaluadores.component';
+import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
+import { ItemsAEvaluarComponent } from './components/evaluacion-proveedor/gestion-evaluadores/items-a-evaluar/items-a-evaluar.component'
+import {MatExpansionModule} from '@angular/material/expansion';
+import { FormEvaluacionContratoComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/form-evaluacion-contrato.component';
+import { CardPreguntaComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/card-pregunta/card-pregunta.component';
+import { ModalCargarItemsComponent } from './components/evaluacion-proveedor/gestion-evaluadores/modal-cargar-items/modal-cargar-items.component';
+import { CardListaEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/card-lista-evaluadores/card-lista-evaluadores.component';
+import { ListarCumplidosReversiblesComponent } from './components/ordenador/listar-cumplidos-reversibles/listar-cumplidos-reversibles.component'
+import { FormularioConsultaComponent } from './components/historico-cumplidos/formulario-consulta/formulario-consulta.component';
+import { ModalHistoricoComponent } from './components/historico-cumplidos/modal-historico/modal-historico.component';
+import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
+import { ListadoHistoricosComponent } from './components/historico-cumplidos/listado-historicos/listado-historicos.component';
+
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.apiUrl + 'assets/i18n/',
-    '.json'
-  );
+  return new TranslateHttpLoader(http, environment.apiUrl+'/assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -91,6 +102,18 @@ export function createTranslateLoader(http: HttpClient) {
     InformacionGeneralComponent,
     ListarElementosComponent,
     EvaluadoresComponent,
+    GestionEvaluadoresComponent,
+    EvaluadoresComponent,
+    ItemsAEvaluarComponent,
+    FormEvaluacionContratoComponent,
+    CardPreguntaComponent,
+    ModalCargarItemsComponent,
+    CardListaEvaluadoresComponent,
+    ListarCumplidosReversiblesComponent,
+    FormularioConsultaComponent,
+    ModalHistoricoComponent,
+    HistoricoCumplidosComponent,
+    ListadoHistoricosComponent
   ],
   imports: [
     HttpClientModule,
@@ -118,9 +141,9 @@ export function createTranslateLoader(http: HttpClient) {
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
+    MatExpansionModule,
     MatSortModule,
     MatListModule,
-    MatExpansionModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -129,7 +152,7 @@ export function createTranslateLoader(http: HttpClient) {
       },
     }),
   ],
-  providers: [DatePipe],
+  providers: [DatePipe,CurrencyPipe],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

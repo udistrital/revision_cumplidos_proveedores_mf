@@ -19,7 +19,6 @@ export class JbpmService {
   }
 
   get(endpoint: string) {
-    console.log(endpoint)
     this.requestManager.setPath('JBPM');
     return this.requestManager.get(endpoint);
   }

@@ -25,9 +25,10 @@ import { ModalVisualizarSoporteComponent } from '../modal-visualizar-soporte/mod
 })
 export class CardSoporteComponent {
 
-  @Input({required:true}) soporte!:InformacionSoporteCumplido
+ @Input({required:true}) soporte!:InformacionSoporteCumplido
   @Input({required:true}) config!:ConfigSoportes
-  @Input({required:true}) cumplidoProveedorId!: number
+  @Input() cambioEstadoCumplido!:CambioEstadoCumplido
+  @Input() cumplidoProveedorId!: number
   @Input() buttons!: Button[];
   @Output() recargarSoportes = new EventEmitter<any>();
   comentarioForm: FormGroup;
@@ -47,7 +48,6 @@ export class CardSoporteComponent {
   }
 
   ngOnInit() {
-
   }
 
   async eliminarSoporte(soporteId: number){
@@ -56,13 +56,10 @@ export class CardSoporteComponent {
       "¿Deseas eliminar el soporte?"
     );
        if(confirm.isConfirmed){
-
-        console.log(this.soporte)
         try{
           this.cumplidos_provedore_crud_service.delete(`/soporte_cumplido`, soporteId)
         .subscribe({
           next: (res: any) => {
-            console.log("Buttons:", this.buttons)
             this.recargarSoportes.emit(res)
             this.popUpManager.showSuccessAlert(
               'El soporte se ha eliminado correctamente.'
@@ -110,7 +107,6 @@ export class CardSoporteComponent {
   //  }
 
    openDialog(soporte_id: number, tipo_soporte: string, cumplido_proveedor_id: number) {
-    console.log("Soportes: ", this.soporte)
     this.dialog.open(ModalComentariosSoporteComponent, {
       disableClose: true,
       maxHeight: '80vh',

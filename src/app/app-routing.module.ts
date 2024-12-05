@@ -9,6 +9,10 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { RevisionCumplidosContratacionComponent } from './components/contratacion/revision-cumplidos-contratacion/revision-cumplidos-contratacion.component';
 import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revision-cumplidos-ordenador/revision-cumplidos-ordenador.component';
 import { AuthGuard } from 'src/_guards/auth.guard';
+import { ListarCumplidosReversiblesComponent } from './components/ordenador/listar-cumplidos-reversibles/listar-cumplidos-reversibles.component';
+import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
+import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/gestion-evaluadores.component';
+import { FormEvaluacionContratoComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/form-evaluacion-contrato.component';
 
 export const routes: Routes = [
   {
@@ -30,8 +34,27 @@ export const routes: Routes = [
     path: 'ordenador/revision-cumplidos',
     canActivate: [AuthGuard],
     component: RevisionCumplidosOrdenadorComponent,
+  },
+  {
+    path: 'gestion-evaluadores',
+    component: GestionEvaluadoresComponent,
+  },
+  {
+    path: 'evaluacion-contrato',
+    component: FormEvaluacionContratoComponent,
+  },
+  {
+    path: 'ordenador/reversion-cumplidos',
+    canActivate: [AuthGuard],
+    component: ListarCumplidosReversiblesComponent,
+  },
+  {
+    path: 'historicos-cumplidos',
+    canActivate: [AuthGuard],
+    component: HistoricoCumplidosComponent
   }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

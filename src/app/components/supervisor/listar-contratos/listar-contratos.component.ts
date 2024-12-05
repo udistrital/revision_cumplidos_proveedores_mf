@@ -117,11 +117,11 @@ export class ListarContratosComponent {
   displayedColumns: any[] = [
     {def: 'numeroContrato', header: 'NUMERO CONTRATO' },
     {def: 'vigencia', header: 'VIGENCIA' },
-    {def: 'tipoContrato', header: 'TIPO CONTRATO' },
+    {def: 'tipoContrato', header: 'TIPO CONTRATO'},
     {def: 'rp', header: 'RP' },
     {def: 'vigenciaRp', header: 'VIGENCIA RP' },
     {def: 'nombreProveedor', header: 'NOMBRE PROVEEDOR' },
-    {def: 'dependencias', header: 'DEPENDENCIAS' },
+    {def: 'dependencias', header: 'DEPENDENCIAS'},
     {
       def: 'acciones',
       header: 'ACCIONES',

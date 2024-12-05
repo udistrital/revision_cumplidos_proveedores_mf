@@ -1,0 +1,60 @@
+<main>
+  <mat-card>
+    <section>
+      <div>
+        <h3 class="title text-center">Gestion Evaluadores</h3>
+      </div>
+    </section>
+
+    <mat-card class="details-card">
+      <section>
+        <article class="box-info">
+          <div>
+            <div class="details-color">
+              <p>Proveedor</p>
+            </div>
+            <div class="text-info">
+              <p>{{ nombreProveedor }}</p>
+            </div>
+          </div>
+          <div>
+            <div class="details-color">
+              <p>N° Contrato</p>
+            </div>
+            <div class="text-info">
+              <p>{{ numeroContrato }}</p>
+            </div>
+          </div>
+          <div>
+            <div class="details-color">
+              <p>Vigencia</p>
+            </div>
+            <div class="text-info">
+              <p>{{ vigenciaContrato }}</p>
+            </div>
+          </div>
+        </article>
+      </section>
+    </mat-card>
+
+    <mat-card class="details-card">
+      <app-items-a-evaluar (listaItemsEmiter)="obtenerListaItems($event)"></app-items-a-evaluar>
+    </mat-card>
+
+    <mat-card class="details-card"> <app-evaluadores (porcentaje)="getPorcentaje($event)" [listaItems]="listaItems"></app-evaluadores></mat-card>
+
+    <mat-card class="details-card"> 
+      <div class="box-puntaje  ">
+        <div class="text-center">
+          <h3 class="title">Puntaje total de evaluación:</h3>
+        </div>
+        <div class="text-start">
+          <h3>{{porcentaje}}</h3>
+        </div>
+        <div class="text-center">
+          <button class="btn-enviar text-center"  mat-button>Enviar Evaluadores</button>
+        </div>
+      </div>
+    </mat-card>
+  </mat-card>
+</main>
