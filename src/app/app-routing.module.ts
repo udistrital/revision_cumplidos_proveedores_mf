@@ -13,6 +13,7 @@ import { ListarCumplidosReversiblesComponent } from './components/ordenador/list
 import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
 import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/gestion-evaluadores.component';
 import { FormEvaluacionContratoComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/form-evaluacion-contrato.component';
+import { ListarContratosEvaluarComponent } from './components/evaluacion-proveedor/listar-contratos-evaluar/listar-contratos-evaluar.component';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,10 @@ export const routes: Routes = [
     component: FormEvaluacionContratoComponent,
   },
   {
+    path: 'listar-contratos-evaluar',
+    component: ListarContratosEvaluarComponent,
+  },
+  {
     path: 'ordenador/reversion-cumplidos',
     canActivate: [AuthGuard],
     component: ListarCumplidosReversiblesComponent,
@@ -52,7 +57,7 @@ export const routes: Routes = [
     path: 'historicos-cumplidos',
     canActivate: [AuthGuard],
     component: HistoricoCumplidosComponent
-  }
+  },
 ];
 
 

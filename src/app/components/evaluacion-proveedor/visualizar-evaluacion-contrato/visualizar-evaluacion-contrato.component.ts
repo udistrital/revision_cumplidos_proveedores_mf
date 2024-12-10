@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Evaluador } from 'src/app/models/evaluador.model';
+import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
 
 @Component({
   selector: 'app-visualizar-evaluacion-contrato',
@@ -12,6 +13,7 @@ export class VisualizarEvaluacionContratoComponent {
   listaItems!: string[];
   listaObservaciones!: string[];
   listaEvaluaciones!: Evaluador[];
+  listaItemsEvaluar!: ItemAEvaluar[];
 
   ngOnInit(){
     this.tittle = 'Ver Evaluación';

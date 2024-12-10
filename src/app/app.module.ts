@@ -26,7 +26,6 @@ import { ModalListarCumplidosComponent } from './components/supervisor/modal-lis
 import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revision-cumplidos-ordenador/revision-cumplidos-ordenador.component';
 import { RevisionCumplidosContratacionComponent } from './components/contratacion/revision-cumplidos-contratacion/revision-cumplidos-contratacion.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {MatExpansionModule} from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 
 
@@ -58,11 +57,8 @@ import { ListarContratosEvaluarComponent } from './components/evaluacion-proveed
 import { VisualizarEvaluacionContratoComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-evaluacion-contrato.component';
 import { InformacionGeneralComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/informacion-general/informacion-general.component';
 import { ListarElementosComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/listar-elementos/listar-elementos.component';
-import { EvaluadoresComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/evaluadores/evaluadores.component'
 import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/gestion-evaluadores.component';
-import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
 import { ItemsAEvaluarComponent } from './components/evaluacion-proveedor/gestion-evaluadores/items-a-evaluar/items-a-evaluar.component'
-import {MatExpansionModule} from '@angular/material/expansion';
 import { FormEvaluacionContratoComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/form-evaluacion-contrato.component';
 import { CardPreguntaComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/card-pregunta/card-pregunta.component';
 import { ModalCargarItemsComponent } from './components/evaluacion-proveedor/gestion-evaluadores/modal-cargar-items/modal-cargar-items.component';
@@ -72,8 +68,8 @@ import { FormularioConsultaComponent } from './components/historico-cumplidos/fo
 import { ModalHistoricoComponent } from './components/historico-cumplidos/modal-historico/modal-historico.component';
 import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
 import { ListadoHistoricosComponent } from './components/historico-cumplidos/listado-historicos/listado-historicos.component';
-
-
+import { MatExpansionModule } from '@angular/material/expansion';
+import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl+'/assets/i18n/', '.json');
 }
