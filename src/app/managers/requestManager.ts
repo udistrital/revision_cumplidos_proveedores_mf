@@ -110,6 +110,28 @@ export class RequestManager {
         );
     }
 
+    postFIle(endpoint: any, element: any) {
+         
+        const acces_token = window.localStorage.getItem('access_token');
+        if (acces_token != '') {
+          const postOptions = {
+            headers: new HttpHeaders({
+              Authorization: `Bearer ${acces_token}`,
+            }),
+          };
+          console.log(`${this.path}${endpoint}`,element,postOptions);
+          return this.http
+            .post<any>(
+              `${this.path}${endpoint}`,element,postOptions)
+            .pipe(catchError(this.errManager.handleError));
+        }
+        return this.http
+          .post<any>(
+            `${this.path}${endpoint}`,
+            element
+          )
+          .pipe(catchError(this.errManager.handleError));
+      }
     /**
      * Perform a DELETE http request
      * @param endpoint service's end-point
