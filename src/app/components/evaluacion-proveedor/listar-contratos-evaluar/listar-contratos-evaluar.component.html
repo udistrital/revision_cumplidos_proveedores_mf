@@ -4,7 +4,10 @@
     <mat-card-title class="card-tittle" >
       <h1>{{tittle}}</h1>
     </mat-card-title>
-    <mat-card-content>
+
+    <br>
+    <br>
+    <!-- <mat-card-content>
       <p class="nota">* Favor ingresar el nombre del proveedor para buscar, tambien puede usar el número de contrato y/o vigencia</p>
       <form [formGroup]="filtrosForm" class="formulario-container">
         <div class="filtros">
@@ -27,15 +30,13 @@
         </div>
       </form>
 
-    </mat-card-content>
-  </mat-card>
+    </mat-card-content> -->
 
-  <mat-card class="card-oas">
     <mat-card-content>
       <app-tabla [data]="dataSource" [displayedColumns]="displayedColumns"/>
     </mat-card-content>
-
   </mat-card>
+
 
 </mat-card>
 
