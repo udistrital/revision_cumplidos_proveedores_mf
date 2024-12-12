@@ -74,7 +74,7 @@ export class ListarContratosEvaluarComponent {
 
 
   consulsarAsignaciones(): Promise<void> {
-    this.popUpManager.showLoadingAlert("Por favor, espere mientras procesamos la información", "Consultando asignaciones");
+    this.popUpManager.showLoadingAlert("Por favor, espere", "Consultando asignaciones");
     return new Promise((resolve, reject) => {
       this.evaluacionCumplidosMid
         .get('/consultar-asignaciones/' + this.documentoSupervisor)
@@ -192,7 +192,7 @@ async  redirigirVista(element: any, vista: string): Promise<void> {
 
     if(evaluacion && evaluacion!=null){
       this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
-      this.router.navigate(['evaluacion-contrato']);
+      this.router.navigate(['gestion-evaluadores']);
       return Promise.resolve(evaluacion)
      
     }else{
@@ -202,7 +202,7 @@ async  redirigirVista(element: any, vista: string): Promise<void> {
           .subscribe({
             next: (res: any) => {
               this.evaluacionCumplidosCrud.setEvaluacion(res.Data); 
-              this.router.navigate(['evaluacion-contrato']);
+              this.router.navigate(['gestion-evaluadores']);
               resolve(res.Data)
             },
             complete: () => {
