@@ -70,6 +70,7 @@ import { HistoricoCumplidosComponent } from './components/historico-cumplidos/hi
 import { ListadoHistoricosComponent } from './components/historico-cumplidos/listado-historicos/listado-historicos.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
+import { VisualizarEvaluadoresComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-evaluadores/visualizar-evaluadores.component';
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl+'/assets/i18n/', '.json');
 }
@@ -109,7 +110,8 @@ export function createTranslateLoader(http: HttpClient) {
     FormularioConsultaComponent,
     ModalHistoricoComponent,
     HistoricoCumplidosComponent,
-    ListadoHistoricosComponent
+    ListadoHistoricosComponent,
+    VisualizarEvaluadoresComponent
   ],
   imports: [
     HttpClientModule,

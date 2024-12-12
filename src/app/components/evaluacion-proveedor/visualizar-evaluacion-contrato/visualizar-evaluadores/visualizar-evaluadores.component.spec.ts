@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EvaluadoresComponent } from './evaluadores.component';
+import { VisualizarEvaluadoresComponent } from './visualizar-evaluadores.component';
 
 describe('EvaluadoresComponent', () => {
-  let component: EvaluadoresComponent;
-  let fixture: ComponentFixture<EvaluadoresComponent>;
+  let component: VisualizarEvaluadoresComponent;
+  let fixture: ComponentFixture<VisualizarEvaluadoresComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [EvaluadoresComponent]
+      declarations: [VisualizarEvaluadoresComponent]
     });
-    fixture = TestBed.createComponent(EvaluadoresComponent);
+    fixture = TestBed.createComponent(VisualizarEvaluadoresComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

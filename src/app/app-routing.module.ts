@@ -14,6 +14,7 @@ import { HistoricoCumplidosComponent } from './components/historico-cumplidos/hi
 import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/gestion-evaluadores.component';
 import { FormEvaluacionContratoComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/form-evaluacion-contrato.component';
 import { ListarContratosEvaluarComponent } from './components/evaluacion-proveedor/listar-contratos-evaluar/listar-contratos-evaluar.component';
+import { VisualizarEvaluacionContratoComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-evaluacion-contrato.component';
 
 export const routes: Routes = [
   {
@@ -47,6 +48,10 @@ export const routes: Routes = [
   {
     path: 'listar-contratos-evaluar',
     component: ListarContratosEvaluarComponent,
+  },
+  {
+    path: 'visualizar-evaluacion-contrato',
+    component: VisualizarEvaluacionContratoComponent,
   },
   {
     path: 'ordenador/reversion-cumplidos',

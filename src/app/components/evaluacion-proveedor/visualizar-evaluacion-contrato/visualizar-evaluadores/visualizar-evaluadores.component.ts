@@ -2,12 +2,12 @@ import { Component, signal, ChangeDetectionStrategy, Input } from '@angular/core
 import { Evaluador } from 'src/app/models/evaluador.model';
 
 @Component({
-  selector: 'app-evaluadores',
-  templateUrl: './evaluadores.component.html',
-  styleUrls: ['./evaluadores.component.scss'],
+  selector: 'app-visualizar-evaluadores',
+  templateUrl: './visualizar-evaluadores.component.html',
+  styleUrls: ['./visualizar-evaluadores.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EvaluadoresComponent {
+export class VisualizarEvaluadoresComponent {
 
   @Input({required:true})evaluadores!:Evaluador[]
   tittle!: string;
@@ -16,5 +16,5 @@ export class EvaluadoresComponent {
   ngOnInit(){
     this.tittle = "Evaluadores"
   }
-  
+
 }
