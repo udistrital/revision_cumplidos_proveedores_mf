@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
 import { Observable } from 'rxjs';
 import { EvaluacionCumplidosProveedoresCrudService } from 'src/app/services/evaluacion_cumplidos_provedores_crud.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-listar-contratos-evaluar',
@@ -54,7 +55,8 @@ export class ListarContratosEvaluarComponent {
     this.tittle = "Lista Proveedores";
    this.obtenerListaVigencias();
 
-    this.consulsarAsignaciones()
+    await this.consulsarAsignaciones()
+    
     this.documentoSupervisor = this.userService.getPayload().documento;
   }
 
@@ -72,7 +74,7 @@ export class ListarContratosEvaluarComponent {
 
 
   consulsarAsignaciones(): Promise<void> {
-    
+    this.popUpManager.showLoadingAlert("Por favor, espere mientras procesamos la información", "Consultando asignaciones");
     return new Promise((resolve, reject) => {
       this.evaluacionCumplidosMid
         .get('/consultar-asignaciones/' + this.documentoSupervisor)
@@ -128,7 +130,10 @@ export class ListarContratosEvaluarComponent {
               });
               this.dataSource = [...this.dataSource, ...asignaciones];
             }
-          },
+          },complete:()=>{
+            Swal.close();
+          }
+          ,
         });
     });
   }
@@ -144,42 +149,36 @@ export class ListarContratosEvaluarComponent {
       this.verEvaluacion(event.element);
     }
     else if (event.action.actionName === 'realizarEv') {
-      this.realizrEvaluacion(event.element);
+      this.realizarEvaluacion(event.element);
     }
   }
 
 
-  async realizrEvaluacion(element:any) : Promise<void>{
-     
-  return new Promise(async (resolve) => {
-    const evaluacion =  await this.consultarEvaluacionCreada(element.contrato, element.vigencia);
 
-    await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
-    this.router.navigate(['evaluacion-contrato']);
-    resolve()
-  })
+  async realizarEvaluacion(element:any) : Promise<void>{
+  return await this.redirigirVista(element, 'evaluacion-contrato')
   }
 
   async verEvaluacion(element:any) : Promise<void>{
-  return new Promise(async (resolve) => {
-    const evaluacion =  await this.consultarEvaluacionCreada(element.contrato, element.vigencia);
-
-    await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
-    this.router.navigate(['visualizar-evaluacion-contrato']);
-    resolve()
-  })
-
+  return await this.redirigirVista(element, 'visualizar-evaluacion-contrato');
   }
 
 
   async gestionarEvaluacion(element: any): Promise<void> {
+    return await this.redirigirVista(element, 'gestion-evaluadores');
+  }
+
+
+
+async  redirigirVista(element: any, vista: string): Promise<void> {
     return new Promise( async (resolve) => {
 
-     const evaluacion =  await this.consultarEvaluacionCreada(element.contrato, element.vigencia);
-     await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
-      this.router.navigate(['evaluacion-contrato']);
-      resolve();
-    });
+      const evaluacion =  await this.consultarEvaluacionCreada(element.contrato, element.vigencia);
+      await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
+       this.router.navigate([vista]);
+       resolve();
+     });
+
   }
 
   async crearEvaluacion(element: any) {
