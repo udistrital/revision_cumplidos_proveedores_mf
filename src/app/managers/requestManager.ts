@@ -14,6 +14,8 @@ import { environment } from '../../environments/environment';
 @Injectable({
     providedIn: 'root',
 })
+
+
 export class RequestManager {
     private path!: string;
     public httpOptions: any;
@@ -77,39 +79,6 @@ export class RequestManager {
       );
     }
 
-    /**
-     * Perform a POST http request
-     * @param endpoint service's end-point
-     * @param element data to send as JSON
-     * @returns Observable<any>
-     */
-    post_file(endpoint: any, element: any) {
-        return this.http.post<any>(`${this.path}${endpoint}`, element, {
-            headers: new HttpHeaders({
-                'Content-Type': 'multipart/form-data',
-            })
-        }).pipe(
-            catchError(this.errManager.handleError),
-        );
-    }
-
-    /**
-     * Perform a PUT http request
-     * @param endpoint service's end-point
-     * @param element data to send as JSON, With the id to UPDATE
-     * @returns Observable<any>
-     */
-    put(endpoint: any, element: { Id: any; }) {
-      const putOptions = {
-        ...this.httpOptions,
-        headers: this.httpOptions.headers.set('Content-Type', 'application/json')
-      }
-        const path = (element.Id) ? `${this.path}${endpoint}/${element.Id}` : `${this.path}${endpoint}`;
-        return this.http.put<any>(path, element, putOptions).pipe(
-            catchError(this.errManager.handleError),
-        );
-    }
-
     postFIle(endpoint: any, element: any) {
          
         const acces_token = window.localStorage.getItem('access_token');
@@ -132,6 +101,26 @@ export class RequestManager {
           )
           .pipe(catchError(this.errManager.handleError));
       }
+
+    /**
+     * Perform a PUT http request
+     * @param endpoint service's end-point
+     * @param element data to send as JSON, With the id to UPDATE
+     * @returns Observable<any>
+     */
+    put(endpoint: any, element: { Id: any; }) {
+      const putOptions = {
+        ...this.httpOptions,
+        headers: this.httpOptions.headers.set('Content-Type', 'application/json')
+      }
+        const path = (element.Id) ? `${this.path}${endpoint}/${element.Id}` : `${this.path}${endpoint}`;
+        return this.http.put<any>(path, element, putOptions).pipe(
+            catchError(this.errManager.handleError),
+        );
+    }
+
+
+ 
     /**
      * Perform a DELETE http request
      * @param endpoint service's end-point

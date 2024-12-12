@@ -8,6 +8,8 @@ import { ItemAEvaluar } from './../../../../models/item_a_evaluar';
 import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
 import { AsignacionEvaluador, AsignacionEvaluadorBody } from './../../../../models/evaluacion_cumplido_prov_crud/asignacion_evaluador.model';
 import { Item } from './../../../../models/evaluacion_cumplido_prov_crud/item.model'
+import { JbpmService } from './../../../../services/jbpm_service.service';
+import { PersonaNatural } from 'src/app/models/persona-natural';
 
 @Component({
   selector: 'app-evaluadores',
@@ -23,22 +25,25 @@ export class EvaluadoresComponent  {
   evaluador!: AsignacionEvaluador;
   @Input() listaItems:ItemAEvaluar[]=[]
   @Output() porcentaje = new EventEmitter<number>();
-
+  evaluadres:PersonaNatural[]=[]
   constructor(
     private fb: FormBuilder,
     private popUpManager: PopUpManager,
     private utilsService:UtilsService,
     private cdr: ChangeDetectorRef,
-    private evaluacionCumplidoProvCrudService: EvaluacionCumplidoProvCrudService
+    private evaluacionCumplidoProvCrudService: EvaluacionCumplidoProvCrudService,
+    private jbpmService:JbpmService
   ) {
-    this.guardarEvaluadores();
     this.formAddEvaluadores = this.fb.group({
       numero_documento: ['', [Validators.required]],
       cargo: ['', [Validators.required]],
       item_a_evaluar: [[], [Validators.required]],
       porcentaje: ['', [Validators.required]],
     });
+    this.guardarEvaluadores();
+  
   }
+
   ngOnChanges(changes: SimpleChanges) {
 
     console.log(this.listaItems);
@@ -274,4 +279,24 @@ itemInLista(idItem: number, ItemsAEvaluar: number[]): boolean{
     }
     this.porcentaje.emit(this.sumarPorcentaje());
   }
-}
+
+
+  obtenerEvaluador(event: any){
+      const numerodeDocumento = event.target.value;
+    this.validarNumero('numero_documento', numerodeDocumento);
+    console.log(numerodeDocumento);
+    if (numerodeDocumento.length >= 3) {
+      this.validarNumero('numero_documento', numerodeDocumento);
+      return this.jbpmService.get(`/personas_documento/${numerodeDocumento}`).subscribe({
+        next: (data) => {
+          console.log("Sientrop")
+          console.log(data.Personas);
+          this.evaluadres=data.Personas;
+        }
+      });
+    }
+    return null;
+  }
+
+
+  }

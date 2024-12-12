@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { EvaluacionCumplidosProveedoresCrudService } from 'src/app/services/evaluacion_cumplidos_provedores_crud.service';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-listar-contratos-evaluar',
   templateUrl: './listar-contratos-evaluar.component.html',

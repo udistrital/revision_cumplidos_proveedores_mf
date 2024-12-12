@@ -14,34 +14,36 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './items-a-evaluar.component.html',
   styleUrls: ['./items-a-evaluar.component.scss'],
 })
-
-export class ItemsAEvaluarComponent  implements OnInit{
+export class ItemsAEvaluarComponent implements OnInit {
   formAddIntems: FormGroup;
   formularioEnviado: boolean = false;
   panelOpenStateItems = false;
   panelOpenStateEvaluadores = false;
   listaItems: ItemAEvaluar[] = [];
-  listaUnidades:UnidadMedida[]=[] 
+  listaUnidades: UnidadMedida[] = [];
+  listaTipoNecesidad:any[]=[]
   @Output() listaItemsEmiter = new EventEmitter<any>();
-  async ngOnInit(){
-    this.listaUnidades= await this.utilsService.obtenerMedidas();
-    
+  async ngOnInit() {
+    this.listaUnidades = await this.utilsService.obtenerMedidas();
   }
-  constructor(private fb: FormBuilder, private popUpManager: PopUpManager,private dialog:MatDialog,private utilsService:UtilsService) {
+  constructor(
+    private fb: FormBuilder,
+    private popUpManager: PopUpManager,
+    private dialog: MatDialog,
+    private utilsService: UtilsService
+  ) {
     this.formAddIntems = this.fb.group({
-      
       id_item: [null, Validators.required],
       nombre_item: [null, Validators.required],
       cantidad_item: [null],
       valor_item: [null],
       iva_item: [null],
-      unidad_item: [null, ],
+      unidad_item: [null],
       tipo_necesidad_item: [null],
       descripcion_item: [null, Validators.required],
-
     });
+    this.listaTipoNecesidad=this.obtenerTipioNecesidad();
   }
- 
 
   displayedColumns = [
     { def: 'id', header: 'Id' },
@@ -55,7 +57,7 @@ export class ItemsAEvaluarComponent  implements OnInit{
   ];
 
   async agregarItem() {
-    console.log(this.formAddIntems.value)
+    console.log(this.formAddIntems.value);
     const existe = this.listaItems.some(
       (item) => item.id === this.obtenerInfoFormulario().id
     );
@@ -69,9 +71,9 @@ export class ItemsAEvaluarComponent  implements OnInit{
       if (confirm.isConfirmed) {
         if (this.validarFromulario()) {
           this.formularioEnviado = false;
-      
+
           this.listaItems = [...this.listaItems, this.obtenerInfoFormulario()];
-          this.listaItemsEmiter.emit(this.listaItems)
+          this.listaItemsEmiter.emit(this.listaItems);
           this.formAddIntems.reset({
             descripcion_item: '',
           });
@@ -85,14 +87,15 @@ export class ItemsAEvaluarComponent  implements OnInit{
     return {
       id: this.formAddIntems.get('id_item')?.getRawValue() ?? '',
       nombre: this.formAddIntems.get('nombre_item')?.getRawValue() ?? '',
-      descripcion: this.formAddIntems.get('descripcion_item')?.getRawValue() ?? '',
+      descripcion:
+        this.formAddIntems.get('descripcion_item')?.getRawValue() ?? '',
       cantidad: this.formAddIntems.get('cantidad_item')?.getRawValue() ?? '',
       valor: this.formAddIntems.get('valor_item')?.getRawValue() ?? '',
       iva: this.formAddIntems.get('iva_item')?.getRawValue() ?? '',
-      tipoNecesidad: this.formAddIntems.get('tipo_necesidad_item')?.getRawValue() ?? '',
+      tipoNecesidad:
+        this.formAddIntems.get('tipo_necesidad_item')?.getRawValue() ?? '',
       acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
     };
-
   }
 
   async eliminarItem(id: number) {
@@ -120,14 +123,14 @@ export class ItemsAEvaluarComponent  implements OnInit{
   }
 
   handleActionClick(event: { action: any; element: any }) {
-    console.log(event.element.id)
+    console.log(event.element.id);
     if (event.action.actionName === 'delete') {
       this.eliminarItem(event.element.id);
     }
   }
 
   openDialogCargarExcel() {
-    this.dialog.open(ModalCargarItemsComponent, {
+    const dialogRef =  this.dialog.open(ModalCargarItemsComponent, {
       disableClose: true,
       maxHeight: '80vh',
       maxWidth: '60vw',
@@ -135,10 +138,19 @@ export class ItemsAEvaluarComponent  implements OnInit{
       minWidth: '60vw',
       height: 'auto',
       width: 'auto',
-      data:{
-      } 
+      data: {},
     });
-    }
 
+    dialogRef.afterClosed().subscribe((result) => {
+      this.listaItems = [...this.listaItems, ...result.listaitemsCargados];
+    });
+  }
 
+  obtenerTipioNecesidad(): any[] {
+    return [
+      { Tipo: 'BIEN', Id: 1 },
+      { Tipo: 'SERVICIO', Id: 2 },
+      { Tipo: 'BIENES Y SERVICIOS', Id: 3 },
+    ];
+  }
 }
