@@ -90,7 +90,7 @@ export class ListarContratosEvaluarComponent {
                   acciones: [
                     {
                       icon: 'edit',
-                      actionName: 'edit',
+                      actionName: 'realizarEv',
                       isActive: true,
                     },
                     {
@@ -102,10 +102,6 @@ export class ListarContratosEvaluarComponent {
                       icon: 'accessibility',
                       actionName: 'gestionarEv',
                       isActive: true,
-                      element: {
-                        ContratoSuscritoId: item.NumeroContrato,
-                        VigenciaContrato: item.VigenciaContrato,
-                      },
                     },
                   ],
                 };
@@ -113,7 +109,7 @@ export class ListarContratosEvaluarComponent {
               this.dataSource = [...this.dataSource, ...asignaciones];
             }
             if (res.Data && res.Data.SinAsignaciones.length > 0) {
-              this.dataSource = res.Data.SinAsignaciones.map((item: any) => {
+              var asignaciones  = res.Data.SinAsignaciones.map((item: any) => {
                 return {
                   nombreProveedor: item.NombreProveedor,
                   dependencia: item.Depenedencia,
@@ -125,10 +121,7 @@ export class ListarContratosEvaluarComponent {
                       icon: 'accessibility',
                       actionName: 'crearEv',
                       isActive: true,
-                      element: {
-                        ContratoSuscritoId: item.NumeroContrato,
-                        VigenciaContrato: item.VigenciaContrato,
-                      },
+                      
                     },
                   ],
                 };
@@ -141,15 +134,46 @@ export class ListarContratosEvaluarComponent {
   }
 
   handleActionClick(event: { action: any; element: any }) {
+    
     if (event.action.actionName === 'gestionarEv') {
       this.gestionarEvaluacion(event.element);
     } else if (event.action.actionName === 'crearEv') {
       this.crearEvaluacion(event.element);
     }
+    else if (event.action.actionName === 'visibility') {
+      this.verEvaluacion(event.element);
+    }
+    else if (event.action.actionName === 'realizarEv') {
+      this.realizrEvaluacion(event.element);
+    }
   }
 
+
+  async realizrEvaluacion(element:any) : Promise<void>{
+     
+  return new Promise(async (resolve) => {
+    const evaluacion =  await this.consultarEvaluacionCreada(element.contrato, element.vigencia);
+
+    await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
+    this.router.navigate(['evaluacion-contrato']);
+    resolve()
+  })
+  }
+
+  async verEvaluacion(element:any) : Promise<void>{
+  return new Promise(async (resolve) => {
+    const evaluacion =  await this.consultarEvaluacionCreada(element.contrato, element.vigencia);
+
+    await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
+    this.router.navigate(['visualizar-evaluacion-contrato']);
+    resolve()
+  })
+
+  }
+
+
   async gestionarEvaluacion(element: any): Promise<void> {
-    return new Promise( async (resolve, reject) => {
+    return new Promise( async (resolve) => {
 
      const evaluacion =  await this.consultarEvaluacionCreada(element.contrato, element.vigencia);
      await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
