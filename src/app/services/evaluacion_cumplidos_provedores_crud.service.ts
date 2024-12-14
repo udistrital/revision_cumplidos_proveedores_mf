@@ -26,7 +26,7 @@ export class EvaluacionCumplidosProveedoresCrudService {
   
   }
 
-  setEvaluacion(evaluacion: Evaluacion | null):Promise<void> {
+  async setEvaluacion(evaluacion: Evaluacion | null):Promise<void> {
    return new Promise((resolve) => {
     this.evaluacionSubject.next(evaluacion);
     resolve();
@@ -34,7 +34,7 @@ export class EvaluacionCumplidosProveedoresCrudService {
 
   }
 
- async getEvaluacion(): Promise<Evaluacion | null> {
+  async getEvaluacion(): Promise<Evaluacion | null> {
     return new Promise((resolve) => {
       this.evaluacionSubject.asObservable().subscribe({
         next: (evaluacion) => {
@@ -43,7 +43,6 @@ export class EvaluacionCumplidosProveedoresCrudService {
       });
     });
   }
-
 
   get(endpoint: string) {
     console.log("Endpointget:", endpoint);
