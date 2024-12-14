@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
-
-import { EvaluacionCumplidosProveedoresCrudService } from 'src/app/services/evaluacion_cumplidos_provedores_crud.service';
+import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
 
 @Component({
   selector: 'app-form-evaluacion-contrato',
@@ -14,13 +13,11 @@ export class FormEvaluacionContratoComponent  implements OnInit{
   evaluacion!:Evaluacion|null
 
 
-constructor(private evaluacionCumplidosCrud:EvaluacionCumplidosProveedoresCrudService){}
+constructor(private evaluacionCumplidosCrud:EvaluacionCumplidoProvCrudService){}
 
   async ngOnInit(): Promise<void> {
     try {
       this.evaluacion = await this.evaluacionCumplidosCrud.getEvaluacion();
-      console.log(this.evaluacion);
-      console.log(this.evaluacion);
     } catch (error) {
       console.error(error);
     }

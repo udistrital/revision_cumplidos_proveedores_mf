@@ -8,7 +8,7 @@ import { EvaluacionCumplidosProveedoresMidService } from 'src/app/services/evalu
 import { ModalItemsNoAgregadosComponent } from '../modal-items-no-agregados/modal-items-no-agregados.component';
 import { map } from 'rxjs';
 import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
-import { EvaluacionCumplidosProveedoresCrudService } from 'src/app/services/evaluacion_cumplidos_provedores_crud.service';
+import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
 
 @Component({
   selector: 'app-modal-cargar-items',
@@ -25,7 +25,7 @@ export class ModalCargarItemsComponent {
   listaitemsCargados: ItemAEvaluar[] = []
 
   @ViewChild('fileInput') fileInput!: ElementRef;
-  constructor(private fb: FormBuilder, private popUpManager: PopUpManager, private matDialogRef: MatDialogRef<ModalCargarItemsComponent>, private utilsService: UtilsService, private evaluacionCumplidosMidService: EvaluacionCumplidosProveedoresMidService, private dialog: MatDialog, private evaluacionCumplidosCrudService: EvaluacionCumplidosProveedoresCrudService) {
+  constructor(private fb: FormBuilder, private popUpManager: PopUpManager, private matDialogRef: MatDialogRef<ModalCargarItemsComponent>, private utilsService: UtilsService, private evaluacionCumplidosMidService: EvaluacionCumplidosProveedoresMidService, private dialog: MatDialog, private evaluacionCumplidosCrudService: EvaluacionCumplidoProvCrudService) {
     this.soporteForm = this.fb.group({
       observaciones: ['', [Validators.minLength(10)]],
       fileName: [{ value: '', disabled: true }, [Validators.required]]
