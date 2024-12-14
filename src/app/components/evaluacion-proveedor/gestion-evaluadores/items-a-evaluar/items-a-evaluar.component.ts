@@ -8,6 +8,8 @@ import { ModalComentariosSoporteData } from 'src/app/models/modal-soporte-cumpli
 import { ModalCargarItemsComponent } from '../modal-cargar-items/modal-cargar-items.component';
 import { UnidadMedida } from 'src/app/models/unidad-medida';
 import { UtilsService } from 'src/app/services/utils.service';
+import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
+import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
 
 @Component({
   selector: 'app-items-a-evaluar',
@@ -22,15 +24,21 @@ export class ItemsAEvaluarComponent implements OnInit {
   listaItems: ItemAEvaluar[] = [];
   listaUnidades: UnidadMedida[] = [];
   listaTipoNecesidad:any[]=[]
+  evaluacion: Evaluacion | null = null;
   @Output() listaItemsEmiter = new EventEmitter<any>();
   async ngOnInit() {
     this.listaUnidades = await this.utilsService.obtenerMedidas();
+    this.evaluacion = await this.evaluacionnCymplidosCrud.getEvaluacion();
+    await this.consulatarItems();
+
+
   }
   constructor(
     private fb: FormBuilder,
     private popUpManager: PopUpManager,
     private dialog: MatDialog,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private evaluacionnCymplidosCrud: EvaluacionCumplidoProvCrudService
   ) {
     this.formAddIntems = this.fb.group({
       id_item: [null, Validators.required],
@@ -46,20 +54,20 @@ export class ItemsAEvaluarComponent implements OnInit {
   }
 
   displayedColumns = [
-    { def: 'id', header: 'Id' },
-    { def: 'nombre', header: 'Nombre' },
-    { def: 'descripcion', header: 'Descripcion' },
-    { def: 'cantidad', header: 'Cantidad' },
-    { def: 'valor', header: 'Valor' },
-    { def: 'iva', header: 'Iva' },
-    { def: 'tipoNecesidad', header: 'Tipo Necesidad' },
+    { def: 'Identificador', header: 'Id' },
+    { def: 'Nombre', header: 'Nombre' },
+    { def: 'FichaTecnica', header: 'Descripcion' },
+    { def: 'Cantidad', header: 'Cantidad' },
+    { def: 'ValorUnitario', header: 'Valor' },
+    { def: 'Iva', header: 'Iva' },
+    { def: 'TipoNecesidad', header: 'Tipo Necesidad' },
     { def: 'acciones', header: 'ACCIONES', isAction: true },
   ];
 
   async agregarItem() {
     console.log(this.formAddIntems.value);
     const existe = this.listaItems.some(
-      (item) => item.id === this.obtenerInfoFormulario().id
+      (item) => item.Identificador === this.obtenerInfoFormulario().Identificador
     );
 
     if (existe) {
@@ -83,27 +91,32 @@ export class ItemsAEvaluarComponent implements OnInit {
       }
     }
   }
-  obtenerInfoFormulario() {
+  obtenerInfoFormulario():ItemAEvaluar {
+    
+    console.log('evaaaaluacion idddddd ', this.evaluacion?.Id);
     return {
-      id: this.formAddIntems.get('id_item')?.getRawValue() ?? '',
-      nombre: this.formAddIntems.get('nombre_item')?.getRawValue() ?? '',
-      descripcion:
+      Identificador: this.formAddIntems.get('id_item')?.getRawValue() ?? '',
+      Nombre: this.formAddIntems.get('nombre_item')?.getRawValue() ?? '',
+      FichaTecnica:
         this.formAddIntems.get('descripcion_item')?.getRawValue() ?? '',
-      cantidad: this.formAddIntems.get('cantidad_item')?.getRawValue() ?? '',
-      valor: this.formAddIntems.get('valor_item')?.getRawValue() ?? '',
-      iva: this.formAddIntems.get('iva_item')?.getRawValue() ?? '',
-      tipoNecesidad:
+        Cantidad: Number(this.formAddIntems.get('cantidad_item')?.getRawValue() ?? ''),
+        ValorUnitario: Number(this.formAddIntems.get('valor_item')?.getRawValue() ?? ''),
+        Iva: Number(this.formAddIntems.get('iva_item')?.getRawValue() ?? ''),
+        TipoNecesidad:
         this.formAddIntems.get('tipo_necesidad_item')?.getRawValue() ?? '',
+        EvaluacionId:{
+        Id:this.evaluacion?.Id ?? 0
+      },
       acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
     };
   }
 
-  async eliminarItem(id: number) {
+  async eliminarItem(identificador: string) {
     let confirm = await this.popUpManager.showConfirmAlert(
       '¿Estás seguro de eliminar el ítem?'
     );
     if (confirm.isConfirmed) {
-      this.listaItems = this.listaItems.filter((item) => item.id !== id);
+      this.listaItems = this.listaItems.filter((item) => item.Identificador !== identificador);
     }
   }
 
@@ -125,7 +138,7 @@ export class ItemsAEvaluarComponent implements OnInit {
   handleActionClick(event: { action: any; element: any }) {
     console.log(event.element.id);
     if (event.action.actionName === 'delete') {
-      this.eliminarItem(event.element.id);
+      this.eliminarItem(event.element.Identificador);
     }
   }
 
@@ -153,4 +166,60 @@ export class ItemsAEvaluarComponent implements OnInit {
       { Tipo: 'BIENES Y SERVICIOS', Id: 3 },
     ];
   }
+
+
+  async guardarItems(){
+
+    if (this.listaItems.length <0) {
+      this.popUpManager.showErrorAlert('No hay elementos agregados a la lista');
+    } else {
+      let confirm = await this.popUpManager.showConfirmAlert(
+        '¿Estás seguro de guardar el ítem?'
+      );
+      if (confirm.isConfirmed) {
+       
+         
+          try{
+              this.evaluacionnCymplidosCrud.post("/item/guardado_multiple", this.listaItems).subscribe({ 
+                next: (res: any) => {
+                  this.popUpManager.showSuccessAlert('Items guardados correctamente');
+                  this.listaItemsEmiter.emit(this.listaItems);
+                }
+
+              })
+          }catch(error){
+            console.error(error);}
+
+      
+      }
+    }
+  }
+
+  async consulatarItems(){
+
+    this.evaluacionnCymplidosCrud.get("/item?query=EvaluacionId:"+this.evaluacion?.Id+"&limit=-1").subscribe({
+      next: (res: any) => {
+        this.listaItems = res.Data.map((item: any) => {
+          return {
+            Id: item.Id,
+            Identificador: item.Identificador,
+            Nombre: item.Nombre,
+            FichaTecnica: item.FichaTecnica,
+            Cantidad: item.Cantidad,
+            ValorUnitario: item.ValorUnitario,
+            Iva: item.Iva,
+            TipoNecesidad: item.TipoNecesidad,
+            EvaluacionId: item.EvaluacionId,
+            acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
+          };
+        });
+        this.listaItemsEmiter.emit(this.listaItems);
+      },
+      error: (error: any) => {
+        this.popUpManager.showErrorAlert('Error al consultar los items');
+      },
+    });
+  }
+
+
 }

@@ -8,8 +8,8 @@ import { EvaluacionCumplidosProveedoresMidService } from 'src/app/services/evalu
 import { Router } from '@angular/router';
 import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
 import { Observable } from 'rxjs';
-import { EvaluacionCumplidosProveedoresCrudService } from 'src/app/services/evaluacion_cumplidos_provedores_crud.service';
 import Swal from 'sweetalert2';
+import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
 
 
 @Component({
@@ -42,7 +42,7 @@ export class ListarContratosEvaluarComponent {
     private userService: UserService,
     private popUpManager: PopUpManager,
     private evaluacionCumplidosMid: EvaluacionCumplidosProveedoresMidService,
-    private evaluacionCumplidosCrud: EvaluacionCumplidosProveedoresCrudService,
+    private evaluacionCumplidosCrud: EvaluacionCumplidoProvCrudService,
     private router: Router
   ) {
     this.filtrosForm = this.fb.group({
@@ -81,12 +81,11 @@ export class ListarContratosEvaluarComponent {
         .get('/consultar-asignaciones/' + this.documentoSupervisor)
         .subscribe({
           next: (res: any) => {
-            console.log(res);
             if (res.Data && res.Data.Asignaciones.length > 0) {
               var asignaciones = res.Data.Asignaciones.map((item: any) => {
                 return {
                   nombreProveedor: item.NombreProveedor,
-                  dependencia: item.Depenedencia,
+                  dependencia: item.Dependencia,
                   tipoContrato: item.TipoContrato,
                   contrato: item.NumeroContrato,
                   vigencia: item.VigenciaContrato,
@@ -115,7 +114,7 @@ export class ListarContratosEvaluarComponent {
               var asignaciones  = res.Data.SinAsignaciones.map((item: any) => {
                 return {
                   nombreProveedor: item.NombreProveedor,
-                  dependencia: item.Depenedencia,
+                  dependencia: item.Dependencia,
                   tipoContrato: item.TipoContrato,
                   contrato: item.NumeroContrato,
                   vigencia: item.VigenciaContrato,
@@ -142,7 +141,13 @@ export class ListarContratosEvaluarComponent {
   handleActionClick(event: { action: any; element: any }) {
     
     if (event.action.actionName === 'gestionarEv') {
-      this.gestionarEvaluacion(event.element);
+        
+      const  asignacion={
+        ContratoSuscritoId: event.element.contrato,
+        VigenciaContrato: event.element.vigencia,
+      }
+      this.gestionarEvaluacion(asignacion);
+      
     } else if (event.action.actionName === 'crearEv') {
       this.crearEvaluacion(event.element);
     }
@@ -172,10 +177,12 @@ export class ListarContratosEvaluarComponent {
 
 
 async  redirigirVista(element: any, vista: string): Promise<void> {
+  console.log("Elementiiiii:", element);
     return new Promise( async (resolve) => {
 
-      const evaluacion =  await this.consultarEvaluacionCreada(element.contrato, element.vigencia);
+      const evaluacion =  await this.consultarEvaluacionCreada(element.ContratoSuscritoId, element.VigenciaContrato);
       await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
+      console.log("Evaluacion:", evaluacion);
        this.router.navigate([vista]);
        resolve();
      });
@@ -193,7 +200,7 @@ async  redirigirVista(element: any, vista: string): Promise<void> {
 
     if(evaluacion && evaluacion!=null){
       this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
-      this.router.navigate(['gestion-evaluadores']);
+      this.redirigirVista(evaluacion, 'gestion-evaluadores');
       return Promise.resolve(evaluacion)
      
     }else{
@@ -202,8 +209,13 @@ async  redirigirVista(element: any, vista: string): Promise<void> {
           .post('/evaluacion', solicitudCrearEvaluacion)
           .subscribe({
             next: (res: any) => {
+              console.log("Evaluacion data:", res.Data);
               this.evaluacionCumplidosCrud.setEvaluacion(res.Data); 
-              this.router.navigate(['gestion-evaluadores']);
+              debugger
+              console.log("imprimir :", res.Data);
+              const evaluacion = res.Data;
+
+              this.redirigirVista(evaluacion, 'gestion-evaluadores');
               resolve(res.Data)
             },
             complete: () => {

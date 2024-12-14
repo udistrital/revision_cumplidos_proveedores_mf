@@ -31,7 +31,6 @@ export class EvaluacionCumplidoProvCrudService {
 
   post(endpoint: any, element: any) {
     this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_CRUD');
-    console.log("Data:", JSON.stringify(element));
     return this.requestManager.post(endpoint, element);
   }
 

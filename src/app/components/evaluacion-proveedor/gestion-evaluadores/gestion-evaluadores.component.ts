@@ -26,7 +26,6 @@ export class GestionEvaluadoresComponent implements OnInit {
 
   getPorcentaje(porcentaje: number){
     this.porcentaje = porcentaje;
-    console.log(this.porcentaje)
   }
 
 

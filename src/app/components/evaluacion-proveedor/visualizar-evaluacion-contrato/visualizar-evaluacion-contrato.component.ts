@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Evaluador } from 'src/app/models/evaluador.model';
 import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
+import { EvaluacionCumplidoProvCrudService } from './../../../services/evaluacion_cumplido_prov_crud';
+import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
 
 @Component({
   selector: 'app-visualizar-evaluacion-contrato',
@@ -14,10 +16,16 @@ export class VisualizarEvaluacionContratoComponent {
   listaObservaciones!: string[];
   listaEvaluaciones!: Evaluador[];
   listaItemsEvaluar!: ItemAEvaluar[];
+  evaluacion!:Evaluacion|null
 
-  ngOnInit(){
+  constructor(private evaluacionCumplidosCrud:EvaluacionCumplidoProvCrudService) { }
+
+  async ngOnInit(){
+    this.evaluacion = await this.evaluacionCumplidosCrud.getEvaluacion();
+    console.log("FormEvaluacionContratoComponent",this.evaluacion);
+ 
     this.tittle = 'Ver Evaluación';
-
+  
     this.listaItems = [
       "Televisores",
       "Mejoras al sistema de servidores",

@@ -103,13 +103,13 @@ export class ModalCargarItemsComponent {
             const itemsNoAgregaaados = res.Data.itemsNoAgregados.map((item: any) => {
     
               return {
-                id: item.Identificador,
-                nombre: item.Nombre,
-                descripcion: item.FichaTecnica,
-                cantidad: item.Cantidad,
-                valor: item.ValorInitario,
-                iva: item.Iva,
-                tipoNecesidad: item.TipoNecesidad
+                Identificador: item.Identificador,
+                Nombre: item.Nombre,
+                FichaTecnica: item.FichaTecnica,
+                Cantidad: item.Cantidad,
+                ValorUnitario: item.ValorInitario,
+                Iva: item.Iva,
+                TipoNecesidad: item.TipoNecesidad
 
               }
             })
@@ -157,13 +157,13 @@ export class ModalCargarItemsComponent {
       next: (res: any) => {
         this.listaitemsCargados = res.Data.map((item: any) => {
           return {
-            id: item.Identificador,
-            nombre: item.Nombre,
-            descripcion: item.FichaTecnica,
-            cantidad: item.Cantidad,
-            valor: item.ValorUnitario,
-            iva: item.Iva,
-            tipoNecesidad: item.TipoNecesidad,
+            Identificador: item.Identificador,
+            Nombre: item.Nombre,
+            FichaTecnica: item.FichaTecnica,
+            Cantidad: item.Cantidad,
+            ValorUnitario: item.ValorUnitario,
+            Iva: item.Iva,
+            TipoNecesidad: item.TipoNecesidad,
             acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
 
           }
