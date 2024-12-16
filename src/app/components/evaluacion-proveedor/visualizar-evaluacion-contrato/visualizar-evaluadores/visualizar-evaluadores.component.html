@@ -4,21 +4,25 @@
       <mat-panel-title class="expansion-panel-title-box"> <h1> {{tittle}} </h1> </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="container-inputs" *ngFor="let evaluador of evaluadores">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="field" style="width: 15%;">
         <mat-label>Cédula de ciudadania</mat-label>
         <input matInput disabled [value]="evaluador.numeroCedula" class="input-text">
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="field" style="width: 33%;">
         <mat-label>Cargo</mat-label>
-        <input matInput disabled [value]="evaluador.cargo" class="input-text">
+        <textarea matInput disabled [value]="evaluador.cargo" class="textarea"></textarea>
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="field" style="width: 30%;">
         <mat-label>Items evaluados</mat-label>
-        <input matInput disabled [value]="evaluador.itemsEvaluados.join(',')" class="input-text">
+        <textarea matInput disabled [value]="evaluador.itemsEvaluados" class="textarea"></textarea>
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="field" style="width: 10%;">
         <mat-label>Evaluación dada</mat-label>
         <input matInput disabled [value]="evaluador.evaluacionDada" class="input-text">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="field" style="width: 12%;">
+        <mat-label>Porcentaje evaluacion</mat-label>
+        <input matInput disabled [value]="evaluador.porcentajeEvaluacion | percent" class="input-text">
       </mat-form-field>
     </div>
   </mat-expansion-panel>

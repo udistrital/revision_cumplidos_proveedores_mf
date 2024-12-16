@@ -15,7 +15,9 @@ export interface AsignacionEvaluadorBody {
 export interface AsignacionEvaluador {
   Id: number;
   PersonaId: number;
-  EvaluacionId: number;
+  EvaluacionId: {
+      Id: number;
+  };
   Cargo: string;
   PorcentajeEvaluacion: number;
 }

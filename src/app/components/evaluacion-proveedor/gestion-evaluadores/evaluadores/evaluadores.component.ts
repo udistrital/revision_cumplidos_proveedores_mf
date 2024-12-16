@@ -7,7 +7,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ItemAEvaluar } from './../../../../models/item_a_evaluar';
 import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
 import { AsignacionEvaluador, AsignacionEvaluadorBody } from './../../../../models/evaluacion_cumplido_prov_crud/asignacion_evaluador.model';
-import { Item } from './../../../../models/evaluacion_cumplido_prov_crud/item.model'
+import { BodyItem } from './../../../../models/evaluacion_cumplido_prov_crud/item.model'
 
 @Component({
   selector: 'app-evaluadores',

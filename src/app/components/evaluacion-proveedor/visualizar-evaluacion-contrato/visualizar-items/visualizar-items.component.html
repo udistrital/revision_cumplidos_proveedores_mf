@@ -1,0 +1,10 @@
+<mat-accordion style="border-radius: 10px;">
+  <mat-expansion-panel class="card-oas" (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)" [expanded]="false">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="expansion-panel-title-box"> <h1> {{tittle}} </h1> </mat-panel-title>
+    </mat-expansion-panel-header>
+    <br>
+    <br>
+    <app-tabla  *ngIf="unidadesCargadas" [data]="dataSource" [displayedColumns]="displayedColumns"></app-tabla>
+  </mat-expansion-panel>
+</mat-accordion>

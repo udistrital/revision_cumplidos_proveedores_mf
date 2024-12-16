@@ -1,102 +1,184 @@
-<form [formGroup]="evaluacion" (ngSubmit)="enviarEvaluacion()">
-  <div *ngFor="let item of listaPreguntas">
-    <mat-card class="item-evaluar margin-10px border-card">
+
+<div *ngIf="!visualizacion">
+  <form [formGroup]="evaluacion" (ngSubmit)="enviarEvaluacion()">
+    <div *ngFor="let item of listaPreguntas">
+      <mat-card class="item-evaluar margin-10px border-card">
 
 
-      <mat-accordion>
-        <mat-expansion-panel [expanded]="false">
-          <mat-expansion-panel-header class="bg-panel-title">
-            <mat-panel-title class="expansion-panel-title-box">
-              <div>
-                <h3 class="title color-white title-expansion">{{ item.elemento }}</h3>
-              </div>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <div>
-            <div class="box-header-evaluacion">
-              <div>
-                <h3 class="color-principal">{{ item.elemento }}</h3>
-              </div>
-              <div class="color-principal text-center">Valor Asignado</div>
-            </div>
-    
-            <div *ngFor="let pregunta of item.preguntas; let i = index">
-              <div class="box-pregunta">
+        <mat-accordion>
+          <mat-expansion-panel [expanded]="false">
+            <mat-expansion-panel-header class="bg-panel-title">
+              <mat-panel-title class="expansion-panel-title-box">
                 <div>
+                  <h3 class="title color-white title-expansion">{{ item.elemento }}</h3>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div>
+              <div class="box-header-evaluacion">
+                <div>
+                  <h3 class="color-principal">{{ item.elemento }}</h3>
+                </div>
+                <div class="color-principal text-center">Valor Asignado</div>
+              </div>
+
+              <div *ngFor="let pregunta of item.preguntas; let i = index">
+                <div class="box-pregunta">
                   <div>
-                    <div class="box-caracteristica">
-                      <div class="color-principal text-center">
-                        {{ pregunta.caracteristica }}
-                      </div>
-                      <div class="text-center">{{ pregunta.pregunta }}</div>
-                      <div style="text-align: center">
-                        <p>Seleccione una opción</p>
-    
-                        <mat-form-field class="mat-form-field">
-                          <mat-select>
-                            <mat-option value="si">Si</mat-option>
-                            <mat-option value="no">No</mat-option>
-                          </mat-select>
-                        </mat-form-field>
+                    <div>
+                      <div class="box-caracteristica">
+                        <div class="color-principal text-center">
+                          {{ pregunta.caracteristica }}
+                        </div>
+                        <div class="text-center">{{ pregunta.pregunta }}</div>
+                        <div style="text-align: center">
+                          <p>Seleccione una opción</p>
+
+                          <mat-form-field class="mat-form-field">
+                            <mat-select>
+                              <mat-option value="si">Si</mat-option>
+                              <mat-option value="no">No</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-    
-                <div class="text-center">
-                  <p class="line-text">{{ pregunta.porcentaje }}</p>
-                </div>
-              </div>
-            </div>
-    
-            <div class="box-total">
-              <div class="text-center p">
-                <p class="principal-color" style="font-size: 1rem">
-                  Puntaje total:
-                </p>
-              </div>
-              <div>
-                <p style="font-size: 1rem">{{ porcentage }}</p>
-              </div>
-            </div>
-          </div>
-          </mat-expansion-panel>
-      </mat-accordion>
-      
-    </mat-card>
-  </div>
 
-  <mat-card class="item-evaluar margin-10px border-card">
-    <div class="box-observaciones margin-10px">
-      <div class="color-principal">
-        <h3>Observaciones</h3>
-      </div>
-      <div class="text-center">
-        <mat-form-field class="">
-          <mat-label>Observaciones</mat-label>
-          <textarea class="" matInput placeholder="" formControlName="observaciones"></textarea>
-          <!-- <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('detalles_item')?.invalid" class="label-error">
-          Ingresa la descripción
-        </mat-error> -->
-        </mat-form-field>
-      </div>
+                  <div class="text-center">
+                    <p class="line-text">{{ pregunta.porcentaje }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="box-total">
+                <div class="text-center p">
+                  <p class="principal-color" style="font-size: 1rem">
+                    Puntaje total:
+                  </p>
+                </div>
+                <div>
+                  <p style="font-size: 1rem">{{ porcentaje }}</p>
+                </div>
+              </div>
+            </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+      </mat-card>
     </div>
-  </mat-card>
-  <mat-card class="item-evaluar margin-10px border-card">
-    <div class="box-suma-total">
-      <div class="title-card color-principal">
-        <p>Puntje Total de evaluacion</p>
+
+    <mat-card class="item-evaluar margin-10px border-card">
+      <div class="box-observaciones margin-10px">
+        <div class="color-principal">
+          <h3>Observaciones</h3>
+        </div>
+        <div class="text-center">
+          <mat-form-field class="">
+            <mat-label>Observaciones</mat-label>
+            <textarea class="" matInput placeholder="" formControlName="observaciones"></textarea>
+            <!-- <mat-error *ngIf=" formularioEnviado  &&  formAddIntems.get('detalles_item')?.invalid" class="label-error">
+            Ingresa la descripción
+          </mat-error> -->
+          </mat-form-field>
+        </div>
       </div>
-      <div>
-        <p class="line-text">Total</p>
+    </mat-card>
+    <mat-card class="item-evaluar margin-10px border-card">
+      <div class="box-suma-total">
+        <div class="title-card color-principal">
+          <p>Puntje Total de evaluacion</p>
+        </div>
+        <div>
+          <p class="line-text">Total</p>
+        </div>
+        <div>
+          <p class="line-text">Calificacion</p>
+        </div>
+        <div class="text-end">
+          <button class="btn-enviar" mat-button>Enviar Evaluacion</button>
+        </div>
       </div>
-      <div>
-        <p class="line-text">Calificacion</p>
-      </div>
-      <div class="text-end">
-        <button class="btn-enviar" mat-button>Enviar Evaluacion</button>
-      </div>
+    </mat-card>
+  </form>
+</div>
+
+<div *ngIf="visualizacion">
+  <form [formGroup]="evaluacion">
+    <div *ngFor="let item of listaPreguntas">
+      <mat-card class="item-evaluar margin-10px border-card">
+        <mat-accordion>
+          <mat-expansion-panel [expanded]="false">
+            <mat-expansion-panel-header class="bg-panel-title">
+              <mat-panel-title class="expansion-panel-title-box">
+                <div>
+                  <h3 class="title color-white title-expansion">{{ item.elemento }}</h3>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div>
+              <div class="box-header-evaluacion">
+                <div>
+                  <h3 class="color-principal">{{ item.elemento }}</h3>
+                </div>
+                <div class="color-principal text-center">Valor Asignado</div>
+              </div>
+
+              <div *ngFor="let pregunta of item.preguntas; let i = index">
+                <div class="box-pregunta">
+                  <div>
+                    <div>
+                      <div class="box-caracteristica">
+                        <div class="color-principal text-center">
+                          {{ pregunta.caracteristica }}
+                        </div>
+                        <div class="text-center">{{ pregunta.pregunta }}</div>
+                        <div style="text-align: center">
+                            <mat-form-field>
+                                <input style="text-align: center;" matInput disabled [value]="pregunta.cumplimiento">
+                            </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="text-center">
+                    <p class="line-text">{{ pregunta.porcentaje }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="box-total">
+                <div class="text-center p">
+                  <p class="principal-color" style="font-size: 1rem">
+                    Puntaje total:
+                  </p>
+                </div>
+                <div>
+                  <p style="font-size: 1rem">{{ puntajesTotales[listaPreguntas.indexOf(item)] }}</p>
+                </div>
+              </div>
+            </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+      </mat-card>
     </div>
-  </mat-card>
-</form>
+
+    <mat-card class="item-evaluar margin-10px border-card">
+      <div class="box-suma-total">
+        <div class="title-card color-principal">
+          <p>Puntaje Total de Evaluacion</p>
+        </div>
+        <div>
+          <p class="line-text"> {{puntajeTotal}}</p>
+        </div>
+        <div>
+          <p class="line-text"> {{clasificacion}} </p>
+        </div>
+      </div>
+    </mat-card>
+  </form>
+</div>
