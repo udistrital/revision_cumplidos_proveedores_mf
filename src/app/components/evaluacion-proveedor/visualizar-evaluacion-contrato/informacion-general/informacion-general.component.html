@@ -1,5 +1,5 @@
 <mat-accordion style="border-radius: 10px;">
-  <mat-expansion-panel class="card-oas" (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+  <mat-expansion-panel class="card-oas" (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(true)" [expanded]="true">
     <mat-expansion-panel-header>
       <mat-panel-title class="expansion-panel-title-box"> <h1> {{tittle}} </h1> </mat-panel-title>
     </mat-expansion-panel-header>
@@ -13,7 +13,7 @@
       <div>
         <div class="textos">
           <p class="label">Calificación</p>
-          <p class="value"> {{informacionGeneral.calificacion}} </p>
+          <p class="value"> {{informacionGeneral.clasificacion}} </p>
         </div>
       </div>
       <div>

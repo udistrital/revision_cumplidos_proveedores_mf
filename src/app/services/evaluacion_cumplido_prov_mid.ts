@@ -12,29 +12,29 @@ const httpOptions = {
   providedIn: 'root',
 })
 
-export class EvaluacionCumplidoProvCrudService {
+export class EvaluacionCumplidoProvMidService {
 
   constructor(private requestManager: RequestManager) {
-    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_CRUD');
+    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_MID');
   }
 
   get(endpoint: string) {
-    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_CRUD');
+    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_MID');
     return this.requestManager.get(endpoint);
   }
 
   post(endpoint: any, element: any) {
-    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_CRUD');
+    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_MID');
     return this.requestManager.post(endpoint, element);
   }
 
   put(endpoint: any, element: any) {
-    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_CRUD');
+    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_MID');
     return this.requestManager.put(endpoint, element);
   }
 
   delete(endpoint: any, element: any) {
-    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_CRUD');
+    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_MID');
     return this.requestManager.delete(endpoint, element);
   }
 }

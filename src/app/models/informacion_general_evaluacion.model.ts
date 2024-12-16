@@ -1,6 +1,8 @@
-export interface InformacionContratoEvaluacion {
+
+
+export interface InformacionGeneralEvaluacion {
   puntajeTotalEvaluacion: number;
-  calificacion: number;
+  clasificacion: string;
   dependenciaEvaluadora: string;
   fechaEvaluacion: Date;
   nombreEvaluador: string;

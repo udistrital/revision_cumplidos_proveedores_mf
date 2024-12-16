@@ -38,10 +38,11 @@
 .container-botones{
   display: flex;
   flex-wrap: wrap;
-  width: 30%;
+  width: 60%;
   height: 20%;
-  justify-content: space-between;
+  justify-content: end;
   margin-top: 2%;
+  gap: 5%;
 }
 
 .card-container{
@@ -82,3 +83,27 @@
     font-size: 14px;
   }
 }
+
+.card-oas{
+  border-radius: 10px !important;
+  margin-bottom: 1% !important;
+  margin: 1%;
+}
+
+.expansion-panel-title-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  color: white !important;
+}
+.mat-expansion-panel-header {
+  background-color: #8c1a19 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .mat-expansion-indicator::after {
+  color: white;
+}
+
