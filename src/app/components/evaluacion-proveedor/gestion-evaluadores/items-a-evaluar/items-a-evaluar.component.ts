@@ -183,7 +183,7 @@ export class ItemsAEvaluarComponent implements OnInit {
               this.evaluacionnCymplidosCrud.post("/item/guardado_multiple", this.listaItems).subscribe({ 
                 next: (res: any) => {
                   this.popUpManager.showSuccessAlert('Items guardados correctamente');
-                  this.listaItemsEmiter.emit(this.listaItems);
+                  this.consulatarItems();
                 }
 
               })
@@ -213,7 +213,11 @@ export class ItemsAEvaluarComponent implements OnInit {
             acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
           };
         });
-        this.listaItemsEmiter.emit(this.listaItems);
+        if (this.listaItems.length > 0 &&  this.listaItems[0].Id !== undefined){ 
+          this.listaItemsEmiter.emit(this.listaItems);}
+          else{
+            this.listaItems=[];
+            this.listaItemsEmiter.emit(this.listaItems)}
       },
       error: (error: any) => {
         this.popUpManager.showErrorAlert('Error al consultar los items');

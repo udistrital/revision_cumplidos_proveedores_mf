@@ -177,12 +177,12 @@ export class ListarContratosEvaluarComponent {
 
 
 async  redirigirVista(element: any, vista: string): Promise<void> {
-  console.log("Elementiiiii:", element);
+
     return new Promise( async (resolve) => {
 
       const evaluacion =  await this.consultarEvaluacionCreada(element.ContratoSuscritoId, element.VigenciaContrato);
       await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
-      console.log("Evaluacion:", evaluacion);
+  
        this.router.navigate([vista]);
        resolve();
      });

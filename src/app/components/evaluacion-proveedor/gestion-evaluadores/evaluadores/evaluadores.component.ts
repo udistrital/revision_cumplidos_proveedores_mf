@@ -104,7 +104,6 @@ export class EvaluadoresComponent implements OnInit {
             this.porcentaje.emit(this.sumarPorcentaje());
             this.formAddEvaluadores.reset();
             this.formularioEnviado = false;
-            console.log(this.listaEvaluadores);
           }
         }
       }
@@ -136,7 +135,6 @@ export class EvaluadoresComponent implements OnInit {
 
 
   async guardarEvaluadores() {
-    console.log('Lista de evaluadores:', this.listaEvaluadores);
     const rol: RolAsignacionEvaluador = await this.obterRolASignacion('PE');
     this.asignacionEvaluador = this.listaEvaluadores.map((evaluador) => {
       return {
@@ -151,22 +149,17 @@ export class EvaluadoresComponent implements OnInit {
         ItemsAEvaluar: evaluador.ItemAEvaluar,
       };
     });
-    console.log('Asignaciones:', this.asignacionEvaluador);
-    let index = 0;
 
     const resultados = await Promise.allSettled(
       this.asignacionEvaluador.map((data) => {
         return (async () => {
-
           let asignacion: AsignacionEvaluadorBody = await this.guardarEvaluadorIndividual(data);
-          console.log('Asignaciónidddddddddddddddd:', asignacion?.Id);
-          await this.guardarItemsEvaluador(asignacion?.Id ?? 0, this.listaItems);
+          await this.guardarItemsEvaluador(asignacion?.Id ?? 0, data.ItemsAEvaluar ?? []);
         })();
       })
     );
 
     resultados.forEach((resultado, index) => {
-      console.log('Resultado:', resultado);
       if (resultado.status === 'fulfilled') {
         console.log(`Solicitud ${index + 1} completada con éxito.`);
       } else {
@@ -179,6 +172,7 @@ export class EvaluadoresComponent implements OnInit {
   async guardarItemsEvaluador(
     asignacionEvaluadorId: number,
     ItemsAEvaluar: any[]
+
   ) {
     let existe: boolean = false;
     if (ItemsAEvaluar.length > 0) {
@@ -206,13 +200,12 @@ export class EvaluadoresComponent implements OnInit {
               }
             }
 
-
             ItemsAEvaluar.forEach((item) => {
-
+             ;
               this.evaluacionCumplidoProvCrudService
                 .post('/asignacion_evaluador_item', {
                   AsignacionEvaluadorId: { Id: asignacionEvaluadorId },
-                  ItemId: { Id: item.Id },
+                  ItemId: { Id: item },
                 })
                 .subscribe({
                   error: (error: any) => {

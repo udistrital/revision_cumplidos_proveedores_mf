@@ -62,9 +62,6 @@ export const routes: Routes = [
     path: 'historicos-cumplidos',
     canActivate: [AuthGuard],
     component: HistoricoCumplidosComponent
-  }, {
-    path: 'Listar-contratos-evaluar',
-    component: ListarContratosEvaluarComponent
   }
 ];
 
