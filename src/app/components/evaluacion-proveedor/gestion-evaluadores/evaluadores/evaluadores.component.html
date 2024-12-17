@@ -29,12 +29,17 @@
                   matInput
                   formControlName="numero_documento"
                   type="text"
-                  (input)="validarNumero('numero_documento',$event)"
+                  (input)="obtenerEvaluador($event)"
                 />
                 <mat-error *ngIf=" formularioEnviado  &&  formAddEvaluadores.get('numero_documento')?.invalid" class="label-error">
                   Ingresa numero de documento
                 </mat-error>
               </mat-form-field>
+
+              <div *ngIf="evaluadres.length  >0">
+                <li *ngFor="let persona of evaluadres"> {{ persona.nombre }} - {{ persona.documento }}
+                </li>
+              </div>
             </div>
             <div class="wp-collection-item">
               <p class="labels">Cargo</p>
@@ -51,8 +56,8 @@
               <mat-form-field>
                 <mat-label class="center-label">item a evaluar</mat-label>
                 <mat-select multiple formControlName="item_a_evaluar">
-                  <mat-option *ngFor="let item of listaItems" [value]="item.id">
-                    {{item.nombre}}
+                  <mat-option *ngFor="let item of listaItems" [value]="item.Id">
+                    {{item.Nombre}}
                   </mat-option>
                 </mat-select>
                 <mat-error *ngIf=" formularioEnviado  &&  formAddEvaluadores.get('item_a_evaluar')?.invalid" class="label-error">
@@ -74,10 +79,16 @@
             </div>
           </div>
           <div class="box-btn-add">
+
+            <button type="button" class="btn-add" mat-button (click)="guardarEvaluadores()">
+              <mat-icon>save</mat-icon>
+              Guardar
+            </button>
             <button type="submit" class="btn-add" mat-button>
               <mat-icon>add</mat-icon>
               Agregar
             </button>
+            
           </div>
         </form>
 

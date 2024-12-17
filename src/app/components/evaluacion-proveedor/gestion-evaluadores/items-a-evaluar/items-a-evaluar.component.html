@@ -162,16 +162,17 @@
 
               <div>
                 <div class="tex-size-17 text-color-principal margin-10px">
-                  Tipo necesidad
+                  Tipo
                 </div>
-                <mat-form-field class="width-text-area input-680">
-                  <mat-label>Agrega el Tipo necesidad</mat-label>
-                  <input
-                    class="text-area"
-                    matInput
-                    placeholder=""
-                    formControlName="tipo_necesidad_item"
-                  />
+                <mat-form-field class="width-text-area unidad-input input-680">
+                  <mat-label>Tipo</mat-label>
+                  <mat-select formControlName="tipo_necesidad_item">
+                    <mat-option
+                      *ngFor="let Tipo of listaTipoNecesidad"
+                      [value]="Tipo.Id"
+                      >{{ Tipo.Tipo }}</mat-option
+                    >
+                  </mat-select>
                   <mat-error
                     *ngIf="
                       formularioEnviado &&
@@ -179,7 +180,7 @@
                     "
                     class="label-error"
                   >
-                    Agrega el Tipo necesidad
+                    Agrega la Unidad
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -221,7 +222,12 @@
                   Adjuntar
                 </button>
               </div>
-
+              <div class="text-right">
+                <button type="button" class="btn-add" mat-button (click)="guardarItems()">
+                  <mat-icon>save</mat-icon>
+                  Guardar
+                </button>
+              </div>
               <div class="text-right">
                 <button type="submit" class="btn-add" mat-button>
                   <mat-icon>add</mat-icon>

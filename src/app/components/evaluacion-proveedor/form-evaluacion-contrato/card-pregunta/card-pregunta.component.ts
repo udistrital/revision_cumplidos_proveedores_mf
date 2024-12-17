@@ -122,7 +122,6 @@ export class CardPreguntaComponent {
       respuestas: this.fb.array(controls),
       observaciones: ['', [Validators.required]],
     });
-    console.log(this.evaluacion.value);
 
     const respuestas = this.evaluacion.get('respuestas') as FormArray;
     respuestas.valueChanges.subscribe(() => {

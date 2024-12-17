@@ -3,6 +3,7 @@ import { Component, signal, SimpleChanges } from '@angular/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { Evaluador } from 'src/app/models/evaluador.model';
 import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
+import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/app/services/user.services';
 import { InformacionEvaluacion, Resultado } from 'src/app/models/evaluacion_cumplido_prov_mid/informacion-evaluacion.model';
@@ -51,8 +52,6 @@ export class VisualizarEvaluacionContratoComponent {
     this.tittle = 'Ver Evaluación';
     await this.obtenerInformacionEvaluacion()
   }
-
-
 
   displayedColumns: any[] = [
     {def: 'Identificador', header: 'ID' },

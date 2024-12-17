@@ -26,14 +26,14 @@
               </mat-option>
           </mat-select>
           </mat-form-field>
-          <button mat-button style="color:white" class="button"> <mat-icon style="color:white">search</mat-icon> Buscar </button>
+          <button mat-button style="color:white" class="button"> <mat-icon style="color:white" >search</mat-icon> Buscar </button>
         </div>
       </form>
 
     </mat-card-content> -->
 
     <mat-card-content>
-      <app-tabla [data]="dataSource" [displayedColumns]="displayedColumns"/>
+      <app-tabla [data]="dataSource" [displayedColumns]="displayedColumns"   (actionClicked)="handleActionClick($event)"/>
     </mat-card-content>
   </mat-card>
 

@@ -1,14 +1,13 @@
-import { ItemAEvaluar } from "../item_a_evaluar";
-import { Item } from "./item.model";
-
 export interface AsignacionEvaluadorBody {
-  PersonaId: number;
-  EvaluacionId: {
-      Id: number;
-  };
+  Id?: number | null;
+  PersonaId: string;
+  EvaluacionId?: { Id: number };
   Cargo: string;
   PorcentajeEvaluacion: number;
-  ItemsAEvaluar: number[];
+  ItemsAEvaluar?: any[];
+  RolAsignacionEvaluadorId?:{
+    Id?: number;
+  }
 }
 
 
