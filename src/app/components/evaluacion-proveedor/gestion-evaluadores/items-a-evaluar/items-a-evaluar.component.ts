@@ -196,8 +196,7 @@ export class ItemsAEvaluarComponent implements OnInit {
   }
 
   async consulatarItems(){
-
-    this.evaluacionnCymplidosCrud.get("/item?query=EvaluacionId:"+this.evaluacion?.Id+"&limit=-1").subscribe({
+    this.evaluacionnCymplidosCrud.get("/item?query=EvaluacionId.Id:"+this.evaluacion?.Id+",Activo:true"+"&limit=-1").subscribe({
       next: (res: any) => {
         this.listaItems = res.Data.map((item: any) => {
           return {

@@ -135,7 +135,7 @@ export class EvaluadoresComponent implements OnInit {
 
 
   async guardarEvaluadores() {
-    const rol: RolAsignacionEvaluador = await this.obterRolASignacion('PE');
+    const rol: RolAsignacionEvaluador = await this.obterRolASignacion('EV');
     this.asignacionEvaluador = this.listaEvaluadores.map((evaluador) => {
       return {
         PersonaId: String(evaluador.NumeroDocumento),

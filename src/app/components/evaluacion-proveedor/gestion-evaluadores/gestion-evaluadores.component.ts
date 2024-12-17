@@ -28,10 +28,12 @@ export class GestionEvaluadoresComponent implements OnInit {
     private router: Router
   ) {}
   async ngOnInit() {
-    this.nombreProveedor = 'nombre Proveedor  tempotal';
-    this.numeroContrato = 'numero de contrato tempotal';
-    this.vigenciaContrato = 'vigenciaContrato tempotal';
+    
     this.evaluacion = await this.evaluacionCumplidoProvCrud.getEvaluacion();
+
+    this.nombreProveedor = "Proveedor";
+    this.numeroContrato = String( this.evaluacion?.ContratoSuscritoId);
+    this.vigenciaContrato = String( this.evaluacion?.VigenciaContrato);
   }
 
   getPorcentaje(porcentaje: number) {
