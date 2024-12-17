@@ -16,6 +16,9 @@
 
 .input-text {
   text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
+  line-height: 1.5;
 }
 
 .expansion-panel-title-box {
@@ -34,4 +37,19 @@
 
 :host ::ng-deep .mat-expansion-indicator::after {
   color: white;
+}
+
+.textarea {
+  white-space: pre-wrap;       /* Asegura que los saltos de línea sean visibles */
+  overflow-wrap: break-word;  /* Ajusta palabras largas */
+  word-wrap: break-word;      /* Compatibilidad con navegadores antiguos */
+  line-height: 1.5;           /* Mejora la legibilidad */
+  resize: none;               /* Desactiva el cambio manual de tamaño */
+  height: auto;               /* Ajusta dinámicamente el tamaño del campo */
+  min-height: 50px;           /* Altura mínima */
+  max-height: 200px;          /* Altura máxima para evitar que sea demasiado grande */
+}
+
+.mat-mdc-text-field-wrapper {
+  width: 70%;
 }

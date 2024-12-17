@@ -116,4 +116,20 @@ export class UtilsService {
     })
   
   }
+
+  async obtenerMedida(id:number):Promise<UnidadMedida>{
+    return new Promise((resolve, reject) => {
+      this.administrativaAmazonService.get(`/unidad/${id}`).subscribe({
+        next:(response:any)=>{
+          const Unidad:UnidadMedida=response;
+          resolve(Unidad??null)
+        },error:(error)=>{
+          this.popUpManager.showErrorAlert(
+            'No fue posible obtener la medida de unidad.'
+          );
+        }
+      
+      })
+    })
+  }
 }

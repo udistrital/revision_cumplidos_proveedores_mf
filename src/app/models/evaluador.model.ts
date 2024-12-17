@@ -1,6 +1,7 @@
 export interface Evaluador {
   numeroCedula: string;
   cargo: string;
-  itemsEvaluados: string[];
-  evaluacionDada: number
+  itemsEvaluados: string;
+  evaluacionDada: number;
+  porcentajeEvaluacion: number
 }

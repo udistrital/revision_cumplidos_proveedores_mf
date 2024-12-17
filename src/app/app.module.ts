@@ -72,6 +72,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
 import { VisualizarEvaluadoresComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-evaluadores/visualizar-evaluadores.component';
 import { ModalItemsNoAgregadosComponent } from './components/evaluacion-proveedor/gestion-evaluadores/modal-items-no-agregados/modal-items-no-agregados.component';
+import { VisualizarItemsComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-items/visualizar-items.component';
+import { VisualizarResultadoEvaluacionComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-resultado-evaluacion/visualizar-resultado-evaluacion.component';
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl+'/assets/i18n/', '.json');
 }
@@ -115,6 +117,8 @@ export function createTranslateLoader(http: HttpClient) {
     ListadoHistoricosComponent,
     VisualizarEvaluadoresComponent,
     ModalItemsNoAgregadosComponent
+    VisualizarItemsComponent,
+    VisualizarResultadoEvaluacionComponent
   ],
   imports: [
     HttpClientModule,

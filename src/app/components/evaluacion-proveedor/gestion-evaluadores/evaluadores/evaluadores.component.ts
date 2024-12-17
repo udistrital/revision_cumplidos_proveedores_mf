@@ -24,6 +24,8 @@ import {
 } from 'src/app/models/evaluacion_cumplido_prov_crud/asignacion_evaluador.model';
 import { map } from 'rxjs';
 import { RolAsignacionEvaluador } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/rol_asignacion_evaluador';
+import { BodyItem } from 'src/app/models/evaluacion_cumplido_prov_crud/item.model'
+
 
 @Component({
   selector: 'app-evaluadores',

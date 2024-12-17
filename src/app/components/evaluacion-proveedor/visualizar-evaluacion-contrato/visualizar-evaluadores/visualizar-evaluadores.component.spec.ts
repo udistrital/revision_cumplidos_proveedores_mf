@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VisualizarEvaluadoresComponent } from './visualizar-evaluadores.component';
 
-describe('EvaluadoresComponent', () => {
+describe('VisualizarEvaluadoresComponent', () => {
   let component: VisualizarEvaluadoresComponent;
   let fixture: ComponentFixture<VisualizarEvaluadoresComponent>;
 
