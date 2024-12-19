@@ -26,6 +26,9 @@ import { ModalListarCumplidosComponent } from './components/supervisor/modal-lis
 import { RevisionCumplidosOrdenadorComponent } from './components/ordenador/revision-cumplidos-ordenador/revision-cumplidos-ordenador.component';
 import { RevisionCumplidosContratacionComponent } from './components/contratacion/revision-cumplidos-contratacion/revision-cumplidos-contratacion.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatListModule } from '@angular/material/list';
+
+
 import {
   TranslateLoader,
   TranslateModule,
@@ -50,10 +53,12 @@ import { TablaComponent } from './components/general-components/tabla/tabla.comp
 import { ModalComentariosSoporteComponent } from './components/general-components/modal-comentarios-soporte/modal-comentarios-soporte.component';
 import { ComentarioIndividualSoporteComponent } from './components/general-components/modal-comentarios-soporte/comentario-individual-soporte/comentario-individual-soporte.component';
 import { GenerarComentarioSoporteComponent } from './components/general-components/modal-comentarios-soporte/generar-comentario-soporte/generar-comentario-soporte.component';
+import { ListarContratosEvaluarComponent } from './components/evaluacion-proveedor/listar-contratos-evaluar/listar-contratos-evaluar.component';
+import { VisualizarEvaluacionContratoComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-evaluacion-contrato.component';
+import { InformacionGeneralComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/informacion-general/informacion-general.component';
+import { ListarElementosComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/listar-elementos/listar-elementos.component';
 import { GestionEvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/gestion-evaluadores.component';
-import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
 import { ItemsAEvaluarComponent } from './components/evaluacion-proveedor/gestion-evaluadores/items-a-evaluar/items-a-evaluar.component'
-import {MatExpansionModule} from '@angular/material/expansion';
 import { FormEvaluacionContratoComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/form-evaluacion-contrato.component';
 import { CardPreguntaComponent } from './components/evaluacion-proveedor/form-evaluacion-contrato/card-pregunta/card-pregunta.component';
 import { ModalCargarItemsComponent } from './components/evaluacion-proveedor/gestion-evaluadores/modal-cargar-items/modal-cargar-items.component';
@@ -63,7 +68,12 @@ import { FormularioConsultaComponent } from './components/historico-cumplidos/fo
 import { ModalHistoricoComponent } from './components/historico-cumplidos/modal-historico/modal-historico.component';
 import { HistoricoCumplidosComponent } from './components/historico-cumplidos/historico-cumplidos.component';
 import { ListadoHistoricosComponent } from './components/historico-cumplidos/listado-historicos/listado-historicos.component';
-
+import { MatExpansionModule } from '@angular/material/expansion';
+import { EvaluadoresComponent } from './components/evaluacion-proveedor/gestion-evaluadores/evaluadores/evaluadores.component';
+import { VisualizarEvaluadoresComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-evaluadores/visualizar-evaluadores.component';
+import { ModalItemsNoAgregadosComponent } from './components/evaluacion-proveedor/gestion-evaluadores/modal-items-no-agregados/modal-items-no-agregados.component';
+import { VisualizarItemsComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-items/visualizar-items.component';
+import { VisualizarResultadoEvaluacionComponent } from './components/evaluacion-proveedor/visualizar-evaluacion-contrato/visualizar-resultado-evaluacion/visualizar-resultado-evaluacion.component';
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl+'/assets/i18n/', '.json');
 }
@@ -87,6 +97,11 @@ export function createTranslateLoader(http: HttpClient) {
     ModalComentariosSoporteComponent,
     ComentarioIndividualSoporteComponent,
     GenerarComentarioSoporteComponent,
+    ListarContratosEvaluarComponent,
+    VisualizarEvaluacionContratoComponent,
+    InformacionGeneralComponent,
+    ListarElementosComponent,
+    EvaluadoresComponent,
     GestionEvaluadoresComponent,
     EvaluadoresComponent,
     ItemsAEvaluarComponent,
@@ -94,12 +109,16 @@ export function createTranslateLoader(http: HttpClient) {
     CardPreguntaComponent,
     ModalCargarItemsComponent,
     CardListaEvaluadoresComponent,
-    
+    ListarContratosEvaluarComponent,
     ListarCumplidosReversiblesComponent,
     FormularioConsultaComponent,
     ModalHistoricoComponent,
     HistoricoCumplidosComponent,
-    ListadoHistoricosComponent
+    ListadoHistoricosComponent,
+    VisualizarEvaluadoresComponent,
+    ModalItemsNoAgregadosComponent,
+    VisualizarItemsComponent,
+    VisualizarResultadoEvaluacionComponent
   ],
   imports: [
     HttpClientModule,
@@ -129,7 +148,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatPaginatorModule,
     MatExpansionModule,
     MatSortModule,
-    
+    MatListModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

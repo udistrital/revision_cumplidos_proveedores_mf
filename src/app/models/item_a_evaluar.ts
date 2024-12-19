@@ -1,11 +1,16 @@
 export interface ItemAEvaluar {
-    id: number;
-    nombre:string,
-    descripcion: string;
-    cantidad:string
-    valor:string
-    iva:string
-    tipoNecesidad:string
+    Id?: number | null;
+    EvaluacionId:{
+        Id:number;
+    };
+    Nombre:string;
+    Identificador:string
+    FichaTecnica: string;
+    Cantidad:number
+    ValorUnitario:number
+    Iva:number
+    TipoNecesidad:number
+    Activo?:boolean | null;
     acciones:any
 
     

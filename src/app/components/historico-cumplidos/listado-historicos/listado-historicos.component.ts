@@ -150,7 +150,7 @@ export class ListadoHistoricosComponent implements OnInit {
     this.popUpManager.showLoadingAlert('Cargando...');
     return new Promise((resolve, reject) => {
       this.cumplidosMidService
-        .get('/historico-cumplidos/cambio-estado/' + idCumplido)
+        .get('/historico-cumplidos/historico_cumplido/' + idCumplido)
         .subscribe({
           next: (response: any) => {
             if (response.Data) {

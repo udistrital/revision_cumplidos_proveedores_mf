@@ -72,7 +72,7 @@ export class FormularioConsultaComponent implements OnInit {
       Anios: this.formularioFiltroHistorico.get('anios')?.value.map((val: string | number) => Number(val)) || [],
       Meses: this.formularioFiltroHistorico.get('meses')?.value.map((val: string | number) => Number(val)) || [],
       Vigencias: this.formularioFiltroHistorico.get('vigencias')?.value.map((val: string | number) => Number(val)) || [],
-      Proveedores: this.formularioFiltroHistorico.get('nombres_proveedor')?.value,
+      Proveedores: this.formularioFiltroHistorico.get('nombres_proveedor')?.value.map((proveedor: string) => Number(proveedor)) || [],
       Estados: this.formularioFiltroHistorico.get('estados')?.value,
       Dependencias: this.formularioFiltroHistorico.get('dependencias')?.value,
       Contratos: this.formularioFiltroHistorico.get('numeros_contrato')?.value,
