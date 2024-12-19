@@ -116,7 +116,7 @@ export function createTranslateLoader(http: HttpClient) {
     HistoricoCumplidosComponent,
     ListadoHistoricosComponent,
     VisualizarEvaluadoresComponent,
-    ModalItemsNoAgregadosComponent
+    ModalItemsNoAgregadosComponent,
     VisualizarItemsComponent,
     VisualizarResultadoEvaluacionComponent
   ],

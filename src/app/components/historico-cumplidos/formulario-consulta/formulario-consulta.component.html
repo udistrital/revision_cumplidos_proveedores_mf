@@ -54,7 +54,7 @@
                 <mat-form-field appearance="outline">
                   <mat-label class="label">Nombre del proveedor</mat-label>
                   <mat-select formControlName="nombres_proveedor" multiple>
-                    <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.ProveedorId">
+                    <mat-option *ngFor="let proveedor of listaProveedores" [value]= "proveedor.ProveedorId">
                       {{ proveedor.NombreProveedor }}
                     </mat-option>
                   </mat-select>
