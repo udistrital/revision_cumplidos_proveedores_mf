@@ -21,5 +21,7 @@ export const environment = {
     //'https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_amazon_api/v1',
   "http://api.intranetoas.udistrital.edu.co:8104/v1",
   EVALUACION_CUMPLIDO_PROV_CRUD: 'http://localhost:8080/v1',
-  EVALUACION_CUMPLIDO_PROV_MID: 'http://localhost:8090/v1'
+  EVALUACION_CUMPLIDO_PROV_MID: 'http://localhost:8090/v1',
+  DOCUMENTOS_CRUD: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2',
+  GESTOR_DOCUMENTAL_MID:'https://autenticacion.portaloas.udistrital.edu.co/apioas/gestor_documental_mid/v1',
 };

@@ -21,4 +21,6 @@ export const environment = {
     'ws://autenticacion.portaloas.udistrital.edu.co/apioas/notificacion_mid/v1/ws',
   ADMINISTRATIVA_AMAZON_API:
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_amazon_api/v1',
+    DOCUMENTOS_CRUD_: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2',
+    GESTOR_DOCUMENTAL_MID:'https://autenticacion.portaloas.udistrital.edu.co/apioas/gestor_documental_mid/v1',
 };
