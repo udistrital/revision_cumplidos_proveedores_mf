@@ -167,7 +167,6 @@ export class ListarContratosEvaluarComponent {
   }
 
   async verEvaluacion(element:any) : Promise<void>{
-    console.log("element", element);
   return await this.redirigirVista(element, 'visualizar-evaluacion-contrato');
   }
 
