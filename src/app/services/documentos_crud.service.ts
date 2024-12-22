@@ -22,7 +22,7 @@ const httpOptions = {
   
     get(endpoint: string) {
       this.requestManager.setPath('DOCUMENTOS_CRUD');
-      console.log((environment as any)["DOCUMENTOS_CRUD"]+endpoint);
+      //console.log((environment as any)["DOCUMENTOS_CRUD"]+endpoint);
       return this.requestManager.get(endpoint);
     }
   

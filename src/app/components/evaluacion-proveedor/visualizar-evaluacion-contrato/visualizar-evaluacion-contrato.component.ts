@@ -67,7 +67,6 @@ export class VisualizarEvaluacionContratoComponent {
     this.tittle = 'Ver Evaluación';
     this.evaluacion =
       await this.evaluacionCumplidoProvCrudService.getEvaluacion();
-    console.log('Evaluacioooooon', this.evaluacion);
     await this.obtenerInformacionEvaluacion();
 
     if (
@@ -197,6 +196,7 @@ export class VisualizarEvaluacionContratoComponent {
                 res[0].Enlace
               );
             }
+
             resolve(evaluacion);
           },
           error: (error: any) => {
@@ -237,7 +237,7 @@ export class VisualizarEvaluacionContratoComponent {
       AsignacionId: this.asignacionEvaluadorId,
     };
 
-   let modalVerEvaluacio=  this.dialog.open(ModalVisualizarSoporteComponent, {
+    let modalVerEvaluacio = this.dialog.open(ModalVisualizarSoporteComponent, {
       disableClose: true,
       height: 'auto',
       width: 'auto',
@@ -254,13 +254,11 @@ export class VisualizarEvaluacionContratoComponent {
             Function: async () => {
               this.firmaElectronicaService
                 .FirmarEvaluacion(peticionFirmaElectronica)
-                .then((res: RespuestaFirmaElectronica) => {
-                  
+                .then(async (res: RespuestaFirmaElectronica) => {
                   Swal.close();
                   modalVerEvaluacio.close();
                   if (res.res.Id != null && res.res != undefined) {
-                   
-                    this.ConsultarDocumentoEvaluacion(res.res.Id);
+                    await this.ConsultarDocumentoEvaluacion(res.res.Id);
                     this.dialog.open(ModalVisualizarSoporteComponent, {
                       disableClose: true,
                       height: 'auto',
