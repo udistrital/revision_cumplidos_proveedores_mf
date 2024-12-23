@@ -59,6 +59,7 @@ export class ListarContratosEvaluarComponent {
     await this.consulsarAsignaciones()
     
     this.documentoSupervisor = this.userService.getPayload().documento;
+    console.log("documentoSupervisor", this.documentoSupervisor); 
   }
 
   obtenerListaVigencias() {
@@ -78,7 +79,7 @@ export class ListarContratosEvaluarComponent {
     this.popUpManager.showLoadingAlert("Por favor, espere", "Consultando asignaciones");
     return new Promise((resolve, reject) => {
       this.evaluacionCumplidosMid
-        .get('/consultar-asignaciones/' + this.documentoSupervisor)
+        .get('/asignaciones/consultar/' + this.documentoSupervisor)
         .subscribe({
           next: (res: any) => {
             if (res.Data && res.Data.Asignaciones.length > 0) {
@@ -177,10 +178,16 @@ export class ListarContratosEvaluarComponent {
 
 
 async  redirigirVista(element: any, vista: string): Promise<void> {
-
+  
+ 
     return new Promise( async (resolve) => {
-
-      const evaluacion =  await this.consultarEvaluacionCreada(element.ContratoSuscritoId, element.VigenciaContrato);
+      let evaluacion
+      if(vista=='gestion-evaluadores'){
+         evaluacion =  await this.consultarEvaluacionCreada(element.ContratoSuscritoId, element.VigenciaContrato);
+      }else{
+         evaluacion =  await this.consultarEvaluacionCreada(element.contrato, element.vigencia);
+      }
+      
       await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
   
        this.router.navigate([vista]);
