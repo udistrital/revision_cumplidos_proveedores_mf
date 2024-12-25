@@ -21,16 +21,16 @@ export class EvaluacionCumplidosProveedoresMidService {
     private http: HttpClient,
     private errManager: HttpErrorManager
   ) {
-    this.requestManager.setPath('EVALUACION_CUMPLIDOS_PROVEEDORES_MID');
+    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_MID');
     const acces_token = window.localStorage.getItem('access_token');
   }
 
   get(endpoint: string) {
-    this.requestManager.setPath('EVALUACION_CUMPLIDOS_PROVEEDORES_MID');
+    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_MID');
     return this.requestManager.get(endpoint);
   }
   post(endpoint: any, element: any) {
-    this.requestManager.setPath('EVALUACION_CUMPLIDOS_PROVEEDORES_MID');
+    this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_MID');
     return this.requestManager.post(endpoint, element);
   }
 

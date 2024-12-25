@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CumplidosProveedoresMidService } from './../../../services/cumplidos_proveedores_mid.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserService } from 'src/app/services/user.services';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { EvaluacionCumplidosProveedoresMidService } from 'src/app/services/evaluacion_cumplidos_provedores_mid.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
-
 
 @Component({
   selector: 'app-listar-contratos-evaluar',
@@ -22,6 +21,7 @@ export class ListarContratosEvaluarComponent {
   filtrosForm!: FormGroup;
   vigencias!: number[];
   dataSource: any[] = [];
+  mensajeDeConfirmacion: string = '';
 
   displayedColumns: any[] = [
     { def: 'nombreProveedor', header: 'NOMBRE' },
@@ -43,7 +43,8 @@ export class ListarContratosEvaluarComponent {
     private popUpManager: PopUpManager,
     private evaluacionCumplidosMid: EvaluacionCumplidosProveedoresMidService,
     private evaluacionCumplidosCrud: EvaluacionCumplidoProvCrudService,
-    private router: Router
+    private router: Router,
+    private activateRoute: ActivatedRoute
   ) {
     this.filtrosForm = this.fb.group({
       nombreProveedor: ['', [Validators.minLength(5)]],
@@ -52,12 +53,16 @@ export class ListarContratosEvaluarComponent {
     });
   }
   documentoSupervisor: string = this.userService.getPayload().documento;
- async ngOnInit(){
-    this.tittle = "Lista Proveedores";
-   this.obtenerListaVigencias();
+  async ngOnInit() {
+    //Verificar y mostrar el mensaje de confirmacion despues de realizar una evaluacion
+    this.activateRoute.queryParams.subscribe((params) => {
+      this.mensajeDeConfirmacion = params['mensajeDeConfirmacion'];
+    });
+    this.tittle = 'Lista Proveedores';
+    this.obtenerListaVigencias();
 
-    await this.consulsarAsignaciones()
-    
+    await this.consulsarAsignaciones();
+
     this.documentoSupervisor = this.userService.getPayload().documento;
   }
 
@@ -71,14 +76,20 @@ export class ListarContratosEvaluarComponent {
     return anios;
   }
 
-
-
-
   consulsarAsignaciones(): Promise<void> {
-    this.popUpManager.showLoadingAlert("Por favor, espere", "Consultando asignaciones");
+    console.log(this.mensajeDeConfirmacion);
+    if (this.mensajeDeConfirmacion) {
+      this.popUpManager.showSuccessAlert(this.mensajeDeConfirmacion);
+    } else {
+      this.popUpManager.showLoadingAlert(
+        'Por favor, espere',
+        'Consultando asignaciones'
+      );
+    }
+
     return new Promise((resolve, reject) => {
       this.evaluacionCumplidosMid
-        .get('/consultar-asignaciones/' + this.documentoSupervisor)
+        .get('/asignaciones/consultar/' + this.documentoSupervisor)
         .subscribe({
           next: (res: any) => {
             if (res.Data && res.Data.Asignaciones.length > 0) {
@@ -111,7 +122,7 @@ export class ListarContratosEvaluarComponent {
               this.dataSource = [...this.dataSource, ...asignaciones];
             }
             if (res.Data && res.Data.SinAsignaciones.length > 0) {
-              var asignaciones  = res.Data.SinAsignaciones.map((item: any) => {
+              var asignaciones = res.Data.SinAsignaciones.map((item: any) => {
                 return {
                   nombreProveedor: item.NombreProveedor,
                   dependencia: item.Dependencia,
@@ -123,70 +134,72 @@ export class ListarContratosEvaluarComponent {
                       icon: 'accessibility',
                       actionName: 'crearEv',
                       isActive: true,
-                      
                     },
                   ],
                 };
               });
               this.dataSource = [...this.dataSource, ...asignaciones];
             }
-          },complete:()=>{
-            Swal.close();
-          }
-          ,
+          },
+          complete: () => {
+
+            if (!this.mensajeDeConfirmacion) {
+              Swal.close();
+            }
+            
+          },
         });
     });
   }
 
   handleActionClick(event: { action: any; element: any }) {
-    
     if (event.action.actionName === 'gestionarEv') {
-        
-      const  asignacion={
+      const asignacion = {
         ContratoSuscritoId: event.element.contrato,
         VigenciaContrato: event.element.vigencia,
-      }
+      };
       this.gestionarEvaluacion(asignacion);
-      
     } else if (event.action.actionName === 'crearEv') {
       this.crearEvaluacion(event.element);
-    }
-    else if (event.action.actionName === 'visibility') {
+    } else if (event.action.actionName === 'visibility') {
       this.verEvaluacion(event.element);
-    }
-    else if (event.action.actionName === 'realizarEv') {
+    } else if (event.action.actionName === 'realizarEv') {
       this.realizarEvaluacion(event.element);
     }
   }
 
-
-
-  async realizarEvaluacion(element:any) : Promise<void>{
-  return await this.redirigirVista(element, 'evaluacion-contrato')
+  async realizarEvaluacion(element: any): Promise<void> {
+    return await this.redirigirVista(element, 'evaluacion-contrato');
   }
 
-  async verEvaluacion(element:any) : Promise<void>{
-  return await this.redirigirVista(element, 'visualizar-evaluacion-contrato');
+  async verEvaluacion(element: any): Promise<void> {
+    return await this.redirigirVista(element, 'visualizar-evaluacion-contrato');
   }
-
 
   async gestionarEvaluacion(element: any): Promise<void> {
     return await this.redirigirVista(element, 'gestion-evaluadores');
   }
 
+  async redirigirVista(element: any, vista: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      let evaluacion;
+      if (vista == 'gestion-evaluadores') {
+        evaluacion = await this.consultarEvaluacionCreada(
+          element.ContratoSuscritoId,
+          element.VigenciaContrato
+        );
+      } else {
+        evaluacion = await this.consultarEvaluacionCreada(
+          element.contrato,
+          element.vigencia
+        );
+      }
 
+      await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion);
 
-async  redirigirVista(element: any, vista: string): Promise<void> {
-
-    return new Promise( async (resolve) => {
-
-      const evaluacion =  await this.consultarEvaluacionCreada(element.ContratoSuscritoId, element.VigenciaContrato);
-      await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
-  
-       this.router.navigate([vista]);
-       resolve();
-     });
-
+      this.router.navigate([vista]);
+      resolve();
+    });
   }
 
   async crearEvaluacion(element: any) {
@@ -195,28 +208,28 @@ async  redirigirVista(element: any, vista: string): Promise<void> {
       VigenciaContrato: Number(element.vigencia),
     };
 
-    var evaluacion=  await this.consultarEvaluacionCreada(element.contrato, element.vigencia);
+    var evaluacion = await this.consultarEvaluacionCreada(
+      element.contrato,
+      element.vigencia
+    );
 
-
-    if(evaluacion && evaluacion!=null){
-      this.evaluacionCumplidosCrud.setEvaluacion(evaluacion); 
+    if (evaluacion && evaluacion != null) {
+      this.evaluacionCumplidosCrud.setEvaluacion(evaluacion);
       this.redirigirVista(evaluacion, 'gestion-evaluadores');
-      return Promise.resolve(evaluacion)
-     
-    }else{
+      return Promise.resolve(evaluacion);
+    } else {
       return new Promise((resolve, reject) => {
         this.evaluacionCumplidosCrud
           .post('/evaluacion', solicitudCrearEvaluacion)
           .subscribe({
             next: (res: any) => {
-              console.log("Evaluacion data:", res.Data);
-              this.evaluacionCumplidosCrud.setEvaluacion(res.Data); 
-              debugger
-              console.log("imprimir :", res.Data);
+              console.log('Evaluacion data:', res.Data);
+              this.evaluacionCumplidosCrud.setEvaluacion(res.Data);
+              console.log('imprimir :', res.Data);
               const evaluacion = res.Data;
 
               this.redirigirVista(evaluacion, 'gestion-evaluadores');
-              resolve(res.Data)
+              resolve(res.Data);
             },
             complete: () => {
               this.popUpManager.showSuccessAlert(
