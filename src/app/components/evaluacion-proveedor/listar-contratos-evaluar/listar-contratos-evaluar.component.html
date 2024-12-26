@@ -33,7 +33,7 @@
     </mat-card-content> -->
 
     <mat-card-content>
-      <app-tabla [data]="dataSource" [displayedColumns]="displayedColumns"   (actionClicked)="handleActionClick($event)"/>
+      <app-tabla *ngIf="!loading" [data]="dataSource" [displayedColumns]="displayedColumns" (actionClicked)="handleActionClick($event)"/>
     </mat-card-content>
   </mat-card>
 

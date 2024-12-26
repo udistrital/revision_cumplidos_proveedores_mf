@@ -15,6 +15,25 @@ import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_c
 import { AsignacionEvaluador } from 'src/app/models/evaluacion_cumplido_prov_crud/asignacion_evaluador.model';
 import { CambioEstadoEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/cambio_estado_evaluacion.model';
 import { EstadoEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/estado_evaluacion.model';
+import * as ExcelJS from 'exceljs';
+import { ExcelEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_mid/excel_evaluacion.model';
+import { saveAs } from 'file-saver';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { vfs } from './../../../../assets/vfs_fonts';
+import { Router } from '@angular/router';
+
+(pdfMake as any).addVirtualFileSystem(vfs);
+(pdfMake as any).vfs = vfs;
+(pdfMake as any).fonts = {
+  'Raleway-SemiBold': {
+    normal: 'Raleway-SemiBold',
+    bold: 'Raleway-SemiBold',
+    italics: 'Raleway-SemiBold',
+    light: 'Raleway-SemiBold',
+  },
+};
+
 
 @Component({
   selector: 'app-visualizar-evaluacion-contrato',
@@ -25,6 +44,7 @@ export class VisualizarEvaluacionContratoComponent {
 
   tittle!: string;
   readonly panelOpenState = signal(false);
+  evaluacionId!: number;
   listaItems!: string[];
   listaObservaciones: string[] = [];
   listaEvaluadores: Evaluador[] = [];
@@ -42,8 +62,15 @@ export class VisualizarEvaluacionContratoComponent {
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private evaluacionCumplidoProvCrudService: EvaluacionCumplidoProvCrudService,
+    private router: Router
   ){
-    this.asignacionEvaluadorId = 2;
+    evaluacionCumplidoProvCrudService.asignacionEvaluador$.subscribe((asignacionEvaluador) => {
+      if (asignacionEvaluador) {
+        this.asignacionEvaluadorId = asignacionEvaluador.Id;
+        this.evaluacionId = asignacionEvaluador.EvaluacionId.Id;
+      }
+    })
+
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
   }
 
@@ -98,7 +125,6 @@ export class VisualizarEvaluacionContratoComponent {
           for (const evaluador of this.informacionEvaluacion.Evaluadores) {
             if (evaluador.Observaciones !== "") {
               this.listaObservaciones.push(evaluador.Observaciones);
-            }
           }
 
           this.resultadoEvaluacion = this.informacionEvaluacion.ResultadoEvaluacion;
@@ -106,7 +132,8 @@ export class VisualizarEvaluacionContratoComponent {
 
           this.loading = false;
 
-        },
+        }
+      },
         error: (error: any) => {
           this.popUpManager.showErrorAlert(
             this.translate.instant(
@@ -114,7 +141,7 @@ export class VisualizarEvaluacionContratoComponent {
             )
           );
         }
-      });
+      })
   }
 
   async ObtenerEstadoEvaluacion(){
@@ -154,4 +181,131 @@ export class VisualizarEvaluacionContratoComponent {
     })
   }
 
+  DescargarPdfEvaluacion(){
+    this.evaluacionCumplidoProvMidService
+    .get(`/resultado-final-evaluacion/${this.evaluacionId}`)
+    .pipe(
+      map((response: any) => response.Data as ExcelEvaluacion)
+    )
+    .subscribe({
+      next: (data: ExcelEvaluacion) => {
+        this.convertBase64ExcelToPDFWithStyles(data.File, 'resultado_final_evaluacion.pdf');
+      },
+      error:(error:any) => {
+        this.popUpManager.showErrorAlert(
+          this.translate.instant(
+            'Error al intentar descargar el archivo'
+          )
+        );
+      }
+    })
+  }
+
+
+
+  // Función para convertir base64 a ArrayBuffer
+  base64ToArrayBuffer(base64: string): ArrayBuffer {
+    const binaryString = window.atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  // Función para mapear alineación de Excel a PDFKit
+  mapAlignment(excelAlignment: string | undefined): 'left' | 'center' | 'right' | 'justify' | undefined {
+    switch (excelAlignment) {
+      case 'left':
+      case 'center':
+      case 'right':
+      case 'justify':
+        return excelAlignment;
+      default:
+        return 'left'; // Valor predeterminado
+    }
+  }
+
+  // Función principal para convertir un Excel en base64 a PDF, respetando estilos básicos
+  async convertBase64ExcelToPDFWithStyles(base64Excel: string, pdfFileName: string = 'output.pdf') {
+    try {
+      // 1. Decodificar el archivo Excel desde base64
+      const arrayBuffer = this.base64ToArrayBuffer(base64Excel);
+
+      // 2. Cargar el archivo Excel con ExcelJS
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(arrayBuffer);
+
+      // 3. Seleccionar la primera hoja
+      const worksheet = workbook.worksheets[0];
+
+      // 4. Crear el documento PDF con pdfmake
+      const docDefinition: any = {
+        content: [
+          { text: 'Texto en Raleway-SemiBold', style: 'header' },
+        ],
+        styles: {
+          header: {
+            font: 'Raleway-SemiBold',
+            fontSize: 18,
+            bold: true,
+          },
+        },
+        defaultStyle: {
+          font: 'Raleway-SemiBold',
+        },
+      };
+
+      // 5. Iterar sobre filas y celdas para agregar contenido al PDF
+      worksheet.eachRow((row, rowNumber) => {
+        const rowData: any[] = [];
+
+        row.eachCell((cell, colNumber) => {
+          const cellValue = cell.value ? cell.value.toString() : '';
+          const fill = cell.fill as any;
+          const alignment = cell.alignment;
+          const font = cell.font;
+
+          // Estilos de fondo
+          const backgroundColor = fill && fill.fgColor && fill.fgColor.argb
+            ? `#${fill.fgColor.argb.substring(2)}`
+            : null;
+
+          // Estilos de texto
+          const textColor = font && font.color && font.color.argb
+            ? `#${font.color.argb.substring(2)}`
+            : 'black';
+
+          const cellStyle = {
+            fillColor: backgroundColor,
+            color: textColor,
+            bold: font?.bold,
+            alignment: this.mapAlignment(alignment?.horizontal),
+          };
+
+          // Agregar celda a la fila del PDF
+          rowData.push({ text: cellValue, style: cellStyle });
+        });
+
+        // Agregar la fila al contenido del documento
+        docDefinition.content.push({
+          table: {
+            body: [rowData]
+          },
+          layout: 'Borders' // Sin bordes
+        });
+      });
+
+      // 6. Generar y descargar el PDF
+      pdfMake.createPdf(docDefinition).download(pdfFileName);
+
+      console.log('PDF generado correctamente');
+    } catch (error) {
+      console.error('Error al procesar el archivo Excel:', error);
+    }
+  }
+
+
 }
+

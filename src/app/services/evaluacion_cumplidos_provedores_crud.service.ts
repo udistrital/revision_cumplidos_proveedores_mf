@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { HttpErrorManager } from '../managers/errorManager';
 import { catchError, map } from 'rxjs/operators';
 import { Evaluacion } from '../models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
+import { AsignacionEvaluador } from '../models/evaluacion_cumplido_prov_crud/asignacion_evaluador.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,8 @@ import { Evaluacion } from '../models/evaluacion_cumplidos_proiveedores_crud/eva
 export class EvaluacionCumplidosProveedoresCrudService {
   public httpOptions: any;
   private evaluacionSubject: BehaviorSubject<Evaluacion | null> = new BehaviorSubject<Evaluacion | null>(null);
+  private asignacionEvaluadorSubject: BehaviorSubject<AsignacionEvaluador | null> = new BehaviorSubject<AsignacionEvaluador | null>(null);
+  asignacionEvaluador$ = this.asignacionEvaluadorSubject.asObservable();
 
   acces_token = '';
   constructor(
@@ -54,6 +57,8 @@ export class EvaluacionCumplidosProveedoresCrudService {
     return this.requestManager.post(endpoint, element);
     console.log("Endpointget:", endpoint);
   }
+
+  
 
   
 }

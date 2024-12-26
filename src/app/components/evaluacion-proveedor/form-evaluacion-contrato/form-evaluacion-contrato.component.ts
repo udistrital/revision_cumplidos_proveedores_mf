@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
+import { Evaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/evaluacion.model';
 import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
 
 @Component({
@@ -7,7 +7,7 @@ import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_c
   templateUrl: './form-evaluacion-contrato.component.html',
   styleUrls: ['./form-evaluacion-contrato.component.scss']
 })
-export class FormEvaluacionContratoComponent  implements OnInit{ 
+export class FormEvaluacionContratoComponent  implements OnInit{
   panelEvaluacion:boolean=false
 
   evaluacion!:Evaluacion|null
