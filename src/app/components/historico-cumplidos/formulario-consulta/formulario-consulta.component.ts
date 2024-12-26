@@ -1,4 +1,11 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import Swal from 'sweetalert2';
 import { Month } from 'src/app/models/month.model';
 import { PopUpManager } from 'src/app/managers/popUpManager';
@@ -45,7 +52,7 @@ export class FormularioConsultaComponent implements OnInit {
     private userService: UserService,
     private crudService: CumplidosProveedoresCrudService,
     private jbpmPostService: JbpmServicePost,
-    private utilsService:UtilsService,
+    private utilsService: UtilsService,
     private cdRef: ChangeDetectorRef
   ) {
     this.formularioFiltroHistorico = this.fb.group({
@@ -69,15 +76,27 @@ export class FormularioConsultaComponent implements OnInit {
 
   async consultar() {
     let peticion = {
-      Anios: this.formularioFiltroHistorico.get('anios')?.value.map((val: string | number) => Number(val)) || [],
-      Meses: this.formularioFiltroHistorico.get('meses')?.value.map((val: string | number) => Number(val)) || [],
-      Vigencias: this.formularioFiltroHistorico.get('vigencias')?.value.map((val: string | number) => Number(val)) || [],
-      Proveedores: this.formularioFiltroHistorico.get('nombres_proveedor')?.value.map((proveedor: string) => Number(proveedor)) || [],
+      Anios:
+        this.formularioFiltroHistorico
+          .get('anios')
+          ?.value.map((val: string | number) => Number(val)) || [],
+      Meses:
+        this.formularioFiltroHistorico
+          .get('meses')
+          ?.value.map((val: string | number) => Number(val)) || [],
+      Vigencias:
+        this.formularioFiltroHistorico
+          .get('vigencias')
+          ?.value.map((val: string | number) => Number(val)) || [],
+      Proveedores:
+        this.formularioFiltroHistorico
+          .get('nombres_proveedor')
+          ?.value.map((proveedor: string) => Number(proveedor)) || [],
       Estados: this.formularioFiltroHistorico.get('estados')?.value,
       Dependencias: this.formularioFiltroHistorico.get('dependencias')?.value,
       Contratos: this.formularioFiltroHistorico.get('numeros_contrato')?.value,
     };
-  
+
     this.obtenerListadoHistoricos(peticion);
   }
   async obtenerListadoHistoricos(peticion: any) {
@@ -115,8 +134,10 @@ export class FormularioConsultaComponent implements OnInit {
           }
         },
         error: (error: any) => {
-          Swal.close();;
-          this.popUpManager.showErrorAlert('Error al consultar, intenta de nuevo');
+          Swal.close();
+          this.popUpManager.showErrorAlert(
+            'Error al consultar, intenta de nuevo'
+          );
           this.loading = false;
         },
         complete: () => {
@@ -139,7 +160,6 @@ export class FormularioConsultaComponent implements OnInit {
         )
         .subscribe({
           next: (response: any) => {
-
             let consulta = response.dependencias.dependencia.map(
               (dependencia: any) => {
                 return {
@@ -165,7 +185,7 @@ export class FormularioConsultaComponent implements OnInit {
   async consultarDependenciasOrdenador(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.jbpmService
-        .get('/dependencias_sic/' + this.userService.getPayload().documento)
+        .get('dependencias_sic/' + this.userService.getPayload().documento)
         .subscribe({
           next: (response: any) => {
             let consulta = response.DependenciasSic.Dependencia.map(
@@ -201,7 +221,6 @@ export class FormularioConsultaComponent implements OnInit {
           resolve();
         },
       });
-
     });
   }
 
@@ -232,7 +251,6 @@ export class FormularioConsultaComponent implements OnInit {
   }
 
   async dependenciaChange(envent: string[]) {
-    
     if (envent.length > 0) {
       this.formularioFiltroHistorico.get('nombres_proveedor')?.enable();
       this.formularioFiltroHistorico.get('numeros_contrato')?.enable();
@@ -259,17 +277,22 @@ export class FormularioConsultaComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.jbpmPostService.post('/proveedores_dependencias', body).subscribe({
         next: (response: any) => {
-          if(response.dependencias.proveedor && response.dependencias.proveedor.length>0){
+          if (
+            response.dependencias.proveedor &&
+            response.dependencias.proveedor.length > 0
+          ) {
             this.listaProveedores = response.dependencias.proveedor.map(
               (dependencia: any) => {
                 return {
+                  Nit: dependencia.nit,
                   ProveedorId: dependencia.proveedor_id,
                   NombreProveedor: dependencia.nombre_proveedor,
                 };
               }
             );
             resolve();
-          }else{ this.listaNumerosContratos=[]
+          } else {
+            this.listaNumerosContratos = [];
             resolve();
           }
         },
@@ -277,50 +300,48 @@ export class FormularioConsultaComponent implements OnInit {
     });
   }
   async consultarVigenciasYContratos(body: any): Promise<void> {
-    this.listaNumerosContratos=[]
+    this.listaNumerosContratos = [];
     return new Promise((resolve, reject) => {
       this.jbpmPostService
         .post('/contratos_dependencias_total/', body)
         .subscribe({
           next: (response: any) => {
-           if(response.dependencias.contratos && response.dependencias.contratos.length>0){
-            this.listaContratos = response.dependencias.contratos.map(
-              (contratoItem: any) => {
-                return {
-                  vigencia: contratoItem.vigencia,
-                  contrato: contratoItem.numero_contrato_suscrito,
-                };
-              }
-            );
-            this.listaContratos.forEach((contrato) => {
-              if (!this.listaNumerosContratos.includes(contrato.contrato)) {
-                this.listaNumerosContratos.push(contrato.contrato);
-              }
-            });
-            resolve();
-           }else{
-            this.listaNumerosContratos=[]
-            resolve();
-           }
+            if (
+              response.dependencias.contratos &&
+              response.dependencias.contratos.length > 0
+            ) {
+              this.listaContratos = response.dependencias.contratos.map(
+                (contratoItem: any) => {
+                  return {
+                    vigencia: contratoItem.vigencia,
+                    contrato: contratoItem.numero_contrato_suscrito,
+                  };
+                }
+              );
+              this.listaContratos.forEach((contrato) => {
+                if (!this.listaNumerosContratos.includes(contrato.contrato)) {
+                  this.listaNumerosContratos.push(contrato.contrato);
+                }
+              });
+              resolve();
+            } else {
+              this.listaNumerosContratos = [];
+              resolve();
+            }
           },
         });
     });
   }
 
   contratoChange(elemt: any) {
-
-    elemt.forEach((vigencia2:any)=>{
+    elemt.forEach((vigencia2: any) => {
       this.listaContratos.forEach((vigencia) => {
-
-
         if (vigencia.contrato === vigencia2) {
           if (!this.listaVigencias.includes(vigencia.vigencia)) {
             this.listaVigencias.push(vigencia.vigencia);
           }
         }
       });
-
-    })
-
+    });
   }
 }
