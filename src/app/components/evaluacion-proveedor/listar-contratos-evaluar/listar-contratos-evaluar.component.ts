@@ -64,6 +64,7 @@ export class ListarContratosEvaluarComponent {
     await this.consulsarAsignaciones();
 
     this.documentoSupervisor = this.userService.getPayload().documento;
+    console.log("documentoSupervisor", this.documentoSupervisor); 
   }
 
   obtenerListaVigencias() {
@@ -196,7 +197,6 @@ export class ListarContratosEvaluarComponent {
       }
 
       await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion);
-
       this.router.navigate([vista]);
       resolve();
     });
