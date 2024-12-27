@@ -6,7 +6,10 @@ import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
 import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/app/services/user.services';
-import { InformacionEvaluacion, Resultado } from 'src/app/models/evaluacion_cumplido_prov_mid/informacion-evaluacion.model';
+import {
+  InformacionEvaluacion,
+  Resultado,
+} from 'src/app/models/evaluacion_cumplido_prov_mid/informacion-evaluacion.model';
 import Swal from 'sweetalert2';
 import { map } from 'rxjs/operators';
 import { InformacionGeneralEvaluacion } from 'src/app/models/informacion_general_evaluacion.model';
@@ -15,6 +18,15 @@ import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_c
 import { AsignacionEvaluador } from 'src/app/models/evaluacion_cumplido_prov_crud/asignacion_evaluador.model';
 import { CambioEstadoEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/cambio_estado_evaluacion.model';
 import { EstadoEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/estado_evaluacion.model';
+import { DocumentosCrudService } from './../../../services/documentos_crud.service';
+import { GestorDocumentalService } from 'src/app/services/gestor_documental.service';
+import { GestorDocumental } from './../../../models/gestor_documnental/gestor_ducumental';
+import { ModalVisualizarSoporteComponent } from 'src/app/components/general-components/modal-visualizar-soporte/modal-visualizar-soporte.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FirmaElectronicaService } from 'src/app/services/firma_electronica_mid.service';
+import { PeticionFirmaElectronicaEvaluacion } from './../../../models/evaluacion_cumplido_prov_mid/peticion_firma_electronica_evaluacion';
+import { Button } from 'src/app/models/button.model';
+import { RespuestaFirmaElectronica } from 'src/app/models/evaluacion_cumplido_prov_mid/respuesta_firma_electronica';
 import * as ExcelJS from 'exceljs';
 import { ExcelEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_mid/excel_evaluacion.model';
 import { saveAs } from 'file-saver';
@@ -34,14 +46,12 @@ import { Router } from '@angular/router';
   },
 };
 
-
 @Component({
   selector: 'app-visualizar-evaluacion-contrato',
   templateUrl: './visualizar-evaluacion-contrato.component.html',
-  styleUrls: ['./visualizar-evaluacion-contrato.component.scss']
+  styleUrls: ['./visualizar-evaluacion-contrato.component.scss'],
 })
 export class VisualizarEvaluacionContratoComponent {
-
   tittle!: string;
   readonly panelOpenState = signal(false);
   evaluacionId!: number;
@@ -51,17 +61,22 @@ export class VisualizarEvaluacionContratoComponent {
   resultadoEvaluacion: Resultado = {} as Resultado;
   listaItemsEvaluar: Item[] = [];
   asignacionEvaluadorId: number = 0;
-  informacionEvaluacion!:InformacionEvaluacion;
+  informacionEvaluacion!: InformacionEvaluacion;
   informacionGeneralEvaluacion!: InformacionGeneralEvaluacion;
   estadoEvaluacion: EstadoEvaluacion = {} as EstadoEvaluacion;
   loading: boolean = true;
   dataSource: any[] = [];
-
+  evaluacion!: Evaluacion | null;
+  documentoEvalucion!: GestorDocumental;
   constructor(
     private evaluacionCumplidoProvMidService: EvaluacionCumplidoProvMidService,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private evaluacionCumplidoProvCrudService: EvaluacionCumplidoProvCrudService,
+    private documentosCrudService: DocumentosCrudService,
+    private gestotrDocumental: GestorDocumentalService,
+    private dialog: MatDialog,
+    private firmaElectronicaService: FirmaElectronicaService
     private router: Router
   ){
     evaluacionCumplidoProvCrudService.asignacionEvaluador$.subscribe((asignacionEvaluador) => {
@@ -69,69 +84,79 @@ export class VisualizarEvaluacionContratoComponent {
         this.asignacionEvaluadorId = asignacionEvaluador.Id;
         this.evaluacionId = asignacionEvaluador.EvaluacionId.Id;
       }
-    })
-
+    }
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
   }
 
-
-  async ngOnInit(){
+  async ngOnInit() {
     this.tittle = 'Ver Evaluación';
-    await this.obtenerInformacionEvaluacion()
+    this.evaluacion =
+      await this.evaluacionCumplidoProvCrudService.getEvaluacion();
+    await this.obtenerInformacionEvaluacion();
+
+    if (
+      this.evaluacion?.DocumentoId !== undefined &&
+      this.evaluacion?.DocumentoId !== null
+    ) {
+      this.ConsultarDocumentoEvaluacion(this.evaluacion.DocumentoId);
+    }
   }
 
   displayedColumns: any[] = [
-    {def: 'Identificador', header: 'ID' },
-    {def: 'Nombre', header: 'NOMBRE'},
-    {def: 'FichaTecnica', header: 'DESCRIPCION' },
-    {def: 'Cantidad', header: 'CANTIDAD' },
-    {def: 'Unidad', header: 'UNIDAD'},
-    {def: 'ValorUnitario', header: 'VALOR UNITARIO' },
-    {def: 'Iva', header: 'IVA' }
+    { def: 'Identificador', header: 'ID' },
+    { def: 'Nombre', header: 'NOMBRE' },
+    { def: 'FichaTecnica', header: 'DESCRIPCION' },
+    { def: 'Cantidad', header: 'CANTIDAD' },
+    { def: 'Unidad', header: 'UNIDAD' },
+    { def: 'ValorUnitario', header: 'VALOR UNITARIO' },
+    { def: 'Iva', header: 'IVA' },
   ];
 
-  async obtenerInformacionEvaluacion(){
+  async obtenerInformacionEvaluacion() {
     await this.evaluacionCumplidoProvMidService
-      .get('/informacion-evaluacion/' + this.asignacionEvaluadorId)
-      .pipe(
-        map((response: any) => response.Data as InformacionEvaluacion)
-      )
+      .get('/informacion_evaluacion/' + this.asignacionEvaluadorId)
+      .pipe(map((response: any) => response.Data as InformacionEvaluacion))
       .subscribe({
         next: (data: InformacionEvaluacion) => {
           this.informacionEvaluacion = data;
           this.informacionGeneralEvaluacion = {
-            puntajeTotalEvaluacion: this.informacionEvaluacion.PuntajeTotalEvaluacion,
+            puntajeTotalEvaluacion:
+              this.informacionEvaluacion.PuntajeTotalEvaluacion,
             clasificacion: this.informacionEvaluacion.Clasificacion,
-            dependenciaEvaluadora: this.informacionEvaluacion.DependenciaEvaluadora,
-            fechaEvaluacion: new Date(this.informacionEvaluacion.FechaEvaluacion),
+            dependenciaEvaluadora:
+              this.informacionEvaluacion.DependenciaEvaluadora,
+            fechaEvaluacion: new Date(
+              this.informacionEvaluacion.FechaEvaluacion
+            ),
             nombreEvaluador: this.informacionEvaluacion.NombreEvaluador,
             cargo: this.informacionEvaluacion.Cargo,
             proveedor: this.informacionEvaluacion.EmpresaProveedor,
-            objetoContrato: this.informacionEvaluacion.ObjetoContrato
+            objetoContrato: this.informacionEvaluacion.ObjetoContrato,
           };
 
           this.listaItemsEvaluar = this.informacionEvaluacion.ItemsEvaluados;
           this.ObtenerEstadoEvaluacion();
-          this.listaEvaluadores = this.informacionEvaluacion.Evaluadores.map((evaluador) => {
-            return {
-              numeroCedula: evaluador.Documento,
-              cargo: evaluador.Cargo,
-              itemsEvaluados: evaluador.ItemEvaluado,
-              evaluacionDada: evaluador.PuntajeEvaluacion,
-              porcentajeEvaluacion: evaluador.PorcentajeEvaluacion
-            };
-          });
+          this.listaEvaluadores = this.informacionEvaluacion.Evaluadores.map(
+            (evaluador) => {
+              return {
+                numeroCedula: evaluador.Documento,
+                cargo: evaluador.Cargo,
+                itemsEvaluados: evaluador.ItemEvaluado,
+                evaluacionDada: evaluador.PuntajeEvaluacion,
+                porcentajeEvaluacion: evaluador.PorcentajeEvaluacion,
+              };
+            }
+          );
 
           for (const evaluador of this.informacionEvaluacion.Evaluadores) {
-            if (evaluador.Observaciones !== "") {
+            if (evaluador.Observaciones !== '') {
               this.listaObservaciones.push(evaluador.Observaciones);
           }
 
-          this.resultadoEvaluacion = this.informacionEvaluacion.ResultadoEvaluacion;
-
+          this.resultadoEvaluacion =
+            this.informacionEvaluacion.ResultadoEvaluacion;
 
           this.loading = false;
-
         }
       },
         error: (error: any) => {
@@ -144,168 +169,139 @@ export class VisualizarEvaluacionContratoComponent {
       })
   }
 
-  async ObtenerEstadoEvaluacion(){
+  async ObtenerEstadoEvaluacion() {
     await this.evaluacionCumplidoProvCrudService
-    .get(`/asignacion_evaluador/${this.asignacionEvaluadorId}`)
-    .pipe(
-      map((response: any) => response.Data as AsignacionEvaluador)
-    )
-    .subscribe({
-      next: (data: AsignacionEvaluador) => {
-        console.log("Asignacion Evaluacion", data)
-        this.evaluacionCumplidoProvCrudService
-        .get(`/cambio_estado_evaluacion/?query=EvaluacionId.Id:${data.EvaluacionId.Id},Activo:true&sortby=FechaCreacion&order=desc&limit:1`)
-        .pipe(
-          map((response: any) => response.Data[0] as CambioEstadoEvaluacion)
-        )
+      .get(`/asignacion_evaluador/${this.asignacionEvaluadorId}`)
+      .pipe(map((response: any) => response.Data as AsignacionEvaluador))
+      .subscribe({
+        next: (data: AsignacionEvaluador) => {
+          console.log('Asignacion Evaluacion', data);
+          this.evaluacionCumplidoProvCrudService
+            .get(
+              `/cambio_estado_evaluacion/?query=EvaluacionId.Id:${data.EvaluacionId.Id},Activo:true&sortby=FechaCreacion&order=desc&limit:1`
+            )
+            .pipe(
+              map((response: any) => response.Data[0] as CambioEstadoEvaluacion)
+            )
+            .subscribe({
+              next: (estado_evaluacion: CambioEstadoEvaluacion) => {
+                this.estadoEvaluacion = estado_evaluacion.EstadoEvaluacionId;
+              },
+              error: (error: any) => {
+                this.popUpManager.showErrorAlert(
+                  this.translate.instant(
+                    'Error al intentar cargar la información del estado de la evaluación'
+                  )
+                );
+              },
+            });
+        },
+        error: (error: any) => {
+          this.popUpManager.showErrorAlert(
+            this.translate.instant(
+              'Error al intentar cargar la información del evaluador'
+            )
+          );
+        },
+      });
+  }
+
+  //Consulta el documento  en documentos crud y regresa la consulta de gestor documental
+  async ConsultarDocumentoEvaluacion(
+    idDocumentoEvaluacion: number
+  ): Promise<GestorDocumental> {
+    let evaluacion: GestorDocumental = {} as GestorDocumental;
+    return new Promise((resolve, reject) => {
+      this.documentosCrudService
+        .get(`/documento/?limit=-1&query=Id.in:${idDocumentoEvaluacion}`)
         .subscribe({
-          next: (estado_evaluacion: CambioEstadoEvaluacion) => {
-            this.estadoEvaluacion = estado_evaluacion.EstadoEvaluacionId;
+          next: async (res: any) => {
+            if (res.length > 0) {
+              evaluacion = await this.ConsultarDocumentoPorEnlace(
+                res[0].Enlace
+              );
+            }
+
+            resolve(evaluacion);
           },
           error: (error: any) => {
             this.popUpManager.showErrorAlert(
               this.translate.instant(
-                'Error al intentar cargar la información del estado de la evaluación'
+                'Error al intentar cargar la información del documento de la evaluación'
               )
             );
+          },
+        });
+    });
+  }
+
+  //Consulta el documento  en gestor documental
+  async ConsultarDocumentoPorEnlace(url: string): Promise<GestorDocumental> {
+    return new Promise((resolve, reject) => {
+      this.gestotrDocumental.get(`/document/${url}`).subscribe({
+        next: (res: any) => {
+          if (res != null) {
+            this.documentoEvalucion = res;
           }
-        })
-      },
-      error: (error: any) => {
-        this.popUpManager.showErrorAlert(
-          this.translate.instant(
-            'Error al intentar cargar la información del evaluador'
-          )
-        );
-      }
-    })
-  }
-
-  DescargarPdfEvaluacion(){
-    this.evaluacionCumplidoProvMidService
-    .get(`/resultado-final-evaluacion/${this.evaluacionId}`)
-    .pipe(
-      map((response: any) => response.Data as ExcelEvaluacion)
-    )
-    .subscribe({
-      next: (data: ExcelEvaluacion) => {
-        this.convertBase64ExcelToPDFWithStyles(data.File, 'resultado_final_evaluacion.pdf');
-      },
-      error:(error:any) => {
-        this.popUpManager.showErrorAlert(
-          this.translate.instant(
-            'Error al intentar descargar el archivo'
-          )
-        );
-      }
-    })
-  }
-
-
-
-  // Función para convertir base64 a ArrayBuffer
-  base64ToArrayBuffer(base64: string): ArrayBuffer {
-    const binaryString = window.atob(base64);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes.buffer;
-  }
-
-  // Función para mapear alineación de Excel a PDFKit
-  mapAlignment(excelAlignment: string | undefined): 'left' | 'center' | 'right' | 'justify' | undefined {
-    switch (excelAlignment) {
-      case 'left':
-      case 'center':
-      case 'right':
-      case 'justify':
-        return excelAlignment;
-      default:
-        return 'left'; // Valor predeterminado
-    }
-  }
-
-  // Función principal para convertir un Excel en base64 a PDF, respetando estilos básicos
-  async convertBase64ExcelToPDFWithStyles(base64Excel: string, pdfFileName: string = 'output.pdf') {
-    try {
-      // 1. Decodificar el archivo Excel desde base64
-      const arrayBuffer = this.base64ToArrayBuffer(base64Excel);
-
-      // 2. Cargar el archivo Excel con ExcelJS
-      const workbook = new ExcelJS.Workbook();
-      await workbook.xlsx.load(arrayBuffer);
-
-      // 3. Seleccionar la primera hoja
-      const worksheet = workbook.worksheets[0];
-
-      // 4. Crear el documento PDF con pdfmake
-      const docDefinition: any = {
-        content: [
-          { text: 'Texto en Raleway-SemiBold', style: 'header' },
-        ],
-        styles: {
-          header: {
-            font: 'Raleway-SemiBold',
-            fontSize: 18,
-            bold: true,
-          },
+          resolve(this.documentoEvalucion);
         },
-        defaultStyle: {
-          font: 'Raleway-SemiBold',
+        error: (error: any) => {
+          this.popUpManager.showErrorAlert(
+            this.translate.instant(
+              'Error al intentar cargar la información del documento de la evaluación'
+            )
+          );
         },
-      };
-
-      // 5. Iterar sobre filas y celdas para agregar contenido al PDF
-      worksheet.eachRow((row, rowNumber) => {
-        const rowData: any[] = [];
-
-        row.eachCell((cell, colNumber) => {
-          const cellValue = cell.value ? cell.value.toString() : '';
-          const fill = cell.fill as any;
-          const alignment = cell.alignment;
-          const font = cell.font;
-
-          // Estilos de fondo
-          const backgroundColor = fill && fill.fgColor && fill.fgColor.argb
-            ? `#${fill.fgColor.argb.substring(2)}`
-            : null;
-
-          // Estilos de texto
-          const textColor = font && font.color && font.color.argb
-            ? `#${font.color.argb.substring(2)}`
-            : 'black';
-
-          const cellStyle = {
-            fillColor: backgroundColor,
-            color: textColor,
-            bold: font?.bold,
-            alignment: this.mapAlignment(alignment?.horizontal),
-          };
-
-          // Agregar celda a la fila del PDF
-          rowData.push({ text: cellValue, style: cellStyle });
-        });
-
-        // Agregar la fila al contenido del documento
-        docDefinition.content.push({
-          table: {
-            body: [rowData]
-          },
-          layout: 'Borders' // Sin bordes
-        });
       });
-
-      // 6. Generar y descargar el PDF
-      pdfMake.createPdf(docDefinition).download(pdfFileName);
-
-      console.log('PDF generado correctamente');
-    } catch (error) {
-      console.error('Error al procesar el archivo Excel:', error);
-    }
+    });
   }
+  
+  async ModalVerEvaluacion() {
+    const peticionFirmaElectronica: PeticionFirmaElectronicaEvaluacion = {
+      PersonaId: '79777053',
+      AsignacionId: this.asignacionEvaluadorId,
+    };
 
-
+    let modalVerEvaluacio = this.dialog.open(ModalVisualizarSoporteComponent, {
+      disableClose: true,
+      height: 'auto',
+      width: 'auto',
+      maxWidth: '60vw',
+      maxHeight: '80vh',
+      panelClass: 'custom-dialog-container',
+      data: {
+        url: this.documentoEvalucion.file,
+        ModalButtonsFunc: [
+          {
+            Color: '#8c1a19',
+            Text: 'Firmar',
+            TextColor: '#ffffff',
+            Function: async () => {
+              this.firmaElectronicaService
+                .FirmarEvaluacion(peticionFirmaElectronica)
+                .then(async (res: RespuestaFirmaElectronica) => {
+                  Swal.close();
+                  modalVerEvaluacio.close();
+                  if (res.res.Id != null && res.res != undefined) {
+                    await this.ConsultarDocumentoEvaluacion(res.res.Id);
+                    this.dialog.open(ModalVisualizarSoporteComponent, {
+                      disableClose: true,
+                      height: 'auto',
+                      width: 'auto',
+                      maxWidth: '60vw',
+                      maxHeight: '80vh',
+                      panelClass: 'custom-dialog-container',
+                      data: {
+                        url: this.documentoEvalucion.file,
+                      },
+                    });
+                  }
+                });
+            },
+          },
+        ],
+      },
+    });
+  }
 }
 

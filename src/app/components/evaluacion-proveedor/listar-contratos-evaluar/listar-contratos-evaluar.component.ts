@@ -80,7 +80,7 @@ export class ListarContratosEvaluarComponent {
     });
 
     this.documentoSupervisor = this.user.getPayload().documento;
-
+    console.log("documentoSupervisor", this.documentoSupervisor); 
   }
 
   obtenerAsignacionesEvaluador(){
@@ -340,8 +340,6 @@ export class ListarContratosEvaluarComponent {
     }
 
 
-  
-
   handleActionClick(event: {action: any, element: any}) {
     if (event.action.actionName === 'edit') {
       this.realizarEvaluacion(event.element.asignacionEvaluadorId);
@@ -350,6 +348,12 @@ export class ListarContratosEvaluarComponent {
     } else if (event.action.actionName === 'accessibility'){
       this.gestionarEvaluacion(event.element);
     }
+  /*
+      await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion);
+      this.router.navigate([vista]);
+      resolve();
+    });
+    */
   }
 
 
