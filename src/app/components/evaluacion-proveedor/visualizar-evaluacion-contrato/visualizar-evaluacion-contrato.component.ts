@@ -27,6 +27,24 @@ import { FirmaElectronicaService } from 'src/app/services/firma_electronica_mid.
 import { PeticionFirmaElectronicaEvaluacion } from './../../../models/evaluacion_cumplido_prov_mid/peticion_firma_electronica_evaluacion';
 import { Button } from 'src/app/models/button.model';
 import { RespuestaFirmaElectronica } from 'src/app/models/evaluacion_cumplido_prov_mid/respuesta_firma_electronica';
+import * as ExcelJS from 'exceljs';
+import { ExcelEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_mid/excel_evaluacion.model';
+import { saveAs } from 'file-saver';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { vfs } from './../../../../assets/vfs_fonts';
+import { Router } from '@angular/router';
+
+(pdfMake as any).addVirtualFileSystem(vfs);
+(pdfMake as any).vfs = vfs;
+(pdfMake as any).fonts = {
+  'Raleway-SemiBold': {
+    normal: 'Raleway-SemiBold',
+    bold: 'Raleway-SemiBold',
+    italics: 'Raleway-SemiBold',
+    light: 'Raleway-SemiBold',
+  },
+};
 
 @Component({
   selector: 'app-visualizar-evaluacion-contrato',
@@ -36,6 +54,7 @@ import { RespuestaFirmaElectronica } from 'src/app/models/evaluacion_cumplido_pr
 export class VisualizarEvaluacionContratoComponent {
   tittle!: string;
   readonly panelOpenState = signal(false);
+  evaluacionId!: number;
   listaItems!: string[];
   listaObservaciones: string[] = [];
   listaEvaluadores: Evaluador[] = [];
@@ -58,8 +77,14 @@ export class VisualizarEvaluacionContratoComponent {
     private gestotrDocumental: GestorDocumentalService,
     private dialog: MatDialog,
     private firmaElectronicaService: FirmaElectronicaService
-  ) {
-    this.asignacionEvaluadorId = 41;
+    private router: Router
+  ){
+    evaluacionCumplidoProvCrudService.asignacionEvaluador$.subscribe((asignacionEvaluador) => {
+      if (asignacionEvaluador) {
+        this.asignacionEvaluadorId = asignacionEvaluador.Id;
+        this.evaluacionId = asignacionEvaluador.EvaluacionId.Id;
+      }
+    }
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
   }
 
@@ -126,22 +151,22 @@ export class VisualizarEvaluacionContratoComponent {
           for (const evaluador of this.informacionEvaluacion.Evaluadores) {
             if (evaluador.Observaciones !== '') {
               this.listaObservaciones.push(evaluador.Observaciones);
-            }
           }
 
           this.resultadoEvaluacion =
             this.informacionEvaluacion.ResultadoEvaluacion;
 
           this.loading = false;
-        },
+        }
+      },
         error: (error: any) => {
           this.popUpManager.showErrorAlert(
             this.translate.instant(
               'Error al intentar cargar la información del evaluador'
             )
           );
-        },
-      });
+        }
+      })
   }
 
   async ObtenerEstadoEvaluacion() {
@@ -230,7 +255,7 @@ export class VisualizarEvaluacionContratoComponent {
       });
     });
   }
-
+  
   async ModalVerEvaluacion() {
     const peticionFirmaElectronica: PeticionFirmaElectronicaEvaluacion = {
       PersonaId: '79777053',
@@ -279,3 +304,4 @@ export class VisualizarEvaluacionContratoComponent {
     });
   }
 }
+

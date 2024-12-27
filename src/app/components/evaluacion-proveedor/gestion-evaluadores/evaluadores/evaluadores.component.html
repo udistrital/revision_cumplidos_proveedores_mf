@@ -19,7 +19,7 @@
           [formGroup]="formAddEvaluadores"
           (submit)="agregarEvaluador()"
         >
-         
+
           <div class="box-form">
             <div class="wp-collection-item">
               <p class="labels">N° de Documento</p>
@@ -36,8 +36,8 @@
                 </mat-error>
               </mat-form-field>
 
-              <div *ngIf="evaluadres.length  >0">
-                <li *ngFor="let persona of evaluadres"> {{ persona.nombre }} - {{ persona.documento }}
+              <div *ngIf="evaluadores.length  >0">
+                <li *ngFor="let persona of evaluadores"> {{ persona.nombre }} - {{ persona.documento }}
                 </li>
               </div>
             </div>
@@ -56,7 +56,7 @@
               <mat-form-field>
                 <mat-label class="center-label">item a evaluar</mat-label>
                 <mat-select multiple formControlName="item_a_evaluar">
-                  <mat-option *ngFor="let item of listaItems" [value]="item.Id">
+                  <mat-option *ngFor="let item of listaItems" [value]="item">
                     {{item.Nombre}}
                   </mat-option>
                 </mat-select>
@@ -66,10 +66,10 @@
               </mat-form-field>
             </div>
             <div class="wp-collection-item">
-              <p class="labels">Procentaje de la evaluacion</p>
+              <p class="labels">Porcentaje de la evaluacion</p>
               <mat-form-field>
                 <mat-label class="center-label"
-                  >Procentaje de la evaluacion</mat-label
+                  >Porcentaje de la evaluacion</mat-label
                 >
                 <input matInput formControlName="porcentaje" type="text"  (input)="validarNumero('porcentaje',$event)"/>
                 <mat-error *ngIf=" formularioEnviado  && formAddEvaluadores.get('porcentaje')?.invalid" class="label-error">
@@ -88,13 +88,13 @@
               <mat-icon>add</mat-icon>
               Agregar
             </button>
-            
+
           </div>
         </form>
 
       </div>
 
-     
+
       <app-card-lista-evaluadores [listaEvaluadores]="listaEvaluadores" [eliminarItem]="eliminarItem.bind(this)"></app-card-lista-evaluadores>
 
     </article>

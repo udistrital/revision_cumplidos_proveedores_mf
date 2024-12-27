@@ -5,16 +5,16 @@
     </mat-card-title>
     <div class="card-container">
       <mat-card-content class="container-botones">
-        <button mat-button style="color:white" class="button">
-          <mat-icon style="color:white">file_download</mat-icon> DESCARGAR EVALUACIÓN
-        </button>
         <button *ngIf="(estadoEvaluacion.CodigoAbreviacion === 'AEV') && informacionEvaluacion.CodigoAbreviacionRol === 'SP'" mat-button style="color:white" class="button">
           <mat-icon style="color:white">turned_in</mat-icon> CARGAR EVALUACIÓN
         </button>
         <button *ngIf="estadoEvaluacion.CodigoAbreviacion === 'PRE'" mat-button style="color:white" class="button">
           <mat-icon style="color:white">border_color</mat-icon> FIRMAR
         </button>
-        <button mat-button style="color:white; background-color:#D65756" class="button">
+        <button *ngIf="estadoEvaluacion.CodigoAbreviacion === 'AEV' || estadoEvaluacion.CodigoAbreviacion === 'PRE'" (click)="DescargarPdfEvaluacion()" mat-button style="color:white" class="button">
+          <mat-icon style="color:white">file_download</mat-icon> DESCARGAR EVALUACIÓN
+        </button>
+        <button routerLink="/listar-contratos-evaluar" mat-button style="color:white; background-color:#D65756" class="button">
           <mat-icon style="color:white">keyboard_arrow_left</mat-icon> REGRESAR
         </button>
       </mat-card-content>
@@ -30,7 +30,7 @@
     <app-visualizar-evaluadores [evaluadores]="listaEvaluadores" />
   </div>
 
-  
+
 
 
   <mat-card class="card-container">
