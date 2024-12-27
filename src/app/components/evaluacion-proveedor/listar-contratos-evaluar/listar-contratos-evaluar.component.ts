@@ -10,10 +10,13 @@ import Swal from 'sweetalert2';
 import { AsignacionEvaluador } from 'src/app/models/evaluacion_cumplido_prov_crud/asignacion_evaluador.model';
 import { Evaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/evaluacion.model';
 import { ResultadoEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/resultado_evaluacion.model';
-import { Router } from '@angular/router';
 import { BodySolicitudEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/solicitud_evaluacion.model';
 import { CambioEstadoEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/cambio_estado_evaluacion.model';
-
+import { CumplidosProveedoresMidService } from './../../../services/cumplidos_proveedores_mid.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { EvaluacionCumplidosProveedoresMidService } from 'src/app/services/evaluacion_cumplidos_provedores_mid.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-listar-contratos-evaluar',
   templateUrl: './listar-contratos-evaluar.component.html',
@@ -22,13 +25,16 @@ import { CambioEstadoEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_
 export class ListarContratosEvaluarComponent {
 
   tittle!: string;
-  //filtrosForm!: FormGroup;
+  filtrosForm!: FormGroup;
   //vigencias!: number[];
   documento_evaluador!: string;
   dataSource: any[] = [];
   loading: boolean = true;
   asignacionEvaluador!: AsignacionEvaluador;
   evaluacion!: Evaluacion;
+  mensajeDeConfirmacion: string = '';
+  documentoSupervisor: string = this.user.getPayload().documento;
+
 
   displayedColumns: any[] = [
     {def: 'nombreProveedor', header: 'NOMBRE' },
@@ -50,16 +56,31 @@ export class ListarContratosEvaluarComponent {
     private evaluacionCumplidoProvCrudService: EvaluacionCumplidoProvCrudService,
     private user: UserService,
     private popUpManager: PopUpManager,
+    private evaluacionCumplidosMid: EvaluacionCumplidosProveedoresMidService,
+    private evaluacionCumplidosCrud: EvaluacionCumplidoProvCrudService,
+    private activateRoute: ActivatedRoute,
     private router: Router
   ){
     this.documento_evaluador = user.getPayload().documento;
-    this.documento_evaluador = '79777053'
+    this.filtrosForm = this.fb.group({
+      nombreProveedor: ['', [Validators.minLength(5)]],
+      numeroContrato: ['', [Validators.pattern(/^[0-9]+$/)]],
+      vigencia: ['', [Validators.pattern(/^[0-9]+$/)]],
+    });
   }
 
   async ngOnInit(){
     this.tittle = "Lista Proveedores";
     this.obtenerAsignacionesEvaluador();
     //this.vigencias = this.obtenerListaVigencias();
+
+    //Verificar y mostrar el mensaje de confirmacion despues de realizar una evaluacion
+    this.activateRoute.queryParams.subscribe((params) => {
+      this.mensajeDeConfirmacion = params['mensajeDeConfirmacion'];
+    });
+
+    this.documentoSupervisor = this.user.getPayload().documento;
+
   }
 
   obtenerAsignacionesEvaluador(){
@@ -83,6 +104,7 @@ export class ListarContratosEvaluarComponent {
         }
         if (data.Asignaciones && data.Asignaciones.length > 0) {
           data.Asignaciones.forEach((asignacion) => {
+            //if (asignacion.EstadoAsignacionEvaluador && asignacion.EstadoAsignacionEvaluador.Id === 1 &&  asignacion.EstadoEvaluacion &&  asignacion.EstadoEvaluacion?.CodigoAbreviacion !== 'GNT' && asignacion.RolEvaluador === 'SP'){}
             this.dataSource.push({
               asignacionEvaluadorId: asignacion.AsignacionEvaluacionId,
               nombreProveedor: asignacion.NombreProveedor,
@@ -154,6 +176,16 @@ export class ListarContratosEvaluarComponent {
         this.loading = false;
       }
     })
+  }
+
+  obtenerListaVigencias() {
+    const anioActual = new Date().getFullYear(); // Obtiene el año actual
+    const anios = [];
+
+    for (let i = 2017; i <= anioActual; i++) {
+      anios.push(i);
+    }
+    return anios;
   }
 
   async realizarEvaluacion(asignacionEvaluadorId: number){
@@ -243,30 +275,44 @@ export class ListarContratosEvaluarComponent {
 
     async gestionarEvaluacion(asignacionEvaluador: any){
       if (asignacionEvaluador.EvaluacionId === 0) {
-        let confirm = await this.popUpManager.showConfirmAlert('No hay una evaluación creada para este contrato, ¿Desea crear una nueva?');
-          if (confirm.isConfirmed){
-            let bodySolicitudEvaluacion: BodySolicitudEvaluacion;
-            bodySolicitudEvaluacion = {
-              ContratoSuscritoId: Number(asignacionEvaluador.contrato),
-              VigenciaContrato: Number(asignacionEvaluador.vigencia)
-            }
-            await this.evaluacionCumplidoProvCrudService
-            .post(`/crear_solicitud_evaluacion`, bodySolicitudEvaluacion)
-            .pipe(
-              map((response:any) => response.Data as Evaluacion)
-            )
-            .subscribe({
-              next: async (data:Evaluacion) => {
-                await this.evaluacionCumplidoProvCrudService.setEvaluacion(data);
-                this.router.navigate(['/gestion-evaluadores']);
-              },
-              error: (error: any) => {
-                this.popUpManager.showErrorAlert(
-                  'Error al intentar crear la solicitud de evaluación.'
-                );
+        await this.evaluacionCumplidoProvCrudService
+        .get(`/evaluacion/?query=ContratoSuscritoId:${asignacionEvaluador.contrato},VigenciaContrato:${asignacionEvaluador.vigencia},Activo:true&sortby=FechaCreacion&order=desc&limit=-1`)
+        .pipe(
+          map((res: any) => res.Data as Evaluacion[])
+        )
+        .subscribe({
+          next: async (data: Evaluacion[]) => {
+            if (data[0].Id === undefined){
+              let confirm = await this.popUpManager.showConfirmAlert('No hay una evaluación creada para este contrato, ¿Desea crear una nueva?');
+              if (confirm.isConfirmed){
+                let bodySolicitudEvaluacion: BodySolicitudEvaluacion;
+                bodySolicitudEvaluacion = {
+                  ContratoSuscritoId: Number(asignacionEvaluador.contrato),
+                  VigenciaContrato: Number(asignacionEvaluador.vigencia)
+                }
+                await this.evaluacionCumplidoProvCrudService
+                .post(`/crear_solicitud_evaluacion`, bodySolicitudEvaluacion)
+                .pipe(
+                  map((response:any) => response.Data as Evaluacion)
+                )
+                .subscribe({
+                  next: async (data:Evaluacion) => {
+                    await this.evaluacionCumplidoProvCrudService.setEvaluacion(data);
+                    this.router.navigate(['/gestion-evaluadores']);
+                  },
+                  error: (error: any) => {
+                    this.popUpManager.showErrorAlert(
+                      'Error al intentar crear la solicitud de evaluación.'
+                    );
+                  }
+                })
               }
-            })
+            } else {
+              await this.evaluacionCumplidoProvCrudService.setEvaluacion(data[0]);
+              this.router.navigate(['/gestion-evaluadores']);
+            }
           }
+        }) 
       } else {
         await this.evaluacionCumplidoProvCrudService.setEvaluacionWithId(asignacionEvaluador.EvaluacionId);
         await this.evaluacionCumplidoProvCrudService.setAsignacionEvaluador(asignacionEvaluador.AsignacionEvaluacionId);
