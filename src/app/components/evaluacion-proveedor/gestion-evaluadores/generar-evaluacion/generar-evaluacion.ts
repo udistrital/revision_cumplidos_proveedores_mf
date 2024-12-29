@@ -1,14 +1,25 @@
 import { style } from '@angular/animations';
 import { Injectable } from '@angular/core';
 import { PdfMakeWrapper, Table } from 'pdfmake-wrapper';
+import {
+  EvaluadorDocumento,
+  InformacionDocumentoEvaluacion,
+  ResultadoDocumentoEvaluacion,
+} from 'src/app/models/evaluacion_cumplido_prov_mid/informacion_documento_evaluacion';
 import pdfFontTime from 'src/assets/fonts/vfs_fonts_times.js';
 import { LOGOS } from 'src/assets/img/logos';
+import { Evaluador } from './../../../../models/evaluador';
+import { Subject } from 'rxjs';
+import { List } from 'pdfmake-wrapper/lib/definitions/list/list';
+import { Resultado } from './../../../../models/evaluacion_cumplido_prov_mid/informacion-evaluacion.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GenerarPdfEvaluacion {
-  public generatePdf(): void {
+  resuldoNumerico: number = 0;
+
+  public generatePdf(infoDocEvaluacion: InformacionDocumentoEvaluacion): void {
     PdfMakeWrapper.setFonts(pdfFontTime, {
       TimesNewRoman: {
         normal: 'Times-Regular.ttf',
@@ -24,16 +35,31 @@ export class GenerarPdfEvaluacion {
     pdf.pageOrientation('landscape');
     pdf.styles(this.obtenerEstilos());
     pdf.add(this.obtenerHeader());
-    pdf.add(this.dependenciaEvaluadora());
-    pdf.add(this.obtenerEmpresa());
-    pdf.add(this.obtenerObjetoDelContrato());
-    pdf.add(this.obtenerItemsEvaluados());
-    pdf.add(this.obtenerNombreDelEncargadoDeLaEvaluacion());
+    pdf.add(this.dependenciaEvaluadora(infoDocEvaluacion));
+    pdf.add(this.obtenerEmpresa(infoDocEvaluacion));
+    pdf.add(this.obtenerObjetoDelContrato(infoDocEvaluacion));
+    infoDocEvaluacion.ResultadoFinalEvaluacion.Evaluadores.forEach(
+      (evaluador) => {
+        pdf.add(this.obtenerItemsEvaluados(evaluador));
+        pdf.add(this.obtenerNombreDelEncargadoDeLaEvaluacion(evaluador));
+      }
+    );
+
     pdf.add(this.criterio());
-    pdf.add(this.cumplimiento());
-    pdf.add(this.calidad());
-    pdf.add(this.posContraActual());
-    pdf.add(this.gestion());
+    pdf.add(
+      this.cumplimiento(infoDocEvaluacion.ResultadoFinalEvaluacion.Resultados)
+    );
+    pdf.add(
+      this.calidad(infoDocEvaluacion.ResultadoFinalEvaluacion.Resultados)
+    );
+    pdf.add(
+      this.posContraActual(
+        infoDocEvaluacion.ResultadoFinalEvaluacion.Resultados
+      )
+    );
+    pdf.add(
+      this.gestion(infoDocEvaluacion.ResultadoFinalEvaluacion.Resultados)
+    );
     pdf.add(this.convencion());
     pdf.create().open();
   }
@@ -41,7 +67,7 @@ export class GenerarPdfEvaluacion {
   obtenerHeader(): any {
     return {
       layout: 'default',
-      margin: [0, 0, 0, 0],
+      margin: [0, 0, 0, 0], pageBreak: 'auto',
 
       table: {
         widths: ['10%', '45%', '30%', '15%'],
@@ -119,14 +145,16 @@ export class GenerarPdfEvaluacion {
             '',
           ],
         ],
-      },
+      }, 
     };
   }
 
-  dependenciaEvaluadora(): any {
+  dependenciaEvaluadora(
+    infoDocEvaluacion: InformacionDocumentoEvaluacion
+  ): any {
     return {
       layout: 'default',
-      margin: [0, 5, 0, 0],
+      margin: [0, 5, 0, 0], pageBreak: 'auto',
       table: {
         widths: ['22.6%', '53%', '9.4%', '15%'],
         body: [
@@ -137,8 +165,8 @@ export class GenerarPdfEvaluacion {
               border: [true, true, true, true],
             },
             {
-              text: '',
-              style: '',
+              text: infoDocEvaluacion.Dependencia,
+              style: 'TextoNormal',
               border: [true, true, true, true],
             },
             {
@@ -157,10 +185,10 @@ export class GenerarPdfEvaluacion {
     };
   }
 
-  obtenerEmpresa(): any {
+  obtenerEmpresa(infoDocEvaluacion: InformacionDocumentoEvaluacion): any {
     return {
       layout: 'default',
-      margin: [0, 0, 0, 0],
+      margin: [0, 0, 0, 0], pageBreak: 'auto',
       table: {
         widths: ['22%', '78%'],
         body: [
@@ -171,8 +199,8 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '',
-              style: '',
+              text: infoDocEvaluacion.EmpresaProveedor,
+              style: 'TextoNormal',
               border: [true, false, true, true],
             },
           ],
@@ -181,10 +209,12 @@ export class GenerarPdfEvaluacion {
     };
   }
 
-  obtenerObjetoDelContrato(): any {
+  obtenerObjetoDelContrato(
+    infoDocEvaluacion: InformacionDocumentoEvaluacion
+  ): any {
     return {
       layout: 'default',
-      margin: [0, 0, 0, 0],
+      margin: [0, 0, 0, 0], pageBreak: 'auto',
       table: {
         widths: ['22%', '78%'],
         body: [
@@ -195,8 +225,8 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '',
-              style: '',
+              text: infoDocEvaluacion.ObjetoContrato,
+              style: 'TextoNormal',
               border: [true, false, true, true],
             },
           ],
@@ -205,34 +235,36 @@ export class GenerarPdfEvaluacion {
     };
   }
 
-  obtenerItemsEvaluados(): any {
+  obtenerItemsEvaluados(evaluador: EvaluadorDocumento): any {
     return {
       layout: 'default',
-      margin: [0, 0, 0, 0],
+      margin: [0, 5, 0, 0],
       table: {
+        dontBreakRows: true,
         widths: ['22%', '78%'],
         body: [
           [
             {
               text: 'ITEM EVALUADO (*):',
               style: 'TablaInfo',
-              border: [true, false, true, true],
+              border: [true, true, true, true],
             },
             {
-              text: '',
-              style: '',
-              border: [true, false, true, true],
+              text: evaluador.Items,
+              style: 'TextoNormal',
+              border: [true, true, true, true],
             },
           ],
         ],
       },
+    
     };
   }
 
-  obtenerNombreDelEncargadoDeLaEvaluacion(): any {
+  obtenerNombreDelEncargadoDeLaEvaluacion(evaluador: EvaluadorDocumento): any {
     return {
       layout: 'default',
-      margin: [0, 0, 0, 0],
+      margin: [0, 0, 0, 5], pageBreak: 'auto',
       table: {
         widths: ['22.55%', '52%', '11%', '14.45%'],
         body: [
@@ -245,8 +277,8 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '1',
-              style: '',
+              text: evaluador.Nombre,
+              style: 'TextoNormal',
               margin: [0, 5, 0, 0],
               alignment: 'left',
               border: [true, false, true, true],
@@ -259,9 +291,9 @@ export class GenerarPdfEvaluacion {
               margin: [0, 5, 0, 0],
             },
             {
-              text: '',
+              text: evaluador.Cargo,
               alignment: 'left',
-              style: '',
+              style: 'TextoNormal',
               border: [true, false, true, true],
             },
           ],
@@ -272,7 +304,7 @@ export class GenerarPdfEvaluacion {
 
   criterio(): any {
     return {
-      layout: 'default',
+      layout: 'default', pageBreak: 'auto',
       margin: [0, 3, 0, 0],
       table: {
         widths: ['11%', '11%', '41%', '11%', '11%', '15%'],
@@ -324,12 +356,27 @@ export class GenerarPdfEvaluacion {
           ],
         ],
       },
+    
     };
   }
 
-  cumplimiento(): any {
+  cumplimiento(resultado: ResultadoDocumentoEvaluacion[]): any {
+    let pregunta1 =
+      '¿Se cumplieron los tiempos de entrega de bienes o la prestación del servicios ofertados por el proveedor?';
+    let pregunta2 = '¿Se entregan las cantidades solicitadas?';
+
+    let CANTIDADES = this.obtenerResultadoPorTitulo(pregunta2, resultado);
+    let TIEMPOS_DE_ENTREGA = this.obtenerResultadoPorTitulo(
+      pregunta1,
+      resultado
+    );
+    let listaCumplimiento = [CANTIDADES, TIEMPOS_DE_ENTREGA];
+
+    let sumaPuntaje = this.sumarValoresSiCumple(listaCumplimiento);
+    this.calcularTotalNumerico(sumaPuntaje);
+
     return {
-      layout: 'default',
+      layout: 'default', pageBreak: 'auto',
       margin: [0, 0, 0, 0],
       table: {
         widths: ['11%', '11%', '41%', '11%', '11%', '15%'],
@@ -352,28 +399,28 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '¿Se cumplieron los tiempos de entrega de bienes o la prestación del servicios ofertados por el proveedor?',
+              text: pregunta1,
               alignment: 'center',
               fillColor: '#EEECE1',
               fontSize: 8,
               border: [true, false, true, true],
             },
             {
-              text: '',
+              text: TIEMPOS_DE_ENTREGA.Cumplimiento,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#EEECE1',
               border: [true, false, true, true],
             },
             {
-              text: '12',
+              text: TIEMPOS_DE_ENTREGA.ValorAsignado,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#EEECE1',
               border: [true, false, true, true],
             },
             {
-              text: '24',
+              text: sumaPuntaje,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#EEECE1',
@@ -391,21 +438,21 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '¿Se entregan las cantidades solicitadas?',
+              text: pregunta2,
               alignment: 'center',
               fontSize: 8,
               fillColor: '#EEECE1',
               border: [true, false, true, true],
             },
             {
-              text: '',
+              text: CANTIDADES.Cumplimiento,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#EEECE1',
               border: [true, false, true, true],
             },
             {
-              text: '12',
+              text: CANTIDADES.ValorAsignado,
               alignment: 'center',
               fillColor: '#EEECE1',
               style: 'TextInfo',
@@ -418,9 +465,21 @@ export class GenerarPdfEvaluacion {
     };
   }
 
-  calidad(): any {
+  calidad(resultado: ResultadoDocumentoEvaluacion[]): any {
+    let pregunta1 =
+      '¿El bien o servicio cumplió con las especificaciones y requisitos pactados en el momento de entrega?';
+    let pregunta2 =
+      '¿El producto comprado o el servicio prestado proporcionó más herramientas o funciones de las solicitadas originalmente?';
+    let CONFORMIDAD = this.obtenerResultadoPorTitulo(pregunta1, resultado);
+    let FUNCIONALIDAD_ADICCIONAL = this.obtenerResultadoPorTitulo(
+      pregunta2,
+      resultado
+    );
+    let listaCalidad = [CONFORMIDAD, FUNCIONALIDAD_ADICCIONAL];
+    let sumaPuntaje = this.sumarValoresSiCumple(listaCalidad);
+    this.calcularTotalNumerico(sumaPuntaje);
     return {
-      layout: 'default',
+      layout: 'default', pageBreak: 'auto',
       table: {
         widths: ['11%', '11%', '41%', '11%', '11%', '15%'],
         body: [
@@ -442,21 +501,21 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '¿El bien o servicio cumplió con las especificaciones y requisitos pactados en elmomento de entrega?',
+              text: pregunta1,
               alignment: 'center',
               fillColor: '#EBF1DE',
               fontSize: 8,
               border: [true, false, true, true],
             },
             {
-              text: '',
+              text: CONFORMIDAD.Cumplimiento,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#EBF1DE',
               border: [true, false, true, true],
             },
             {
-              text: '20',
+              text: CONFORMIDAD.ValorAsignado,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#EBF1DE',
@@ -464,7 +523,7 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '30',
+              text: sumaPuntaje,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#EBF1DE',
@@ -482,21 +541,21 @@ export class GenerarPdfEvaluacion {
               border: [true, true, true, true],
             },
             {
-              text: '¿El producto comprado o el servicio prestado proporcionó más herramientas o funciones de las solicitadas originalmente?',
+              text: pregunta2,
               alignment: 'center',
               fontSize: 8,
               fillColor: '#EBF1DE',
               border: [true, true, true, true],
             },
             {
-              text: '',
+              text: FUNCIONALIDAD_ADICCIONAL.Cumplimiento,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#EBF1DE',
               border: [true, true, true, true],
             },
             {
-              text: '10',
+              text: FUNCIONALIDAD_ADICCIONAL.ValorAsignado,
               alignment: 'center',
               fillColor: '#EBF1DE',
               style: 'TextInfo',
@@ -510,10 +569,27 @@ export class GenerarPdfEvaluacion {
     };
   }
 
-  posContraActual(): any {
+  posContraActual(resultado: ResultadoDocumentoEvaluacion[]): any {
+    let pregunta1 =
+      '¿Se han presentado reclamaciones al proveedor en calidad o gestión?';
+    let pregunta2 =
+      '¿El proveedor soluciona oportunamente las no conformidades de calidad y gestión de los bienes o servicios recibidos?';
+    let pregunta3 =
+      '¿El proveedor cumple con los compromisos pactados dentro del contrato u orden de servicio o compra? (aplicación de garantías, mantenimiento, cambios, reparaciones, capacitaciones, entre otras)';
+
+    let RECLAMACIONES = this.obtenerResultadoPorTitulo(pregunta1, resultado);
+    let RECLAMACIONES2 = this.obtenerResultadoPorTitulo(pregunta2, resultado);
+    let SERVICIO_POS_VENTA = this.obtenerResultadoPorTitulo(
+      pregunta3,
+      resultado
+    );
+    let listaReclamaciones = [RECLAMACIONES, RECLAMACIONES2];
+    let sumaPuntaje = this.sumarValoresSiCumple(listaReclamaciones);
+    this.calcularTotalNumerico(sumaPuntaje);
+    this.calcularTotalNumerico(Number(SERVICIO_POS_VENTA.ValorAsignado));
     return {
       layout: 'default',
-      margin: [0, 0, 0, 0],
+      margin: [0, 0, 0, 0], pageBreak: 'auto',
       table: {
         widths: ['11%', '11%', '41%', '11%', '11%', '15%'],
         body: [
@@ -533,24 +609,25 @@ export class GenerarPdfEvaluacion {
               style: 'TituloSubCriterio',
               fillColor: '#DCE6F1',
               rowSpan: 2,
+              margin: [0, 15, 0, 0],
               border: [true, false, true, true],
             },
             {
-              text: '¿Se han presentado reclamaciones al proveedor en calidad o gestión?',
+              text: pregunta1,
               alignment: 'center',
               fillColor: '#DCE6F1',
               fontSize: 8,
               border: [true, false, true, true],
             },
             {
-              text: '',
+              text: RECLAMACIONES.Cumplimiento,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#DCE6F1',
               border: [true, false, true, true],
             },
             {
-              text: '20',
+              text: RECLAMACIONES.ValorAsignado,
               alignment: 'center',
               style: 'TextInfo',
               margin: [0, 5, 0, 0],
@@ -558,7 +635,7 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '30',
+              text: sumaPuntaje,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#DCE6F1',
@@ -571,21 +648,21 @@ export class GenerarPdfEvaluacion {
             '',
             '',
             {
-              text: ' (●) ¿El proveedor soluciona oportunamente las no conformidades de calidad y gestión de los bienes o servicios recibidos?',
+              text: ' (●)' + pregunta2,
               alignment: 'center',
               fontSize: 8,
               fillColor: '#DCE6F1',
               border: [true, true, true, true],
             },
             {
-              text: '',
+              text: RECLAMACIONES2.Cumplimiento,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#DCE6F1',
               border: [true, true, true, true],
             },
             {
-              text: '10',
+              text: RECLAMACIONES2.ValorAsignado,
               alignment: 'center',
               fillColor: '#DCE6F1',
               style: 'TextInfo',
@@ -603,21 +680,21 @@ export class GenerarPdfEvaluacion {
               border: [true, true, true, true],
             },
             {
-              text: '¿El proveedor cumple con los compromisos pactados dentro del contrato u orden de servicio o compra?  (aplicación de garantías, mantenimiento, cambios,  reparaciones, capacitaciones, entre otras) ',
+              text: pregunta3,
               alignment: 'center',
               fontSize: 8,
               fillColor: '#DCE6F1',
               border: [true, true, true, true],
             },
             {
-              text: '',
+              text: SERVICIO_POS_VENTA.Cumplimiento,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#DCE6F1',
               border: [true, true, true, true],
             },
             {
-              text: '10',
+              text: SERVICIO_POS_VENTA.ValorAsignado,
               alignment: 'center',
               fillColor: '#DCE6F1',
               style: 'TextInfo',
@@ -631,10 +708,26 @@ export class GenerarPdfEvaluacion {
     };
   }
 
-  gestion(): any {
+  gestion(resultado: ResultadoDocumentoEvaluacion[]): any {
+    let pregunta1 =
+      '¿El contrato es suscrito en el tiempo pactado, entrega las pólizas a tiempo y las facturas son radicadas en el tiempo indicado con las condiciones y soportes requeridos para su trámite contractual?';
+    let pregunta2 =
+      '¿Se requirió hacer uso de la garantía del producto o servicio?';
+    let pregunta3 =
+      '¿El proveedor cumplió a satisfacción con la garantía pactada?';
+
+    let PROCEDIMIENTOS = this.obtenerResultadoPorTitulo(pregunta1, resultado);
+    let GARANTÍA = this.obtenerResultadoPorTitulo(pregunta2, resultado);
+    let GARANTÍA2 = this.obtenerResultadoPorTitulo(pregunta3, resultado);
+    let listaGrantia = [GARANTÍA, GARANTÍA2];
+    let sumaPuntaje = this.sumarValoresSiCumple(listaGrantia);
+    this.calcularTotalNumerico(sumaPuntaje);
+    this.calcularTotalNumerico(Number(PROCEDIMIENTOS.ValorAsignado));
     return {
       layout: 'default',
       margin: [0, 0, 0, 0],
+      pageBreak: 'auto',
+      keepWithHeaderRows: 1,
       table: {
         widths: ['11%', '11%', '41%', '11%', '11%', '15%'],
         body: [
@@ -657,7 +750,7 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '¿El contrato es suscrito en el tiempo pactado, entrega las pólizas a tiempo y las facturas son radicadas en el tiempo indicado con las condiciones y soportes requeridos para su trámite contractual? ',
+              text: pregunta1,
               alignment: 'center',
               fillColor: '#E4DFEC',
               fontSize: 8,
@@ -665,15 +758,16 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '',
+              text: PROCEDIMIENTOS.Cumplimiento,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#E4DFEC',
               rowSpan: 2,
+              margin: [0, 10, 0, 0],
               border: [true, false, true, true],
             },
             {
-              text: '20',
+              text: PROCEDIMIENTOS.ValorAsignado,
               alignment: 'center',
               style: 'TextInfo',
               rowSpan: 2,
@@ -682,7 +776,7 @@ export class GenerarPdfEvaluacion {
               border: [true, false, true, true],
             },
             {
-              text: '30',
+              text: PROCEDIMIENTOS.ValorAsignado,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#E4DFEC',
@@ -702,28 +796,28 @@ export class GenerarPdfEvaluacion {
               border: [true, true, true, true],
             },
             {
-              text: '¿Se requirió hacer uso de la garantía del producto o servicio?',
+              text: pregunta2,
               alignment: 'center',
               fontSize: 8,
               fillColor: '#E4DFEC',
               border: [true, true, true, true],
             },
             {
-              text: '',
+              text: GARANTÍA.Cumplimiento,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#E4DFEC',
               border: [true, true, true, true],
             },
             {
-              text: '10',
+              text: GARANTÍA.ValorAsignado,
               alignment: 'center',
               fillColor: '#E4DFEC',
               style: 'TextInfo',
               border: [true, true, true, true],
             },
             {
-              text: '10',
+              text: sumaPuntaje,
               alignment: 'center',
               fillColor: '#E4DFEC',
               style: 'TextInfo',
@@ -736,21 +830,21 @@ export class GenerarPdfEvaluacion {
             '',
             '',
             {
-              text: '(●) ¿El proveedor cumplió a satisfacción con la garantía pactada?',
+              text: '(●)' + pregunta3,
               alignment: 'center',
               fontSize: 8,
               fillColor: '#E4DFEC',
               border: [true, true, true, true],
             },
             {
-              text: '',
+              text: GARANTÍA2.Cumplimiento,
               alignment: 'center',
               style: 'TextInfo',
               fillColor: '#E4DFEC',
               border: [true, true, true, true],
             },
             {
-              text: '10',
+              text: GARANTÍA2.ValorAsignado,
               alignment: 'center',
               fillColor: '#E4DFEC',
               style: 'TextInfo',
@@ -766,7 +860,9 @@ export class GenerarPdfEvaluacion {
   convencion(): any {
     return {
       layout: 'default',
+      keepWithHeaderRows: 1,
       table: {
+       
         widths: ['10.72%', '10.70%', '63.95%', '14.63%'],
         body: [
           [
@@ -775,7 +871,7 @@ export class GenerarPdfEvaluacion {
               bold: true,
               alignment: 'center',
               fontSize: 8,
-              border: [true, false, true, true],
+              border: [true, true, true, true],
               margin: [0, 30, 0, 0],
               rowSpan: 4,
             },
@@ -786,7 +882,7 @@ export class GenerarPdfEvaluacion {
               alignment: 'center',
 
               rowSpan: 1,
-              border: [true, false, true, true],
+              border: [true, true, true, true],
             },
             {
               text: [
@@ -805,45 +901,46 @@ export class GenerarPdfEvaluacion {
                   fontSize: 9,
                 },
                 {
-                    text: 'PROVEEDOR TIPO B: BUENO. ',
-                    style: 'TextoNegrilla',
-                    decoration: 'underline',
-                  },
-                  {
-                    text: 'Puntaje entre 46 hasta 79 puntos.',
-                    style: 'TextoNegrilla',
-                    fontSize: 9,
-                  },
-                  {
-                    text: 'Se invita nuevamente a procesos pero debe mejorar las observaciones presentadas por la Universidad. La Universidad (Supervisor) presentará las observaciones mediante oficio adjunto al presente formato.\n',
-                    style: 'TextoNormal',
-                    fontSize: 9,
-                  },
-                  {
-                    text: 'PROVEEDOR TIPO C: MALO.',
-                    style: 'TextoNegrilla',
-                    decoration: 'underline',
-                  },
-                  {
-                    text: 'Puntaje inferior o igual a 45 puntos.',
-                    style: 'TextoNegrilla',
-                  },
-                  {
-                    text: ' La Universidad no debe contratar con este proveedor.',
-                    style: 'TextoNormal',
-                  },
+                  text: 'PROVEEDOR TIPO B: BUENO. ',
+                  style: 'TextoNegrilla',
+                  decoration: 'underline',
+                },
+                {
+                  text: 'Puntaje entre 46 hasta 79 puntos.',
+                  style: 'TextoNegrilla',
+                  fontSize: 9,
+                },
+                {
+                  text: 'Se invita nuevamente a procesos pero debe mejorar las observaciones presentadas por la Universidad. La Universidad (Supervisor) presentará las observaciones mediante oficio adjunto al presente formato.\n',
+                  style: 'TextoNormal',
+                  fontSize: 9,
+                },
+                {
+                  text: 'PROVEEDOR TIPO C: MALO.',
+                  style: 'TextoNegrilla',
+                  decoration: 'underline',
+                },
+                {
+                  text: 'Puntaje inferior o igual a 45 puntos.',
+                  style: 'TextoNegrilla',
+                },
+                {
+                  text: ' La Universidad no debe contratar con este proveedor.',
+                  style: 'TextoNormal',
+                },
               ],
               margin: [0, 10, 0, 0],
               alignment: 'left',
               rowSpan: 4,
-              border: [true, false, true, true],
+              border: [true, true, true, true],
             },
             {
-              text: '',
+              margin: [0, 5, 0, 0],
+              text: this.resuldoNumerico,
               alignment: 'center',
               style: 'TextInfo',
               rowSpan: 1,
-              border: [true, false, true, true],
+              border: [true, true, true, true],
             },
           ],
           [
@@ -854,15 +951,16 @@ export class GenerarPdfEvaluacion {
               style: 'TextoNormal',
               rowSpan: 3,
 
-              border: [true, false, true, true],
+              border: [true, true, true, true],
             },
             '',
             {
-              text: '',
+              text: this.calcularTotalTexto(this.resuldoNumerico),
               alignment: 'center',
+              margin: [0, 20, 0, 0],
               style: 'TextInfo',
               rowSpan: 3,
-              border: [true, false, true, true],
+              border: [true, true, true, true],
             },
           ],
           ['', '', '', ''],
@@ -911,4 +1009,89 @@ export class GenerarPdfEvaluacion {
       },
     };
   }
+
+  obtenerResultadoPorTitulo(
+    tituloBuscar: string,
+    listaResultados: ResultadoDocumentoEvaluacion[]
+  ): ResultadoDocumentoEvaluacion {
+    const resultado = listaResultados.find(
+      (item) =>
+        item.Pregunta?.toLocaleLowerCase() === tituloBuscar.toLocaleLowerCase()
+    );
+
+    if (resultado) {
+      return {
+        ValorAsignado: resultado.ValorAsignado,
+        Cumplimiento: resultado.Cumplimiento,
+      };
+    }
+    return {
+      ValorAsignado: 0,
+      Cumplimiento: '',
+    };
+  }
+
+  sumarValoresSiCumple(
+    listaResultados: ResultadoDocumentoEvaluacion[]
+  ): number {
+    return listaResultados.reduce((acumulador, item) => {
+      if (item.Cumplimiento === 'SI' && item.ValorAsignado) {
+        return acumulador + item.ValorAsignado;
+      }
+
+      return acumulador;
+    }, 0);
+  }
+
+  calcularTotalNumerico(total: number) {
+    this.resuldoNumerico = this.resuldoNumerico + total;
+  }
+
+  calcularTotalTexto(total: number): string {;
+
+    if (total >= 80) {
+      return 'EXCELENTE';
+    }
+
+    if (total >= 46 && total <= 79) {
+      return 'BUENO';
+    }
+
+    if (total <= 45) {
+      return 'MALO';
+    }
+    return 'NO DEFINIDO';
+  }
+
+
+  
 }
+
+//   organizarPorCategoriaYSubcategoria(datos: InformacionDocumentoEvaluacion): Map<string, Map<string, Resultados[]> > {
+//     let categoria = new Map<string, Map<string, Resultados[]>>();
+
+//     datos.ResultadoFinalEvaluacion.Resultados.forEach((resultado) => {
+//       if (!categoria.has(resultado.Categoria)) {
+//         let subCategoria = new Map<string, Resultados[]>();
+//         subCategoria.set(resultado.Titulo, [resultado]);
+//         categoria.set(resultado.Categoria, subCategoria);
+//       } else {
+//         let subCategoria = categoria.get(resultado.Categoria);
+
+//         if (!subCategoria) {
+//           subCategoria = new Map<string, Resultados[]>();
+//           categoria.set(resultado.Categoria, subCategoria);
+//         }
+
+//         if (!subCategoria.has(resultado.Titulo)) {
+//           subCategoria.set(resultado.Titulo, [resultado]);
+//         } else {
+//           let resultados = subCategoria.get(resultado.Titulo);
+//           if (resultados) {
+//             resultados.push(resultado);
+//           }
+//         }
+//       }
+//     });
+//     return categoria;
+//   }
