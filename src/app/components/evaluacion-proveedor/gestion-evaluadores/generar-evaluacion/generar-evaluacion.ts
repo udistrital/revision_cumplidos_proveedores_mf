@@ -860,6 +860,7 @@ export class GenerarPdfEvaluacion {
   convencion(): any {
     return {
       layout: 'default',
+      keepWithHeaderRows: 1,
       table: {
        
         widths: ['10.72%', '10.70%', '63.95%', '14.63%'],
