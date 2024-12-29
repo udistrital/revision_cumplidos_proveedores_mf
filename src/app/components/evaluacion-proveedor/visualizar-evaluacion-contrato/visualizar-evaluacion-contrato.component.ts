@@ -3,7 +3,7 @@ import { Component, signal, SimpleChanges } from '@angular/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { Evaluador } from 'src/app/models/evaluador.model';
 import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
-import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
+import { Evaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/evaluacion.model';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/app/services/user.services';
 import {
@@ -76,7 +76,7 @@ export class VisualizarEvaluacionContratoComponent {
     private documentosCrudService: DocumentosCrudService,
     private gestotrDocumental: GestorDocumentalService,
     private dialog: MatDialog,
-    private firmaElectronicaService: FirmaElectronicaService
+    private firmaElectronicaService: FirmaElectronicaService,
     private router: Router
   ){
     evaluacionCumplidoProvCrudService.asignacionEvaluador$.subscribe((asignacionEvaluador) => {
@@ -84,14 +84,13 @@ export class VisualizarEvaluacionContratoComponent {
         this.asignacionEvaluadorId = asignacionEvaluador.Id;
         this.evaluacionId = asignacionEvaluador.EvaluacionId.Id;
       }
-    }
+    })
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
   }
 
   async ngOnInit() {
     this.tittle = 'Ver Evaluación';
-    this.evaluacion =
-      await this.evaluacionCumplidoProvCrudService.getEvaluacion();
+    this.evaluacion =  await this.evaluacionCumplidoProvCrudService.getEvaluacion();
     await this.obtenerInformacionEvaluacion();
 
     if (
