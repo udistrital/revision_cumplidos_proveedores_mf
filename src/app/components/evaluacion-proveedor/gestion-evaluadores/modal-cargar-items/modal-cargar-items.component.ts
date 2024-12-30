@@ -9,6 +9,7 @@ import { ModalItemsNoAgregadosComponent } from '../modal-items-no-agregados/moda
 import { map } from 'rxjs';
 import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
 import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
+import { Evaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/evaluacion.model';
 
 @Component({
   selector: 'app-modal-cargar-items',
@@ -22,10 +23,24 @@ export class ModalCargarItemsComponent {
   base64Output: string | ArrayBuffer | null = '';
   archivoSeleccionado: boolean = true;
   excel: File | null = null;
-  listaitemsCargados: ItemAEvaluar[] = []
+  listaitemsCargados: ItemAEvaluar[] = [];
+  evaluacion!: Evaluacion;
 
   @ViewChild('fileInput') fileInput!: ElementRef;
-  constructor(private fb: FormBuilder, private popUpManager: PopUpManager, private matDialogRef: MatDialogRef<ModalCargarItemsComponent>, private utilsService: UtilsService, private evaluacionCumplidosMidService: EvaluacionCumplidosProveedoresMidService, private dialog: MatDialog, private evaluacionCumplidosCrudService: EvaluacionCumplidoProvCrudService) {
+  constructor(
+    private fb: FormBuilder, 
+    private popUpManager: PopUpManager, 
+    private matDialogRef: MatDialogRef<ModalCargarItemsComponent>, 
+    private utilsService: UtilsService, 
+    private evaluacionCumplidosMidService: EvaluacionCumplidosProveedoresMidService, 
+    private dialog: MatDialog, 
+    private evaluacionCumplidoProvCrudService: EvaluacionCumplidoProvCrudService
+  ) {
+    this.evaluacionCumplidoProvCrudService.evaluacion$.subscribe((evaluacion) => {
+      if (evaluacion) {
+        this.evaluacion = evaluacion;
+      }
+    })
     this.soporteForm = this.fb.group({
       observaciones: ['', [Validators.minLength(10)]],
       fileName: [{ value: '', disabled: true }, [Validators.required]]
@@ -39,7 +54,7 @@ export class ModalCargarItemsComponent {
     this.fileName = '';
     this.soporteForm.patchValue({ fileName: '' })
     this.base64Output = '';
-    this.archivoSeleccionado = true;
+    this.archivoSeleccionado = false;
   }
   triggerFileInput() {
     this.fileInput.nativeElement.click();
@@ -92,16 +107,23 @@ export class ModalCargarItemsComponent {
       this.popUpManager.showErrorAlert('No ha cargado ningún archivo');
       return;
     }
+
+    if (!this.evaluacion || !this.evaluacion.Id) {
+      this.popUpManager.showErrorAlert('No hay una evaluación creada.');
+      return;
+    }
+
+
     const formData = new FormData();
     formData.append('file', this.excel, this.excel.name);
+    formData.append('idEvaluacion', this.evaluacion.Id.toString());
 
     this.evaluacionCumplidosMidService.postCargaExcel("/carga-data-excel/upload", formData).subscribe(
       {
         next: async (res: any) => {
   
-          if (res.Data.itemsNoAgregados &&res.Data.itemsNoAgregados.length > 0) {
+          if (res.Data.itemsNoAgregados && res.Data.itemsNoAgregados.length > 0) {
             const itemsNoAgregaaados = res.Data.itemsNoAgregados.map((item: any) => {
-    
               return {
                 Identificador: item.Identificador,
                 Nombre: item.Nombre,
@@ -153,7 +175,7 @@ export class ModalCargarItemsComponent {
 
   async cargarItemCargados():Promise<void> {
    return new Promise((resolve, reject) => {
-    this.evaluacionCumplidosCrudService.get('/item?query=EvaluacionId:1&limit=-1').subscribe({
+    this.evaluacionCumplidoProvCrudService.get(`/item?query=EvaluacionId:${this.evaluacion.Id}&limit=-1`).subscribe({
       next: (res: any) => {
         this.listaitemsCargados = res.Data.map((item: any) => {
           return {
