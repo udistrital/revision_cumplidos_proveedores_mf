@@ -62,6 +62,7 @@ export class ListarContratosEvaluarComponent {
     private router: Router
   ){
     this.documento_evaluador = user.getPayload().documento;
+
     this.filtrosForm = this.fb.group({
       nombreProveedor: ['', [Validators.minLength(5)]],
       numeroContrato: ['', [Validators.pattern(/^[0-9]+$/)]],
@@ -89,7 +90,7 @@ export class ListarContratosEvaluarComponent {
       'Por favor, espera mientras se cargan las asignaciones del evaluador.'
     );
     this.evaluacionCumplidoProvMidService
-    .get(`/consultar-asignaciones/${this.documento_evaluador}`)
+    .get(`/asignaciones/consultar/${this.documento_evaluador}`)
     .pipe(
       map((response:any) => response.Data as AsignacionEvaluacion)
     )
