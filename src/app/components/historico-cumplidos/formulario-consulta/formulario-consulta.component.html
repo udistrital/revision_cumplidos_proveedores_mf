@@ -18,7 +18,10 @@
                 <mat-form-field appearance="outline">
                   <mat-label class="label">Seleccione Dependencia</mat-label>
                   <mat-select placeholder="Dependencia" formControlName="dependencias" multiple (selectionChange)="dependenciaChange($event.value)">
-                    <mat-option *ngFor="let dependencia of listaDependencias" [value]="dependencia.Codigo">
+                    <mat-form-field>
+                      <input matInput style="display:flex; justify-content:center; font-size:large;" placeholder="Filtrar Dependencias" (keyup)="filtrarDependencias($event)" (keydown)="preventSpaceKey($event)">
+                    </mat-form-field>
+                    <mat-option *ngFor="let dependencia of dependenciasSeleccionadas" [value]="dependencia">
                       {{dependencia.Nombre}}
                     </mat-option>
                   </mat-select>
@@ -32,8 +35,11 @@
                 <mat-form-field appearance="outline">
                   <mat-label class="label">Seleccione un número de contrato</mat-label>
                   <mat-select placeholder="Número de contrato" formControlName="numeros_contrato" multiple (selectionChange)="contratoChange($event.value)">
-                    <mat-option *ngFor="let contrato of listaNumerosContratos" [value]="contrato">
-                      {{contrato}}
+                    <mat-form-field>
+                      <input matInput style="display:flex; justify-content:center; font-size:large;" placeholder="Filtrar Contratos" (keyup)="filtrarContratos($event)" (keydown)="preventSpaceKey($event)">
+                    </mat-form-field>
+                    <mat-option *ngFor="let contrato of contratosFiltrados" [value]="contrato">
+                      {{contrato.contrato}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -43,7 +49,10 @@
                 <mat-form-field appearance="outline">
                   <mat-label class="label">Seleccione vigencia</mat-label>
                   <mat-select placeholder="Vigencia" formControlName="vigencias" multiple>
-                    <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
+                    <mat-form-field>
+                      <input matInput style="display:flex; justify-content:center; font-size:large;" placeholder="Filtrar Vigencias" (keyup)="filtrarVigencias($event)" (keydown)="preventSpaceKey($event)">
+                    </mat-form-field>
+                    <mat-option *ngFor="let vigencia of vigenciasFiltradas" [value]="vigencia">
                       {{ vigencia }}
                     </mat-option>
                   </mat-select>
@@ -52,10 +61,13 @@
 
               <div class="">
                 <mat-form-field appearance="outline">
-                  <mat-label class="label">Nombre del proveedor</mat-label>
+                  <mat-label class="label">Proveedor</mat-label>
                   <mat-select formControlName="nombres_proveedor" multiple>
-                    <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.ProveedorId">
-                      {{ proveedor.NombreProveedor }}
+                    <mat-form-field>
+                      <input matInput style="display:flex; justify-content:center; font-size:large;" placeholder="Filtrar Proveedores" (keyup)="filtrarProveedores($event)" (keydown)="preventSpaceKey($event)">
+                    </mat-form-field>
+                    <mat-option *ngFor="let proveedor of proveedoresFiltrados" [value]= "proveedor.ProveedorId">
+                      {{proveedor.Nit +" - " +proveedor.NombreProveedor }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -65,7 +77,10 @@
                 <mat-form-field appearance="outline">
                   <mat-label class="label">Seleccione año</mat-label>
                   <mat-select formControlName="anios" placeholder="Año" multiple>
-                    <mat-option *ngFor="let anio of anios" [value]="anio">
+                    <mat-form-field>
+                      <input matInput style="display:flex; justify-content:center; font-size:large;" placeholder="Filtrar Años" (keyup)="filtrarAnios($event)" (keydown)="preventSpaceKey($event)">
+                    </mat-form-field>
+                    <mat-option *ngFor="let anio of aniosFiltrados" [value]="anio">
                       {{ anio }}
                     </mat-option>
                   </mat-select>
@@ -76,7 +91,10 @@
                 <mat-form-field appearance="outline">
                   <mat-label class="label">Seleccione mes</mat-label>
                   <mat-select placeholder="Mes" formControlName="meses" multiple>
-                    <mat-option *ngFor="let mes of meses" [value]="mes.mes">
+                    <mat-form-field>
+                      <input matInput style="display:flex; justify-content:center; font-size:large;" placeholder="Filtrar Meses" (keyup)="filtrarMeses($event)" (keydown)="preventSpaceKey($event)">
+                    </mat-form-field>
+                    <mat-option *ngFor="let mes of mesesFiltrados" [value]="mes.mes">
                       {{ mes.nombre }}
                     </mat-option>
                   </mat-select>
@@ -87,7 +105,10 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Seleccione estado</mat-label>
                   <mat-select class="label" placeholder="Estado" formControlName="estados" multiple>
-                    <mat-option *ngFor="let estado of listaEstadosCumplido" [value]="estado.CodigoAbreviacion">
+                    <mat-form-field>
+                      <input matInput style="display:flex; justify-content:center; font-size:large;" placeholder="Filtrar Estados" (keyup)="filtrarEstados($event)" (keydown)="preventSpaceKey($event)">
+                    </mat-form-field>
+                    <mat-option *ngFor="let estado of estadosFiltrados" [value]="estado.CodigoAbreviacion">
                       {{estado.Nombre}}
                     </mat-option>
                   </mat-select>

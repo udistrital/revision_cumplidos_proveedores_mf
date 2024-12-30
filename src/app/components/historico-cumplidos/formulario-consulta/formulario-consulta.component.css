@@ -14,6 +14,15 @@
     padding-bottom: 10px;
 }
 
+.input-filter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    width: inherit;
+    height: inherit;
+}
+
 .label{
   font-size: 1rem;
 }
@@ -29,7 +38,7 @@
 }
 form {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 2fr 1fr 1fr  3fr;
     gap: 2rem;
     box-sizing: border-box;
   }
