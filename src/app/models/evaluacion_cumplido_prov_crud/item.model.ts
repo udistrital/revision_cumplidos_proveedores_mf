@@ -26,7 +26,7 @@ export interface Item {
   FichaTecnica: string;
   Unidad: number;
   Cantidad: number;
-  TipoNecesidad: number;
+  TipoNecesidad: string|number;
   Activo: boolean;
   FechaCreacion: Date;
   FechaModificacion: Date;
