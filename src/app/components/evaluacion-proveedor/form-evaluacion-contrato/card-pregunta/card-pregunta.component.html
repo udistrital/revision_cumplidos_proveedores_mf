@@ -16,16 +16,16 @@
             <div>
               <div class="box-header-evaluacion">
                 <div>
-                  <h3 class="color-principal">{{ item.elemento }}</h3>
+                  <h3 class="color-principal">{{ item.elemento }} test</h3>
                 </div>
                 <div class="color-principal text-center">Valor Asignado</div>
               </div>
   
               <div *ngFor="let pregunta of item.preguntas; let i = index">
-                <div class="box-pregunta">
+                <div class="box-pregunta" >
                   <div>
                     <div>
-                      <div class="box-caracteristica">
+                      <div class="box-caracteristica" >
                         <div class="color-principal text-center">
                           {{ pregunta.titulo }}
                         </div>
@@ -61,7 +61,11 @@
                   </p>
                 </div>
                 <div>
-                  <p style="font-size: 1rem">{{ porcentaje }}</p>
+                  <p style="font-size: 1rem" *ngIf="item.elemento == 'Cumplimiento'">{{ puntaJeTotalCumplimiento }}</p>
+                  <p style="font-size: 1rem" *ngIf="item.elemento == 'Calidad'">{{ puntajeTotalCalidad }}</p>
+                  <p style="font-size: 1rem" *ngIf="item.elemento == 'Pos contractual'">{{ puntajeTotalPosContraActual }}</p>
+                  <p style="font-size: 1rem" *ngIf="item.elemento == 'Gestión'">{{puntajeTotalGestion}}</p>
+
                 </div>
               </div>
             </div>
@@ -93,10 +97,10 @@
           <p>Puntaje Total de evaluación</p>
         </div>
         <div>
-          <p class="line-text">Total</p>
+          <p class="line-text">{{puntajeTotal}}</p>
         </div>
         <div>
-          <p class="line-text">Calificación</p>
+          <p class="line-text">{{calificacionTexto}}</p>
         </div>
         <div class="text-end">
           <button class="btn-enviar" mat-button (click)="enviarEvaluacion()">Enviar Evaluación</button>

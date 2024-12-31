@@ -30,14 +30,21 @@ export class CardPreguntaComponent {
   porcentaje: number = 0;
   preguntaIndex: number = 0;
   formularioEnviado: boolean = false;
+  puntaJeTotalCumplimiento: number = 0;
+  puntajeTotalCalidad: number = 0;
+  puntajeTotalPosContraActual: number = 0;
+  puntajeTotalGestion: number = 0;
   asignacionEvaluador!: CambioEstadoAsignacionEvalacion;
+  ocultarPreguntaGarantia: boolean = false;
+  ocultaPreguntaReclamaciones: boolean = false;
+  calificacionTexto: string = 'Sin calificar';
 
   @Input() resultadoEvaluador?: Resultado;
-  @Input() puntajeTotal?: number;
+  @Input() puntajeTotal?: number = 0;
   @Input() clasificacion?: string;
   @Input({ required: true }) visualizacion: boolean = false;
   puntajesTotales: number[] = [];
-  evaluacion!:Evaluacion|null
+  evaluacion!: Evaluacion | null;
 
   listaPreguntas = [
     {
@@ -146,9 +153,8 @@ export class CardPreguntaComponent {
     private popUpManager: PopUpManager,
     private evaluacionCumplidosCrud: EvaluacionCumplidoProvCrudService,
     private evaluacionCumplidosMid: EvaluacionCumplidosProveedoresMidService,
-    private router: Router,
+    private router: Router
   ) {
-    
     let indexPreginta = 0;
 
     this.listaPreguntas.forEach((item) => {
@@ -177,6 +183,7 @@ export class CardPreguntaComponent {
     });
 
     const respuestas = this.FormularioEvaluacion.get('respuestas') as FormArray;
+
     respuestas.valueChanges.subscribe(() => {
       this.porcentaje = this.sumarPorcentajes();
     });
@@ -224,17 +231,92 @@ export class CardPreguntaComponent {
   sumarPorcentajes() {
     let total = 0;
     const respuestas = this.FormularioEvaluacion.get('respuestas') as FormArray;
-    console.log(respuestas);
-
+    this.puntajeTotal = 0;
+    this.puntaJeTotalCumplimiento = 0;
+    this.puntajeTotalCalidad = 0;
+    this.puntajeTotalPosContraActual = 0;
+    this.puntajeTotalGestion = 0;
     respuestas.controls.forEach((control: any, index: number) => {
-      if (control.value === 'Si') {
-        const pregunta = this.getPreguntaPorIndex(index);
-        if (pregunta) {
-          total += pregunta.valorAsignado;
+      if (control.value.Categoria == 'Cumplimiento') {
+        if (control.value.Respuesta.Cumplimiento === 'Si') {
+          const pregunta = this.getPreguntaPorIndex(index);
+          if (pregunta) {
+            this.puntaJeTotalCumplimiento += pregunta.valorAsignado;
+          }
         }
       }
+
+      if (control.value.Categoria == 'Calidad') {
+        if (control.value.Respuesta.Cumplimiento === 'Si') {
+          const pregunta = this.getPreguntaPorIndex(index);
+          if (pregunta) {
+            this.puntajeTotalCalidad += pregunta.valorAsignado;
+          }
+        }
+      }
+      if (control.value.Categoria == 'Pos contractual') {
+        if (control.value.Respuesta.Cumplimiento === 'No') {
+          if (
+            control.value.Respuesta.Pregunta ==
+            '¿Se han presentado reclamaciones al proveedor en calidad o gestión?'
+          ) {
+            this.ocultaPreguntaReclamaciones = true;
+            const pregunta = this.getPreguntaPorIndex(index);
+            if (pregunta) {
+              this.puntajeTotalPosContraActual += pregunta.valorAsignado;
+            }
+          }
+        }
+
+        if (control.value.Respuesta.Cumplimiento === 'Si') {
+          if (
+            control.value.Respuesta.Pregunta !=
+            '¿Se han presentado reclamaciones al proveedor en calidad o gestión?'
+          ) {
+            const pregunta = this.getPreguntaPorIndex(index);
+            if (pregunta) {
+              this.puntajeTotalPosContraActual += pregunta.valorAsignado;
+            }
+          }
+        }
+      }
+
+      if (control.value.Categoria == 'Gestión') {
+        
+        if (control.value.Respuesta.Cumplimiento === 'No') {
+          if (
+            control.value.Respuesta.Pregunta ==
+            '¿Se requirió hacer uso de la garantía del producto o servicio?'
+          ) {
+            this.ocultarPreguntaGarantia = true;
+            const pregunta = this.getPreguntaPorIndex(index);
+            if (pregunta) {
+              this.puntajeTotalGestion += pregunta.valorAsignado;
+            }
+          }
+        }
+
+        if (control.value.Respuesta.Cumplimiento === 'Si') {
+          if (
+            control.value.Respuesta.Pregunta !=
+            '¿Se requirió hacer uso de la garantía del producto o servicio?'
+          ) {
+            const pregunta = this.getPreguntaPorIndex(index);
+            if (pregunta) {
+              this.puntajeTotalGestion += pregunta.valorAsignado;
+            }
+          }
+        }
+      }
+
+      this.puntajeTotal =
+        this.puntaJeTotalCumplimiento +
+        this.puntajeTotalCalidad +
+        this.puntajeTotalPosContraActual +
+        this.puntajeTotalGestion;
     });
 
+    this.obtenerCalificaiconTexto(this.puntajeTotal);
     return total;
   }
 
@@ -278,13 +360,12 @@ export class CardPreguntaComponent {
               this.popUpManager.showErrorAlert('Error al enviar la evaluación');
             },
             complete: () => {
-              this.router.navigate(['/listar-contratos-evaluar'],{
+              this.router.navigate(['/listar-contratos-evaluar'], {
                 queryParams: {
-                  mensajeDeConfirmacion:'Evaluación enviada correctamente',
+                  mensajeDeConfirmacion: 'Evaluación enviada correctamente',
                 },
               });
-          
-             
+
               // let cambioEstado = {
               //   AsignacionId: {
               //     Id: 45,
@@ -333,7 +414,9 @@ export class CardPreguntaComponent {
     });
   }
   crearCuerpoRespuesta() {
-    const respuestas = (this.FormularioEvaluacion.get('respuestas') as FormArray).value;
+    const respuestas = (
+      this.FormularioEvaluacion.get('respuestas') as FormArray
+    ).value;
     const observaciones = this.FormularioEvaluacion.get('observaciones')?.value;
 
     const resultadoEvaluacion = {
@@ -367,4 +450,24 @@ export class CardPreguntaComponent {
       }
     });
   }
+
+
+
+  obtenerCalificaiconTexto(puntaje:number) {
+
+  if(puntaje>=80 && puntaje<=100){
+    this.calificacionTexto = "Excelente"
+    
+  }
+
+  if(puntaje>=46 && puntaje<=79){
+     this.calificacionTexto = "Bueno"
+
+  }
+
+  if(puntaje>=0 && puntaje<=45){
+     this.calificacionTexto = "Malo"
+  }
+}
+ 
 }

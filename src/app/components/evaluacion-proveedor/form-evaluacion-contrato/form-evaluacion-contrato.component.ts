@@ -44,7 +44,6 @@ export class FormEvaluacionContratoComponent implements OnInit {
       (asignacion) => {
         if (asignacion) {
           this.asignacionEvaluador = asignacion;
-          console.log(this.asignacionEvaluador);
           this.evaluacion = asignacion.EvaluacionId;
         }
       }
@@ -92,9 +91,7 @@ obtnerUnidadMedida(): Promise<UnidadMedida[]> {
 
    return new Promise((resolve, reject) => {
     this.AdministrativaAmazonService.get(`/unidad`).subscribe({
-      next: (unidadMedida: any) => {
-           console.log("Unidad de medidasssssssssssss",unidadMedida);  
-       
+      next: (unidadMedida: any) => {       
           this.listaMedidas = unidadMedida.map((unidad: any) => {
 
             return {
@@ -119,7 +116,6 @@ obtnerUnidadMedida(): Promise<UnidadMedida[]> {
 
 obtenerUnidadPorId(id: number): string {
   const unidadEncontrada = this.listaMedidas.find(unidad => unidad.Id === id);
-  console.log("Unidad encontrada", unidadEncontrada);
   return unidadEncontrada ? unidadEncontrada.Unidad : 'Unidad no encontrada';
 }
 
