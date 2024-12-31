@@ -5,6 +5,8 @@ import { Item } from 'src/app/models/evaluacion_cumplido_prov_crud/item.model';
 import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
 import { map } from 'rxjs';
 import { PopUpManager } from 'src/app/managers/popUpManager';
+import { UnidadMedida } from 'src/app/models/unidad-medida';
+import { AdministrativaAmazonService } from 'src/app/services/administrativa_amazon.service';
 
 @Component({
   selector: 'app-form-evaluacion-contrato',
@@ -16,10 +18,12 @@ export class FormEvaluacionContratoComponent implements OnInit {
   asignacionEvaluador!: AsignacionEvaluador;
   evaluacion!: Evaluacion | null;
   listaItems: Item[] = [];
+  listaMedidas: UnidadMedida[] = [];
 
   constructor(
     private evaluacionCumplidosCrud: EvaluacionCumplidoProvCrudService,
     private evaluacionCumplidoProvCrudService: EvaluacionCumplidoProvCrudService,
+    private AdministrativaAmazonService: AdministrativaAmazonService,
     private popUpManager: PopUpManager
   ) {}
 
@@ -35,7 +39,7 @@ export class FormEvaluacionContratoComponent implements OnInit {
   ];
 
   async ngOnInit(): Promise<void> {
-   await this.consularItems();
+    
     this.evaluacionCumplidoProvCrudService.asignacionEvaluador$.subscribe(
       (asignacion) => {
         if (asignacion) {
@@ -45,33 +49,36 @@ export class FormEvaluacionContratoComponent implements OnInit {
         }
       }
     );
-
-    console.log("listaItems", this.listaItems);
+   await  this.obtnerUnidadMedida()
+    await this.consularItems();
   }
 
   async consularItems(): Promise<Item[]> {
+
     return new Promise((resolve, reject) => {
       this.evaluacionCumplidosCrud
         .get(`/asignacion_evaluador_item?query=AsignacionEvaluadorId.Id:${this.asignacionEvaluador.Id}`)
         .subscribe({
           next: (asignacion: any) => {
-            this.listaItems = asignacion.Data.map((itemId: any) => {
-              return {
-                Id: itemId.ItemId.Id,
-                EvaluacionId:  itemId.ItemId.EvaluacionId,
-                Identificador: itemId.ItemId.Identificador,
-                Nombre: itemId.ItemId.Nombre,
-                ValorUnitario: itemId.ItemId.ValorUnitario,
-                Iva: itemId.ItemId.Iva,
-                FichaTecnica: itemId.ItemId.FichaTecnica,
-                Unidad: itemId.ItemId.Unidad,
-                Cantidad: itemId.ItemId.Cantidad,
-                TipoNecesidad: this.obtenerTipoNecesidad(itemId.ItemId.TipoNecesidad),
-                Activo: itemId.ItemId.Activo,
-                FechaCreacion: itemId.ItemId.FechaCreacion,
-                FechaModificacion: itemId.ItemId.FechaModificacion,
-              };
-            });
+            if(asignacion.Data && asignacion.Data[0].Id!=null){
+              this.listaItems = asignacion.Data.map((itemId: any) => {
+                return {
+                  Id: itemId.ItemId.Id,
+                  EvaluacionId:  itemId.ItemId.EvaluacionId,
+                  Identificador: itemId.ItemId.Identificador,
+                  Nombre: itemId.ItemId.Nombre,
+                  ValorUnitario: itemId.ItemId.ValorUnitario,
+                  Iva: itemId.ItemId.Iva,
+                  FichaTecnica: itemId.ItemId.FichaTecnica,
+                  Unidad: this.obtenerUnidadPorId(itemId.ItemId.Unidad),
+                  Cantidad: itemId.ItemId.Cantidad,
+                  TipoNecesidad: this.obtenerTipoNecesidad(itemId.ItemId.TipoNecesidad),
+                  Activo: itemId.ItemId.Activo,
+                  FechaCreacion: itemId.ItemId.FechaCreacion,
+                  FechaModificacion: itemId.ItemId.FechaModificacion,
+                };
+              });
+            }
             resolve(this.listaItems);
           },error: (error) => {
             this.popUpManager.showErrorAlert('Error al obtener los items de la evaluación');
@@ -80,6 +87,41 @@ export class FormEvaluacionContratoComponent implements OnInit {
     });
   }
 
+
+obtnerUnidadMedida(): Promise<UnidadMedida[]> {
+
+   return new Promise((resolve, reject) => {
+    this.AdministrativaAmazonService.get(`/unidad`).subscribe({
+      next: (unidadMedida: any) => {
+           console.log("Unidad de medidasssssssssssss",unidadMedida);  
+       
+          this.listaMedidas = unidadMedida.map((unidad: any) => {
+
+            return {
+              Id: unidad.Id,         
+              Unidad:  unidad.Unidad,     
+              Tipo:  unidad.Tipo, 
+              Descripcion: unidad.Descripcion,
+              Estado:     unidad.Estado, 
+            }
+          });
+      
+        resolve(this.listaMedidas);
+      },error: (error) => {
+        this.popUpManager.showErrorAlert('Error al obtener las unidades de medida');
+      }
+    })
+   })
+
+
+}
+
+
+obtenerUnidadPorId(id: number): string {
+  const unidadEncontrada = this.listaMedidas.find(unidad => unidad.Id === id);
+  console.log("Unidad encontrada", unidadEncontrada);
+  return unidadEncontrada ? unidadEncontrada.Unidad : 'Unidad no encontrada';
+}
 
   obtenerTipoNecesidad(tipoNecesidad: number): string {
 
