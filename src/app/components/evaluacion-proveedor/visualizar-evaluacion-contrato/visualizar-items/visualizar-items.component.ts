@@ -45,7 +45,7 @@ export class VisualizarItemsComponent {
 
     for (const item of items){
       try{
-        const unidadMedida = await this.utilsService.obtenerMedida(item.Unidad);
+        const unidadMedida = await this.utilsService.obtenerMedida(Number(item.Unidad));
         const nombreUnidad = unidadMedida ? unidadMedida.Unidad : '';
 
         const itemTransformado: any = {

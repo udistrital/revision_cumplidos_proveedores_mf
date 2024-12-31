@@ -24,9 +24,9 @@ export interface Item {
   ValorUnitario: number;
   Iva: number;
   FichaTecnica: string;
-  Unidad: number;
+  Unidad: string;
   Cantidad: number;
-  TipoNecesidad: number;
+  TipoNecesidad: string|number;
   Activo: boolean;
   FechaCreacion: Date;
   FechaModificacion: Date;
