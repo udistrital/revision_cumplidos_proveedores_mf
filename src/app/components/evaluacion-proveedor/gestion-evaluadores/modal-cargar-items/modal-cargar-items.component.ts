@@ -10,6 +10,7 @@ import { map } from 'rxjs';
 import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
 import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
 import { Evaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/evaluacion.model';
+import { plantillaBase64 } from 'src/app/models/plantilla_carga_masiva_items.model';
 
 @Component({
   selector: 'app-modal-cargar-items',
@@ -34,7 +35,7 @@ export class ModalCargarItemsComponent {
     private utilsService: UtilsService, 
     private evaluacionCumplidosMidService: EvaluacionCumplidosProveedoresMidService, 
     private dialog: MatDialog, 
-    private evaluacionCumplidoProvCrudService: EvaluacionCumplidoProvCrudService
+    private evaluacionCumplidoProvCrudService: EvaluacionCumplidoProvCrudService,
   ) {
     this.evaluacionCumplidoProvCrudService.evaluacion$.subscribe((evaluacion) => {
       if (evaluacion) {
@@ -60,6 +61,20 @@ export class ModalCargarItemsComponent {
     this.fileInput.nativeElement.click();
   }
 
+  descargarPlantilla(){
+    const byteCharacters = atob(plantillaBase64);
+    const byteNumbers = Array.from(byteCharacters, char => char.charCodeAt(0));
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Formato-carga-masiva-de-items.xlsx';
+    a.click();
+
+    URL.revokeObjectURL(url);
+  }
 
   async onFileSelected(event: Event) {
     this.archivoSeleccionado = true;
