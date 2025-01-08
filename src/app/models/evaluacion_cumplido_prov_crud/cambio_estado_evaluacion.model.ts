@@ -9,3 +9,12 @@ export interface CambioEstadoEvaluacion {
   FechaCreacion: Date;
   FechaModificacion: Date;
 }
+
+export interface BodyCambioEstadoEvaluacion {
+  EvaluacionId: {
+    Id: number | undefined;
+  }
+  EstadoEvaluacionId: {
+    Id: number;
+  }
+}

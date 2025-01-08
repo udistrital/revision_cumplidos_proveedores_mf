@@ -9,7 +9,7 @@ import { ModalCargarItemsComponent } from '../modal-cargar-items/modal-cargar-it
 import { UnidadMedida } from 'src/app/models/unidad-medida';
 import { UtilsService } from 'src/app/services/utils.service';
 import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
-import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
+import { Evaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/evaluacion.model';
 
 @Component({
   selector: 'app-items-a-evaluar',
@@ -26,9 +26,15 @@ export class ItemsAEvaluarComponent implements OnInit {
   listaTipoNecesidad:any[]=[]
   evaluacion: Evaluacion | null = null;
   @Output() listaItemsEmiter = new EventEmitter<any>();
+
+
   async ngOnInit() {
+    await this.evaluacionCumplidosCrud.evaluacion$.subscribe({
+      next: (res: any) => {
+        this.evaluacion = res;
+      },
+    });
     this.listaUnidades = await this.utilsService.obtenerMedidas();
-    this.evaluacion = await this.evaluacionnCymplidosCrud.getEvaluacion();
     await this.consulatarItems();
 
 
@@ -38,7 +44,7 @@ export class ItemsAEvaluarComponent implements OnInit {
     private popUpManager: PopUpManager,
     private dialog: MatDialog,
     private utilsService: UtilsService,
-    private evaluacionnCymplidosCrud: EvaluacionCumplidoProvCrudService
+    private evaluacionCumplidosCrud: EvaluacionCumplidoProvCrudService
   ) {
     this.formAddIntems = this.fb.group({
       id_item: [null, Validators.required],
@@ -64,6 +70,7 @@ export class ItemsAEvaluarComponent implements OnInit {
     { def: 'acciones', header: 'ACCIONES', isAction: true },
   ];
 
+  
   async agregarItem() {
     console.log(this.formAddIntems.value);
     const existe = this.listaItems.some(
@@ -92,7 +99,7 @@ export class ItemsAEvaluarComponent implements OnInit {
     }
   }
   obtenerInfoFormulario():ItemAEvaluar {
-    
+
     console.log('evaaaaluacion idddddd ', this.evaluacion?.Id);
     return {
       Identificador: this.formAddIntems.get('id_item')?.getRawValue() ?? '',
@@ -177,10 +184,10 @@ export class ItemsAEvaluarComponent implements OnInit {
         '¿Estás seguro de guardar el ítem?'
       );
       if (confirm.isConfirmed) {
-       
-         
+
+
           try{
-              this.evaluacionnCymplidosCrud.post("/item/guardado_multiple", this.listaItems).subscribe({ 
+              this.evaluacionCumplidosCrud.post("/item/guardado_multiple", this.listaItems).subscribe({
                 next: (res: any) => {
                   this.popUpManager.showSuccessAlert('Items guardados correctamente');
                   this.consulatarItems();
@@ -190,13 +197,13 @@ export class ItemsAEvaluarComponent implements OnInit {
           }catch(error){
             console.error(error);}
 
-      
+
       }
     }
   }
 
   async consulatarItems(){
-    this.evaluacionnCymplidosCrud.get("/item?query=EvaluacionId.Id:"+this.evaluacion?.Id+",Activo:true"+"&limit=-1").subscribe({
+    this.evaluacionCumplidosCrud.get("/item/?query=EvaluacionId.Id:"+this.evaluacion?.Id+",Activo:true"+"&limit=-1").subscribe({
       next: (res: any) => {
         this.listaItems = res.Data.map((item: any) => {
           return {
@@ -212,7 +219,7 @@ export class ItemsAEvaluarComponent implements OnInit {
             acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
           };
         });
-        if (this.listaItems.length > 0 &&  this.listaItems[0].Id !== undefined){ 
+        if (this.listaItems.length > 0 &&  this.listaItems[0].Id !== undefined){
           this.listaItemsEmiter.emit(this.listaItems);}
           else{
             this.listaItems=[];

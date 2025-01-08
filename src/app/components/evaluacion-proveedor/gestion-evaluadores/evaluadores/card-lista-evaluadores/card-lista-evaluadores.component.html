@@ -4,7 +4,7 @@
       <div class="box-items">
         <div><span>N° de Documento</span></div>
         <div>
-          <textarea class="documento-box text-area  text-center">{{
+          <textarea class="documento-box text-area  text-center" readonly>{{
             evaluador.NumeroDocumento
           }}</textarea>
         </div>
@@ -12,7 +12,7 @@
       <div class="box-items">
         <div  ><span>Cargo</span></div>
         <div  >
-          <textarea class="item-nombre text-area  text-center">{{
+          <textarea class="item-nombre text-area  text-center" readonly>{{
             evaluador.Cargo
           }}</textarea>
         </div>
@@ -20,19 +20,26 @@
       <div class="box-items">
         <div > <span>Items a evaluar</span></div>
         <div  >
-          <textarea class="text-area text-center">{{
-            evaluador.ItemAEvaluar
+          <textarea class="text-area text-center" readonly>{{
+            getItemsAEvaluar(evaluador.ItemAEvaluar)
           }}</textarea>
         </div>
       </div>
       <div class="box-items">
         <div><span>Procentaje
         </span></div>
-        <div>
-          <textarea class="text-area text-center">{{
-            evaluador.PorcentajeDeEvaluacion
+        <div *ngIf="evaluador.PorcentajeDeEvaluacion < 1; else elseBlock">
+          <textarea class="text-area text-center" readonly>{{
+            evaluador.PorcentajeDeEvaluacion | percent
           }}</textarea>
         </div>
+        <ng-template #elseBlock>
+          <div>
+            <textarea class="text-area text-center" readonly>{{
+              (evaluador.PorcentajeDeEvaluacion/100) | percent
+            }}</textarea>
+          </div>
+        </ng-template>
       </div>
       <div>
         <button

@@ -12,4 +12,5 @@ export interface Contrato {
     CDPFechaExpedicion: string;
     Rubro: string;
     ProveedorId:string
+    Nit: number;
 }

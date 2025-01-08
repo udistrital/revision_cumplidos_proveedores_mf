@@ -17,14 +17,18 @@ import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_c
 import { Item } from './../../../../models/evaluacion_cumplido_prov_crud/item.model';
 import { JbpmService } from './../../../../services/jbpm_service.service';
 import { PersonaNatural } from 'src/app/models/persona-natural';
-import { Evaluacion } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/evaluacion';
 import {
   AsignacionEvaluador,
   AsignacionEvaluadorBody,
+  TransaccionAsignacionEvaluador,
 } from 'src/app/models/evaluacion_cumplido_prov_crud/asignacion_evaluador.model';
 import { map } from 'rxjs';
 import { RolAsignacionEvaluador } from 'src/app/models/evaluacion_cumplidos_proiveedores_crud/rol_asignacion_evaluador';
 import { BodyItem } from 'src/app/models/evaluacion_cumplido_prov_crud/item.model'
+import { Evaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/evaluacion.model';
+import { UserService } from 'src/app/services/user.services';
+import { AsignacionEvaluadorItem } from 'src/app/models/evaluacion_cumplido_prov_crud/asignacion_evaluador_item.model';
+import { CambioEstadoEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/cambio_estado_evaluacion.model';
 
 
 @Component({
@@ -36,22 +40,28 @@ export class EvaluadoresComponent implements OnInit {
   panelOpenStateItems = true;
   listaEvaluadores: Evaluador[] = [];
   formAddEvaluadores: FormGroup;
-  asignacionEvaluador: AsignacionEvaluadorBody[] = [];
+  asignacionEvaluador: TransaccionAsignacionEvaluador[] = [];
   formularioEnviado: boolean = false;
   asignacion!: AsignacionEvaluador;
   rolAsignacion: RolAsignacionEvaluador[] = [];
+  documentoSupervisor!: string;
   @Input() listaItems: ItemAEvaluar[] = [];
   @Output() porcentaje = new EventEmitter<number>();
-  evaluadres: PersonaNatural[] = [];
+  evaluadores: PersonaNatural[] = [];
   evaluacion!: Evaluacion | null;
+
+
   constructor(
     private fb: FormBuilder,
     private popUpManager: PopUpManager,
     private utilsService: UtilsService,
     private cdr: ChangeDetectorRef,
     private evaluacionCumplidoProvCrudService: EvaluacionCumplidoProvCrudService,
-    private jbpmService: JbpmService
+    private jbpmService: JbpmService,
+    private user: UserService,
   ) {
+    this.documentoSupervisor = user.getPayload().documento;
+    console.log('Documento Supervisor:', this.documentoSupervisor)
     this.formAddEvaluadores = this.fb.group({
       numero_documento: ['', [Validators.required]],
       cargo: ['', [Validators.required]],
@@ -61,12 +71,51 @@ export class EvaluadoresComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.evaluacion =
-      await this.evaluacionCumplidoProvCrudService.getEvaluacion();
-    await this.obterEvaluadores(this.evaluacion?.Id ?? 0);
+    await this.evaluacionCumplidoProvCrudService.evaluacion$.subscribe((evaluacion) => {
+      this.evaluacion = evaluacion;
+    })
+    await this.refrescarEvaluadores();
   }
+
+
   ngOnChanges(changes: SimpleChanges) {
 
+  }
+
+  async refrescarEvaluadores(){
+    await this.evaluacionCumplidoProvCrudService
+    .get(`/asignacion_evaluador/?query=EvaluacionId.Id:${this.evaluacion?.Id},Activo:true`)
+    .pipe(
+      map((res: any) => res.Data as AsignacionEvaluador[])
+    )
+    .subscribe({
+      next: (data: AsignacionEvaluador[]) => {
+        if (data[0].Id !== undefined){
+          data.map((asignacion) => {
+            
+            this.obtenerItemsAsinagcion(asignacion.Id)
+            .then((items) => {
+              console.log("Items:",items )
+              this.listaEvaluadores = [
+                ...this.listaEvaluadores,
+                {
+                  NumeroDocumento: asignacion.PersonaId,
+                  Cargo: asignacion.Cargo,
+                  ItemAEvaluar: items,
+                  PorcentajeDeEvaluacion: asignacion.PorcentajeEvaluacion,
+                  acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
+                }
+              ]
+              this.porcentaje.emit(this.sumarPorcentaje());
+            })
+          })
+
+        }
+      },
+      error: (error: any) => {
+        this.popUpManager.showErrorAlert('No fue posible obtener los evaluadores');
+      }
+    })
   }
 
   handleActionClick(event: { action: any; element: any }) {
@@ -77,16 +126,27 @@ export class EvaluadoresComponent implements OnInit {
 
   async agregarEvaluador() {
     if (this.validarFromulario()) {
-      const existe = this.listaEvaluadores.some(
+      const existe = this.listaEvaluadores.find(
         (item) =>
           item.NumeroDocumento === this.obtenerInfoFormulario().NumeroDocumento
       );
 
-      if (existe) {
-        this.popUpManager.showErrorAlert('El Documento ya existe');
+      if (existe !== undefined) {
+        let confirm = await this.popUpManager.showConfirmAlert(`El evaluador identificado con documento ${existe.NumeroDocumento} ya existe ¿Desea sobreescribirlo?`)
+        if (confirm.isConfirmed) {
+          this.listaEvaluadores = this.listaEvaluadores.map((evaluador) => {
+            if (evaluador.NumeroDocumento === existe.NumeroDocumento) {
+              evaluador = existe;
+              return this.obtenerInfoFormulario();
+            }
+            return evaluador;
+          });
+          this.porcentaje.emit(this.sumarPorcentaje());
+          this.formAddEvaluadores.reset();
+        }
       } else {
         let confirm = await this.popUpManager.showConfirmAlert(
-          '¿Estás seguro de agregar el ítem?'
+          '¿Estás seguro de agregar el evaluador y sus items?'
         );
         if (confirm.isConfirmed) {
           if (
@@ -114,10 +174,10 @@ export class EvaluadoresComponent implements OnInit {
     }
   }
 
-  async guardarEvaluadorIndividual(data: AsignacionEvaluadorBody): Promise<AsignacionEvaluadorBody> {
+  async guardarEvaluadorIndividual(data: TransaccionAsignacionEvaluador): Promise<TransaccionAsignacionEvaluador> {
     return new Promise((resolve, reject) => {
       this.evaluacionCumplidoProvCrudService
-        .post('/asignacion_evaluador', data)
+        .post('/crear_solicitud_asignacion_evaluador', data)
         .subscribe({
           next: (res: any) => {
 
@@ -137,29 +197,29 @@ export class EvaluadoresComponent implements OnInit {
 
 
   async guardarEvaluadores() {
-    const rol: RolAsignacionEvaluador = await this.obterRolASignacion('EV');
     this.asignacionEvaluador = this.listaEvaluadores.map((evaluador) => {
       return {
+        EvaluacionId: this.evaluacion && this.evaluacion.Id ? this.evaluacion.Id : 0,
         PersonaId: String(evaluador.NumeroDocumento),
-        EvaluacionId:
-          this.evaluacion && this.evaluacion.Id
-            ? { Id: this.evaluacion.Id }
-            : { Id: 0 },
         Cargo: evaluador.Cargo,
-        RolAsignacionEvaluadorId: { Id: rol.Id },
-        PorcentajeEvaluacion: Number(evaluador.PorcentajeDeEvaluacion),
-        ItemsAEvaluar: evaluador.ItemAEvaluar,
+        PorcentajeEvaluacion: Number(evaluador.PorcentajeDeEvaluacion)/100,
+        RolAsignacionEvaluador: this.documentoSupervisor === String(evaluador.NumeroDocumento) ?  'SP': 'EV',
+        ItemsAEvaluar: evaluador.ItemAEvaluar.map((item) => item.Id),
       };
     });
+
+    await this.eliminarEvaluadores();
 
     const resultados = await Promise.allSettled(
       this.asignacionEvaluador.map((data) => {
         return (async () => {
-          let asignacion: AsignacionEvaluadorBody = await this.guardarEvaluadorIndividual(data);
+          let asignacion: TransaccionAsignacionEvaluador = await this.guardarEvaluadorIndividual(data);
+          console.log("Data", data)
           await this.guardarItemsEvaluador(asignacion?.Id ?? 0, data.ItemsAEvaluar ?? []);
         })();
       })
     );
+
 
     resultados.forEach((resultado, index) => {
       if (resultado.status === 'fulfilled') {
@@ -170,13 +230,66 @@ export class EvaluadoresComponent implements OnInit {
     });
   }
 
+  async eliminarEvaluadores(){
+    await this.evaluacionCumplidoProvCrudService
+    .get(`/asignacion_evaluador/?query=EvaluacionId.Id:${this.evaluacion?.Id},Activo:true`)
+    .pipe(
+      map((res: any) => res.Data as AsignacionEvaluador[])
+    )
+    .subscribe({
+      next: (data: AsignacionEvaluador[]) => {
+        if (data[0].Id !== undefined){
+          data.map((asignacion) => {
+            let existe = this.evaluadorInLista(String(asignacion.PersonaId), this.listaEvaluadores);
+            if (!existe){
+              this.evaluacionCumplidoProvCrudService
+              .delete('/asignacion_evaluador', asignacion.Id)
+              .subscribe({
+                error: (error: any) => {
+                  this.popUpManager.showErrorAlert(
+                    `No fue posible eliminar el evaluador ${asignacion.PersonaId}`
+                  );
+                  console.error(error);
+                },
+              });
+            }
+          })
+        }
+      },
+      error: (error: any) => {
+        this.popUpManager.showErrorAlert(
+          'No fue posible eliminar los evaluadores'
+        );
+        console.error(error);
+      },
+    })
+  }
+
+  desactivarEstadosAnterioresEvaluacion(){
+    this.evaluacionCumplidoProvCrudService
+    .get(`/cambio_estado_evaluacion/?query=EvaluacionId.Id:${this.evaluacion?.Id},Activo:true&limit=-1&sortby=FechaCreacion&order=desc`)
+    .pipe(
+      map ((res:any) => res.Data as CambioEstadoEvaluacion[])
+    )
+    .subscribe({
+      next: (data:CambioEstadoEvaluacion[]) => {
+        if (data[0].Id !== undefined){
+          data.forEach((cambioEstado) => {
+            this.evaluacionCumplidoProvCrudService
+            .delete(`/cambio_estado_evaluacion`, cambioEstado.Id)
+          })
+        }
+      },
+      error: (error: any) => {
+        this.popUpManager.showErrorAlert('No fue posible desactivar los estados anteriores de la evaluación')
+      }
+    })
+  }
 
   async guardarItemsEvaluador(
     asignacionEvaluadorId: number,
-    ItemsAEvaluar: any[]
-
+    ItemsAEvaluar: number[]
   ) {
-    let existe: boolean = false;
     if (ItemsAEvaluar.length > 0) {
       this.evaluacionCumplidoProvCrudService
         .get(
@@ -186,7 +299,8 @@ export class EvaluadoresComponent implements OnInit {
           next: (res: any) => {
             if (res.Data[0].Id !== undefined) {
               for (let i = 0; i < res.Data.length; i++) {
-                existe = this.itemInLista(res.Data[i].ItemId.Id, ItemsAEvaluar);
+                let existe = this.itemInLista(res.Data[i].ItemId.Id, ItemsAEvaluar);
+                console.log("Item Actual:", res.Data[i].ItemId.Id, "Items a evaluar:", ItemsAEvaluar)
                 if (!existe) {
                   this.evaluacionCumplidoProvCrudService
                     .delete('/asignacion_evaluador_item', res.Data[i].Id)
@@ -203,7 +317,6 @@ export class EvaluadoresComponent implements OnInit {
             }
 
             ItemsAEvaluar.forEach((item) => {
-             ;
               this.evaluacionCumplidoProvCrudService
                 .post('/asignacion_evaluador_item', {
                   AsignacionEvaluadorId: { Id: asignacionEvaluadorId },
@@ -229,9 +342,19 @@ export class EvaluadoresComponent implements OnInit {
     }
   }
 
-  itemInLista(idItem: number, ItemsAEvaluar: any[]): boolean {
+
+  evaluadorInLista(docEvaluador: string, Evaluadores: Evaluador[]){
+    for (let i = 0; i < Evaluadores.length; i++) {
+      if (String(Evaluadores[i].NumeroDocumento) === docEvaluador) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  itemInLista(idItem: number, ItemsAEvaluar: number[]): boolean {
     for (let i = 0; i < ItemsAEvaluar.length; i++) {
-      if (ItemsAEvaluar[i].Id == idItem) {
+      if (ItemsAEvaluar[i] == idItem) {
         return true;
       }
     }
@@ -291,6 +414,9 @@ export class EvaluadoresComponent implements OnInit {
   sumarPorcentaje() {
     let suma = 0;
     this.listaEvaluadores.forEach((evaluador) => {
+      if(evaluador.PorcentajeDeEvaluacion < 1){
+        evaluador.PorcentajeDeEvaluacion = evaluador.PorcentajeDeEvaluacion * 100;
+      }
       suma += Number(evaluador.PorcentajeDeEvaluacion);
     });
     return suma;
@@ -319,14 +445,14 @@ export class EvaluadoresComponent implements OnInit {
         .subscribe({
           next: (data) => {
             console.log(data.Personas);
-            this.evaluadres = data.Personas;
+            this.evaluadores = data.Personas;
           },
         });
     }
     return null;
   }
 
-  async obterRolASignacion(codigo: string): Promise<RolAsignacionEvaluador> {
+  async obtenerRolASignacion(codigo: string): Promise<RolAsignacionEvaluador> {
     return new Promise((resolve, reject) => {
       this.evaluacionCumplidoProvCrudService
         .get(`/rol_asignacion_evaluador?query=CodigoAbreviacion:${codigo}`)
@@ -352,59 +478,29 @@ export class EvaluadoresComponent implements OnInit {
   }
 
 
-
-  async obterEvaluadores(id: number): Promise<Evaluador[]> {
+  async obtenerItemsAsinagcion(idAsignacion: number): Promise<Item[]> {
     return new Promise((resolve, reject) => {
       this.evaluacionCumplidoProvCrudService
-        .get(`/asignacion_evaluador?query=EvaluacionId.Id:${id}&limit=-1`)
+        .get(`/asignacion_evaluador_item?query=AsignacionEvaluadorId.Id:${idAsignacion},Activo:true&limit=-1`)
+        .pipe(
+          map((res: any) => res.Data as AsignacionEvaluadorItem[])
+        )
         .subscribe({
-          next: async (res: any) => {
-            if (res.Data && res.Data.length > 0) {
-              this.listaEvaluadores = await Promise.all(res.Data.map(async (asignacion: any) => {
-                let items = await this.obtenerItemsAsinagcion(asignacion.Id);
-                return {
-                  NumeroDocumento: asignacion.PersonaId,
-                  Id: asignacion.Id,
-                  Cargo: asignacion.Cargo,
-                  ItemAEvaluar: items,
-                  PorcentajeDeEvaluacion: asignacion.PorcentajeEvaluacion,
-                  acciones: [{ icon: 'delete', actionName: 'delete', isActive: true }],
-                };
-              }));
+          next: (data: AsignacionEvaluadorItem[]) => {
+            if (data.length > 0 && data[0].ItemId !== undefined) {
+              data.map((item) => {
+                const items = data.map(item => item.ItemId);
+                resolve(items);
+              })
+            } else {
+              resolve([]);
             }
-            resolve(this.listaEvaluadores);
           },
-          error: (err) => {
-            console.error('Error al obtener rol de asignación:', err);
-            reject(err);
-          },
-        });
-    });
-  }
-
-
-
-  async obtenerItemsAsinagcion(idAsignacion: number): Promise<number[]> {
-    let items: number[] = [];
-    return new Promise((resolve, reject) => {
-      this.evaluacionCumplidoProvCrudService
-        .get(`/asignacion_evaluador_item?query=AsignacionEvaluadorId.Id:${idAsignacion}&limit=-1`)
-        .subscribe({
-          next: (res: any) => {
-            if (res.Data && res.Data.length > 0) {
-              items = res.Data.map((item: any) => {
-                if (item && item.ItemId && item.ItemId.Id !== undefined) {
-                  return item.ItemId.Id;
-                }
-                return null;
-              }).filter((id: number | null) => id !== null); 
-            }
-            resolve(items);
-          },
-          error: (err) => {
-            reject(err);
-          },
-        });
+          error: (error: any) => {
+            this.popUpManager.showErrorAlert('No fue posible obtener los items del evaluador');
+            reject(error);
+          }
+        })
     });
   }
 }

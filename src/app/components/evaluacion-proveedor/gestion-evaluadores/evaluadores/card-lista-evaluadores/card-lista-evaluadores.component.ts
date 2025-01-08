@@ -1,7 +1,7 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
+import { Item } from 'src/app/models/evaluacion_cumplido_prov_crud/item.model';
 import { Evaluador } from 'src/app/models/evaluador';
-import { ItemAEvaluar } from 'src/app/models/item_a_evaluar';
 
 @Component({
   selector: 'app-card-lista-evaluadores',
@@ -13,12 +13,15 @@ export class CardListaEvaluadoresComponent {
 
   @Input() listaEvaluadores: Evaluador[] = [];
   @Input() eliminarItem!: (id: number) => Promise<void>;
- 
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes["listaItems"]) {
-    }
-}
+
+
+
+
+
+  getItemsAEvaluar(items: Item[]): string {
+    return items.map(item => item.Identificador).join(",").trim();
+  }
 
 
   async ejecutarEliminarItem(id: number) {
@@ -26,6 +29,6 @@ export class CardListaEvaluadoresComponent {
       await this.eliminarItem(id);
     }
   }
- 
-  
+
+
 }

@@ -9,8 +9,8 @@ export const environment = {
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/core_amazon_crud/v1',
   FIRMA_ELECTRONICA_MID:
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/firma_electronica_mid/v1',
-  JBPM://https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_jbpm/v2',
-  'http://busservicios.intranetoas.udistrital.edu.co:8282/wso2eiserver/services/administrativa_pruebas',
+  JBPM:'https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_jbpm/v2',
+  //'http://busservicios.intranetoas.udistrital.edu.co:8282/wso2eiserver/services/administrativa_pruebas',
   // Notificaciones
   JBPMPOST:
     'https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa/v1',
@@ -18,7 +18,8 @@ export const environment = {
   NOTIFICACION_MID_WS:
     'ws://autenticacion.portaloas.udistrital.edu.co/apioas/notificacion_mid/v1/ws',
   ADMINISTRATIVA_AMAZON_API:
-    'https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_amazon_api/v1',
+    'http://api.intranetoas.udistrital.edu.co:8104/v1',
+    //'https://autenticacion.portaloas.udistrital.edu.co/apioas/administrativa_amazon_api/v1',
   //"http://api.intranetoas.udistrital.edu.co:8104/v1"
   EVALUACION_CUMPLIDO_PROV_CRUD: 'http://localhost:8080/v1',
   EVALUACION_CUMPLIDO_PROV_MID: 'http://localhost:8090/v1'
