@@ -11,7 +11,7 @@
         <button *ngIf="estadoEvaluacion.CodigoAbreviacion === 'PRE'" mat-button style="color:white" class="button">
           <mat-icon style="color:white">border_color</mat-icon> FIRMAR
         </button>
-        <button *ngIf="estadoEvaluacion.CodigoAbreviacion === 'AEV' || estadoEvaluacion.CodigoAbreviacion === 'PRE'" (click)="DescargarPdfEvaluacion()" mat-button style="color:white" class="button">
+        <button *ngIf="estadoEvaluacion.CodigoAbreviacion === 'AEV' || estadoEvaluacion.CodigoAbreviacion === 'PRE'" mat-button style="color:white" class="button">
           <mat-icon style="color:white">file_download</mat-icon> DESCARGAR EVALUACIÓN
         </button>
         <button routerLink="/listar-contratos-evaluar" mat-button style="color:white; background-color:#D65756" class="button">

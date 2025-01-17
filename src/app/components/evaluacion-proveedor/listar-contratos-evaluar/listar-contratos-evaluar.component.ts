@@ -62,6 +62,7 @@ export class ListarContratosEvaluarComponent {
     private router: Router
   ){
     this.documento_evaluador = user.getPayload().documento;
+
     this.filtrosForm = this.fb.group({
       nombreProveedor: ['', [Validators.minLength(5)]],
       numeroContrato: ['', [Validators.pattern(/^[0-9]+$/)]],
@@ -80,7 +81,7 @@ export class ListarContratosEvaluarComponent {
     });
 
     this.documentoSupervisor = this.user.getPayload().documento;
-
+    console.log("documentoSupervisor", this.documentoSupervisor); 
   }
 
   obtenerAsignacionesEvaluador(){
@@ -89,7 +90,7 @@ export class ListarContratosEvaluarComponent {
       'Por favor, espera mientras se cargan las asignaciones del evaluador.'
     );
     this.evaluacionCumplidoProvMidService
-    .get(`/consultar-asignaciones/${this.documento_evaluador}`)
+    .get(`/asignaciones/consultar/${this.documento_evaluador}`)
     .pipe(
       map((response:any) => response.Data as AsignacionEvaluacion)
     )
@@ -340,8 +341,6 @@ export class ListarContratosEvaluarComponent {
     }
 
 
-  
-
   handleActionClick(event: {action: any, element: any}) {
     if (event.action.actionName === 'edit') {
       this.realizarEvaluacion(event.element.asignacionEvaluadorId);
@@ -350,6 +349,12 @@ export class ListarContratosEvaluarComponent {
     } else if (event.action.actionName === 'accessibility'){
       this.gestionarEvaluacion(event.element);
     }
+  /*
+      await this.evaluacionCumplidosCrud.setEvaluacion(evaluacion);
+      this.router.navigate([vista]);
+      resolve();
+    });
+    */
   }
 
 

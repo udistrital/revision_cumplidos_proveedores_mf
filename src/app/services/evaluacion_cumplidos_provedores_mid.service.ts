@@ -36,7 +36,7 @@ export class EvaluacionCumplidosProveedoresMidService {
 
   // postCargaExcel(data: any) {const acces_token = window.localStorage.getItem('access_token');
 
-  //   this.requestManager.setPath('EVALUACION_CUMPLIDOS_PROVEEDORES_MID');
+  //   this.requestManager.setPath('EVALUACION_CUMPLIDO_PROV_MID');
   //   this.requestManager.post_file('carga_excel', data)
   // }
 
