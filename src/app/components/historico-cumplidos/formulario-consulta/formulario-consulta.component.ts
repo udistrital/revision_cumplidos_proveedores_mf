@@ -32,7 +32,7 @@ export class FormularioConsultaComponent implements OnInit {
   @Input() anios: number[] = [];
   @Input() meses: Month[] = [];
   @Output() listaCumplidos = new EventEmitter<Cumplido[]>();
-  title: string = 'CONSULTA CUMPLIDOS APROBADOS';
+  title: string = 'HISTÓRICOS CUMPLIDOS PROVEEDORES';
   formularioFiltroHistorico!: FormGroup;
   ListaCumplidos: Cumplido[] = [];
   listaEstadosCumplido: EstadoCumplido[] = [];
@@ -45,7 +45,7 @@ export class FormularioConsultaComponent implements OnInit {
   listaNumerosContratos: any[] = [];
   listaContratos: any[] = [];
 
-  dependenciasSeleccionadas!: Dependencia[]; 
+  dependenciasSeleccionadas!: Dependencia[];
   contratosFiltrados!: any[];
   vigenciasFiltradas!: any[];
   proveedoresFiltrados!: Contrato[];
@@ -214,7 +214,7 @@ export class FormularioConsultaComponent implements OnInit {
       event.stopPropagation();
     }
   }
-  
+
 
   async consultar() {
     let peticion = {
@@ -395,7 +395,6 @@ export class FormularioConsultaComponent implements OnInit {
   }
 
   async dependenciaChange(envent: Dependencia[]) {
-    this.dependenciasSeleccionadas = [...this.dependenciasSeleccionadas, ...envent];
     if (envent.length > 0) {
       this.formularioFiltroHistorico.get('nombres_proveedor')?.enable();
       this.formularioFiltroHistorico.get('numeros_contrato')?.enable();
@@ -481,7 +480,6 @@ export class FormularioConsultaComponent implements OnInit {
   }
 
   contratoChange(elemt: any) {
-    this.contratosFiltrados = [...this.contratosFiltrados, this.listaContratos];
     elemt.forEach((vigencia2: any) => {
       this.listaContratos.forEach((vigencia) => {
         if (vigencia.vigencia === vigencia2.vigencia) {
