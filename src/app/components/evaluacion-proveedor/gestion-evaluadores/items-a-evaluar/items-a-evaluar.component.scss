@@ -1,0 +1,246 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+.title {
+  margin: 10px;
+  font-weight: normal;
+  font-size: 2rem;
+}
+
+.text-center {
+  text-align: center !important;
+}
+.text-left {
+  text-align: left !important;
+}
+.text-right {
+  text-align: right !important;
+}
+
+.color-white {
+  color: white !important;
+}
+.text-color-principal {
+  color: #8c1a19;
+}
+.mat-expansion-panel-header {
+  background-color: #8c1a19 !important;
+  color: white !important;
+}
+.box-form {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  justify-items: center !important;
+  align-items: center !important;
+}
+
+.tex-size-17 {
+  font-size: 20px;
+}
+
+.form {
+  width: 80%;
+}
+
+.margin-10px {
+  margin: 10px;
+}
+
+.margin-5px {
+  margin: 5px;
+}
+
+.btn-add {
+  background-color: #8c1a19;
+  color: white !important;
+}
+
+.btn-add:hover {
+  transform: scale(1.2);
+  background-color: #8c1a19;
+}
+
+.text-area {
+  border: solid rgba(0, 0, 0, 0.164) 1px;
+  pointer-events: none;
+  resize: none;
+  width: 100%;
+  height: 60px;
+  border-radius: 5px;
+}
+
+.text-area-id {
+  pointer-events: none;
+  resize: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+}
+
+.box-buttons{
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr; 
+  gap: 10px;
+  margin: 10px;
+}
+.box-items {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-items: center !important;
+  align-items: start !important;
+  gap: 10px;
+}
+
+.box-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 0.5fr;
+  justify-items: center !important;
+  align-items: center !important;
+  width: 100%;
+  gap: 2px;
+  text-align: center;
+}
+
+.id-input {
+  width: 90px !important;
+}
+.cantidad-input {
+  width: 150px !important;
+}
+.iva-input {
+  width: 70px !important;
+}
+.valor-input {
+  width: 130px !important;
+}
+.unidad-input {
+  width: 200px !important;
+}
+.box-text-area {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-items: stretch !important;
+  align-items: center !important;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  width: 100%;
+  text-align: center;
+}
+.box-text-area > div:nth-child(8) {
+  grid-column: 1 / -1;
+}
+.btn-delete {
+  border: none;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.btn-delete :hover {
+  transform: scale(1.1);
+}
+
+.text-btn-delete {
+  font-size: 32px;
+  color: #8c1a19;
+}
+.item-id {
+  border: solid rgba(0, 0, 0, 0.164) 1px;
+  padding: 5px;
+  min-width: 80px;
+  max-width: 80px;
+}
+
+.item-nombre {
+  border: solid rgba(0, 0, 0, 0.164) 1px;
+  padding: 5px;
+  min-width: 120px;
+}
+
+.item-descripcion {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.card-item {
+  width: 100%;
+  border: solid #4042412f 1px;
+}
+
+.bg-panel-title {
+  background-color: #8c1a19;
+  color: white;
+}
+.card-item {
+  width: 100%;
+}
+.expansion-panel-title-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+:host ::ng-deep .mat-expansion-indicator::after {
+  color: white;
+}
+
+@media screen and (max-width: 1280px) {
+  .box-text-area {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+    align-items: center;
+  }
+
+  .box-text-area > div:nth-child(5),
+  .box-text-area > div:nth-child(6),
+  .box-text-area > div:nth-child(7) {
+    grid-column: span 1;
+    justify-self: center;
+    align-self: center;
+    grid-column: span 1;
+  }
+}
+
+@media screen and (max-width: 886px) {
+  .box-text-area {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .box-text-area > div:nth-child(7) {
+    grid-column: span 1;
+  }
+
+  .box-text-area > div:nth-child(8) {
+    grid-column: span 2;
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .box-text-area {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .box-text-area > div:nth-child(1),
+  .box-text-area > div:nth-child(2),
+  .box-text-area > div:nth-child(3),
+  .box-text-area > div:nth-child(4),
+  .box-text-area > div:nth-child(5),
+  .box-text-area > div:nth-child(6),
+  .box-text-area > div:nth-child(7),
+  .box-text-area > div:nth-child(8) {
+    grid-column: span 1;
+  }
+
+  .input-680 {
+    width: 100% !important;
+  }
+}

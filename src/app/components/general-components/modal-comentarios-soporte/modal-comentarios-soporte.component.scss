@@ -1,0 +1,39 @@
+.modal-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.card-visualizar-comentarios {
+  border-radius: 10px;
+  width: 940px;
+  height: auto;
+  padding-bottom: 0%;
+  margin: 0 auto;
+}
+
+.comentarios-tittle{
+  justify-content: center;
+  color: white;
+  background-color: #98483c;
+  padding: 10px;
+}
+
+.card-generar-comentario{
+  margin-top: 5%;
+  border-radius: 10px;
+  margin-bottom: 5%;
+}
+
+.sppiner{
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+mat-dialog-content{
+  padding: 0;
+  margin: 0;
+  height: auto;
+
+}

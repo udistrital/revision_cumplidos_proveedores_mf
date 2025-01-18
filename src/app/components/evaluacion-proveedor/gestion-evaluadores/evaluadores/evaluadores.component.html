@@ -1,0 +1,102 @@
+<mat-accordion>
+  <mat-expansion-panel
+    [expanded]="false"
+    (opened)="panelOpenStateItems = true"
+    (closed)="panelOpenStateItems = false"
+  >
+    <mat-expansion-panel-header class="bg-panel-title">
+      <mat-panel-title class="expansion-panel-title-box">
+        <div>
+          <h3 class="title color-white text-center">Evaluadores</h3>
+        </div>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <article>
+      <div>
+        <form
+          action=""
+          [formGroup]="formAddEvaluadores"
+          (submit)="agregarEvaluador()"
+        >
+
+          <div class="box-form">
+            <div class="wp-collection-item">
+              <p class="labels">N° de Documento</p>
+              <mat-form-field>
+                <mat-label class="center-label">N° de Documento</mat-label>
+                <input
+                  matInput
+                  formControlName="numero_documento"
+                  type="text"
+                  (input)="obtenerEvaluador($event)"
+                />
+                <mat-error *ngIf=" formularioEnviado  &&  formAddEvaluadores.get('numero_documento')?.invalid" class="label-error">
+                  Ingresa numero de documento
+                </mat-error>
+              </mat-form-field>
+
+              <div *ngIf="evaluadores.length  >0">
+                <li *ngFor="let persona of evaluadores"> {{ persona.nombre }} - {{ persona.documento }}
+                </li>
+              </div>
+            </div>
+            <div class="wp-collection-item">
+              <p class="labels">Cargo</p>
+              <mat-form-field>
+                <mat-label class="center-label">Cargo</mat-label>
+                <input matInput formControlName="cargo" type="text" />
+                <mat-error *ngIf=" formularioEnviado  &&  formAddEvaluadores.get('cargo')?.invalid" class="label-error">
+                  Ingresa el cargo
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="wp-collection-item">
+              <p class="labels">item a evaluar</p>
+              <mat-form-field>
+                <mat-label class="center-label">item a evaluar</mat-label>
+                <mat-select multiple formControlName="item_a_evaluar">
+                  <mat-option *ngFor="let item of listaItems" [value]="item">
+                    {{item.Nombre}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf=" formularioEnviado  &&  formAddEvaluadores.get('item_a_evaluar')?.invalid" class="label-error">
+                  Ingresa el  item a evaluar
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="wp-collection-item">
+              <p class="labels">Porcentaje de la evaluacion</p>
+              <mat-form-field>
+                <mat-label class="center-label"
+                  >Porcentaje de la evaluacion</mat-label
+                >
+                <input matInput formControlName="porcentaje" type="text"  (input)="validarNumero('porcentaje',$event)"/>
+                <mat-error *ngIf=" formularioEnviado  && formAddEvaluadores.get('porcentaje')?.invalid" class="label-error">
+                  Ingresa el porcentaje
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="box-btn-add">
+
+            <button type="button" class="btn-add" mat-button (click)="guardarEvaluadores()">
+              <mat-icon>save</mat-icon>
+              Guardar
+            </button>
+            <button type="submit" class="btn-add" mat-button>
+              <mat-icon>add</mat-icon>
+              Agregar
+            </button>
+
+          </div>
+        </form>
+
+      </div>
+
+
+      <app-card-lista-evaluadores [listaEvaluadores]="listaEvaluadores" [eliminarItem]="eliminarItem.bind(this)"></app-card-lista-evaluadores>
+
+    </article>
+  </mat-expansion-panel>
+</mat-accordion>

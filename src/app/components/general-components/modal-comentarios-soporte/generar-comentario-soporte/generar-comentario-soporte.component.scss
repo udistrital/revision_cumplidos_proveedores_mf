@@ -1,0 +1,55 @@
+
+.text-area-comentario{
+  resize: none;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.enviar-comentario-button{
+  background-color: #98483C;
+  color: white;
+  border-radius: 5px;
+  width: 30%;
+  height: 50px;
+}
+
+.container-enviar{
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+// .box-text-area{
+//   resize: none;
+//   background-color: #FFFFFF;
+//   height: 100px;
+//   width: 100%;
+//   padding: 2%;
+//   border-radius: 10px;
+//   overflow-x: auto;
+//   overflow-y: hidden;
+// }
+
+.box-text-area{
+  border-width: 0;
+  resize: none;
+  background-color: #f8cecc;
+  height: 100px;
+  width: 100%;
+  color: rgb(85, 83, 83) !important;
+  padding: 2%;
+  border-radius: 10px;
+  border: 1px solid #b85450;
+}
+
+.mat-button-disabled {
+  background-color: #98483C;
+  color: #a3a3a3;
+  cursor: not-allowed;
+}
+
+.comment-error{
+  display: flex;
+  justify-content: center;
+}

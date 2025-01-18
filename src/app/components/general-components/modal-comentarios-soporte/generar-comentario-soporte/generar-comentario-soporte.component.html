@@ -1,0 +1,18 @@
+<mat-card>
+    <mat-card-content>
+      <form [formGroup]="comentarioForm" (ngSubmit)="registrarComentarioSoporte()">
+          <div>
+            <mat-label style="display:flex; justify-content:center"> Ingrese un comentario para el soporte</mat-label>
+            <textarea matInput formControlName="comentario" class="box-text-area"></textarea>
+          </div>
+          <mat-error class="comment-error" *ngIf="comentarioForm.get('comentario')?.invalid && (comentarioForm.get('comentario')?.touched || comentarioForm.get('comentario')?.dirty)">
+            {{getErrorMessage()}}
+          </mat-error>
+        <div class="container-enviar">
+          <button mat-button class="enviar-comentario-button"  [disabled]="comentarioForm.invalid" [class.mat-button-disabled]="comentarioForm.invalid" >
+            Crear Comentario
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+</mat-card>

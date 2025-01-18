@@ -1,0 +1,39 @@
+.title{
+  display: flex;
+  justify-content: center;
+  color: #8c1a19;
+  margin-bottom: 1rem;
+
+}
+
+.title-border{
+  border-bottom: 1px solid currentColor;
+  padding-left: 50px;
+  padding-right:50px;
+  font-size: 20px;
+  padding-bottom: 10px;
+}
+
+
+.nota{
+  justify-content: center;
+  color: #b85450;
+  margin-top: 2rem;
+  display: flex;
+}
+
+
+ .buttonInicio{
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  background-color: #60a917;
+  width: 15rem;
+  color: white !important;
+  text-align: center;
+}
+
+
+.containerButton{
+  text-align: center;
+}

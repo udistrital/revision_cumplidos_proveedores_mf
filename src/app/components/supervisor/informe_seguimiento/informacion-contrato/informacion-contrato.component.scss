@@ -1,0 +1,57 @@
+.wp-contract-form {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2rem;
+}
+
+.wp-inputs {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.wp-type-contract {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.set-margin-left {
+  margin-left: 3rem;
+}
+
+.labels {
+  display: block;
+  color: rgb(97, 93, 93) !important;
+  //font-weight: bold;
+  font-size: 20px;
+}
+
+.wp-input {
+  height: 25px;
+  margin: 0;
+  background-color: #f8cecc;
+  border-radius: 5px;
+  border: 1px solid #b85450;
+  color: bwlack;
+  text-align: center;
+  font-size: 15px;
+}
+
+.width-input {
+  width: 45%;
+}
+
+@media screen and (max-width: 1115px) {
+  .wp-type-contract {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 782px) {
+  .wp-contract-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

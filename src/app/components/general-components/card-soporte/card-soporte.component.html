@@ -1,0 +1,34 @@
+<div class="">
+  <mat-card-header class="soporte-cumplido-header">
+    <mat-card-title class="soporte-cumplido-title title.card">{{
+      soporte.Documento.Nombre
+    }}</mat-card-title>
+  </mat-card-header>
+  <div class="box-docs">
+    <mat-card-content class="soporte-cumplido-content">
+      <div class="box-docs">
+        <p class="">{{ soporte.Documento.FechaCreacion }}</p>
+
+        <p class="">{{ soporte.Documento.TipoDocumento }}</p>
+      </div>
+      <div class="box-text-area">
+        <p matInput>{{ soporte.Documento.Descripcion }}</p>
+      </div>
+
+    </mat-card-content>
+  </div>
+
+  <mat-card-footer>
+    <div >
+    
+      <div *ngIf="buttons && buttons.length > 0" class="btn-box">
+        <div *ngFor="let button of buttons" [class.dos-botones]="!(config.mode == mode.CD || config.mode == mode.RC || config.mode == mode.RO) || !(config.rolUsuario == rolUsuario.S)" [class.tres-botones]="(config.mode == mode.CD || config.mode == mode.RC || config.mode == mode.RO) && (config.rolUsuario == rolUsuario.S)">
+          <button mat-button [ngClass]="button.Classes" *ngIf="evaluarCondicional(button)" (click)="handleActionClick(button, soporte, cumplidoProveedorId)">
+            <mat-icon [color]="button.Color">{{ button.FontIcon }}</mat-icon>
+            {{ button.Text }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-card-footer>
+</div>

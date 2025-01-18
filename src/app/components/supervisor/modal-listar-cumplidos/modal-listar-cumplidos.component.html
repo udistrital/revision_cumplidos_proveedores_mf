@@ -1,0 +1,49 @@
+<div class="button-close">
+
+<button mat-icon-button mat-dialog-close aria-label="Cerrar" class="btn-close">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <mat-card>
+
+    <div class="title">
+      <mat-card-header class="">
+
+        <div class="text">
+         <mat-card-title class="text2">
+           <div class="">
+             <h5  >CARGA  SOPORTES</h5>
+           </div>
+         </mat-card-title>
+        </div>
+
+   </mat-card-header>
+    </div>
+
+    <mat-card-content>
+
+      <div class="btn-create">
+        <div class="text-center">
+          <p>Seleccione la solicitud a la cual va a cargar los soportes</p>
+        </div>
+        <div>
+          <button   mat-button class="button-enviar" (click)="crearCumplidoProveedor()" >Crear solicitud</button>
+        </div>
+      </div>
+
+
+      <br>
+
+
+        <div *ngIf="!loading" style="margin-left: 1.4%; margin-right: 1.4%">
+          <app-tabla [data]="dataSource" [displayedColumns]="displayedColumns"
+            (actionClicked)="handleActionClick($event)" ></app-tabla>
+        </div>
+    </mat-card-content>
+
+  </mat-card>
+
+
+</mat-dialog-content>
+

@@ -1,0 +1,32 @@
+<div>
+  <mat-card>
+    <div class="title">
+      <mat-card-header>
+        <mat-card-title
+          ><div class="title-border">REVISIÓN CUMPLIDOS</div></mat-card-title
+        >
+      </mat-card-header>
+    </div>
+    <div>
+      <mat-card-content>
+        <div>
+          <div class="texto-gris-negrita">
+            <div>
+              <p>ORDENADOR/A</p>
+            </div>
+            <div class="border-data-supervisor">
+              <p>{{nombreOrdenador}}</p>
+            </div>
+          </div>
+        </div>
+
+        <br>
+        <br>
+        <div *ngIf="!loading">
+          <app-tabla [data]="dataSource" [displayedColumns]="displayedColumns"
+          (actionClicked)="handleActionClick($event)" />
+        </div>
+      </mat-card-content>
+    </div>
+  </mat-card>
+</div>

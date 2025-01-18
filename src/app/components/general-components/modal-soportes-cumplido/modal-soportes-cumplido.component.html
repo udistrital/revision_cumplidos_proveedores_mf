@@ -1,0 +1,62 @@
+<div class="modal-header">
+  <button mat-icon-button (click)="close()">
+    <mat-icon color="warn">close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <div>
+    <div>
+      <app-form-soporte
+        [cumplidoProveedorId]="cumplidoProveedorId"
+        (recargarSoportes)="cargarSoportes()"
+        *ngIf="(data.Config.mode == mode.CD || data.Config.mode == mode.RC || data.Config.mode == mode.RO) && data.Config.rolUsuario == rolUsuario.S "
+      >
+      </app-form-soporte>
+    </div>
+  </div>
+  <mat-card>
+    <mat-card-header class="ver-soportes-tittle">
+      <mat-card-title>Soportes</mat-card-title>
+    </mat-card-header>
+    <mat-card-content
+      *ngIf="soportes == undefined; then Cargando; else listarSoportes"
+    >
+    </mat-card-content>
+    <div class="box-spiner">
+      <div>
+        <ng-template #Cargando><mat-spinner></mat-spinner></ng-template>
+      </div>
+    </div>
+    <ng-template #listarSoportes>
+      <section
+        *ngIf="soportes.length != 0; then conSoportes; else sinSoportes"
+      ></section>
+      <ng-template #conSoportes>
+        <p class="spaced-paragraph">
+          A continuación se muestran los soportes asociados al cumplimiento.
+        </p>
+        <mat-card>
+          <div class="margin-section">
+            <mat-card
+              class="soporte-cumplido-card"
+              *ngFor="let soporte of soportes"
+            >
+              <app-card-soporte
+                [soporte]="soporte"
+                [config]="this.data.Config"
+                [cumplidoProveedorId]="cumplidoProveedorId"
+                (recargarSoportes)="cargarSoportes()"
+                [buttons]="buttons"
+              ></app-card-soporte>
+            </mat-card>
+          </div>
+        </mat-card>
+      </ng-template>
+      <ng-template #sinSoportes>
+        <div class="text-center">
+          <p>No se encontraron soportes.</p>
+        </div>
+      </ng-template>
+    </ng-template>
+  </mat-card>
+</div>

@@ -1,0 +1,44 @@
+<mat-card style="margin-bottom:5%; background-color:#F9F9F9;">
+
+  <mat-card class="card-oas">
+    <mat-card-title class="card-tittle" >
+      <h1>{{tittle}}</h1>
+    </mat-card-title>
+
+    <br>
+    <br>
+    <!-- <mat-card-content>
+      <p class="nota">* Favor ingresar el nombre del proveedor para buscar, tambien puede usar el número de contrato y/o vigencia</p>
+      <form [formGroup]="filtrosForm" class="formulario-container">
+        <div class="filtros">
+          <mat-form-field class="input-field">
+            <mat-label>Nombre Proveedor</mat-label>
+            <input matInput formControlName="nombreProveedor" />
+          </mat-form-field>
+          <mat-form-field class="input-field">
+            <mat-label>Número de contrato</mat-label>
+            <input matInput formControlName="númeroContrato" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select  formControlName="vigencia" placeholder="Vigencia">
+              <mat-option *ngFor="let vigencia of vigencias" [value]="vigencia">
+                {{vigencia}}
+              </mat-option>
+          </mat-select>
+          </mat-form-field>
+          <button mat-button style="color:white" class="button"> <mat-icon style="color:white" >search</mat-icon> Buscar </button>
+        </div>
+      </form>
+
+    </mat-card-content> -->
+
+    <mat-card-content>
+      <app-tabla *ngIf="!loading" [data]="dataSource" [displayedColumns]="displayedColumns" (actionClicked)="handleActionClick($event)"/>
+    </mat-card-content>
+  </mat-card>
+
+
+</mat-card>
+
+
+

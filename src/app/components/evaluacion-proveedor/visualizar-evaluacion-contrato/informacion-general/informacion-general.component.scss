@@ -1,0 +1,52 @@
+.card-oas{
+  border-radius: 10px !important;
+  margin-bottom: 1% !important;
+  margin: 1%;
+  //padding: 0 1%;
+}
+
+
+.expansion-panel-title-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  color: white !important;
+}
+.mat-expansion-panel-header {
+  background-color: #8c1a19 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .mat-expansion-indicator::after {
+  color: white;
+}
+
+.grid-container{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  flex-wrap: wrap;
+  grid-gap: 1%;
+  margin: 1%;
+}
+
+.label{
+  color: grey !important;
+  margin: 2% 0;
+}
+
+.textos{
+  height: 100%;
+	display: flex;
+	flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.grid-objeto-contrato{
+  display: grid;
+  grid-column: 2/4;
+  margin: 0%;
+  padding: 0%;
+}

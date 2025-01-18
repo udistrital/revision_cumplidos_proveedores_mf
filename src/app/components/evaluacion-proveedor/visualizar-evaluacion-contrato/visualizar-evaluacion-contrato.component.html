@@ -1,0 +1,55 @@
+<mat-card style="background-color:#F9F9F9; padding-bottom:1%">
+  <mat-card class="card-oas">
+    <mat-card-title class="card-tittle">
+      <h1> {{tittle}} </h1>
+    </mat-card-title>
+    <div class="card-container">
+      <mat-card-content class="container-botones">
+        <button *ngIf="(estadoEvaluacion.CodigoAbreviacion === 'AEV') && informacionEvaluacion.CodigoAbreviacionRol === 'SP'" mat-button style="color:white" class="button">
+          <mat-icon style="color:white">turned_in</mat-icon> CARGAR EVALUACIÓN
+        </button>
+        <button *ngIf="estadoEvaluacion.CodigoAbreviacion === 'PRE'" mat-button style="color:white" class="button">
+          <mat-icon style="color:white">border_color</mat-icon> FIRMAR
+        </button>
+        <button *ngIf="estadoEvaluacion.CodigoAbreviacion === 'AEV' || estadoEvaluacion.CodigoAbreviacion === 'PRE'" mat-button style="color:white" class="button">
+          <mat-icon style="color:white">file_download</mat-icon> DESCARGAR EVALUACIÓN
+        </button>
+        <button routerLink="/listar-contratos-evaluar" mat-button style="color:white; background-color:#D65756" class="button">
+          <mat-icon style="color:white">keyboard_arrow_left</mat-icon> REGRESAR
+        </button>
+      </mat-card-content>
+    </div>
+  </mat-card>
+
+
+  <div *ngIf="!loading">
+    <app-informacion-general [informacionGeneral]="informacionGeneralEvaluacion"/>
+    <app-visualizar-items [listaItems]="listaItemsEvaluar" />
+    <app-visualizar-resultado-evaluacion [resultadoEvaluacion]="resultadoEvaluacion" [puntajeTotal]="informacionEvaluacion.PuntajeTotalEvaluacion" [clasificacion]="informacionEvaluacion.Clasificacion"/>
+    <app-listar-elementos [tittle]="'Observaciones'" [lista]="listaObservaciones" />
+    <app-visualizar-evaluadores [evaluadores]="listaEvaluadores" />
+  </div>
+
+
+
+
+  <mat-card class="card-container">
+    <div *ngIf="!loading" class="card-container">
+      <mat-card-title class="card-tittle">
+        <h2> Puntaje total de la evaluación </h2>
+      </mat-card-title>
+      <mat-card-content class="container-inputs">
+        <mat-form-field>
+          <input matInput disabled [value]="informacionEvaluacion.PuntajeTotalEvaluacion" style="text-align:center">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput disabled
+            [value]="informacionEvaluacion.Clasificacion"
+            style="text-align: center">
+        </mat-form-field>
+      </mat-card-content>
+    </div>
+
+
+  </mat-card>
+</mat-card>

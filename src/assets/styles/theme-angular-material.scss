@@ -1,0 +1,136 @@
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+/* For use in src/lib/core/theming/_palette.scss */
+$md-primary: (
+  50: #8c1a19,
+  100: #8c1a19,
+  200: #8c1a19,
+  300: #8c1a19,
+  400: #8c1a19,
+  500: #8c1a19,
+  600: #8c1a19,
+  700: #8c1a19,
+  800: #8c1a19,
+  900: #8c1a19,
+  A100: #ab1f1e,
+  A200: #ab1f1e,
+  A400: #ab1f1e,
+  A700: #ab1f1e,
+  contrast: (
+      50: white,
+      100: white,
+      200: white,
+      300: white,
+      400: white,
+      500: white,
+      600: white,
+      700: white,
+      800: white,
+      900: white,
+      A100: white,
+      A200: white,
+      A400: white,
+      A700: white,
+      )
+);
+
+/* For use in src/lib/core/theming/_palette.scss */
+$md-accent: (
+  50: #e3ebf2,
+  100: #b9cedf,
+  200: #8aadca,
+  300: #5b8cb5,
+  400: #3773a5,
+  500: #145a95,
+  600: #12528d,
+  700: #0e4882,
+  800: #0b3f78,
+  900: #062e67,
+  A100: #97bbff,
+  A200: #649aff,
+  A400: #3179ff,
+  A700: #1868ff,
+
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+
+    A200: #000000,
+
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+$md-warning: (
+  50: #8c1a19,
+  100: #8c1a19,
+  200: #8c1a19,
+  300: #8c1a19,
+  400: #8c1a19,
+  500: #8c1a19,
+  600: #8c1a19,
+  700: #8c1a19,
+  800: #8c1a19,
+  900: #8c1a19,
+  A100: #ab1f1e,
+  A200: #ab1f1e,
+  A400: #ab1f1e,
+  A700: #ab1f1e,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #000000,
+    600: #000000,
+    700: #000000,
+    800: #000000,
+    900: #000000,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
+
+$light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: mat.define-palette($md-primary, 500),
+      accent: mat.define-palette($md-accent, 500),
+      warn: mat.define-palette($md-warning, 500),
+    ),
+    typography: mat.define-typography-config(
+      $font-family: "Helvetica",
+    ),
+    density: 0,
+  )
+);
+
+@include mat.all-component-themes($light-theme);
+
+
+.swal2-confirm {
+  background-color: #358227 !important; 
+  color: white !important;              
+
+}
+
+/* Estilo global para el botón de cancelación en SweetAlert2 */
+.swal2-cancel {
+  background-color: #731b14 !important; 
+  color: white !important;
+}

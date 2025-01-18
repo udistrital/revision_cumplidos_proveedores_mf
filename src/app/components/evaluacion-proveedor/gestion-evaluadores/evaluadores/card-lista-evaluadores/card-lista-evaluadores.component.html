@@ -1,0 +1,57 @@
+<div class="box-items">
+  <mat-card class="card-item" *ngFor="let evaluador of listaEvaluadores">
+    <div class="box-item margin-5px">
+      <div class="box-items">
+        <div><span>N° de Documento</span></div>
+        <div>
+          <textarea class="documento-box text-area  text-center" readonly>{{
+            evaluador.NumeroDocumento
+          }}</textarea>
+        </div>
+      </div>
+      <div class="box-items">
+        <div  ><span>Cargo</span></div>
+        <div  >
+          <textarea class="item-nombre text-area  text-center" readonly>{{
+            evaluador.Cargo
+          }}</textarea>
+        </div>
+      </div>
+      <div class="box-items">
+        <div > <span>Items a evaluar</span></div>
+        <div  >
+          <textarea class="text-area text-center" readonly>{{
+            getItemsAEvaluar(evaluador.ItemAEvaluar)
+          }}</textarea>
+        </div>
+      </div>
+      <div class="box-items">
+        <div><span>Procentaje
+        </span></div>
+        <div *ngIf="evaluador.PorcentajeDeEvaluacion < 1; else elseBlock">
+          <textarea class="text-area text-center" readonly>{{
+            evaluador.PorcentajeDeEvaluacion | percent
+          }}</textarea>
+        </div>
+        <ng-template #elseBlock>
+          <div>
+            <textarea class="text-area text-center" readonly>{{
+              (evaluador.PorcentajeDeEvaluacion/100) | percent
+            }}</textarea>
+          </div>
+        </ng-template>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="btn-delete"
+          (click)="eliminarItem(evaluador.NumeroDocumento)"
+        >
+          <span class="material-symbols-outlined text-btn-delete">
+            delete
+          </span>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>
