@@ -58,9 +58,26 @@ export class GestionEvaluadoresComponent implements OnInit {
     }
   }
 
+  async enviarNotificacionEvaluadores(){
+    await this.evaluacionCumplidoProvCrud
+    .evaluacion$.subscribe((evaluacion) => {
+      if (evaluacion){
+        this.evaluacion = evaluacion;
+      }
+    })
+    await this.evaluacionCumplidoMid
+    .get(`/notificaciones/${this.evaluacion?.Id}`)
+    .subscribe({
+      error: (error) => {
+        this.popUpManager.showErrorAlert('No se pudieron enviar las notificaciones');
+      }
+    })
+  }
+
 
   async enviarEvaluacion() {
     await this.desactivarEstadosAnterioresEvaluacion();
+    await this.enviarNotificacionEvaluadores();
     await this.evaluacionCumplidoProvCrud
     .get(`/estado_evaluacion/?query=CodigoAbreviacion:EPR,Activo:true&limit=-1`)
     .pipe(
@@ -114,7 +131,7 @@ export class GestionEvaluadoresComponent implements OnInit {
             await this.evaluacionCumplidoProvCrud
             .delete(`/cambio_estado_evaluacion`, cambioEstado.Id)
             .subscribe({
-              
+
             })
           })
         }
