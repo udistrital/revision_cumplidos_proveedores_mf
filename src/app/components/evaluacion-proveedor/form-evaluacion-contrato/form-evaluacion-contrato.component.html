@@ -1,4 +1,4 @@
-<section>
+<section *ngIf="!visualizacion">
   <mat-card>
     <header>
       <div>
@@ -93,38 +93,81 @@
       </article>
     </mat-card>
 
-    <mat-card class="item-evaluar margin-10px border-card">
-      <div class="box-observaciones margin-10px">
-        <div class="title-card color-principal">
-          <h3>Observaciones</h3>
+    <form [formGroup]="FormularioEvaluacion" (submit)="enviarEvaluacion()">
+      <mat-card class="item-evaluar margin-10px border-card">
+        <div class="box-observaciones margin-10px">
+          <div class="title-card color-principal">
+            <h3>Observaciones</h3>
+          </div>
+          <div class="text-center">
+            <mat-form-field class="">
+              <mat-label>Observaciones</mat-label>
+              <textarea class="" matInput placeholder="" formControlName="observaciones"></textarea>
+              <mat-error *ngIf="FormularioEvaluacion.get('observaciones')?.invalid && FormularioEvaluacion.get('observaciones')?.touched">
+                Ingresa las observaciones
+              </mat-error>
+            </mat-form-field>
+          </div>
         </div>
-        <div class="text-center">
-          <mat-form-field class="">
-            <mat-label>Observaciones</mat-label>
-            <textarea class="" matInput placeholder="" formControlName="observaciones"></textarea>
-            <mat-error *ngIf="FormularioEvaluacion.get('observaciones')?.invalid && FormularioEvaluacion.get('observaciones')?.touched">
-              Ingresa las observaciones
-            </mat-error>
-          </mat-form-field>
+      </mat-card>
+  
+      <mat-card class="item-evaluar margin-10px border-card">
+        <div class="box-suma-total">
+          <div class="title-card color-principal">
+            <p>Puntaje Total de evaluación</p>
+          </div>
+          <div style="display: flex">
+            <p class="line-text">{{valorTotalEvaluacion}}</p>
+          </div>
+          <div style="display: flex">
+            <p class="line-text">{{calificacionTexto}}</p>
+          </div>
+          <div class="text-end">
+            <button type="submit" class="btn-enviar" mat-button>Enviar Evaluación</button>
+          </div>
         </div>
-      </div>
-    </mat-card>
-
-    <mat-card class="item-evaluar margin-10px border-card">
-      <div class="box-suma-total">
-        <div class="title-card color-principal">
-          <p>Puntaje Total de evaluación</p>
-        </div>
-        <div style="display: flex">
-          <p class="line-text">{{valorTotalEvaluacion}}</p>
-        </div>
-        <div style="display: flex">
-          <p class="line-text">{{calificacionTexto}}</p>
-        </div>
-        <div class="text-end">
-          <button class="btn-enviar" mat-button>Enviar Evaluación</button>
-        </div>
-      </div>
-    </mat-card>
+      </mat-card>
+    </form>
+    
   </mat-card>
+</section>
+
+<section *ngIf="visualizacion">
+    <article>
+
+
+      <div class="box-items">
+            <div>
+              <div>
+                <div *ngFor="let item of listaPreguntas">
+                  <mat-card class="item-evaluar margin-10px border-card">
+                    <mat-accordion>
+                      <mat-expansion-panel [expanded]="true">
+                        <mat-expansion-panel-header class="bg-panel-title">
+                          <mat-panel-title class="expansion-panel-title-box">
+                            <div>
+                              <h3 class="title color-white title-expansion">{{ item.elemento }}</h3>
+                            </div>
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div>
+                          <div *ngFor="let pregunta of item.preguntas">
+                            <div class="box-pregunta">
+                              <app-card-pregunta
+                                [pregunta]="pregunta"
+                                [visualizacion]="true"
+                                (respuestaChange)="onRespuestaChange($event, pregunta.index)"
+                              ></app-card-pregunta>
+                            </div>
+                          </div>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+                  </mat-card>
+                </div>
+              </div>
+            </div>
+      </div>
+    </article>
+
 </section>

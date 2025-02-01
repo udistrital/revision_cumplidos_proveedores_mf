@@ -11,7 +11,7 @@
           <mat-form-field class="mat-form-field">
             <mat-select formControlName="cumplimiento" placeholder="Seleccione una opción" style="text-align: center">
               <mat-option value="" disabled>Seleccione una opción</mat-option>
-              <mat-option *ngFor="let opcion of pregunta.valorAsignado" value={{opcion.valor}}> {{opcion.cumplimiento}} </mat-option>
+              <mat-option *ngFor="let opcion of pregunta.valorAsignado; let i = index" [value]="i"> {{opcion.cumplimiento}} </mat-option>
             </mat-select>
           </mat-form-field>
           <mat-error *ngIf="cumplimientoControl.invalid && cumplimientoControl.touched">
@@ -35,12 +35,12 @@
       <div class="text-center">{{ pregunta.pregunta }}</div>
       <div style="text-align: center">
         <mat-form-field>
-          <input style="text-align: center;" matInput disabled [value]="pregunta.cumplimiento">
+          <input style="text-align: center;" matInput disabled [value]="pregunta.opcionSeleccionada">
         </mat-form-field>
       </div>
     </div>
     <div class="text-center">
-      <p class="line-text">{{ pregunta.valorAsignado }}</p>
+      <p class="line-text">{{ pregunta.valorSeleccionado }}</p>
     </div>
   </div>
 </div>
