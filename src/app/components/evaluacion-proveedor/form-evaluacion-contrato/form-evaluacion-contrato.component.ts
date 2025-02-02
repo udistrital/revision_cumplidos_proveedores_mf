@@ -37,8 +37,8 @@ export class FormEvaluacionContratoComponent implements OnInit {
   listaClasificaciones!: Clasificacion[];
   ultimoEstadoEvaluacion!: CambioEstadoAsignacionEvalacion;
   @Input({required: true}) visualizacion: boolean = false;
-  @Input() respuestasEvaluacion!: Resultado; 
-  
+  @Input() respuestasEvaluacion!: Resultado;
+
 
   constructor(
     private evaluacionCumplidosCrud: EvaluacionCumplidoProvCrudService,
@@ -89,20 +89,20 @@ export class FormEvaluacionContratoComponent implements OnInit {
 
   onRespuestaChange(respuesta: any, index: number) {
     this.respuestas[index] = respuesta;
-  
+
     if (!this.visualizacion){
       // Esconde las preguntas dependientes
-      if (index === 4) { 
-        const preguntaDependiente = this.listaPreguntas[2].preguntas[1]; 
-        preguntaDependiente.visible = respuesta.valorSeleccionado === 0; 
+      if (index === 4) {
+        const preguntaDependiente = this.listaPreguntas[2].preguntas[1];
+        preguntaDependiente.visible = respuesta.valorSeleccionado === 0;
       }
 
-      if (index === 8) { 
-        const preguntaDependiente = this.listaPreguntas[3].preguntas[2]; 
-        preguntaDependiente.visible = respuesta.valorSeleccionado === 0; 
+      if (index === 8) {
+        const preguntaDependiente = this.listaPreguntas[3].preguntas[2];
+        preguntaDependiente.visible = respuesta.valorSeleccionado === 0;
       }
     }
-    
+
 
     // Actualiza el valor seleccionado en la pregunta correspondiente
     const pregunta = this.listaPreguntas
@@ -180,18 +180,18 @@ obtnerUnidadMedida(): Promise<UnidadMedida[]> {
 
    return new Promise((resolve, reject) => {
     this.AdministrativaAmazonService.get(`/unidad`).subscribe({
-      next: (unidadMedida: any) => {       
+      next: (unidadMedida: any) => {
           this.listaMedidas = unidadMedida.map((unidad: any) => {
 
             return {
-              Id: unidad.Id,         
-              Unidad:  unidad.Unidad,     
-              Tipo:  unidad.Tipo, 
+              Id: unidad.Id,
+              Unidad:  unidad.Unidad,
+              Tipo:  unidad.Tipo,
               Descripcion: unidad.Descripcion,
-              Estado:     unidad.Estado, 
+              Estado:     unidad.Estado,
             }
           });
-      
+
         resolve(this.listaMedidas);
       },error: (error) => {
         this.popUpManager.showErrorAlert('Error al obtener las unidades de medida');
@@ -235,15 +235,19 @@ obtenerClasificacionTexto(puntaje:number) {
       this.calificacionTexto = this.listaClasificaciones[i].Nombre;
       console.log(this.calificacionTexto);
       this.clasificacionId = this.listaClasificaciones[i].Id;
-      break 
+      break
     }
   }
 }
 
- enviarEvaluacion() {
-    if (this.clasificacionId == undefined) {
+ async enviarEvaluacion() {
+  let confirm = await this.popUpManager.showConfirmAlert(
+    '¿Esta seguro de enviar la evaluación?'
+  );
+  if (confirm.isConfirmed) {
+    if (this.comprobarPreguntasRespondidas()) {
       this.popUpManager.showErrorAlert(
-        'Todavia no se ha realizado la evaluación'
+        'No se han contestado todas las preguntas'
       );
       return
     }
@@ -290,6 +294,8 @@ obtenerClasificacionTexto(puntaje:number) {
     }
   }
 
+  }
+
 crearCuerpoRespuesta(): BodyEvaluacion{
   const resultadosIndividuales = this.listaPreguntas.flatMap((seccion) =>
     seccion.preguntas.map((pregunta) => ({
@@ -310,6 +316,14 @@ crearCuerpoRespuesta(): BodyEvaluacion{
       ResultadosIndividuales: resultadosIndividuales,
     },
   };
+}
+
+comprobarPreguntasRespondidas(): boolean {
+  return this.listaPreguntas.every(seccion => 
+    seccion.preguntas.every(pregunta => 
+      !pregunta.visible || pregunta.opcionSeleccionada !== ""
+    )
+  );
 }
 
 actualizarPreguntasConResultado(resultado: Resultado): Preguntas[] {
@@ -355,14 +369,16 @@ obtenerUnidadPorId(id: number): string {
 
     if (tipoNecesidad === 1) {
       return 'BIEN';
-    } 
+    }
      if (tipoNecesidad === 2) {
       return 'SERVICIO';
-    } 
+    }
     if (tipoNecesidad === 3) {
       return 'BIENES Y SERVICIOS';
     }
       return 'No definido';
-    }
   }
+}
+
+ 
 

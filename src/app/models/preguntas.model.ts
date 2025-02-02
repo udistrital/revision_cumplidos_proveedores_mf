@@ -10,7 +10,7 @@ export interface Pregunta {
   valorAsignado: { cumplimiento: string; valor: number }[];
   index: number;
   opcionSeleccionada: string;
-  valorSeleccionado: number; 
+  valorSeleccionado: number;
   visible: boolean;
 }
 
@@ -27,9 +27,9 @@ export const FormularioPreguntas: Preguntas[] = [
             { cumplimiento: 'NO', valor: 0 }
           ],
           index: 0,
-          opcionSeleccionada: 'NO',
+          opcionSeleccionada: "",
           valorSeleccionado: 0,
-          visible: true, 
+          visible: true,
         },
         {
           titulo: 'Cantidades',
@@ -39,9 +39,9 @@ export const FormularioPreguntas: Preguntas[] = [
             { cumplimiento: 'NO', valor: 0 }
           ],
           index: 1,
-          opcionSeleccionada: 'NO',
+          opcionSeleccionada: "",
           valorSeleccionado: 0,
-          visible: true, 
+          visible: true,
         },
       ],
     },
@@ -57,9 +57,9 @@ export const FormularioPreguntas: Preguntas[] = [
             { cumplimiento: 'NO', valor: 0 }
           ],
           index: 2,
-          opcionSeleccionada: 'NO',
+          opcionSeleccionada: "",
           valorSeleccionado: 0,
-          visible: true, 
+          visible: true,
         },
         {
           titulo: 'Funcionalidad adicional',
@@ -69,9 +69,9 @@ export const FormularioPreguntas: Preguntas[] = [
             { cumplimiento: 'NO', valor: 0 }
           ],
           index: 3,
-          opcionSeleccionada: 'NO',
+          opcionSeleccionada: "",
           valorSeleccionado: 0,
-          visible: true, 
+          visible: true,
         },
       ],
     },
@@ -87,9 +87,9 @@ export const FormularioPreguntas: Preguntas[] = [
             { cumplimiento: 'NO', valor: 12 }
           ],
           index: 4,
-          opcionSeleccionada: 'SI',
+          opcionSeleccionada: "",
           valorSeleccionado: 0,
-          visible: true, 
+          visible: true,
         },
         {
           titulo: 'Reclamaciones',
@@ -101,7 +101,7 @@ export const FormularioPreguntas: Preguntas[] = [
           index: 5,
           opcionSeleccionada: 'NO',
           valorSeleccionado: 0,
-          visible: false, 
+          visible: false,
         },
         {
           titulo: 'Servicio pos venta',
@@ -111,9 +111,9 @@ export const FormularioPreguntas: Preguntas[] = [
             { cumplimiento: 'NO', valor: 0 }
           ],
           index: 6,
-          opcionSeleccionada: 'NO',
+          opcionSeleccionada: "",
           valorSeleccionado: 0,
-          visible: true, 
+          visible: true,
         },
       ],
     },
@@ -131,9 +131,9 @@ export const FormularioPreguntas: Preguntas[] = [
             { cumplimiento: 'MALO', valor: 0 }
           ],
           index: 7,
-          opcionSeleccionada: 'MALO',
+          opcionSeleccionada: "",
           valorSeleccionado: 0,
-          visible: true, 
+          visible: true,
         },
         {
           titulo: 'Garantía',
@@ -143,9 +143,9 @@ export const FormularioPreguntas: Preguntas[] = [
             { cumplimiento: 'NO', valor: 15 }
           ],
           index: 8,
-          opcionSeleccionada: 'SI',
+          opcionSeleccionada: "",
           valorSeleccionado: 0,
-          visible: true, 
+          visible: true,
         },
         {
           titulo: 'Garantía',
@@ -157,7 +157,7 @@ export const FormularioPreguntas: Preguntas[] = [
           index: 9,
           opcionSeleccionada: 'NO',
           valorSeleccionado: 0,
-          visible: false, 
+          visible: false,
         },
       ],
     },
