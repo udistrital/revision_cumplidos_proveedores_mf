@@ -95,11 +95,19 @@ export class FormEvaluacionContratoComponent implements OnInit {
       if (index === 4) {
         const preguntaDependiente = this.listaPreguntas[2].preguntas[1];
         preguntaDependiente.visible = respuesta.valorSeleccionado === 0;
+        if (!preguntaDependiente.visible){
+          preguntaDependiente.opcionSeleccionada = "NO";
+          preguntaDependiente.valorSeleccionado = 0;
+        }
       }
 
       if (index === 8) {
         const preguntaDependiente = this.listaPreguntas[3].preguntas[2];
         preguntaDependiente.visible = respuesta.valorSeleccionado === 0;
+        if (!preguntaDependiente.visible){
+          preguntaDependiente.opcionSeleccionada = "NO";
+          preguntaDependiente.valorSeleccionado = 0;
+        }
       }
     }
 
@@ -245,7 +253,7 @@ obtenerClasificacionTexto(puntaje:number) {
     '¿Esta seguro de enviar la evaluación?'
   );
   if (confirm.isConfirmed) {
-    if (this.comprobarPreguntasRespondidas()) {
+    if (!this.comprobarPreguntasRespondidas()) {
       this.popUpManager.showErrorAlert(
         'No se han contestado todas las preguntas'
       );
@@ -319,8 +327,8 @@ crearCuerpoRespuesta(): BodyEvaluacion{
 }
 
 comprobarPreguntasRespondidas(): boolean {
-  return this.listaPreguntas.every(seccion => 
-    seccion.preguntas.every(pregunta => 
+  return this.listaPreguntas.every(seccion =>
+    seccion.preguntas.every(pregunta =>
       !pregunta.visible || pregunta.opcionSeleccionada !== ""
     )
   );
@@ -380,5 +388,5 @@ obtenerUnidadPorId(id: number): string {
   }
 }
 
- 
+
 
