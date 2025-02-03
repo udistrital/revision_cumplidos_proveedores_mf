@@ -1,192 +1,46 @@
-
 <div *ngIf="!visualizacion">
-  <form [formGroup]="FormularioEvaluacion" (ngSubmit)="enviarEvaluacion()">
-    <div *ngFor="let item of listaPreguntas">
-      <mat-card class="item-evaluar margin-10px border-card">
-        <mat-accordion>
-          <mat-expansion-panel [expanded]="false">
-            <mat-expansion-panel-header class="bg-panel-title">
-              <mat-panel-title class="expansion-panel-title-box">
-                <div>
-                  <h3 class="title color-white title-expansion">{{ item.elemento }}</h3>
-                </div>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-  
-            <div>
-              <div class="box-header-evaluacion">
-                <div>
-                  <h3 class="color-principal">{{ item.elemento }} test</h3>
-                </div>
-                <div class="color-principal text-center">Valor Asignado</div>
-              </div>
-  
-              <div *ngFor="let pregunta of item.preguntas; let i = index">
-                <div class="box-pregunta" >
-                  <div>
-                    <div>
-                      <div class="box-caracteristica" >
-                        <div class="color-principal text-center">
-                          {{ pregunta.titulo }}
-                        </div>
-                        <div class="text-center">{{ pregunta.pregunta }}</div>
-                        <div style="text-align: center">
-                          <p>Seleccione una opción</p>
-                          
-                          <mat-form-field class="mat-form-field">
-                            <mat-select [formControl]="getCumplimiento(pregunta.index)" placeholder="Seleccione una opción">
-                              <mat-option value="" disabled>Seleccione una opción</mat-option>
-                              <mat-option value="Si">Si</mat-option>
-                              <mat-option value="No">No</mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <mat-error *ngIf="getCumplimiento(pregunta.index)?.invalid && formularioEnviado || getCumplimiento(pregunta.index)?.invalid && getCumplimiento(pregunta.index)?.touched">
-                            Por favor seleccione una opción
-                          </mat-error>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-  
-                  <div class="text-center">
-                    <p class="line-text">{{ pregunta.valorAsignado }}</p>
-                  </div>
-                </div>
-              </div>
-  
-              <div class="box-total">
-                <div class="text-center p">
-                  <p class="principal-color" style="font-size: 1rem">
-                    Puntaje total:
-                  </p>
-                </div>
-                <div>
-                  <p style="font-size: 1rem" *ngIf="item.elemento == 'Cumplimiento'">{{ puntaJeTotalCumplimiento }}</p>
-                  <p style="font-size: 1rem" *ngIf="item.elemento == 'Calidad'">{{ puntajeTotalCalidad }}</p>
-                  <p style="font-size: 1rem" *ngIf="item.elemento == 'Pos contractual'">{{ puntajeTotalPosContraActual }}</p>
-                  <p style="font-size: 1rem" *ngIf="item.elemento == 'Gestión'">{{puntajeTotalGestion}}</p>
-
-                </div>
-              </div>
-            </div>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </mat-card>
-    </div>
-  
-    <mat-card class="item-evaluar margin-10px border-card">
-      <div class="box-observaciones margin-10px">
-        <div class="color-principal">
-          <h3>Observaciones</h3>
+  <form [formGroup]="FormularioPregunta">
+    <div class="box-pregunta">
+      <div class="box-caracteristica">
+        <div class="color-principal text-center">
+          {{ pregunta.titulo }}
         </div>
-        <div class="text-center">
-          <mat-form-field class="">
-            <mat-label>Observaciones</mat-label>
-            <textarea class="" matInput placeholder="" formControlName="observaciones"></textarea>
-            <mat-error *ngIf="FormularioEvaluacion.get('observaciones')?.invalid && FormularioEvaluacion.get('observaciones')?.touched">
-              Ingresa las observaciones
-            </mat-error>
+        <div class="text-center">{{ pregunta.pregunta }}</div>
+        <div style="text-align: center">
+          <p>Seleccione una opción</p>
+          <mat-form-field class="mat-form-field">
+            <mat-select formControlName="cumplimiento" placeholder="Seleccione una opción" style="text-align: center">
+              <mat-option value="" disabled>Seleccione una opción</mat-option>
+              <mat-option *ngFor="let opcion of pregunta.valorAsignado; let i = index" [value]="i"> {{opcion.cumplimiento}} </mat-option>
+            </mat-select>
           </mat-form-field>
+          <mat-error *ngIf="cumplimientoControl.invalid && cumplimientoControl.touched">
+            Por favor seleccione una opción
+          </mat-error>
         </div>
       </div>
-    </mat-card>
-  
-    <mat-card class="item-evaluar margin-10px border-card">
-      <div class="box-suma-total">
-        <div class="title-card color-principal">
-          <p>Puntaje Total de evaluación</p>
-        </div>
-        <div>
-          <p class="line-text">{{puntajeTotal}}</p>
-        </div>
-        <div>
-          <p class="line-text">{{calificacionTexto}}</p>
-        </div>
-        <div class="text-end">
-          <button class="btn-enviar" mat-button (click)="enviarEvaluacion()">Enviar Evaluación</button>
-        </div>
+      <div class="text-center">
+        <p class="line-text">{{ valorSeleccionado }}</p>
       </div>
-    </mat-card>
+    </div>
   </form>
-  
-  
 </div>
 
 <div *ngIf="visualizacion">
-  <form [formGroup]="FormularioEvaluacion">
-    <div *ngFor="let item of listaPreguntas">
-      <mat-card class="item-evaluar margin-10px border-card">
-        <mat-accordion>
-          <mat-expansion-panel [expanded]="false">
-            <mat-expansion-panel-header class="bg-panel-title">
-              <mat-panel-title class="expansion-panel-title-box">
-                <div>
-                  <h3 class="title color-white title-expansion">{{ item.elemento }}</h3>
-                </div>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-
-            <div>
-              <div class="box-header-evaluacion">
-                <div>
-                  <h3 class="color-principal">{{ item.elemento }}</h3>
-                </div>
-                <div class="color-principal text-center">Valor Asignado</div>
-              </div>
-
-              <div *ngFor="let pregunta of item.preguntas; let i = index">
-                <div class="box-pregunta">
-                  <div>
-                    <div>
-                      <div class="box-caracteristica">
-                        <div class="color-principal text-center">
-                          {{ pregunta.titulo }}
-                        </div>
-                        <div class="text-center">{{ pregunta.pregunta }}</div>
-                        <div style="text-align: center">
-                            <mat-form-field>
-                                <input style="text-align: center;" matInput disabled [value]="pregunta.cumplimiento">
-                            </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="text-center">
-                    <p class="line-text">{{ pregunta.valorAsignado }}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="box-total">
-                <div class="text-center p">
-                  <p class="principal-color" style="font-size: 1rem">
-                    Puntaje total:
-                  </p>
-                </div>
-                <div>
-                  <p style="font-size: 1rem">{{ puntajesTotales[listaPreguntas.indexOf(item)] }}</p>
-                </div>
-              </div>
-            </div>
-            </mat-expansion-panel>
-        </mat-accordion>
-
-      </mat-card>
-    </div>
-
-    <mat-card class="item-evaluar margin-10px border-card">
-      <div class="box-suma-total">
-        <div class="title-card color-principal">
-          <p>Puntaje Total de Evaluacion</p>
-        </div>
-        <div>
-          <p class="line-text"> {{puntajeTotal}}</p>
-        </div>
-        <div>
-          <p class="line-text"> {{clasificacion}} </p>
-        </div>
+  <div class="box-pregunta">
+    <div class="box-caracteristica">
+      <div class="color-principal text-center">
+        {{ pregunta.titulo }}
       </div>
-    </mat-card>
-  </form>
+      <div class="text-center">{{ pregunta.pregunta }}</div>
+      <div style="text-align: center">
+        <mat-form-field>
+          <input style="text-align: center;" matInput disabled [value]="pregunta.opcionSeleccionada">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="text-center">
+      <p class="line-text">{{ pregunta.valorSeleccionado }}</p>
+    </div>
+  </div>
 </div>

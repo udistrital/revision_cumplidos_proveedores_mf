@@ -119,17 +119,17 @@ export class ListarContratosEvaluarComponent {
                 {
                   icon: 'edit',
                   actionName: 'edit',
-                  isActive: asignacion.EstadoAsignacionEvaluador && asignacion.EstadoAsignacionEvaluador.Id === 1 &&  asignacion.EstadoEvaluacion &&  asignacion.EstadoEvaluacion?.CodigoAbreviacion !== 'GNT'? true : false,
+                  isActive: asignacion.EstadoEvaluacion?.CodigoAbreviacion==="EPR"  ? true : false,
                 },
                 {
                   icon: 'visibility',
                   actionName: 'visibility',
-                  isActive: asignacion.EstadoEvaluacion && asignacion.EstadoEvaluacion.CodigoAbreviacion !== 'GNT' ? true: false,
+                  isActive: asignacion.EstadoEvaluacion?.CodigoAbreviacion==="PRE" ? true: false,
                 },
                 {
                   icon: 'accessibility',
                   actionName: 'accessibility',
-                  isActive: asignacion.EstadoEvaluacion?.CodigoAbreviacion === 'GNT' && asignacion.RolEvaluador === 'SP' ? true : false,
+                  isActive: asignacion.EstadoEvaluacion?.CodigoAbreviacion === 'GNT'  && asignacion.RolEvaluador === 'SP' ? true : false,
                 },
               ]
             })

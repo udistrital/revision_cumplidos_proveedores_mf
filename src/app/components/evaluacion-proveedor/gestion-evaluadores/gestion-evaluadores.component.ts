@@ -11,6 +11,7 @@ import { AdministrativaAmazonService } from 'src/app/services/administrativa_ama
 import { EstadoEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/estado_evaluacion.model';
 import { map } from 'rxjs';
 import { BodyCambioEstadoEvaluacion, CambioEstadoEvaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/cambio_estado_evaluacion.model';
+import { AsignacionEvaluador } from 'src/app/models/evaluacion_cumplido_prov_crud/asignacion_evaluador.model';
 
 @Component({
   selector: 'app-gestion-evaluadores',
@@ -58,40 +59,96 @@ export class GestionEvaluadoresComponent implements OnInit {
     }
   }
 
-
-  async enviarEvaluacion() {
-    await this.desactivarEstadosAnterioresEvaluacion();
+  async enviarNotificacionEvaluadores(){
     await this.evaluacionCumplidoProvCrud
-    .get(`/estado_evaluacion/?query=CodigoAbreviacion:EPR,Activo:true&limit=-1`)
-    .pipe(
-      map((res: any) => res.Data as EstadoEvaluacion[])
-    )
-    .subscribe({
-      next: async (data: EstadoEvaluacion[]) => {
-        let body: BodyCambioEstadoEvaluacion = {
-          EvaluacionId: {
-            Id: this.evaluacion?.Id,
-          },
-          EstadoEvaluacionId: {
-            Id: data[0].Id,
-          },
-        }
-        await this.evaluacionCumplidoProvCrud
-        .post(`/cambio_estado_evaluacion`, body)
-        .subscribe({
-          next: (data) => {
-            this.popUpManager.showSuccessAlert('Evaluación enviada correctamente');
-            this.evaluacionCumplidoProvCrud.removeEvaluacion();
-            this.evaluacionCumplidoProvCrud.removeAsignacionEvaluador();
-            this.router.navigate(['listar-contratos-evaluar']);
-
-          },
-          error: (error) => {
-            this.popUpManager.showErrorAlert('No se pudo enviar la evaluación');
-          }
-        })
+    .evaluacion$.subscribe((evaluacion) => {
+      if (evaluacion){
+        this.evaluacion = evaluacion;
       }
     })
+    await this.evaluacionCumplidoMid
+    .get(`/notificaciones/${this.evaluacion?.Id}`)
+    .subscribe({
+      error: (error) => {
+        this.popUpManager.showErrorAlert('No se pudieron enviar las notificaciones');
+      }
+    })
+  }
+
+
+  async enviarEvaluacion() {
+    if (await this.obtenerPorcentajeTotalEvaluacion() !== 1) {
+      this.popUpManager.showErrorAlert('No se ha completado el 100% de la evaluación, edite los porcentajes de evaluación, agregue más valuadores o verifique que ya guardo todos los evaluadores.');
+      return
+    }
+    let confirm = await this.popUpManager.showConfirmAlert(
+      '¿Esta seguro que desea terminar la gestion y enviar la evaluación?'
+    );
+    if (confirm.isConfirmed) {
+
+      await this.evaluacionCumplidoProvCrud
+      .get(`/estado_evaluacion/?query=CodigoAbreviacion:EPR,Activo:true&limit=-1`)
+      .pipe(
+        map((res: any) => res.Data as EstadoEvaluacion[])
+      )
+      .subscribe({
+        next: async (data: EstadoEvaluacion[]) => {
+          await this.desactivarEstadosAnterioresEvaluacion();
+          let body: BodyCambioEstadoEvaluacion = {
+            EvaluacionId: {
+              Id: this.evaluacion?.Id,
+            },
+            EstadoEvaluacionId: {
+              Id: data[0].Id,
+            },
+          }
+          await this.evaluacionCumplidoProvCrud
+          .post(`/cambio_estado_evaluacion`, body)
+          .subscribe({
+            next: (data) => {
+              this.popUpManager.showSuccessAlert('Evaluación enviada correctamente');
+              this.evaluacionCumplidoProvCrud.removeEvaluacion();
+              this.evaluacionCumplidoProvCrud.removeAsignacionEvaluador();
+              this.router.navigate(['listar-contratos-evaluar']);
+
+            },
+            error: (error) => {
+              console.log("Error", error)
+              this.popUpManager.showErrorAlert('No se pudo enviar la evaluación');
+            }
+          })
+        },
+        error: (error: any) => {
+          console.log("Error", error)
+          this.popUpManager.showErrorAlert('No se pudo enviar la evaluación');
+        }
+      })
+      await this.enviarNotificacionEvaluadores();
+    }
+  }
+
+  async obtenerPorcentajeTotalEvaluacion(): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+      this.evaluacionCumplidoProvCrud
+        .get(`/asignacion_evaluador?query=EvaluacionId.Id:${this.evaluacion?.Id},Activo:true&limit=-1`)
+        .pipe(
+          map((res: any) => res.Data as AsignacionEvaluador[])
+        )
+        .subscribe({
+          next: (data: AsignacionEvaluador[]) => {
+            let porcentaje = 0;
+            if (data[0].Id !== undefined) {
+              data.forEach((asignacion) => {
+                porcentaje += asignacion.PorcentajeEvaluacion;
+              });
+            }
+            resolve(porcentaje);
+          },
+          error: (error) => {
+            reject(error);
+          }
+        });
+    });
   }
 
   async desactivarEstadosAnterioresEvaluacion(){
@@ -114,7 +171,7 @@ export class GestionEvaluadoresComponent implements OnInit {
             await this.evaluacionCumplidoProvCrud
             .delete(`/cambio_estado_evaluacion`, cambioEstado.Id)
             .subscribe({
-              
+
             })
           })
         }
