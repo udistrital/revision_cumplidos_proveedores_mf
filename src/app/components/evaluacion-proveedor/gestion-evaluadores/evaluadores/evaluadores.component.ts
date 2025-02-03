@@ -61,7 +61,6 @@ export class EvaluadoresComponent implements OnInit {
     private user: UserService,
   ) {
     this.documentoSupervisor = user.getPayload().documento;
-    console.log('Documento Supervisor:', this.documentoSupervisor)
     this.formAddEvaluadores = this.fb.group({
       numero_documento: ['', [Validators.required]],
       cargo: ['', [Validators.required]],
