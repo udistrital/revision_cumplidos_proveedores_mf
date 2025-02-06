@@ -105,6 +105,7 @@ export class ListarContratosEvaluarComponent {
         }
         if (data.Asignaciones && data.Asignaciones.length > 0) {
           data.Asignaciones.forEach((asignacion) => {
+            
             //if (asignacion.EstadoAsignacionEvaluador && asignacion.EstadoAsignacionEvaluador.Id === 1 &&  asignacion.EstadoEvaluacion &&  asignacion.EstadoEvaluacion?.CodigoAbreviacion !== 'GNT' && asignacion.RolEvaluador === 'SP'){}
             this.dataSource.push({
               asignacionEvaluadorId: asignacion.AsignacionEvaluacionId,
@@ -119,12 +120,12 @@ export class ListarContratosEvaluarComponent {
                 {
                   icon: 'edit',
                   actionName: 'edit',
-                  isActive: asignacion.EstadoEvaluacion?.CodigoAbreviacion==="EPR"  ? true : false,
+                  isActive: asignacion.EstadoAsignacionEvaluador?.CodigoAbreviacion==="EA"  ? true : false,
                 },
                 {
-                  icon: 'visibility',
+                  icon: 'visibility', 
                   actionName: 'visibility',
-                  isActive: asignacion.EstadoEvaluacion?.CodigoAbreviacion==="PRE" ? true: false,
+                  isActive: asignacion.EstadoAsignacionEvaluador?.CodigoAbreviacion==="ER" ? true: false,
                 },
                 {
                   icon: 'accessibility',

@@ -261,7 +261,7 @@ obtenerClasificacionTexto(puntaje:number) {
     }
     if (
       this.ultimoEstadoEvaluacion.EstadoAsignacionEvaluadorId
-        .CodigoAbreviacion == 'EAG'
+        .CodigoAbreviacion == 'EA'
     ) {
       this.evaluacionCumplidosMid
         .post('/resultado/resultado-evaluacion', this.crearCuerpoRespuesta())

@@ -209,6 +209,7 @@ export class VisualizarEvaluacionContratoComponent {
   async ConsultarDocumentoEvaluacion(
     idDocumentoEvaluacion: number
   ): Promise<GestorDocumental> {
+    console.log('documento evaluacion ', `/documento/?limit=-1&query=Id.in:${idDocumentoEvaluacion}`);
     let evaluacion: GestorDocumental = {} as GestorDocumental;
     return new Promise((resolve, reject) => {
       this.documentosCrudService

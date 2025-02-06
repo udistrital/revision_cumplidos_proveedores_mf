@@ -1,4 +1,5 @@
 <section *ngIf="!visualizacion">
+  <form [formGroup]="FormularioEvaluacion" (submit)="enviarEvaluacion()">
   <mat-card>
     <header>
       <div>
@@ -130,6 +131,7 @@
     </form>
     
   </mat-card>
+  </form>
 </section>
 
 <section *ngIf="visualizacion">
