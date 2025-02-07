@@ -19,6 +19,10 @@ import { Router } from '@angular/router';
 import { Button } from 'src/app/models/button.model';
 import { SoportesService } from './soportes.service';
 import { InformacionSoporteCumplido } from '../models/revision_cumplidos_proveedores_mid/informacion_soporte_cumplido.model';
+import { GestorDocumental } from '../models/gestor_documnental/gestor_ducumental';
+import { PeticionFirmaElectronicaEvaluacion } from '../models/evaluacion_cumplido_prov_mid/peticion_firma_electronica_evaluacion';
+import { EvaluacionCumplidoProvMidService } from './evaluacion_cumplido_prov_mid';
+import { RespuestaFirmaElectronica } from '../models/evaluacion_cumplido_prov_mid/respuesta_firma_electronica';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -35,6 +39,8 @@ export class FirmaElectronicaService {
   recargarTaba!: Function;
   soportes!: InformacionSoporteCumplido[];
   soporteDeSatisfacion!: InformacionSoporteCumplido;
+  documentoEvaluacion!: GestorDocumental;
+  evaluacionFirmada!: RespuestaFirmaElectronica;
 
   constructor(
     private requestManager: RequestManager,
@@ -42,6 +48,7 @@ export class FirmaElectronicaService {
     private userService: UserService,
     private cumplidos_provedore_crud_service: CumplidosProveedoresCrudService,
     private cumplidos_provedore_mid_service: CumplidosProveedoresMidService,
+    private evaluacionCumplidoProvMidService: EvaluacionCumplidoProvMidService,
     public dialog: MatDialog,
     private router: Router,
     private soporteService: SoportesService
@@ -265,5 +272,34 @@ export class FirmaElectronicaService {
       },
     });
     dialog.afterClosed().subscribe();
+  }
+
+
+
+
+  FirmarEvaluacion(peticionFirmaEvaluacion:PeticionFirmaElectronicaEvaluacion):Promise<RespuestaFirmaElectronica>{
+      this.popUpManager.showLoadingAlert('Firmando Evaluación', 'Por favor, espera mientras se firma la evaluación.');
+    return new Promise((resolve, reject) => {
+      this.evaluacionCumplidoProvMidService.post('/firma_electronica/firmar_evaluacion', peticionFirmaEvaluacion).subscribe({
+        next: (res: any) => {
+       if(res && res.Data){
+        
+        this.evaluacionFirmada = res.Data;
+        resolve(this.evaluacionFirmada);
+        
+       }else{
+        Swal.close();
+        this.popUpManager.showErrorAlert(res.Message);
+       }
+        },error:(err)=>{
+          Swal.close();
+          this.popUpManager.showErrorAlert('Error al firmar la evaluación');
+          reject(err);
+        }
+      })
+    });
+
+
+
   }
 }
