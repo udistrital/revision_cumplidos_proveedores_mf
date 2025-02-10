@@ -91,7 +91,7 @@ export class EvaluadoresComponent implements OnInit {
       next: (data: AsignacionEvaluador[]) => {
         if (data[0].Id !== undefined){
           data.map((asignacion) => {
-            
+
             this.obtenerItemsAsinagcion(asignacion.Id)
             .then((items) => {
               console.log("Items:",items )

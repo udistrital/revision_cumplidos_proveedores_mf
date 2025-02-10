@@ -261,9 +261,27 @@ obtenerClasificacionTexto(puntaje:number) {
     }
     if (
       this.ultimoEstadoEvaluacion.EstadoAsignacionEvaluadorId
-        .CodigoAbreviacion == 'EA'
+        .CodigoAbreviacion === 'EAG'
     ) {
-      this.evaluacionCumplidosMid
+
+      let cambioEstado = {
+        AsignacionId: {
+          Id: this.asignacionEvaluador.Id,
+        },
+        AbreviacionEstado: 'ERE',
+      };
+      await this.evaluacionCumplidosMid
+        .post(`/asignaciones/cambiar-estado`, cambioEstado)
+        .subscribe({
+          next: (res: any) => {},
+          error: (error: any) => {
+            this.popUpManager.showErrorAlert(
+              'Error al cambiar el estado de la evaluación'
+            );
+          },
+        });
+
+      await this.evaluacionCumplidosMid
         .post('/resultado/resultado-evaluacion', this.crearCuerpoRespuesta())
         .subscribe({
           next: (res: any) => {},
@@ -276,23 +294,6 @@ obtenerClasificacionTexto(puntaje:number) {
                 mensajeDeConfirmacion: 'Evaluación enviada correctamente',
               },
             });
-
-            let cambioEstado = {
-              AsignacionId: {
-                Id: this.asignacionEvaluador.Id,
-              },
-              AbreviacionEstado: 'ERE',
-            };
-            this.evaluacionCumplidosMid
-              .post(`/asignaciones/cambiar-estado`, cambioEstado)
-              .subscribe({
-                next: (res: any) => {},
-                error: (error: any) => {
-                  this.popUpManager.showErrorAlert(
-                    'Error al cambiar el estado de la evaluación'
-                  );
-                },
-              });
           },
         });
     } else {

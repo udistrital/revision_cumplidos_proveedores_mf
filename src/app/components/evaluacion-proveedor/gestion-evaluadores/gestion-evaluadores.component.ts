@@ -78,7 +78,7 @@ export class GestionEvaluadoresComponent implements OnInit {
 
   async enviarEvaluacion() {
     if (await this.obtenerPorcentajeTotalEvaluacion() !== 1) {
-      this.popUpManager.showErrorAlert('No se ha completado el 100% de la evaluación, edite los porcentajes de evaluación, agregue más valuadores o verifique que ya guardo todos los evaluadores.');
+      this.popUpManager.showErrorAlert('No se ha completado el 100% de la evaluación, edite los porcentajes de evaluación, agregue más evaluadores o verifique que ya guardo todos los evaluadores.');
       return
     }
     let confirm = await this.popUpManager.showConfirmAlert(

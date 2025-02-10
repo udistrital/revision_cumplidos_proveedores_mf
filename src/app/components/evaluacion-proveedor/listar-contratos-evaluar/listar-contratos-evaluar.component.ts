@@ -62,7 +62,6 @@ export class ListarContratosEvaluarComponent {
     private router: Router
   ){
     this.documento_evaluador = user.getPayload().documento;
-
     this.filtrosForm = this.fb.group({
       nombreProveedor: ['', [Validators.minLength(5)]],
       numeroContrato: ['', [Validators.pattern(/^[0-9]+$/)]],
@@ -81,7 +80,6 @@ export class ListarContratosEvaluarComponent {
     });
 
     this.documentoSupervisor = this.user.getPayload().documento;
-    console.log("documentoSupervisor", this.documentoSupervisor); 
   }
 
   obtenerAsignacionesEvaluador(){
@@ -105,35 +103,37 @@ export class ListarContratosEvaluarComponent {
         }
         if (data.Asignaciones && data.Asignaciones.length > 0) {
           data.Asignaciones.forEach((asignacion) => {
-            
-            //if (asignacion.EstadoAsignacionEvaluador && asignacion.EstadoAsignacionEvaluador.Id === 1 &&  asignacion.EstadoEvaluacion &&  asignacion.EstadoEvaluacion?.CodigoAbreviacion !== 'GNT' && asignacion.RolEvaluador === 'SP'){}
-            this.dataSource.push({
-              asignacionEvaluadorId: asignacion.AsignacionEvaluacionId,
-              nombreProveedor: asignacion.NombreProveedor,
-              dependencia: asignacion.Dependencia,
-              tipoContrato: asignacion.TipoContrato,
-              contrato: asignacion.NumeroContrato,
-              vigencia: asignacion.VigenciaContrato,
-              EvaluacionId: asignacion.EvaluacionId,
-              EstadoEvaluacion: asignacion.EstadoEvaluacion,
-              acciones: [
-                {
-                  icon: 'edit',
-                  actionName: 'edit',
-                  isActive: asignacion.EstadoAsignacionEvaluador?.CodigoAbreviacion==="EA"  ? true : false,
-                },
-                {
-                  icon: 'visibility', 
-                  actionName: 'visibility',
-                  isActive: asignacion.EstadoAsignacionEvaluador?.CodigoAbreviacion==="ER" ? true: false,
-                },
-                {
-                  icon: 'accessibility',
-                  actionName: 'accessibility',
-                  isActive: asignacion.EstadoEvaluacion?.CodigoAbreviacion === 'GNT'  && asignacion.RolEvaluador === 'SP' ? true : false,
-                },
-              ]
-            })
+            if (asignacion.EstadoAsignacionEvaluador && asignacion.EstadoAsignacionEvaluador.CodigoAbreviacion === "EAG" &&  asignacion.EstadoEvaluacion &&  asignacion.EstadoEvaluacion?.CodigoAbreviacion === 'GNT' && asignacion.RolEvaluador !== 'SP'){
+
+            } else {
+              this.dataSource.push({
+                asignacionEvaluadorId: asignacion.AsignacionEvaluacionId,
+                nombreProveedor: asignacion.NombreProveedor,
+                dependencia: asignacion.Dependencia,
+                tipoContrato: asignacion.TipoContrato,
+                contrato: asignacion.NumeroContrato,
+                vigencia: asignacion.VigenciaContrato,
+                EvaluacionId: asignacion.EvaluacionId,
+                EstadoEvaluacion: asignacion.EstadoEvaluacion,
+                acciones: [
+                  {
+                    icon: 'edit',
+                    actionName: 'edit',
+                    isActive: asignacion.EstadoAsignacionEvaluador && asignacion.EstadoAsignacionEvaluador.CodigoAbreviacion === "EAG" &&  asignacion.EstadoEvaluacion &&  asignacion.EstadoEvaluacion?.CodigoAbreviacion === 'EPR'? true : false,
+                  },
+                  {
+                    icon: 'visibility',
+                    actionName: 'visibility',
+                    isActive: asignacion.EstadoAsignacionEvaluador && asignacion.EstadoAsignacionEvaluador.CodigoAbreviacion !== "EAG" ? true: false,
+                  },
+                  {
+                    icon: 'accessibility',
+                    actionName: 'accessibility',
+                    isActive: asignacion.EstadoEvaluacion?.CodigoAbreviacion === 'GNT' && asignacion.RolEvaluador === 'SP' ? true : false,
+                  },
+                ]
+              })
+            }
           });
         }
 
@@ -314,7 +314,7 @@ export class ListarContratosEvaluarComponent {
               this.router.navigate(['/gestion-evaluadores']);
             }
           }
-        }) 
+        })
       } else {
         await this.evaluacionCumplidoProvCrudService.setEvaluacionWithId(asignacionEvaluador.EvaluacionId);
         await this.evaluacionCumplidoProvCrudService.setAsignacionEvaluador(asignacionEvaluador.AsignacionEvaluacionId);
