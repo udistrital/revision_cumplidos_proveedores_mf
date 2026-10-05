@@ -10,6 +10,8 @@ import { UnidadMedida } from 'src/app/models/unidad-medida';
 import { UtilsService } from 'src/app/services/utils.service';
 import { EvaluacionCumplidoProvCrudService } from 'src/app/services/evaluacion_cumplido_prov_crud';
 import { Evaluacion } from 'src/app/models/evaluacion_cumplido_prov_crud/evaluacion.model';
+import { Item } from 'src/app/models/evaluacion_cumplido_prov_crud/item.model';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-items-a-evaluar',
@@ -70,9 +72,8 @@ export class ItemsAEvaluarComponent implements OnInit {
     { def: 'acciones', header: 'ACCIONES', isAction: true },
   ];
 
-  
+
   async agregarItem() {
-    console.log(this.formAddIntems.value);
     const existe = this.listaItems.some(
       (item) => item.Identificador === this.obtenerInfoFormulario().Identificador
     );
@@ -100,7 +101,6 @@ export class ItemsAEvaluarComponent implements OnInit {
   }
   obtenerInfoFormulario():ItemAEvaluar {
 
-    console.log('evaaaaluacion idddddd ', this.evaluacion?.Id);
     return {
       Identificador: this.formAddIntems.get('id_item')?.getRawValue() ?? '',
       Nombre: this.formAddIntems.get('nombre_item')?.getRawValue() ?? '',
@@ -177,19 +177,18 @@ export class ItemsAEvaluarComponent implements OnInit {
 
   async guardarItems(){
 
-    if (this.listaItems.length <0) {
-      this.popUpManager.showErrorAlert('No hay elementos agregados a la lista');
+    if (this.listaItems.length === 0) {
+      this.eliminarItemsEnEvaluacion();
+      this.popUpManager.showSuccessAlert('Items actualizados correctamente');
     } else {
       let confirm = await this.popUpManager.showConfirmAlert(
-        '¿Estás seguro de guardar el ítem?'
+        '¿Estás seguro de guardar los ítems?'
       );
       if (confirm.isConfirmed) {
-
-
           try{
               this.evaluacionCumplidosCrud.post("/item/guardado_multiple", this.listaItems).subscribe({
                 next: (res: any) => {
-                  this.popUpManager.showSuccessAlert('Items guardados correctamente');
+                  this.popUpManager.showSuccessAlert('Items actualizados correctamente');
                   this.consulatarItems();
                 }
 
@@ -200,6 +199,27 @@ export class ItemsAEvaluarComponent implements OnInit {
 
       }
     }
+  }
+
+  async eliminarItemsEnEvaluacion(){
+    this.evaluacionCumplidosCrud
+    .get(`/item/?query=EvaluacionId.Id:${this.evaluacion?.Id},Activo:true&limit=-1`)
+    .pipe(
+      map((response: any) => response.Data as Item[])
+    )
+    .subscribe({
+      next: (data: Item[]) => {
+        if (data[0].Id !== undefined) {
+          data.forEach((item) => {
+            this.evaluacionCumplidosCrud
+            .delete(`/item`, item.Id)
+            .subscribe({
+
+            })
+          })
+        }
+      }
+    })
   }
 
   async consulatarItems(){

@@ -29,7 +29,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
+              "src/assets/*",
               {
                 "glob": "**/*",
                 "input": "src/assets/i18n/",
@@ -40,7 +40,7 @@
               "src/styles.scss",
               "src/assets/styles/theme-angular-material.scss"
             ],
-            "scripts": [],
+            "scripts": ["src/assets/fonts/vfs_fonts_times.js"],
             "customWebpackConfig": {
               "path": "extra-webpack.config.js",
               "libraryName": "revision_cumplidos_proveedores_mf",
